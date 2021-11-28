@@ -1,0 +1,146 @@
+// import React, { useEffect, useState } from "react";
+import React, { useState } from "react"; 
+// import { useMoralis } from "react-moralis";
+
+import { useMoralis, useNFTBalances } from "react-moralis";
+import { Card, Image, Tooltip, Modal, Input } from "antd";
+
+//import { useNFTBalance } from "hooks/useNFTBalance";
+// import { useNFTCollections } from "hooks/useNFTCollections";
+
+import { FileSearchOutlined, SendOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
+import { getExplorer } from "helpers/networks";
+import AddressInput from "./AddressInput";
+import NFTDisplayMetadata from "components/NFTCollections/NFTDisplayMetadata";
+// const { Meta } = Card;
+
+const styles = {
+  NFTs: {
+    display: "flex",
+    flexWrap: "wrap",
+    WebkitBoxPack: "start",
+    justifyContent: "flex-start",
+    margin: "0 auto",
+    maxWidth: "1000px",
+    gap: "10px",
+  },
+};
+
+
+function NFTBalance() {
+  // const { NFTBalance, getNFTBalance } = useNFTBalance();
+  // const { NFTBalance } = useNFTBalance();
+  const { data: NFTBalances } = useNFTBalances();
+  
+  const { chainId } = useMoralisDapp();
+  const { Moralis } = useMoralis();
+  const [visible, setVisibility] = useState(false);
+  const [receiverToSend, setReceiver] = useState(null);
+  const [amountToSend, setAmount] = useState(null);
+  const [nftToSend, setNftToSend] = useState(null);
+  const [isPending, setIsPending] = useState(false);
+  
+  async function transfer(nft, amount, receiver) {
+    const options = {
+      type: nft.contract_type,
+      tokenId: nft.token_id,
+      receiver: receiver,
+      contractAddress: nft.token_address,
+    };
+
+    if (options.type === "erc1155") {
+      options.amount = amount;
+    }
+
+    setIsPending(true);
+    await Moralis.transfer(options)
+      .then((tx) => {
+        console.log(tx);
+        setIsPending(false);
+      })
+      .catch((e) => {
+        alert(e.message);
+        setIsPending(false);
+      });
+  }
+
+  const handleTransferClick = (nft) => {
+    setNftToSend(nft);
+    setVisibility(true);
+  };
+
+  const handleChange = (e) => {
+    setAmount(e.target.value);
+  };
+
+  console.log("NFTBalance Page", NFTBalances);
+  return (
+    <>
+      <div style={styles.NFTs}>
+        {NFTBalances?.result &&
+          NFTBalances.result.map((nft, index) => (
+          <Card size="small" hoverable key={index} style={{ width: 260, border: "2px solid #e7eaf3", overflow:'hidden'}}
+            cover={<Image
+              preview={false}
+              src={nft?.image || "error"}
+              fallback="data:image/png;base64,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"
+              alt=""
+              style={{ height: "300px" }}
+            />}
+            actions={[
+              <Tooltip title="View On Blockexplorer"><FileSearchOutlined onClick={() => window.open(`${getExplorer(chainId)}address/${nft.token_address}`, "_blank") } /></Tooltip>,
+              <Tooltip title="Transfer NFT"><SendOutlined onClick={() => handleTransferClick(nft)} /></Tooltip>,
+              <Tooltip title="Sell On OpenSea"><ShoppingCartOutlined onClick={() => alert("OPENSEA INTEGRATION COMING!")} /></Tooltip>,
+            ]}
+            > 
+      
+            <Card title={nft.name} description={nft.name+' '+nft.symbol}></Card>
+
+            <NFTDisplayMetadata nft={nft} />
+          </Card>
+          
+          ))}
+      </div>
+      <Modal
+        title={`Transfer ${nftToSend?.name || "NFT"}`}
+        visible={visible}
+        onCancel={() => setVisibility(false)}
+        onOk={() => transfer(nftToSend, amountToSend, receiverToSend)}
+        confirmLoading={isPending}
+        okText="Send"
+        >
+        <AddressInput autoFocus placeholder="Receiver" onChange={setReceiver} />
+        {nftToSend && nftToSend.contract_type === "erc1155" && (
+          <Input placeholder="amount to send" onChange={(e) => handleChange(e)} />
+        )}
+      </Modal>
+    </>
+  );
+}//NFTBalance()
+
+export default NFTBalance;
+
+/**
+ * Display a Single NFT
+nft:{
+  contract_type: "ERC1155"
+
+  //Collection Data
+  token_address: "0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656"   //Collection
+  name: "OpenSea Collections"
+  symbol: "OPENSTORE"
+
+  //Unique
+  token_id: "62886929592743516099400483946210518088519633430112237408489058185285174558721"     //Within The Collection
+  token_uri: "https://testnets-api.opensea.io/api/v1/metadata/0x88B48F654c30e99bc2e4A1559b4Dcf1aD93FA656/0x8b08bda46eb904b18e8385f1423a135167647ca3000000000000030000000001"      //Metadata URI
+  image: "https://lh3.googleusercontent.com/6KdfGMFC2ucrayOUEX7xRmo2bngSp0GWW_MK_fhFwhcjiHS6_a2YLjqt-xW1zaHNSEQWJIxTAK7z5Rdi-lpdejS_feIEEVudY6n6Vw"
+  owner_of: "0x874a6e7f5e9537c4f934fa0d6cea906e24fc287d"
+  metadata: {name: 'SuperCat', description: null, external_link: null, image: 'https://lh3.googleusercontent.com/6KdfGMFC2ucrayOU…jqt-xW1zaHNSEQWJIxTAK7z5Rdi-lpdejS_feIEEVudY6n6Vw', animation_url: null}
+  amount: "1"
+
+  block_number: "9655885"
+  block_number_minted: "9655885"
+  synced_at: "2021-11-17T03:54:32.340Z"
+}
+*/
