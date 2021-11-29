@@ -166,7 +166,7 @@ function NFTCollections(props) {
                 return (
                   
                     <Link key={collection.symbol}
-                      onClick={() => setSelected(collection.id)}
+                      // onClick={() => setSelected(collection.id)}
                       to={{
                         // pathname: "/nftSingle/"+collection.hash,
                         pathname: `${hash ? hash+"/"+collection.hash : '/nftSingle/'+collection.hash}`,
@@ -175,7 +175,9 @@ function NFTCollections(props) {
                         // state: { fromDashboard: true }
                       }}
                       >
-                      <div key={collection.symbol} className={`collection ${selected ? "stack" : ""}`} onClick={(e)=> setSelected(collection.hash)}> 
+                      <div key={collection.symbol} className={`collection ${selected ? "stack" : ""}`} 
+                      // onClick={(e)=> setSelected(collection.hash)}
+                      > 
                         <h2 className="title">{collection.contract_type} Collection: {collection.name} ({collection.symbol})</h2>
                         <div className="middle">
                           <div className="cards">

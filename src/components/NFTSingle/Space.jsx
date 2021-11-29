@@ -106,7 +106,7 @@ function Space({hash, collection}) {
       if(!result || result.length === 0) {
         let roomsInit = initRooms(hash);
         //Log
-        console.log("[TEST] Space() No Rooms Found for Space:"+hash+" --> Init Rooms");
+        console.log("[TEST] Space() No Rooms Found for Space:"+hash+" --> Init Rooms", roomsInit);
         
         //Set Rooms
         // setRooms(roomsInit); //Try Without... Also Use Live Query
@@ -114,7 +114,7 @@ function Space({hash, collection}) {
       }//No Rooms
       else{
         //Log
-        console.log("[TEST] Space() Got Rooms for Space:"+hash, result);
+        // console.log("[TEST] Space() Got Rooms for Space:"+hash, result);
         //Set Rooms
         setRooms(result);
       }//Found Rooms
