@@ -1,6 +1,11 @@
 import React from "react";
 
 function NFTDisplayMetadata({nft}) {
+  //Excluded Keys
+  const excludedKeys = ['image'];
+  //Determine if Should Show Metadata
+  const shouldShow = (key, value) => (!excludedKeys.includes(key));
+
   //<a href={nft.token_uri} target="_blank" rel="noreferrer"><h3>{nft.name}: {nft?.metadata?.name}</h3></a>
   return (
     <> 
@@ -13,26 +18,31 @@ function NFTDisplayMetadata({nft}) {
           {nft?.metadata && <dl>
             <dt>Metadata:</dt>
             {Object.keys(nft?.metadata).map((key, index) => {
-            // {console.log("Metadata:", nft.metadata)}
-            // {console.log("NFT:", nft)}
-            if(nft.metadata[key]) //Only if Has Content
-              if(typeof nft.metadata[key] === 'string') {
-                return (
-                  <dd key={index+key}>
-                    <label>{key}: </label> 
-                    <span className="value">{nft.metadata[key]}</span>
-                  </dd>
-                );
-              }
-              else{
-                console.log("Metadata is not a String  key:"+key, nft.metadata[key]);
-                return (
-                  <dd key={index+key}>
-                    <label>{key}: </label> 
-                    <span className="value">{nft.metadata[key].toString()}</span>
-                  </dd>
-                );
-              }
+              // {console.log("Metadata key:'"+key+"'", nft.metadata, key, nft?.metadata[key]);}
+              if(shouldShow(key)){
+                
+                // {console.log("NFT:", nft)}
+                //Only if Has Content
+                if(nft.metadata[key]) return <DisplayMetadataField label={key} value={nft.metadata[key]} />
+                
+                // if(typeof nft.metadata[key] === 'string') {
+                //   return (
+                //     <dd key={index+key}>
+                //       <label>{key}: </label> 
+                //       <span className="value">{nft.metadata[key]}</span>
+                //     </dd>
+                //   );
+                // }
+                // else{
+                //   console.log("Metadata is not a String  key:"+key, nft.metadata[key]);
+                //   return (
+                //     <dd key={index+key}>
+                //       <label>{key}: </label> 
+                //       <span className="value">{nft.metadata[key].toString()}</span>
+                //     </dd>
+                //   );
+                // }
+              }//Should Show
             })}
           </dl>}
           {/* <p>Token ID:{nft.token_id}</p> */}
@@ -43,3 +53,29 @@ function NFTDisplayMetadata({nft}) {
 }//NFTDisplayMetadata()
 
 export default NFTDisplayMetadata;
+
+
+/**
+ * 404 Page
+ */
+ function DisplayMetadataField({label, value}){
+   if(typeof value == 'string'){
+      return (
+        <dd key={label}>
+          <label>{label}: </label> 
+          <span className="value">{value}</span>
+        </dd>
+      );
+   }
+   else if(Array.isArray(value)){
+    console.warn("DisplayMetadataField() Attribute is an Array", {label, value});
+      return (
+        <dd key={label}>
+          <label>{label}: (IS ARRAY) </label> 
+          <span className="value">{value.toString()}</span>
+        </dd>
+      );
+  }
+  else console.error("DisplayMetadataField() Datatype Not Supported", {label, value}, typeof value);
+  return null;
+}//DisplayMetadataField()
