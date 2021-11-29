@@ -131,22 +131,22 @@ function Space({hash, collection}) {
   // if(!space) return <div className="loading">...LOADING SPACE...</div>;    //Enable
   return (
     <Skeleton active loading={!space}>
-    <div className="space">
-        <h2> Private Space for {collection.name}</h2>
-        <h3>NFT:{collection.token_address}</h3>
-        <p key="typs">Type: {collection.contract_type}</p>
-        <p key="symbol">Symbol: {collection.symbol}</p>
-        {/* TODO: Add Field: Creator, Total No. of Items, */}
-        <div className="room_list">
-          {/* Chat Rooms */}
-          {/* <RoomPage hash collection /> */}
-          {/* <RoomEntrance hash collection /> */}
-          {/* {roomsTest && roomsTest.map((room, index) => (<RoomEntrance hash collection room key={collection.token_address} />))} */}
-          {rooms ? rooms.map((room, index) => (<RoomEntrance hash={hash} collection={collection} room={room} />)) : <div>Loading Rooms...</div>}
-        </div>
-        <RoomAdd hash={hash} collection={collection} />
-        <div className="clearfloat"></div>
-    </div>
+      <div className="space">
+          <h2> Private Space for {collection.name}</h2>
+          <h3>Addr:{collection.hash}</h3>
+          <span key="typs">Type: {collection.contract_type}</span>
+          <span key="symbol">Symbol: {collection.symbol}</span>
+          {/* TODO: Add Field: Creator, Total No. of Items, */}
+          <div className="room_list">
+            {/* Chat Rooms */}
+            {/* <RoomPage hash collection /> */}
+            {/* <RoomEntrance hash collection /> */}
+            {/* {roomsTest && roomsTest.map((room, index) => (<RoomEntrance hash collection room key={collection.hash} />))} */}
+            {rooms ? rooms.map((room, index) => (<RoomEntrance hash={hash} collection={collection} room={room} />)) : <div>Loading Rooms...</div>}
+          </div>
+          <RoomAdd hash={hash} collection={collection} />
+          <div className="clearfloat"></div>
+      </div>
     </Skeleton>
   );
 }//Space()

@@ -7,6 +7,7 @@ import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvide
 import { getExplorer } from "helpers/networks";
 import AddressInput from "components/AddressInput";
 import NFTDisplayMetadata from "components/NFTCollections/NFTDisplayMetadata";
+import __ from "helpers/__";
 
 const { Meta } = Card;
 
@@ -74,7 +75,7 @@ const { Meta } = Card;
                                 alt=""
                                 // style={{ height: "var(--cardHeight)", width: "var(--cardWidth)" }}
                             />
-                            <Meta title={nft?.metadata?.name} description={nft.name} />
+                            <Meta title={nft?.metadata?.name} description={__.sanitize(nft.name)} />
                         </div>
                         <div className="flip-card-back">
                             <NFTDisplayMetadata nft={nft} />
@@ -87,12 +88,7 @@ const { Meta } = Card;
                 <Tooltip title="Transfer NFT"><SendOutlined onClick={() => handleTransferClick(nft)} /></Tooltip>,
                 <Tooltip title="Sell On OpenSea"><ShoppingCartOutlined onClick={() => alert("OPENSEA INTEGRATION COMING!")} /></Tooltip>,
             ]}
-            > 
-
-            {/* <Card title={nft.name}>{nft?.metadata?.name}</Card> */}
-            {/* <Meta title={nft?.metadata?.name} description={nft.name} /> */}
-            {/* <Meta title={nft?.metadata?.name} /> */}
-
+            >
         </Card>
     
         <Modal
