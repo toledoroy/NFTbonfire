@@ -53,7 +53,9 @@ footer { margin-top: 40px; }
   font-weight: bold;
   margin-bottom: 20px;
 }
-.NFTitems {
+.NFTitems { 
+  transition-delay: 5s; 
+  transition: all 1s ease-in-out; flex-shrink:0; 
   width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -65,10 +67,21 @@ footer { margin-top: 40px; }
   box-shadow:0 0 10px #9ecaed;
   margin: 20px 10px;
   transition: all 0.6s ease-in-out;
+  overflow: visible !important; 
 }
-
 .NFTitems .item>ul { border-radius: 0 0 20px 20px; }
-.NFTitems .item .flip-card-back { border-radius: 20px ;}
+.NFTitems .item .flip-card-front,
+.NFTitems .item .flip-card-back { 
+  border-radius: 20px ;
+}
+.NFTitems .item .flip-card-back { 
+  /*https://heropatterns.com/*/
+  background-color: #dbdde5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='52' height='52' viewBox='0 0 52 52'%3E%3Cpath fill='%239C92AC' fill-opacity='0.27' d='M0 17.83V0h17.83a3 3 0 0 1-5.66 2H5.9A5 5 0 0 1 2 5.9v6.27a3 3 0 0 1-2 5.66zm0 18.34a3 3 0 0 1 2 5.66v6.27A5 5 0 0 1 5.9 52h6.27a3 3 0 0 1 5.66 0H0V36.17zM36.17 52a3 3 0 0 1 5.66 0h6.27a5 5 0 0 1 3.9-3.9v-6.27a3 3 0 0 1 0-5.66V52H36.17zM0 31.93v-9.78a5 5 0 0 1 3.8.72l4.43-4.43a3 3 0 1 1 1.42 1.41L5.2 24.28a5 5 0 0 1 0 5.52l4.44 4.43a3 3 0 1 1-1.42 1.42L3.8 31.2a5 5 0 0 1-3.8.72zm52-14.1a3 3 0 0 1 0-5.66V5.9A5 5 0 0 1 48.1 2h-6.27a3 3 0 0 1-5.66-2H52v17.83zm0 14.1a4.97 4.97 0 0 1-1.72-.72l-4.43 4.44a3 3 0 1 1-1.41-1.42l4.43-4.43a5 5 0 0 1 0-5.52l-4.43-4.43a3 3 0 1 1 1.41-1.41l4.43 4.43c.53-.35 1.12-.6 1.72-.72v9.78zM22.15 0h9.78a5 5 0 0 1-.72 3.8l4.44 4.43a3 3 0 1 1-1.42 1.42L29.8 5.2a5 5 0 0 1-5.52 0l-4.43 4.44a3 3 0 1 1-1.41-1.42l4.43-4.43a5 5 0 0 1-.72-3.8zm0 52c.13-.6.37-1.19.72-1.72l-4.43-4.43a3 3 0 1 1 1.41-1.41l4.43 4.43a5 5 0 0 1 5.52 0l4.43-4.43a3 3 0 1 1 1.42 1.41l-4.44 4.43c.36.53.6 1.12.72 1.72h-9.78zm9.75-24a5 5 0 0 1-3.9 3.9v6.27a3 3 0 1 1-2 0V31.9a5 5 0 0 1-3.9-3.9h-6.27a3 3 0 1 1 0-2h6.27a5 5 0 0 1 3.9-3.9v-6.27a3 3 0 1 1 2 0v6.27a5 5 0 0 1 3.9 3.9h6.27a3 3 0 1 1 0 2H31.9z'%3E%3C/path%3E%3C/svg%3E");
+}
+.NFTitems .item .flip-card-back .metadata {
+  color: #333;
+}
 .item .flip-card-back dd{ 
   max-width: 100%;
   white-space: nowrap;
@@ -95,12 +108,10 @@ footer { margin-top: 40px; }
   /* border: 1px solid #9ecaed; */
   /* border-radius: 20px; */
   border-top: 1px solid #9ecaed;
-
 }
 .room_list .room_entrance:last-child {
   border-bottom: 1px solid #9ecaed;
   margin-bottom:10px;
-
 }
 .room_list .room_entrance img { 
   max-width: 99px;
@@ -128,16 +139,15 @@ footer { margin-top: 40px; }
   background-color: var(--comment-background);
 }
 .comment_add .comment_text:focus-visible { border:none; outline:none;}
-.comment_add .comment_text:empty:before {
-  content: attr(data-placeholder);
-  
-}
+.comment_add .comment_text:empty:before { content: attr(data-placeholder); }
+
 /* Simple Click Effect  https://stackoverflow.com/questions/13630229/can-i-have-an-onclick-effect-in-css?rq=1 */
 button { transition: filter 0.3s ease 0.3s; }
 button:active {
   filter: drop-shadow(0 0 0 steelblue);
   transition: filter 0s;
 }
+
 /* Address */
 .crypto_addr { }
 
@@ -167,7 +177,8 @@ button:active {
 .flip-card:hover .flip-card-inner {
   transform: rotateY(180deg);
 }
-.flip-card-front, .flip-card-back {
+.flip-card-front, 
+.flip-card-back {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -182,8 +193,8 @@ button:active {
 }
 .flip-card-back {
   padding: 12px;
-  background-color: #2980b9;
-  color: white;
+  /* background-color: #2980b9; */
+  /* color: white; */
   transform: rotateY(180deg);
   overflow-y: auto;
 }
@@ -194,43 +205,15 @@ button:active {
 }
 
 
-/* GLOBALS */
-.flex {display: flex;}
-
-.NFTitems .item {
-  /* transition-delay: 1s; */
-}
-.NFTitems { transition-delay: 5s; transition: all 1s ease-in-out; flex-shrink:0; }
 
 
-.space_container .DEPRECATED{
-  /* padding:5px; */
-  /* border:1px solid green; */
-  /* margin:5px 0; */
-  /* visibility: hidden; */
-  animation: fadeIn 2s;
-  -moz-animation: fadeIn 2s;      /* Firefox */
-  -webkit-animation: fadeIn 2s;  /* Safari and Chrome */
-  -o-animation: fadeIn 2s;      /* Opera */
-
-  /* animation-fill-mode: forwards; */
-  animation-delay: 3s;
-
-  /* transition-delay: 1s; */
-  /* transition: all 1s ease-in-out; */
-
-    flex-shrink:2;
-}
 .space_container {
   overflow: hidden;
-
-  transform: translateX(99%);
-  animation: slideIn 0.6s ease forwards;
-  animation-delay: 0.25s;
+  transform: translateX(110%);
+  animation: slideIn 0.6s ease-in-out forwards;
+  animation-delay: 0.15s;
 }
-.space_container:nth-child(odd) {
-  animation-duration: 0.6s; /* So they look staggered */
-}
+.space_container:nth-child(odd) { animation-duration: 0.6s; /* So they look staggered */ }
 
 /* Animations */
 @keyframes slideIn {
@@ -255,3 +238,7 @@ button:active {
   from { opacity:0; }
   to { opacity:1; }
 }
+
+
+/* GLOBALS */
+.flex {display: flex;}
