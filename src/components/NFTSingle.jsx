@@ -51,13 +51,12 @@ function NFTSingle(props) {
           <div className="address">{hash}</div>
           <h1>NFT Collection</h1>
         </div>
-        <div className="middle">
-
-          <NFTDisplayCollection collection={collectionCurrent} />
-
-          <Space hash={hash} collection={collectionCurrent} />
-
-        </div>
+          <div className="middle">
+            <div className="stack">
+              <NFTDisplayCollection collection={collectionCurrent} />
+            </div>
+            <Space hash={hash} collection={collectionCurrent} />
+          </div>
       </div>
     );
   }//Valid Access

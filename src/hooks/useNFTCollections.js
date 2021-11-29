@@ -20,7 +20,7 @@ export const useNFTCollections = (options) => {
     for(let NFT of NFTs){
       // if(NFT.contract_type == "ERC1155"){ //Item of an NFT Collection
         //Init Collection Slot
-        if(!collections[NFT.token_address]) collections[NFT.token_address] = {owned:false, items:[], token_address:NFT.token_address, symbol:NFT.symbol, name:NFT.name, contract_type:NFT.contract_type,};
+        if(!collections[NFT.token_address]) collections[NFT.token_address] = {owned:false, items:[], hash:NFT.token_address, symbol:NFT.symbol, name:NFT.name, contract_type:NFT.contract_type,};
         //Add NFT to Collection
         collections[NFT.token_address].items.push(NFT);
         //ANY - Ownes Something in This Collection

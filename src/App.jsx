@@ -19,7 +19,7 @@ import Contract from "components/Contract/Contract";
 import Text from "antd/lib/typography/Text";
 import Ramper from "components/Ramper";
 //Pages
-import NFTSingle from "components/NFTSingle";
+// import NFTSingle from "components/NFTSingle";
 import NFTCollections from "components/NFTCollections";
 import RoomPage from "components/RoomPage";
 
@@ -150,9 +150,12 @@ const App = ({ isServerInfo }) => {
               {/*<Route path="/erc20transfers"><ERC20Transfers /></Route>*/}
               {/*<Route path="/nftBalance/:id" component={NFTBalance} />*/} {/* Breaks Things... */}
               <Route path="/nftBalance"><NFTBalance /></Route>
+              <Route path="/nftCollections/:hash/:selected" component={NFTCollections} />
               <Route path="/nftCollections/:hash" component={NFTCollections} />
               <Route path="/nftCollections" component={NFTCollections} />
-              <Route path="/nftSingle/:hash" component={NFTSingle} />
+              <Route path="/nftSingle/:selected" component={NFTCollections} />
+              
+              {/* <Route path="/nftSingle/:hash" component={NFTSingle} /> */}
               <Route path="/room/:id" component={RoomPage} />
               <Route path="/contract"><Contract /></Route>
               <Route path="/nonauthenticated">

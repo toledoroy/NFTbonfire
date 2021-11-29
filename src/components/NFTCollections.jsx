@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 //import { Card, Image, Tooltip, Modal, Input } from "antd";
-import { Skeleton } from "antd";
+import { Skeleton, Button } from "antd";
 import { useMoralis, useNFTBalances } from "react-moralis";
 
 // import { useNFTBalance } from "hooks/useNFTBalance";
@@ -13,6 +13,7 @@ import NFTDisplayCollection from "components/Wallet/NFTDisplayCollection";
 // import { useNFTCollections } from "hooks/useNFTCollections";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 // import { useNFTBalance } from "hooks/useNFTBalance";
+import Space from "components/NFTSingle/Space";
 
 /*
 const styles = {
@@ -34,7 +35,7 @@ const styles = {
         contract_type: "ERC1155"
 
         //Collection Data
-        token_address: "0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656"   //Collection
+        hash: "0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656"   //Collection
         name: "OpenSea Collections"
         symbol: "OPENSTORE"
 
@@ -54,7 +55,8 @@ const styles = {
 function NFTCollections(props) {
 
   //Extract Props
-  const { hash } = props.match.params;
+  // const { hash } = props.match.params;
+  const { hash, selected } = props.match.params;
   //Init Options
   let options = {
     // chain:"0x4", 
@@ -66,13 +68,13 @@ function NFTCollections(props) {
   // const { NFTBalance, getNFTBalance } = useNFTBalance();   //Using Colleciton Instead
   const { Moralis, isWeb3Enabled } = useMoralis();
   const { NFTCollections } = useNFTCollections(options);
-  const [ selected, setSelected ] = useState(null);           //Currently Selected NFT
+  const [ selectedNOT, setSelected ] = useState(null);           //Currently Selected NFT
 
 
   // const { NFTBalances } = useNFTBalances(guestOptions);
 // const { data: NFTBalances, isLoading, error } = useNFTBalances(options);   //Get NFTs for Account
   // console.log("[TEST] NFTCollections() NFTBalance", NFTBalances);
-  console.warn("[TEST] NFTCollection() NFTCollections: ", {NFTCollections, selected, options, hash});
+  console.warn("[TEST] NFTCollection() NFTCollections: ", {NFTCollections, selected, options, hash, params:props.match.params });
   
   try {
   
@@ -150,31 +152,43 @@ function NFTCollections(props) {
 
   
 
-    //style={styles.NFTs}
+  //style={styles.NFTs}
   return (
-    <>
-      <Skeleton loading={!isWeb3Enabled}>
+    <Skeleton loading={!isWeb3Enabled}>
       <div className="collections">
-          <h2>My NFTs</h2>
+          <div className="header">
+            {hash ? <h2>{hash}'s NFTs</h2> : <h2>My NFTs</h2>}
+            <h4 className="subheading">{Object.keys(NFTCollections).length} Collections</h4>
+            {/* {selected && <Button className="cancel" onClick={() => setSelected(null)}>x</Button>} */}
+          </div>
           {NFTCollections && Object.values(NFTCollections).map((collection, index) => {
-              if(selected === null || selected === collection.id) {
-                return <Link key={collection.symbol}
-                  onClick={() => setSelected(collection.id)}
-
+            if(!selected || selected === collection.hash) {
+                return (
+                  
+                    <Link key={collection.symbol}
+                      onClick={() => setSelected(collection.id)}
                       to={{
-                        pathname: "/nftSingle/"+collection.token_address,
+                        // pathname: "/nftSingle/"+collection.hash,
+                        pathname: `${hash ? hash+"/"+collection.hash : '/nftSingle/'+collection.hash}`,
                         // search: "?sort=name",
                         // hash: "#the-hash",
                         // state: { fromDashboard: true }
                       }}
-
                       >
-                    <div key={collection.symbol} className="collection"> 
-                      <h2 className="title">{collection.contract_type} Collection: {collection.name} ({collection.symbol})</h2>
-                      <NFTDisplayCollection key={collection.token_address} collection={collection} />
-                    </div>
-                  </Link>
+                      <div key={collection.symbol} className={`collection ${selected ? "stack" : ""}`} onClick={(e)=> setSelected(collection.hash)}> 
+                        <h2 className="title">{collection.contract_type} Collection: {collection.name} ({collection.symbol})</h2>
+                        <div className="middle">
+                          <div className="cards">
+                          <NFTDisplayCollection key={collection.hash} collection={collection} />
+                          </div>
+                          {selected && <div className="space_container"><Space hash={hash} collection={collection} /></div>}
+                        </div>
+                      </div>
+                    </Link>
+
+                );
               } else return '';
+              //
           })}
       </div>
 
@@ -186,8 +200,7 @@ function NFTCollections(props) {
             ))}
         </div>
       */}  
-     </Skeleton>
-    </>
+    </Skeleton>
   );
 }//NFTCollections()
 

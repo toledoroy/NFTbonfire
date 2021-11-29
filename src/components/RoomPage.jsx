@@ -35,8 +35,6 @@ function RoomPage(props) {
     });
     const Comment = Moralis.Object.extend("Post");     //Sub-Posts
     
-
-    
     // hash = '0xIUYASD&(&TEST'; //TEST Room Hash
     // id = 'r65dlvN0HDxTI3Sr41shucle';
     // console.log("START Room Page W/id:"+id);

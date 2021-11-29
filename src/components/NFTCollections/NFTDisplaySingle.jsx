@@ -62,7 +62,7 @@ const { Meta } = Card;
 
     return (
       <>
-        <Card size="small" className="item" hoverable key={nft.token_id} style={{ zIndex: index, width: 260, border: "2px solid #e7eaf3", overflow:'hidden'}}
+        <Card size="small" className="item" hoverable key={nft.token_id} style={{ zIndex: index, width: 'var(--cardWidth)', border: "2px solid #e7eaf3", overflow:'hidden'}}
             cover={
                 <div className="flip-card">
                     <div className="flip-card-inner">

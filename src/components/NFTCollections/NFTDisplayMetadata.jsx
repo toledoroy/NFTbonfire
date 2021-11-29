@@ -16,12 +16,23 @@ function NFTDisplayMetadata({nft}) {
             // {console.log("Metadata:", nft.metadata)}
             // {console.log("NFT:", nft)}
             if(nft.metadata[key]) //Only if Has Content
-              return (
-                <dd key={index+key}>
-                  <label>{key}:</label> 
-                  {/* <span className="value">{nft.metadata[key]}</span> */}
-                </dd>
-              );
+              if(typeof nft.metadata[key] === 'string') {
+                return (
+                  <dd key={index+key}>
+                    <label>{key}: </label> 
+                    <span className="value">{nft.metadata[key]}</span>
+                  </dd>
+                );
+              }
+              else{
+                console.log("Metadata is not a String  key:"+key, nft.metadata[key]);
+                return (
+                  <dd key={index+key}>
+                    <label>{key}: </label> 
+                    <span className="value">{nft.metadata[key].toString()}</span>
+                  </dd>
+                );
+              }
             })}
           </dl>}
           {/* <p>Token ID:{nft.token_id}</p> */}

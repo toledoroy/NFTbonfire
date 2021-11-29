@@ -2,11 +2,9 @@ import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
 
 /**
  * Display NFT Colelction
- * @param {*} param0 
- * @returns 
  */
  function NFTDisplayCollection({ collection }) {
-    /*
+    /* Structure
     contract_type: "ERC1155"
     name: "OpenSea Collections"
     owned: false
@@ -16,9 +14,8 @@ import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
     */
     return (
         <div key={collection.symbol+'items'} className="NFTitems"> 
-            {collection && collection.items.map((nft, index) => (
-                <NFTDisplaySingle key={nft.token_address+nft.token_id} nft={nft} index={collection.items.length-index}  style={{ zIndex: index}} />
-            ))}
+            {collection && collection.items.map((nft, index) => (<NFTDisplaySingle key={nft.token_address+nft.token_id} nft={nft} index={collection.items.length-index}  style={{ zIndex: index}} />)
+            )}
         </div>
     );
 }//NFTDisplayCollection()
