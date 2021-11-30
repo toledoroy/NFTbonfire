@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { useMoralis } from "react-moralis";
 // import RoomPage from "components/Pages/RoomPage";
 import { FireTwoTone } from '@ant-design/icons';
-import { Skeleton, Image } from "antd";
+// import { Skeleton, Image } from "antd";
+import { Skeleton, Image,  Form, Input, Button, Checkbox } from 'antd';
+
 import { useMoralisQuery } from "react-moralis";
 
 import PersonaHelper from "helpers/PersonaHelper"
@@ -81,7 +83,9 @@ function Space({hash, collection}) {
           // newSpace.set("first_user", Moralis.currentUser.get("objectId"));   //TODO: Get Current User ObjectID, This isn't Really It...
           // newSpace.set("rooms", []); //Other Way...
           newSpace.save().then(result => {
+            //Log
             console.log("Created new Space:", result);
+            //Set
             setSpace(result);
           });
         }//New Space
@@ -142,9 +146,9 @@ function Space({hash, collection}) {
             {/* <RoomPage hash collection /> */}
             {/* <RoomEntrance hash collection /> */}
             {/* {roomsTest && roomsTest.map((room, index) => (<RoomEntrance hash collection room key={collection.hash} />))} */}
-            {rooms ? rooms.map((room, index) => (<RoomEntrance hash={hash} collection={collection} room={room} />)) : <div>Loading Rooms...</div>}
+            {rooms ? rooms.map((room, index) => (<RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />)) : <div>Loading Rooms...</div>}
           </div>
-          <RoomAdd hash={hash} collection={collection} />
+          <RoomAddForm hash={hash} collection={collection} />
           <div className="clearfloat"></div>
       </div>
     </Skeleton>
@@ -159,7 +163,7 @@ export default Space;
  */
 function RoomEntrance({hash, collection, room}) {
 
-  console.log("[TEST] RoomEntrance ", room, PersonaHelper.userImage(room.get('userId')));
+  // console.log("[TEST] RoomEntrance ", room, PersonaHelper.userImage(room.get('userId')));
 
   return(
     <div className="room_entrance">
@@ -169,7 +173,7 @@ function RoomEntrance({hash, collection, room}) {
         alt=""
         // style={{ height: "var(--cardHeight)", width: "var(--cardWidth)" }}
         className="avatar"
-    />
+      />
     
       <h3><FireTwoTone twoToneColor="red" />{room?.get('name')}</h3>
       <p key="id">ID: {room.id}</p>
@@ -180,41 +184,81 @@ function RoomEntrance({hash, collection, room}) {
       {/* <p key="">Total Users: {room.total_users}</p> */}
       <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn">Go!</Link>
      
-      
-     
-    <div className="clearfloat"></div>
+      <div className="clearfloat"></div>
     </div>
   );
 }//RoomEntrance()
 
-function RoomAdd({hash}) {
+
+
+/**
+ * Component: Add New Post
+ */
+function RoomAddForm({hash}) {
   const { Moralis } = useMoralis();
   //Objects
   const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
   
+
+  const onFinish = async (values) => {
+    //Additional
+    values.parentId = hash;
+
+  // const newRoom = new Room();
+  // newRoom.set("name", "New Room");
+  // newRoom.set("text", "This is a new room");
+  // newRoom.set("parentId", hash);
+  // newRoom.save().then(result => {
+  //   console.log("Created new Room:", result);
+  // });
+
+    //Create
+    const newPost = await Moralis.Cloud.run("post", values);
+    //Log
+    console.log("Created new Post:", newPost);
+    //Return
+    return newPost;
+  };//onFinish()
+
   return(
     <div className="room_add">  
       <h3>Start a new bonfire</h3>
-      <p>Add a new Room to this Space</p>
-      <form onSubmit={(event) => {
-          event.preventDefault();
-          
-          //https://stackoverflow.com/questions/23427384/get-form-data-in-reactjs
-          console.log("[TEST] Form Values:", {name2:event.target.name.value, name:event.target.elements.name.value, text:event.target.elements.text.value}) // from elements property
-        
-        // const newRoom = new Room();
-        // newRoom.set("name", "New Room");
-        // newRoom.set("text", "This is a new room");
-        // newRoom.set("parentId", hash);
-        // newRoom.save().then(result => {
-        //   console.log("Created new Room:", result);
-        // });
+      <p>Add a new Room to this Space!</p>
 
-        }}>
-        <input type="text" name="name" placeholder="Topic" />
-        <input type="text" name="text" placeholder="Description" />
-        <button type="submit">Light Up</button>
-      </form>
+      <Form name="postAdd" 
+      onFinish={onFinish}
+        // onFinish={console.log}
+        onFinishFailed={console.error}
+        labelCol={{ span: 6, }}
+        wrapperCol={{ span: 16, }}
+        initialValues={{ remember: true, }}
+        // autoComplete="off"
+        >
+        {/* <input type="text" name="name" placeholder="Topic" /> */}
+        <Form.Item
+          label="Topic"
+          name="name"
+          rules={[{ required: true, message: 'You forgot to fill in a Topic'}]}
+          >
+          <Input />
+        </Form.Item>
+
+        {/* <input type="text" name="text" placeholder="Description" /> */}
+        <Form.Item
+          label="Description"
+          name="text"
+          rules={[{ required: true, message: "You'd need to enter some text as well..."}]}
+          >
+          <Input />
+        </Form.Item>
+        
+        {/* <button type="submit">Light Up</button> */}
+        <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+          <Button type="primary" htmlType="submit"><FireTwoTone twoToneColor="red" />Light Up</Button>
+        </Form.Item>
+
+      </Form>
+
     </div>
   );
-}//RoomAdd()
+}//RoomAddForm()

@@ -15,22 +15,9 @@ import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 // import { useNFTBalance } from "hooks/useNFTBalance";
 import Space from "components/NFTSingle/Space";
 
-/*
-const styles = {
-  NFTs: {
-    display: "flex",
-    flexWrap: "wrap",
-    WebkitBoxPack: "start",
-    justifyContent: "flex-start",
-    margin: "0 auto",
-    maxWidth: "1000px",
-    gap: "10px",
-  },
-};
-*/
-
 /**
- * Display a Single NFT
+ * Component: Display a Single NFT
+ * 
     nft:{
         contract_type: "ERC1155"
 
@@ -68,11 +55,9 @@ function NFTCollections(props) {
   // const { NFTBalance, getNFTBalance } = useNFTBalance();   //Using Colleciton Instead
   const { Moralis, isWeb3Enabled } = useMoralis();
   const { NFTCollections } = useNFTCollections(options);
-  const [ selectedNOT, setSelected ] = useState(null);           //Currently Selected NFT
-
 
   // const { NFTBalances } = useNFTBalances(guestOptions);
-// const { data: NFTBalances, isLoading, error } = useNFTBalances(options);   //Get NFTs for Account
+  // const { data: NFTBalances, isLoading, error } = useNFTBalances(options);   //Get NFTs for Account
   // console.log("[TEST] NFTCollections() NFTBalance", NFTBalances);
   console.warn("[TEST] NFTCollection() NFTCollections: ", {NFTCollections, selected, options, hash, params:props.match.params });
   
@@ -115,7 +100,7 @@ function NFTCollections(props) {
         // query.equalTo("roomId", "?"); //Filter           //TODO: Get Current Room ID
         // query.notEqualTo("ownerName", "Daenerys");
         // query.greaterThan("ownerAge", 18);
-        queryPosts.limit(10); 
+        queryPosts.limit(20); 
         // query.skip(10); 
         // query.withCount(); //Add Count
         //Sorting
@@ -159,14 +144,12 @@ function NFTCollections(props) {
           <div className="header">
             {hash ? <h2>{hash}'s NFTs</h2> : <h2>My NFTs</h2>}
             <h4 className="subheading">{Object.keys(NFTCollections).length} Collections</h4>
-            {/* {selected && <Button className="cancel" onClick={() => setSelected(null)}>x</Button>} */}
           </div>
           {NFTCollections && Object.values(NFTCollections).map((collection, index) => {
             if(!selected || selected === collection.hash) {
                 return (
-                  
-                    <Link key={collection.symbol}
-                      // onClick={() => setSelected(collection.id)}
+                  <>
+                    <Link key={collection.hash+'Link'}
                       to={{
                         // pathname: "/nftSingle/"+collection.hash,
                         pathname: `${hash ? hash+"/"+collection.hash : '/nftSingle/'+collection.hash}`,
@@ -174,23 +157,20 @@ function NFTCollections(props) {
                         // hash: "#the-hash",
                         // state: { fromDashboard: true }
                       }}
-                      >
-                      <div key={collection.symbol} className={`collection ${selected ? "stack" : ""}`} 
-                      // onClick={(e)=> setSelected(collection.hash)}
-                      > 
+                      >SELECT</Link>
+
+                      <div key={collection.hash+'cards'} className={`collection ${selected ? "stack" : ""}`}> 
                         <h2 className="title">{collection.contract_type} Collection: {collection.name} ({collection.symbol})</h2>
                         <div className="middle">
                           <div className="cards">
-                          <NFTDisplayCollection key={collection.hash} collection={collection} />
+                            <NFTDisplayCollection key={collection.hash} collection={collection} />
                           </div>
-                          {selected && <div className="space_container"><Space hash={hash} collection={collection} /></div>}
+                          {selected && <div className="space_container"><Space hash={selected} collection={collection} /></div>}
                         </div>
                       </div>
-                    </Link>
-
+                  </>
                 );
               } else return '';
-              //
           })}
       </div>
 

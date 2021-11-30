@@ -1,9 +1,14 @@
 import React from "react";
+import { useMoralis, useNFTBalances } from "react-moralis";
 import __ from "helpers/__";
 
+/**
+ * Component: Display NFT's Metadata
+ * //https://docs.opensea.io/docs/metadata-standards
+ */
 function NFTDisplayMetadata({nft}) {
   //Excluded Keys
-  const excludedKeys = ['image'];
+  const excludedKeys = ['image','background_color'];    //TODO: Should Apply 'background_color' as actual background color
   //Determine if Should Show Metadata
   const shouldShow = (key, value) => (!excludedKeys.includes(key));
 
@@ -42,7 +47,10 @@ export default NFTDisplayMetadata;
  */
  function DisplayMetadataField({label, value}){
   // console.log("DisplayMetadataField() Start W/", {label, value})
-   
+  // const { Moralis } = useMoralis();
+  // const logger = Moralis.Cloud.getLogger(); //Moralis.Cloud.getLogger is not a function
+
+
   if(typeof value == 'string' || typeof value == 'number'){
     if(label === 'date'){
       //Process Date
@@ -82,6 +90,7 @@ export default NFTDisplayMetadata;
     }
     else{
       console.warn("[UNHANDLED] DisplayMetadataField() DisplayMetadataField() Attribute is an Array", {label, value});
+      // logger.warn("[UNHANDLED] DisplayMetadataField() DisplayMetadataField() Attribute is an Array", {label, value}); 
       return (
         <dd key={label}>
           <label>{label}: (IS ARRAY) </label> 
@@ -92,6 +101,7 @@ export default NFTDisplayMetadata;
   }//Array
   else{
     console.error("DisplayMetadataField() Datatype Not Supported", {label, value}, typeof value);
+    // logger.error("DisplayMetadataField() Datatype Not Supported", {label, value}, typeof value);
     //TODO: Try to Recurse on Objects...
   } 
   return null;
