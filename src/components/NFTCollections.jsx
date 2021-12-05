@@ -59,7 +59,7 @@ function NFTCollections(props) {
   // const { NFTBalances } = useNFTBalances(guestOptions);
   // const { data: NFTBalances, isLoading, error } = useNFTBalances(options);   //Get NFTs for Account
   // console.log("[TEST] NFTCollections() NFTBalance", NFTBalances);
-  console.warn("[TEST] NFTCollection() NFTCollections: ", {NFTCollections, selected, options, hash, params:props.match.params });
+  console.warn("[TEST] NFTCollection() NFTCollections: ", {NFTCollections, selected, options, params:props.match.params });
   
   try {
   
@@ -147,23 +147,23 @@ function NFTCollections(props) {
           </div>
           {NFTCollections && Object.values(NFTCollections).map((collection, index) => {
             if(!selected || selected === collection.hash) {
+              //Link Destination (Single Collection)
+              let dest = {
+                  // pathname: "/nftSingle/"+collection.hash,
+                  pathname: selected ? `${hash ? "/nftCollections/"+hash : '/nftCollections/'}` : `${hash ? hash+"/"+collection.hash : '/nftSingle/'+collection.hash}`,
+                  // search: "?sort=name",
+                  // hash: "#the-hash",
+                  // state: { fromDashboard: true }
+                };
                 return (
                   <>
-                    <Link key={collection.hash+'Link'}
-                      to={{
-                        // pathname: "/nftSingle/"+collection.hash,
-                        pathname: `${hash ? hash+"/"+collection.hash : '/nftSingle/'+collection.hash}`,
-                        // search: "?sort=name",
-                        // hash: "#the-hash",
-                        // state: { fromDashboard: true }
-                      }}
-                      >SELECT</Link>
+                    <Link key={collection.hash+'Link'} to={dest}>SELECT</Link>
 
                       <div key={collection.hash+'cards'} className={`collection ${selected ? "stack" : ""}`}> 
                         <h2 className="title">{collection.contract_type} Collection: {collection.name} ({collection.symbol})</h2>
                         <div className="middle">
                           <div className="cards">
-                            <NFTDisplayCollection key={collection.hash} collection={collection} />
+                            <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} dest={dest} />
                           </div>
                           {selected && <div className="space_container"><Space hash={selected} collection={collection} /></div>}
                         </div>

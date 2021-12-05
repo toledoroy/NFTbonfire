@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FileSearchOutlined, SendOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { Card, Image, Tooltip, Modal, Input } from "antd";
-
 import { useMoralis } from "react-moralis";
 import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 import { getExplorer } from "helpers/networks";
@@ -29,6 +28,7 @@ const { Meta } = Card;
         setVisibility(true);
     };
     const handleChange = (e) => { setAmount(e.target.value); };
+    const selectItem = () => {  };
 
     /**
      * Transfer NFT
@@ -65,7 +65,7 @@ const { Meta } = Card;
       <>
         <Card size="small" className="item" hoverable key={nft.token_id} style={{ zIndex: index, width: 'var(--cardWidth)', border: "2px solid #e7eaf3", overflow:'hidden'}}
             cover={
-                <div className="flip-card">
+                <div className="flip-card" onClick={() => { console.warn("Selected Collection of", nft); }}>
                     <div className="flip-card-inner">
                         <div className="flip-card-front">
                             <Image

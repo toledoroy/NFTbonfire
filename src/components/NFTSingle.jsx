@@ -6,7 +6,9 @@ import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 import NFTDisplayCollection from "components/Wallet/NFTDisplayCollection";
 import Space from "components/NFTSingle/Space";
 
-
+/**
+ * Page: Display Single NFT
+ */
 function NFTSingle(props) {
   const { NFTCollections, isLoading } = useNFTCollections();
   const { Moralis, isWeb3Enabled } = useMoralis();
@@ -21,8 +23,10 @@ function NFTSingle(props) {
   // console.log("NFTSingle() props.NFT:", props.nft); 
   
   //TODO: Single: Load NFT TXs: getNFTTransfers
+  const options = { token_address: hash };
   // const options = { chain: 'matic', address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1', /*token_address: '0x...'*/ };
-  const options = { address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1', token_address: hash, };
+  // const options = { address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1', token_address: hash, };    //[DEV]
+  // options.address = '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1';    //[DEV]
   // const options = { address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1',};
 
 

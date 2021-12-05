@@ -28,7 +28,7 @@ function NFTDisplayMetadata({nft}) {
                 // {console.log("NFT:", nft)}
                 // console.log("Metadata key:'"+key+"'", nft.metadata, key, nft?.metadata[key]);
                 //Only if Has Content
-                if(nft.metadata[key]) return <DisplayMetadataField label={key} value={nft.metadata[key]} />
+                if(nft.metadata[key]) return <DisplayMetadataField key={key} label={key} value={nft.metadata[key]} />
               }//Should Show
             })}
           </dl>}
@@ -75,7 +75,7 @@ export default NFTDisplayMetadata;
       let items = [];
       // for(let field of value) if(field.trait_type && field.value){ //Validate
       for(let field of value) if(field.trait_type && field.value && !field.trait_type.startsWith('bg_')){ //Validate
-        items.push(<DisplayMetadataField label={field.trait_type} value={field.value} />);
+        items.push(<DisplayMetadataField key={field.trait_type} label={field.trait_type} value={field.value} />);
       }
       if(items.length>0){
         return (
