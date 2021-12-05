@@ -37,7 +37,7 @@ const styles = {
   },
   header: {
     position: "fixed",
-    zIndex: 1,
+    zIndex: 100,
     width: "100%",
     background: "#fff",
     display: "flex",
@@ -107,6 +107,7 @@ const App = ({ isServerInfo }) => {
             <Menu.Item key="nftCollections2"><NavLink to="/nftCollections/0x9e87f6bd0964300d2bde778b0a6444217d09f3c1">NFTs 2</NavLink></Menu.Item>
             <Menu.Item key="nftSingle"><NavLink to="/nftSingle/0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656/">nftSingle</NavLink></Menu.Item>
             <Menu.Item key="room"><NavLink to="/room/bgqJwFMexah0ZqkI3Vu9OW5I/">Room</NavLink></Menu.Item>
+            <Menu.Item key="persona"><NavLink to="/toledoroy/">Persona</NavLink></Menu.Item>
             
             <Menu.Item key="nfts">
               <NavLink to="/nftBalance">? NFTs</NavLink>
@@ -131,8 +132,14 @@ const App = ({ isServerInfo }) => {
         <div className="mainContent">
           <Skeleton active loading={!isWeb3Enabled}>
             <Switch>
+              <Route
+                exact
+                path="/"
+                render={() => {
+                    return (<Redirect to="/nftCollections" />)
+                }}
+              />
               {/* <Route path="/quickstart"><QuickStart isServerInfo={isServerInfo} /></Route> */}
-              <Route path="/wallet"><Wallet /></Route>
               {/*
               <Route path="/1inch">
                 <Tabs defaultActiveKey="1" style={{ alignItems: "center" }}>
@@ -148,6 +155,7 @@ const App = ({ isServerInfo }) => {
                 </Tabs>
               </Route>
               */}
+              <Route path="/wallet"><Wallet /></Route>
               <Route path="/erc20balance"><ERC20Balance /></Route>
               <Route path="/onramp"><Ramper /></Route>
               {/*<Route path="/erc20transfers"><ERC20Transfers /></Route>*/}
@@ -163,18 +171,12 @@ const App = ({ isServerInfo }) => {
               
               <Route path="/contract"><Contract /></Route>
               <Route path="/nonauthenticated"><>Please login using the "Authenticate" button</></Route>
-              <Route exact path="/:id/" component={PagePersona} />
+              <Route exact path="/:handle/" component={PagePersona} />
               <Route path="*"><Page404 /></Route>
             </Switch>
           </Skeleton>
           {/*<Redirect to="/quickstart" />*/}
-          <Route
-              exact
-              path="/"
-              render={() => {
-                  return (<Redirect to="/nftCollections" />)
-              }}
-            />
+          
             
         </div>
       </Router>
