@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMoralis } from "react-moralis";
-// import RoomPage from "components/Pages/RoomPage";
+import RoomAddForm from "components/Room/RoomAddForm";
 import { FireTwoTone } from '@ant-design/icons';
-// import { Skeleton, Image } from "antd";
-import { Skeleton, Image,  Form, Input, Button, Checkbox } from 'antd';
-
+// import { Skeleton, Image, Form, Input, Button, Checkbox } from "antd";
+import { Skeleton } from 'antd';
 import { useMoralisQuery } from "react-moralis";
-
 import PersonaHelper from "helpers/PersonaHelper"
+
 
 function Space({hash, collection}) {
   const { Moralis, isWeb3Enabled } = useMoralis();
@@ -190,75 +189,3 @@ function RoomEntrance({hash, collection, room}) {
 }//RoomEntrance()
 
 
-
-/**
- * Component: Add New Post
- */
-function RoomAddForm({hash}) {
-  const { Moralis } = useMoralis();
-  //Objects
-  const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
-  
-
-  const onFinish = async (values) => {
-    //Additional
-    values.parentId = hash;
-
-  // const newRoom = new Room();
-  // newRoom.set("name", "New Room");
-  // newRoom.set("text", "This is a new room");
-  // newRoom.set("parentId", hash);
-  // newRoom.save().then(result => {
-  //   console.log("Created new Room:", result);
-  // });
-
-    //Create
-    const newPost = await Moralis.Cloud.run("post", values);
-    //Log
-    console.log("Created new Post:", newPost);
-    //Return
-    return newPost;
-  };//onFinish()
-
-  return(
-    <div className="room_add">  
-      <h3>Start a new bonfire</h3>
-      <p>Add a new Room to this Space!</p>
-
-      <Form name="postAdd" 
-      onFinish={onFinish}
-        // onFinish={console.log}
-        onFinishFailed={console.error}
-        labelCol={{ span: 6, }}
-        wrapperCol={{ span: 16, }}
-        initialValues={{ remember: true, }}
-        // autoComplete="off"
-        >
-        {/* <input type="text" name="name" placeholder="Topic" /> */}
-        <Form.Item
-          label="Topic"
-          name="name"
-          rules={[{ required: true, message: 'You forgot to fill in a Topic'}]}
-          >
-          <Input />
-        </Form.Item>
-
-        {/* <input type="text" name="text" placeholder="Description" /> */}
-        <Form.Item
-          label="Description"
-          name="text"
-          rules={[{ required: true, message: "You'd need to enter some text as well..."}]}
-          >
-          <Input />
-        </Form.Item>
-        
-        {/* <button type="submit">Light Up</button> */}
-        <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-          <Button type="primary" htmlType="submit"><FireTwoTone twoToneColor="red" />Light Up</Button>
-        </Form.Item>
-
-      </Form>
-
-    </div>
-  );
-}//RoomAddForm()
