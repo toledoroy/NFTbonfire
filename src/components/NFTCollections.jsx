@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 //import { Card, Image, Tooltip, Modal, Input } from "antd";
+import { Breadcrumb } from 'antd';
 import { Skeleton, Button } from "antd";
 import { useMoralis, useNFTBalances } from "react-moralis";
 
@@ -14,6 +15,8 @@ import NFTDisplayCollection from "components/Wallet/NFTDisplayCollection";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 // import { useNFTBalance } from "hooks/useNFTBalance";
 import Space from "components/NFTSingle/Space";
+
+import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 
 /**
  * Component: Display a Single NFT
@@ -42,14 +45,16 @@ import Space from "components/NFTSingle/Space";
 function NFTCollections(props) {
 
   //Extract Props
-  // const { hash } = props.match.params;
-  const { hash, selected } = props.match.params;
+  // const { accountHash } = props.match.params;
+  let { accountHash, collectionHash } = props.match.params;
+  const { walletAddress } = useMoralisDapp();
   //Init Options
   let options = {
     // chain:"0x4", 
     // address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1'
   };
-  if (hash) options.address = hash;    //No Dice... :(
+  if (accountHash) options.address = accountHash;    //No Dice... :(
+  else accountHash = walletAddress; 
   // let guestOptions = {chain:"0x4", address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1'};
   
   // const { NFTBalance, getNFTBalance } = useNFTBalance();   //Using Colleciton Instead
@@ -59,7 +64,7 @@ function NFTCollections(props) {
   // const { NFTBalances } = useNFTBalances(guestOptions);
   // const { data: NFTBalances, isLoading, error } = useNFTBalances(options);   //Get NFTs for Account
   // console.log("[TEST] NFTCollections() NFTBalance", NFTBalances);
-  console.warn("[TEST] NFTCollection() NFTCollections: ", {NFTCollections, selected, options, params:props.match.params });
+  console.warn("(i) NFTCollection() NFTCollections: ", {NFTCollections, collectionHash, options, params:props.match.params });
   
   try {
   
@@ -132,6 +137,7 @@ function NFTCollections(props) {
     // testFunc();
   }
   catch (error) {
+    //Log
     console.log("[CAUGHT] NFTCollection() Exception", {error});
   }//SANDBOX
 
@@ -140,32 +146,39 @@ function NFTCollections(props) {
   //style={styles.NFTs}
   return (
     <Skeleton loading={!isWeb3Enabled}>
-      <div className="collections">
-          <div className="header">
-            {hash ? <h2>{hash}'s NFTs</h2> : <h2>My NFTs</h2>}
+      <Breadcrumb separator=">">
+        {/* <Breadcrumb.Item key="1">Home</Breadcrumb.Item> */}
+        {accountHash && <Breadcrumb.Item key="2"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>NFT Collections</Link></Breadcrumb.Item>}
+        {collectionHash && <Breadcrumb.Item key="3"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash+'/'+collectionHash}}>Room</Link></Breadcrumb.Item>}
+        {/* <Breadcrumb.Item key="4"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>SELECT</Link></Breadcrumb.Item> */}
+        {/* <Breadcrumb.Item key="4">Post</Breadcrumb.Item> */}
+      </Breadcrumb>
+      <div key="collections" className="collections">
+          <div key="header" className="header">
+            {accountHash ? <h2>{accountHash}'s NFTs</h2> : <h2>My NFTs</h2>}
             <h4 className="subheading">{Object.keys(NFTCollections).length} Collections</h4>
           </div>
           {NFTCollections && Object.values(NFTCollections).map((collection, index) => {
-            if(!selected || selected === collection.hash) {
+            if(!collectionHash || collectionHash === collection.hash) {
               //Link Destination (Single Collection)
               let dest = {
                   // pathname: "/nftSingle/"+collection.hash,
-                  pathname: selected ? `${hash ? "/nftCollections/"+hash : '/nftCollections/'}` : `${hash ? hash+"/"+collection.hash : '/nftSingle/'+collection.hash}`,
+                  // pathname: collectionHash ? `${accountHash ? "/nftCollections/"+accountHash : '/nftCollections/'}` : `${accountHash ? accountHash+"/"+collection.hash : '/nftSingle/'+collection.hash}`,
+                  pathname: collectionHash ? "/nftCollections/"+accountHash : '/nftCollections/'+accountHash+'/'+collection.hash,
                   // search: "?sort=name",
                   // hash: "#the-hash",
                   // state: { fromDashboard: true }
                 };
                 return (
                   <>
-                    <Link key={collection.hash+'Link'} to={dest}>SELECT</Link>
-
-                      <div key={collection.hash+'cards'} className={`collection ${selected ? "stack" : ""}`}> 
+                    {/* <Link key={collection.hash+'Link'} to={dest}>SELECT</Link> */}
+                      <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
                         <h2 className="title">{collection.contract_type} Collection: {collection.name} ({collection.symbol})</h2>
                         <div className="middle">
-                          <div className="cards">
+                          <div key="cards" className="cards">
                             <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} dest={dest} />
                           </div>
-                          {selected && <div className="space_container"><Space hash={selected} collection={collection} /></div>}
+                          {collectionHash && <div key="space" className="space_container"><Space hash={collectionHash} collection={collection} /></div>}
                         </div>
                       </div>
                   </>

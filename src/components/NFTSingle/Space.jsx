@@ -5,20 +5,22 @@ import RoomAddForm from "components/Room/RoomAddForm";
 import { FireTwoTone } from '@ant-design/icons';
 // import { Skeleton, Image, Form, Input, Button, Checkbox } from "antd";
 import { Skeleton } from 'antd';
-import { useMoralisQuery } from "react-moralis";
+// import { useMoralisQuery } from "react-moralis";
 import PersonaHelper from "helpers/PersonaHelper"
+import __ from "helpers/__";
+
+import { Badge } from 'antd';
 
 
 function Space({hash, collection}) {
   const { Moralis, isWeb3Enabled } = useMoralis();
   const [ space, setSpace ] = useState({});
   const [ rooms, setRooms ] = useState([]);
-
+  
   //Objects
   const Space = Moralis.Object.extend("Space");
   // const Room = Moralis.Object.extend("Rooms");
   const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
-
   
   /* isLoading turns false before the data is actually loaded :( 
   const res = useMoralisQuery("Post",
@@ -40,9 +42,10 @@ function Space({hash, collection}) {
   console.log("[TEST] Space's' Rooms Query:", {isLoading, rooms,});
   */
 
-
+  /**
+   * [DEV] Insert Rooms
+   */
   function initRooms(hash){
-
     let roomsInit = [
       new Room().set("name", 'Introduction').set("text", 'Say Hi! and introduce yourself'),
       new Room().set("name", 'News').set("text", 'Things people like you should know about'),
@@ -98,7 +101,7 @@ function Space({hash, collection}) {
    */
   useEffect(() => {
     //Log
-    console.log("[TEST] Space() RUNNUING EFFECT:"+hash);
+    console.log("[TEST] Space() RUNNUING W/Hash:"+hash);
         
     //Get Rooms for Space (by Space's hash)
     const RoomQuery = new Moralis.Query(Room);
@@ -106,21 +109,22 @@ function Space({hash, collection}) {
     //Log
     console.log("Get Rooms for Space:"+hash);
     RoomQuery.find().then(result => {
-      if(!result || result.length === 0) {
-        let roomsInit = initRooms(hash);
-        //Log
-        console.log("[TEST] Space() No Rooms Found for Space:"+hash+" --> Init Rooms", roomsInit);
-        
-        //Set Rooms
-        // setRooms(roomsInit); //Try Without... Also Use Live Query
-
-      }//No Rooms
-      else{
+      if(result && result.length > 0) {
         //Log
         // console.log("[TEST] Space() Got Rooms for Space:"+hash, result);
         //Set Rooms
         setRooms(result);
       }//Found Rooms
+      /* Cancelled - Allow for No Rooms
+      else {
+        //Init Rooms
+        let roomsInit = initRooms(hash); 
+        //Set Rooms
+        // setRooms(roomsInit); //Try Without... Also Use Live Query
+        //Log
+        // console.log("[TEST] Space() No Rooms Found for Space:"+hash+" --> Init Rooms", roomsInit);
+      }//No Rooms
+      */
     });
     //Log
     // console.log("Moralis Query Object for Current Room: ", {hash, curRoom});
@@ -128,7 +132,9 @@ function Space({hash, collection}) {
  
   //Log
   console.log("Space() For collection:", {collection, rooms});
-  
+
+  //TODO!! Check if Authorized to View Space
+
   //Validate  
   // if(collection.contract_type!=="ERC1155") return <div>Unsupported Collection Type:'{collection.contract_type}'</div>;   //It's a mess out there, ERC721 0xcc14dd8e6673fee203366115d3f9240b079a4930 Contains Multiple NFTs (All Have amount=1)
   // if(!space) return <div className="loading">...LOADING SPACE...</div>;    //Enable
@@ -145,17 +151,30 @@ function Space({hash, collection}) {
             {/* <RoomPage hash collection /> */}
             {/* <RoomEntrance hash collection /> */}
             {/* {roomsTest && roomsTest.map((room, index) => (<RoomEntrance hash collection room key={collection.hash} />))} */}
-            {rooms ? rooms.map((room, index) => (<RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />)) : <div>Loading Rooms...</div>}
+            {(rooms && rooms.length>0) ? rooms.map((room, index) => (<RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />)) : <SpaceEmpty collection={collection} />}
           </div>
           <RoomAddForm hash={hash} collection={collection} />
           <div className="clearfloat"></div>
       </div>
+      
     </Skeleton>
   );
 }//Space()
 
 export default Space;
 
+/**
+ * Empty Space
+ */
+ function SpaceEmpty({collection}) {
+  return(
+    <div className="SpaceEmpty">
+      {/* <div>Loading Rooms...</div> */}
+      <p key="1">Congradulations! You're the first person in this Space</p>
+      <p key="2">Why don't you go ahead and light up a new bonfire for your {__.sanitize(collection.name)} NFT buddies</p>
+    </div>
+  );
+ }//SpaceEmpty()
 
 /**
  * Link To Room
@@ -165,6 +184,8 @@ function RoomEntrance({hash, collection, room}) {
   // console.log("[TEST] RoomEntrance ", room, PersonaHelper.userImage(room.get('userId')));
 
   return(
+    <Badge.Ribbon text="0x...AAA">
+      
     <div className="room_entrance">
       <img
         src={PersonaHelper.userImage(room.get('userId'))}
@@ -185,6 +206,7 @@ function RoomEntrance({hash, collection, room}) {
      
       <div className="clearfloat"></div>
     </div>
+    </Badge.Ribbon>
   );
 }//RoomEntrance()
 

@@ -67,6 +67,9 @@ const App = ({ isServerInfo }) => {
 //quickstart
   return (
     <Layout style={{ height: "100vh", overflow: "auto" }}>
+      {/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /> */}
+      {/* <script src="https://kit.fontawesome.com/62e94cb93f.js" crossorigin="anonymous"></script> */}
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
       <Router>
         <Header style={styles.header}>
         <div style={{ display: "flex" }}><Logo /></div>
@@ -161,8 +164,10 @@ const App = ({ isServerInfo }) => {
               {/*<Route path="/erc20transfers"><ERC20Transfers /></Route>*/}
               {/*<Route path="/nftBalance/:id" component={NFTBalance} />*/} {/* Breaks Things... */}
               <Route path="/nftBalance"><NFTBalance /></Route>
-              <Route path="/nftCollections/:hash/:selected" component={NFTCollections} />
-              <Route path="/nftCollections/:hash" component={NFTCollections} />
+              <Route path="/nftCollections/:accountHash/:collectionHash/:roomId/:postId" component={NFTCollections} />
+              <Route path="/nftCollections/:accountHash/:collectionHash/:roomId" component={NFTCollections} />
+              <Route path="/nftCollections/:accountHash/:collectionHash" component={NFTCollections} />
+              <Route path="/nftCollections/:accountHash" component={NFTCollections} />
               <Route path="/nftCollections" component={NFTCollections} />
               <Route path="/nftSingle/:selected" component={NFTCollections} />
               
