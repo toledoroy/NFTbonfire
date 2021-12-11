@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
+import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
+    
 // import { useNFTCollections } from "hooks/useNFTCollections";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 import { Link } from "react-router-dom";
@@ -24,8 +26,7 @@ function RoomPage(props) {
 
     //Objects
     // const Room = Moralis.Object.extend("Rooms", { 
-    const Room = Moralis.Object.extend("Post", {    //Container of Main Posts
-    });
+    const Room = Moralis.Object.extend("Post", {});    //Container of Main Posts
     const Post = Moralis.Object.extend("Post", {        //Main Posts
         getComments: function() { 
             //Log
@@ -34,7 +35,7 @@ function RoomPage(props) {
         },
     });
     const Comment = Moralis.Object.extend("Post");     //Sub-Posts
-    
+    const limit = 20;    //Posts per page
     // hash = '0xIUYASD&(&TEST'; //TEST Room Hash
     // id = 'r65dlvN0HDxTI3Sr41shucle';
     // console.log("START Room Page W/id:"+id);
@@ -63,9 +64,9 @@ function RoomPage(props) {
 
                 //Get Current Room's Convos
                 const PostQuery = new Moralis.Query(Post); //Query the Object
-                PostQuery.equalTo("parentId", id).find().then(function(curPosts) {
+                PostQuery.equalTo("parentId", id).limit(limit).find().then(function(curPosts) {
                     //Log
-                    console.log("Moralis Query Object for Current Room's Posts: ", {id, curRoom, curPosts});
+                    console.log("Moralis Query Found "+curPosts.length+" Posts in Current Room's Posts: ", {id, curRoom, curPosts});
                     if(curPosts.length === 0) {
                         //Test Post
                         let testPost = new Post({
@@ -116,6 +117,7 @@ function RoomPage(props) {
                     <>
                     <ConvoEntrance key={post.id} convo={post} />
                     <AddPost />
+                    <ShowMore />
                     </>
                     ))
                 : <div>
@@ -136,7 +138,7 @@ export default RoomPage;
 /**
  * Link To Convo
  */
- function ConvoEntrance({convo}) {
+function ConvoEntrance({convo}) {
      //Set Avatar
     // let avatar = convo.get('image') || <Blockie address={convo.get('account')} scale="4" />;
     
@@ -158,7 +160,6 @@ export default RoomPage;
             <div className="content">
                 <h3>{convo?.get('name')}</h3>
                 <p key="text">Text: {convo.get('text')}</p>
-                
             </div>
         </Link>
 
@@ -174,4 +175,14 @@ export default RoomPage;
         <VotePane post={convo}/>
     </div>
     );
-  }//ConvoEntrance()
+}//ConvoEntrance()
+
+function ShowMore() {
+    return (
+        <div className="showMore flex">
+            <div className="inner">
+                <p>Show More</p>
+            </div>
+        </div>
+    );
+}//ShowMore()

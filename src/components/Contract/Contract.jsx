@@ -1,27 +1,53 @@
 import { Button, Card, Input, Typography, Form, notification } from "antd";
 import { useMemo, useState } from "react";
-import contractInfo from "contracts/contractInfo.json";
+
 import Address from "components/Address/Address";
 import { useMoralis, useMoralisQuery } from "react-moralis";
 import { getEllipsisTxt } from "helpers/formatters";
 import { useEffect } from "react";
 
+// import contractInfo from "contracts/contractInfo.json";
+//Persona ABI
+// import personaABI from "contracts/abi/PERSONA.json";
+const personaABI = require('contracts/abi/PERSONA.json');
+
+
+//Flat Instance
+const personaContract = { 
+    address: '0x9E91a8dDF365622771312bD859A2B0063097ad34', 
+    chain:4,
+    abi: personaABI,
+    name:'PERSONA',
+    /*
+    "networks": {
+      "4": {
+        // "events": {},
+        // "links": { "ConvertLib": "0x" },
+        "address": "0x9E91a8dDF365622771312bD859A2B0063097ad34",
+        // "transactionHash": "0x"
+      }
+    },
+    */
+};
+console.log("Contract() Perosna Contract:", personaContract);
+
 const { Text } = Typography;
 
 export default function Contract() {
   const { Moralis } = useMoralis();
-  const { contractName, networks, abi } = contractInfo;
   const [responses, setResponses] = useState({});
 
+  // const { contractName, networks, abi } = contractInfo;
+  const contractAddress = personaContract.address;
+  const abi = personaContract.abi;
+  const contractName = personaContract.name;
   // const contractAddress = networks[1337].address;
-  const contractAddress = '0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656';
+  // const contractAddress = '0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656';
   // let contractName = 'OpenSea Collections';
   // let abi = Moralis.Web3.abis.erc1155;
 
   /**Live query */
-  const { data } = useMoralisQuery("Events", (query) => query, [], {
-    live: true,
-  });
+  const { data } = useMoralisQuery("Events", (query) => query, [], {live: true,});
 
   useEffect(() => console.log("New data: ", data), [data]);
 
@@ -106,35 +132,30 @@ export default function Contract() {
         >
           {displayedContractFunctions &&
             displayedContractFunctions.map((item, key) => (
-              <Card
-                title={`${key + 1}. ${item?.name}`}
-                size="small"
-                style={{ marginBottom: "20px" }}
-              >
-                <Form layout="vertical" name={`${item.name}`}>
+              <Card title={`${key + 1}. ${item?.name}`} size="small" style={{ marginBottom: "20px" }}>
+                <Form 
+                  name={`${item.name}`}
+                  labelCol={{ span: 6, }}
+                  wrapperCol={{ span: 18, }}
+                  >
                   {item.inputs.map((input, key) => (
                     <Form.Item
-                      label={`${input.name} (${input.type})`}
-                      name={`${input.name}`}
+                      label={input.name}
+                      name={input.name}
                       required
                       style={{ marginBottom: "15px" }}
                     >
-                      <Input placeholder="input placeholder" />
+                      <Input placeholder={`${input.name} (${input.type})`} />
                     </Form.Item>
                   ))}
+                  
                   <Form.Item style={{ marginBottom: "5px" }}>
-                    <Text style={{ display: "block" }}>
-                      {responses[item.name]?.result &&
-                        `Response: ${JSON.stringify(responses[item.name]?.result)}`}
-                    </Text>
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      loading={responses[item?.name]?.isLoading}
-                    >
+                    <Text style={{ display: "block" }}>{responses[item.name]?.result && `Response: ${JSON.stringify(responses[item.name]?.result)}`}</Text>
+                    <Button type="primary" htmlType="submit" loading={responses[item?.name]?.isLoading}>
                       {item.stateMutability === "view" ? "Read🔎" : "Transact💸"}
                     </Button>
                   </Form.Item>
+
                 </Form>
               </Card>
             ))}

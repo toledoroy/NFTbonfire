@@ -171,9 +171,12 @@ function NFTCollections(props) {
                 };
                 return (
                   <>
-                    {/* <Link key={collection.hash+'Link'} to={dest}>SELECT</Link> */}
                       <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
-                        <h2 className="title">{collection.contract_type} Collection: {collection.name} ({collection.symbol})</h2>
+                        <h2 className="title">
+                          <Link key={collection.hash+'Link'} to={dest}>
+                            {collection.contract_type} Collection: {collection.name} ({collection.symbol})
+                          </Link>
+                        </h2>
                         <div className="middle">
                           <div key="cards" className="cards">
                             <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} dest={dest} />

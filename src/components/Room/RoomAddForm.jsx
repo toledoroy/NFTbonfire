@@ -36,7 +36,7 @@ import { useHistory } from 'react-router-dom';
     return(
       <div className="room_add">  
         <h3>Start a new bonfire</h3>
-        <p>Add a new Room to this Space!</p>
+        {/* <p>Add a new Room to this Space!</p> */}
   
         <Form name="postAdd" 
           onFinish={onFinish}

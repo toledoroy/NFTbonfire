@@ -7,7 +7,7 @@ import "./identicon.css";
 
 const styles = {
   address: {
-    height: "36px",
+    // height: "36px",
     display: "flex",
     gap: "5px",
     backgroundColor: "rgba(255, 255, 255, 0.1)",
@@ -30,9 +30,9 @@ function Address(props) {
   const Copy = () => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="26"
-      height="26"
-      viewBox="0 0 24 24"
+      width="18"
+      height="18"
+      viewBox="0 0 28 28"
       strokeWidth="2"
       stroke="#1780FF"
       fill="none"

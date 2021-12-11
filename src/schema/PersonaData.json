@@ -1,0 +1,46 @@
+{
+    "name":{
+        "label": "Name",
+        "name": "name",
+        "rules": [{ "required": true, "message": "Seems you might have forgot to fiil in your name" }]
+    },
+    "description":{
+        "label": "Description",
+        "name": "description",
+        "placeholder": "description",
+        "rules": [{ "required": true, "message": "and about a desctiption?" }]
+    },
+    "location":{
+        "label": "Location",
+        "name": "location"
+    },
+    "accounts":{
+        "label": "Crypto Accounts",
+        "name": "accounts",
+        "type": "items"
+    },
+    "social":{
+        "label": "Social",
+        "name": "social",
+        "type":"object",
+        "network":{
+            "twitter": {"name":"twitter", "url":"http://twitter.com/"},
+            "facebook": {"name":"facebook", "url":"http://facebook.com/"},
+            "github": {"name":"github", "url":"http://github.com/"},
+            "linkedin": {"name":"linkedin", "url":"http://linkedin.com/in/"},
+            "telegram": {"name":"telegram", "url":"http://telegram.com/"},
+            "instagram": {"name":"instagram", "url":"http://instagram.com/"},
+            "youtube": {"name":"youtube", "url":"http://youtube.com/c/"},
+            "twitch": {"name":"twitch", "url":"http://twitch.com/"},
+            "reddit": {"name":"reddit", "url":"http://reddit.com/"},
+            "medium": {"name":"medium", "url":"http://medium.com/@"},
+            "discord": {"name":"discord", "url":"http://discord.com/"}
+        }
+    },
+    "links":{
+        "label": "Links",
+        "name": "links",
+        "type": "items",
+        "types":[ "website", "blog" ]
+    }
+}
