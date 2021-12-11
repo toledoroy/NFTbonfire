@@ -99,9 +99,9 @@ footer { margin-top: 40px; }
 .persona .header .cover{ width:100%; height: 290px; overflow: hidden; 
   /* border-radius: 0 0 12px 12px; */
 }
-.persona .header .details{ display: flex; }
-.persona .header .details .actions {margin-left:auto;}
-.persona .header .image{ 
+.persona .details{ display: flex; }
+.persona .details .actions {margin-left:auto;}
+.persona .details .image{ 
   margin-top:-6rem; 
   background: var(--background-color);
   border-radius: 50%;
@@ -112,30 +112,22 @@ footer { margin-top: 40px; }
   flex-direction: row-reverse;
   justify-content: space-between;
 }
+.persona .primary { flex-grow: 1; }  
 .persona .secondary .ant-collapse-header {flex-direction: row-reverse; justify-content: space-between; color: inherit; cursor: initial; flex-flow: row;}
 .persona .secondary .ant-collapse-arrow {margin: 0 0 0 12px !important;}
 .persona .secondary .item i { padding-right: 10px; font-size: 1.8em; vertical-align: middle; }
 .persona .secondary .item a { color:var(--color); }
-
-
-.persona .textSwitch {display: inline-flex; flex-wrap: wrap;}
+.persona .secondary .ant-collapse-header { padding: 6px 12px; overflow: hidden; }
+.persona .secondary .ant-collapse-header:hover .network { top:-60px; }
+.persona .secondary .handle { top:60px; }
+.persona .secondary .ant-collapse-header:hover .handle { top:0px; }
+.persona .textSwitch { display: inline-flex; flex-wrap: wrap; } 
 .persona .textSwitch span {
   position: relative;
   transition: .5s ease-in-out; 
   top:0px;
   width:0px;
 }
-
-.persona .secondary .ant-collapse-header {
-  padding: 6px 12px;
-  overflow: hidden;
-}
-.persona .secondary .ant-collapse-header:hover .network { top:-60px; }
-.persona .secondary .handle { top:60px; }
-.persona .secondary .ant-collapse-header:hover .handle { top:0px; }
-
-
-
 
 .persona .secondary .item { position: relative; overflow: hidden;} 
 .persona .secondary .item i { transition: .32s ease-in; z-index: 3; }
@@ -159,7 +151,7 @@ footer { margin-top: 40px; }
 .persona .secondary .item:hover i { color: #fff; z-index: 3; position:relative;}
 .persona .secondary .item:hover a:after { top: 0; }
 .persona .secondary .item:hover i:before { transform: rotate(-180deg); }
-  
+
 .persona .accounts { flex-grow: 1; border-radius: 12px;}
 .persona .accounts .ant-tabs-nav-add,
 .persona .accounts .ant-tabs-tab {border-radius: 12px 12px 0 0 !important; border:0; }

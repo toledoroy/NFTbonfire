@@ -194,31 +194,10 @@ function PagePersona(props) {
                 <div className="cover" style={{background:"url("+coverImage+")"}}>
                     {/* <img src={coverImage}/> */}
                 </div>
-                <div className="details framed">
-                    <div className="image">
-                        <Avatar size={200} src={image} />
-                    </div>
-                    <div className="info framed">
-                        <h1 className="name">{metadata?.name}</h1>
-                        {/* <div className="handle">@{metadata?.username}</div> */}
-                        <q className="description">{metadata?.description}</q>
-                        <div className="flex">
-                            <div className="location">
-                                <i className="bi bi-geo-alt"></i>
-                                {metadata?.location?.name}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="actions">
-                        <div className="button">
-                            <Button variant="contained" color="primary" onClick={()=>updatUserData()}>Edit</Button>
-                        </div>
-                    </div>
-                </div>
-               
+                
             </div>
             
-            <div className="main flex">
+            <div className="main">
             {/* <div className="persona-body"> */}
                 <div className="secondary framed">
 
@@ -272,39 +251,63 @@ function PagePersona(props) {
                         </Collapse>
                     </div>
                 </div>
-
-                <div className="accounts framed">
-                    <Tabs       //https://ant.design/components/tabs/
-                        type="editable-card"
-                        // onChange={this.onChange}
-                        // activeKey={activeKey}
-                        // onEdit={this.onEdit}
-                        hideAdd={!isEditMode}
-                        >
-                        {metadata?.accounts?.map((account, index) => (
-                            <TabPane tab={(<Address copyable address={account.address} size={5} />)} key={account.address+account.chain} closable={isEditMode}>
-                                <div className="item framed" key={index}>
-                                    {/* TODO: Add Network Icon */}
-
-                                    <div className="flex">
-                                        <div className="chain">
-                                            <i className="bi bi-ethereum"></i>
-                                             Chain: {account.chain}
-                                        </div>
-                                    </div>
-
-                                    <Address copyable address={account.address} size={5} />
-
-                                    <div className="NFTs">
-                                        <NFTCollections match={{params:{accountHash:account.address}}} />
-                                    </div>
-
+                <div className="primary framed">
+                    
+                    <div className="details framed">
+                        <div className="image">
+                            <Avatar size={200} src={image} />
+                        </div>
+                        <div className="info framed">
+                            <h1 className="name">{metadata?.name}</h1>
+                            {/* <div className="handle">@{metadata?.username}</div> */}
+                            <q className="description">{metadata?.description}</q>
+                            <div className="flex">
+                                <div className="location">
+                                    <i className="bi bi-geo-alt"></i>
+                                    {metadata?.location?.name}
                                 </div>
-                            </TabPane>
-                        ))}
-                    </Tabs>
+                            </div>
+                        </div>
+                        <div className="actions">
+                            <div className="button">
+                                <Button variant="contained" color="primary" onClick={()=>updatUserData()}>Edit</Button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="accounts framed">
+
+                    
+                        <Tabs       //https://ant.design/components/tabs/
+                            type="editable-card"
+                            // onChange={this.onChange}
+                            // activeKey={activeKey}
+                            // onEdit={this.onEdit}
+                            hideAdd={!isEditMode}
+                            >
+                            {metadata?.accounts?.map((account, index) => (
+                                <TabPane tab={(<Address copyable address={account.address} size={5} />)} key={account.address+account.chain} closable={isEditMode}>
+                                    <div className="item framed" key={index}>
+                                        {/* TODO: Add Network Icon */}
+
+                                        <div className="flex">
+                                            <div className="chain">
+                                                <i className="bi bi-ethereum"></i>
+                                                Chain: {account.chain}
+                                            </div>
+                                        </div>
+
+                                        <Address copyable address={account.address} size={5} />
+
+                                        <div className="NFTs">
+                                            <NFTCollections match={{params:{accountHash:account.address}}} />
+                                        </div>
+
+                                    </div>
+                                </TabPane>
+                            ))}
+                        </Tabs>
+                    </div>
                 </div>
-                
             </div>
 
             <div className="persona-footer">
