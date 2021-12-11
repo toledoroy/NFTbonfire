@@ -25,14 +25,18 @@ const styles = {
 export default function QuickStart({ isServerInfo }) {
   const { Moralis } = useMoralis();
 
-  const isInchDex = useMemo(
-    () => (Moralis.Plugins?.oneInch ? true : false),
-    [Moralis.Plugins?.oneInch]
-  );
+  const isInchDex = useMemo(() => (Moralis.Plugins?.oneInch ? true : false), [Moralis.Plugins?.oneInch]);
 
   return (
     <div style={{ display: "flex", gap: "10px" }}>
-      <Card style={styles.card} title={<h1 style={styles.title}>? To-Do List</h1>}>
+      <Card
+        style={styles.card}
+        title={
+          <>
+            ? <Text strong>To-Do List</Text>
+          </>
+        }
+      >
         <Timeline mode="left" style={styles.timeline}>
           <Timeline.Item dot="?">
             <Text delete style={styles.text}>
@@ -82,8 +86,8 @@ export default function QuickStart({ isServerInfo }) {
 
           <Timeline.Item dot="?">
             <Text delete={isServerInfo} style={styles.text}>
-              Rename <Text code>.env.example</Text> to <Text code>.env</Text> and provide your{" "}
-              <Text strong>appId</Text> and <Text strong>serverUrl</Text> from{" "}
+              Rename <Text code>.env.example</Text> to <Text code>.env</Text> and provide your <Text strong>appId</Text>{" "}
+              and <Text strong>serverUrl</Text> from{" "}
               <a
                 href="https://moralis.io?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplate"
                 target="_blank"
@@ -149,7 +153,7 @@ export default function QuickStart({ isServerInfo }) {
                 <Text code>npm install -g ganache-cli truffle</Text>
               </Text>
             </Timeline.Item>
-            <Timeline.Item dot="⚙️">
+            <Timeline.Item dot="??">
               <Text style={styles.text}>
                 Start you local devchain: <Text code>npm run devchain</Text> on a new terminal
               </Text>
@@ -159,7 +163,7 @@ export default function QuickStart({ isServerInfo }) {
                 Deploy test contract: <Text code>npm run deploy</Text> on a new terminal
               </Text>
             </Timeline.Item>
-            <Timeline.Item dot="✅" style={styles.text}>
+            <Timeline.Item dot="?" style={styles.text}>
               <Text>
                 Open the ?<Text strong> Contract</Text> tab
               </Text>
@@ -184,7 +188,7 @@ export default function QuickStart({ isServerInfo }) {
                 and provide missing params in the <Text code>.env</Text> file
               </Text>
             </Timeline.Item>
-            <Timeline.Item dot="⚙️">
+            <Timeline.Item dot="??">
               <Text style={styles.text}>
                 Connect your Moralis Database and Local Chain: <Text code>npm run connect</Text>
               </Text>

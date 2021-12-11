@@ -1,5 +1,5 @@
 import { CreditCardOutlined } from "@ant-design/icons";
-import { Button, Input } from "antd";
+import { Button, Input, notification } from "antd";
 import Text from "antd/lib/typography/Text";
 import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
@@ -53,23 +53,66 @@ function Transfer() {
     asset && amount && receiver ? setTx({ amount, receiver, asset }) : setTx();
   }, [asset, amount, receiver]);
 
+  const openNotification = ({ message, description }) => {
+    notification.open({
+      placement: "bottomRight",
+      message,
+      description,
+      onClick: () => {
+        console.log("Notification Clicked!");
+      },
+    });
+  };
+
   async function transfer() {
     const { amount, receiver, asset } = tx;
-    const options = {
-      type: "erc20",
-      amount: Moralis.Units.Token(amount, asset.decimals),
-      receiver,
-      contractAddress: asset.token_address,
-    };
-    console.log(isPending);
+
+    let options = {};
+
+    switch (asset.token_address) {
+      case "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee":
+        options = {
+          native: "native",
+          amount: Moralis.Units.ETH(amount),
+          receiver,
+          awaitReceipt: false,
+        };
+        break;
+      default:
+        options = {
+          type: "erc20",
+          amount: Moralis.Units.Token(amount, asset.decimals),
+          receiver,
+          contractAddress: asset.token_address,
+          awaitReceipt: false,
+        };
+    }
+
     setIsPending(true);
-    await Moralis.transfer(options)
-      .then((tx) => {
-        console.log(tx);
+    const txStatus = await Moralis.transfer(options);
+
+    txStatus
+      .on("transactionHash", (hash) => {
+        openNotification({
+          message: "? New Transaction",
+          description: `${hash}`,
+        });
+        console.log("? New Transaction", hash);
+      })
+      .on("receipt", (receipt) => {
+        openNotification({
+          message: "? New Receipt",
+          description: `${receipt.transactionHash}`,
+        });
+        console.log("? New Receipt: ", receipt);
         setIsPending(false);
       })
-      .catch((e) => {
-        alert(e.message);
+      .on("error", (error) => {
+        openNotification({
+          message: "? Error",
+          description: `${error.message}`,
+        });
+        console.error(error);
         setIsPending(false);
       });
   }
@@ -112,7 +155,7 @@ function Transfer() {
           onClick={() => transfer()}
           disabled={!tx}
         >
-          Transfer💸
+          Transfer?
         </Button>
       </div>
     </div>

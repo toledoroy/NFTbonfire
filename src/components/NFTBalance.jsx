@@ -3,13 +3,13 @@ import React, { useState } from "react";
 // import { useMoralis } from "react-moralis";
 
 import { useMoralis, useNFTBalances } from "react-moralis";
-import { Card, Image, Tooltip, Modal, Input } from "antd";
+import { Card, Image, Tooltip, Modal, Input, Skeleton } from "antd";
 
 //import { useNFTBalance } from "hooks/useNFTBalance";
 // import { useNFTCollections } from "hooks/useNFTCollections";
 
 import { FileSearchOutlined, SendOutlined, ShoppingCartOutlined } from "@ant-design/icons";
-import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
+//import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 import { getExplorer } from "helpers/networks";
 import AddressInput from "./AddressInput";
 import NFTDisplayMetadata from "components/NFTCollections/NFTDisplayMetadata";
@@ -27,14 +27,11 @@ const styles = {
   },
 };
 
-
 function NFTBalance() {
   // const { NFTBalance, getNFTBalance } = useNFTBalance();
   // const { NFTBalance } = useNFTBalance();
   const { data: NFTBalances } = useNFTBalances();
-  
-  const { chainId } = useMoralisDapp();
-  const { Moralis } = useMoralis();
+  const { Moralis, chainId } = useMoralis();
   const [visible, setVisibility] = useState(false);
   const [receiverToSend, setReceiver] = useState(null);
   const [amountToSend, setAmount] = useState(null);
@@ -78,6 +75,7 @@ function NFTBalance() {
   return (
     <>
       <div style={styles.NFTs}>
+		<Skeleton loading={!NFTBalances?.result}>
         {NFTBalances?.result &&
           NFTBalances.result.map((nft, index) => (
           <Card size="small" hoverable key={index} style={{ width: 260, border: "2px solid #e7eaf3", overflow:'hidden'}}
@@ -101,6 +99,7 @@ function NFTBalance() {
           </Card>
           
           ))}
+		</Skeleton>
       </div>
       <Modal
         title={`Transfer ${nftToSend?.name || "NFT"}`}

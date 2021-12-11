@@ -49,7 +49,6 @@ export default function Contract() {
   /**Live query */
   const { data } = useMoralisQuery("Events", (query) => query, [], {live: true,});
 
-  useEffect(() => console.log("New data: ", data), [data]);
 
   const displayedContractFunctions = useMemo(() => {
     if (!abi) return [];
@@ -107,23 +106,24 @@ export default function Contract() {
               tx.on("transactionHash", (hash) => {
                 setResponses({ ...responses, [name]: { result: null, isLoading: true } });
                 openNotification({
-                  message: "🔊 New Transaction",
+                  message: "? New Transaction",
                   description: `${hash}`,
                 });
-                console.log("🔊 New Transaction", hash);
+                console.log("? New Transaction", hash);
               })
                 .on("receipt", (receipt) => {
                   setResponses({ ...responses, [name]: { result: null, isLoading: false } });
                   openNotification({
-                    message: "📃 New Receipt",
+                    message: "? New Receipt",
                     description: `${receipt.transactionHash}`,
                   });
-                  console.log("🔊 New Receipt: ", receipt);
+                  console.log("? New Receipt: ", receipt);
                 })
                 .on("error", (error) => {
-                  console.log(error);
+                  console.error(error);
                 });
             } else {
+              console.log("options", options);
               Moralis.executeFunction(options).then((response) =>
                 setResponses({ ...responses, [name]: { result: response, isLoading: false } })
               );
@@ -152,7 +152,7 @@ export default function Contract() {
                   <Form.Item style={{ marginBottom: "5px" }}>
                     <Text style={{ display: "block" }}>{responses[item.name]?.result && `Response: ${JSON.stringify(responses[item.name]?.result)}`}</Text>
                     <Button type="primary" htmlType="submit" loading={responses[item?.name]?.isLoading}>
-                      {item.stateMutability === "view" ? "Read🔎" : "Transact💸"}
+                      {item.stateMutability === "view" ? "Read?" : "Transact?"}
                     </Button>
                   </Form.Item>
 
