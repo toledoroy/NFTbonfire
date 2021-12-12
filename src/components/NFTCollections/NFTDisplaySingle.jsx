@@ -21,6 +21,7 @@ const { Meta } = Card;
     const [amountToSend, setAmount] = useState(null);
     const [visible, setVisibility] = useState(false);
     const [isPending, setIsPending] = useState(false); 
+    
     // const { walletAddress } = useMoralisDapp();
 
     const handleTransferClick = (nft) => {

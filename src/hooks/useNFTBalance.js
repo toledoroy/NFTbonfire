@@ -30,11 +30,9 @@ export const useNFTBalance = (options) => {
     });
     */
 
-    
     account.getNFTs(options).then((data) => {
       console.warn("NFTs Raw result", data);
     });
-
 
     if (data?.result) {
       const NFTs = data.result;
