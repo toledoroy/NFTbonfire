@@ -4,6 +4,8 @@ import { useMoralisWeb3Api, useNFTBalances } from "react-moralis";
 // import { useMoralis } from "react-moralis";
 // import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 
+import { useVerifyMetadata } from "hooks/useVerifyMetadata";
+
 
 export const useNFTCollections = (options) => {
   // const { Moralis } = useMoralis();
@@ -11,7 +13,9 @@ export const useNFTCollections = (options) => {
   // const { chainId } = useMoralisDapp();
     // const { resolveLink } = useIPFS();
   const [ NFTCollections, setNFTCollections ] = useState({});
-  
+  const {verifyMetadata} = useVerifyMetadata();
+
+
   /**
    * Arrange User's NFTs by Collection
    * @param array NFTs 
@@ -21,6 +25,8 @@ export const useNFTCollections = (options) => {
     //Init Return
     let collections = {};
     for(let NFT of NFTs){
+      //Verify Metadata      
+      NFT = verifyMetadata(NFT);
       //Init Collection Slot
       if(!collections[NFT.token_address]) collections[NFT.token_address] = {owned:false, items:[], hash:NFT.token_address, symbol:NFT.symbol, name:NFT.name, contract_type:NFT.contract_type,};
       //Add NFT to Collection
