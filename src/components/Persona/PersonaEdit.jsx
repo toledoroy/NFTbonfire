@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
+import { useMoralisQuery, useWeb3ExecuteFunction } from "react-moralis";
+
+
 
 // import { useNFTCollections } from "hooks/useNFTCollections";
 // import { Link } from "react-router-dom";
@@ -28,7 +31,15 @@ console.error("personaFields", personaFields);
     const [ imageUrl, setImageUrl ] = useState();
     const [ imageLoading, setImageLoading ] = useState(false);
 
-    const { Moralis, setUserData, userError, isUserUpdating, user } = useMoralis();
+    const { Moralis, setUserData, userError, isUserUpdating, user, isAuthenticated } = useMoralis();
+    const contractProcessor = useWeb3ExecuteFunction();
+    //Contract Data
+    const contractPersona = {
+        address: '0x9E91a8dDF365622771312bD859A2B0063097ad34',
+        abi: require('contracts/abi/PERSONA.json'),
+        // chainId: 4,
+    }
+
     /*
     //Initial Metadata State
     useEffect(() => {
@@ -41,18 +52,6 @@ console.error("personaFields", personaFields);
     */
     console.warn("PersonaEdit() MEtadata", {env:process.env, metadata, contract, tokenId, orig:props.metadata});
 
-    
-    /**
-     * Fetch File From IPFS by Hash (Works with JSON Filed)
-     * @param string ipfsHash 
-     * @returns object
-     */
-     async function fetchJSONFromIPFS(ipfsHash) {
-        const url = `https://ipfs.moralis.io:2053/ipfs/${ipfsHash}`;
-        const response = await fetch(url);
-        return await response.json();
-    }
-
     /**
      * Save JSON File to IPFS
      * @var object jsonObject
@@ -64,34 +63,17 @@ console.error("personaFields", personaFields);
         return file.saveIPFS().then(result => {
             //Log
             // console.log("[DEV] PersonaEdit() IPFS Hash for Metadata:", {hash:result.hash(), });
-            
             //TEST - Check if file is on IPFS
             // fetchJSONFromIPFS(result.hash()).then(result => { console.log("[DEV] PersonaEdit() IPFS JSON File:", { IPFSfile:result}); });     //OK  
             //Return IPFS Hash
             // return result.hash();
             //Return IPFS URL
-            return result.ipfs();
-        })
-        .catch(function(error) { console.error("[CAUGHT] PersonaEdit() IPFS Call Failed:", {error, user, user2:Moralis.User.current() }); });
+            // return result.ipfs();
+            return "ipfs://" + result.hash();
+        });
+        // .catch(function(error) { console.error("[CAUGHT] PersonaEdit() IPFS Call Failed:", {error, user, user2:Moralis.User.current() }); });
     }
     // saveJSONToIPFS(metadata);       //TEST
-
-    /**
-     * Save Image file to IPFS
-     */
-    async function saveImageToIPFS(image, fileName="image.png"){
-        // const data = fileInput.files[0]
-        // const file = new Moralis.File(data.name, data)
-
-        const file = new Moralis.File(fileName, image);
-
-        //Save File to Object
-        // const jobApplication = new Moralis.Object('Applications')
-        // jobApplication.set('resume', file)
-
-        //Save Image to IPFS
-        return await file.saveIPFS();
-    }//saveImageToIPFS()
 
     /**
      * Form Validation
@@ -111,9 +93,9 @@ console.error("personaFields", personaFields);
 
         //Always False - Manual Upload Via handleChangeFile()
         return false;   
-
     }
-    /* WORKS - Regular File Upload
+
+    /* Regular File Upload [WORKS]
     const handleChangeFileEvent = event => {
         let data = event.target.files[0];
         console.log("[TEST] File Upload handleChangeFileEvent()", data);
@@ -124,7 +106,10 @@ console.error("personaFields", personaFields);
         });
     }
     */
-    //Option 1 - Doesn't Work, Expects an action URL
+
+    /**
+     * 
+     */
     const handleChangeFile = info => {
         // console.log("[TEST] File Upload handleChangeFile() Status:"+info?.file?.status, info);
         try{
@@ -160,7 +145,26 @@ console.error("personaFields", personaFields);
             //log
             console.error("[CAUGHT] handleChangeFile() File Upload Error:", error, info);
         }
-    };
+    }
+    
+    /**
+     * Save Image file to IPFS
+     * @var object image
+     * @ret string imageFile
+     * @ret string URL
+     */
+     async function saveImageToIPFS(image, fileName="image.png"){
+        // const data = fileInput.files[0]
+        // const file = new Moralis.File(data.name, data)
+        const file = new Moralis.File(fileName, image);
+
+        //Save File to Object
+        // const jobApplication = new Moralis.Object('Applications')
+        // jobApplication.set('resume', file)
+
+        //Save Image to IPFS
+        return await file.saveIPFS();
+    }//saveImageToIPFS()
     
     /**
      * on Social Account Update
@@ -168,13 +172,11 @@ console.error("personaFields", personaFields);
     const formSocialOnChange = (e) => {
         let change = {[e.target.name]: e.target.value.trim()};
         //Log
-        console.log("[DEV] formSocialOnChange() ", {e, change});
-        // setSocial(e.target.value);
-        // return setSocial({ ...formData, [key]: value });
-        // metadata.social[e.target.name] = e.target.value.trim();
+        // console.log("[DEV] formSocialOnChange() ", {e, change});
+        //Set
         setMetadata({...metadata, social:{ ...metadata.social, ...change }});
         //Log
-        console.log("[TEST] formSocialOnChange() Modified Metadata ", {metadata, social:metadata.social, change});
+        console.log("[DEV] formSocialOnChange() Modified Metadata ", {metadata, social:metadata.social, change});
         return true;
     }
     /**
@@ -204,12 +206,16 @@ console.error("personaFields", personaFields);
 
         //TODO: Trimming any whitespace
         // .trim();
+        let user = Moralis.User.current();
 
-        saveJSONToIPFS(metadata).then(url => {
-            console.warn("[TODO] PersonaEdit() Should Now Save Persoa Contract:", {metadata, url});
-            //TODO: Update Contract
 
-        });
+
+        saveJSONToIPFS(metadata).then(uri => {
+            console.warn("[TODO] PersonaEdit() Should Now Save Persoa Contract:", {metadata, uri});
+            //Update Contract
+            updateNFT(uri);
+        })
+        .catch(function(error) { console.error("[CAUGHT] PersonaEdit() IPFS Call Failed:", {error, isAuthenticated, user, user2:Moralis.User.current() }); });
 
         //Redirect
         // history.push('/room/'+newPost.id);
@@ -218,6 +224,26 @@ console.error("personaFields", personaFields);
         // return newPost;
     };//onFinish()
     
+    /**
+     * Update NFT URI
+     * @param string uri 
+     */
+    async function updateNFT(uri, tokenId=1){
+        const options = {
+            contractAddress: contractPersona.address,
+            abi: contractPersona.abi,
+            functionName: 'update',
+            params: { tokenId, uri },
+        };
+
+        //Update Contract
+        await contractProcessor.fetch({
+            params: options,
+            onSuccess: (data) => console.log("updateNFT() Success", {data, uri, tokenId}),
+            onError: (error) => console.error("updateNFT() Failed", error, {uri, tokenId}),
+        });
+    }
+
     function formReset(){
         setMetadata(props?.metadata); 
         

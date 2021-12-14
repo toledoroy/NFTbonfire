@@ -29,7 +29,7 @@ function Account() {
 
   if (!isAuthenticated) {
     return (
-      <div style={styles.account} onClick={() => authenticate({ signingMessage: "Hello World!" })}>
+      <div style={styles.account} onClick={() => authenticate({ signingMessage: "Log In!" })}>
         <p style={styles.text}>Authenticate</p>
       </div>
     );

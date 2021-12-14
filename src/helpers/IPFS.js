@@ -30,6 +30,20 @@ export const IPFS = {
         .catch(function(error) { console.error("[CAUGHT] PersonaEdit() IPFS Call Failed:", {error, user, user2:Moralis.User.current() }); });
     }
     */
+
+    
+    /**
+     * Fetch File From IPFS by Hash (Works with JSON Filed)
+     * @param string ipfsHash 
+     * @returns object
+     */
+    fetchJSONFromIPFS: async (ipfsHash) => {
+        const url = `https://ipfs.moralis.io:2053/ipfs/${ipfsHash}`;
+        const response = await fetch(url);
+        return await response.json();
+    }
+
+
 };
 
 export default IPFS;

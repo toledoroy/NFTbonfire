@@ -13,10 +13,11 @@ import NFTDisplayCollection from "components/Wallet/NFTDisplayCollection";
 
 // import { useNFTCollections } from "hooks/useNFTCollections";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
+import { Post, Room } from "common/objects";
 // import { useNFTBalance } from "hooks/useNFTBalance";
 import Space from "components/NFTSingle/Space";
 
-import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
+import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider"; //DEPRECATED
 
 /**
  * Component: Display a Single NFT
@@ -48,6 +49,8 @@ function NFTCollections(props) {
   // const { accountHash } = props.match.params;
   let { accountHash, collectionHash } = props.match.params;
   const { walletAddress } = useMoralisDapp();
+
+
   //Init Options
   let options = {
     // chain:"0x4", 
@@ -64,7 +67,7 @@ function NFTCollections(props) {
   // const { NFTBalances } = useNFTBalances(guestOptions);
   // const { data: NFTBalances, isLoading, error } = useNFTBalances(options);   //Get NFTs for Account
   // console.log("[TEST] NFTCollections() NFTBalance", NFTBalances);
-  console.warn("(i) NFTCollection() NFTCollections: ", {NFTCollections, collectionHash, options, params:props.match.params });
+  console.warn("(i) Render NFTCollection() for Collections: ", {NFTCollections, collectionHash, options, params:props.match.params });
   
   try {
   
@@ -85,11 +88,7 @@ function NFTCollections(props) {
         console.warn("Moralis Cloud Func:", {msg, posts, rooms});
 
         //Objects
-        const Post = Moralis.Object.extend("Post");
-        const Room = Moralis.Object.extend("Rooms", { 
-          sayHi: function() { console.log("Hi! I'm Room "+this.id); },
-        });
-        
+        // const Post = Moralis.Object.extend("Post");
         
         /* Create a new instance of that class. */
         const post1 = new Post();
