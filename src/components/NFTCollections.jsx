@@ -43,27 +43,83 @@ import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvide
         synced_at: "2021-11-17T03:54:32.340Z"
     }
 */
+
+
+
+
+
 function NFTCollections(props) {
 
   //Extract Props
   // const { accountHash } = props.match.params;
   let { accountHash, collectionHash } = props.match.params;
-  const { walletAddress } = useMoralisDapp();
 
+  const { Moralis, isWeb3Enabled , chainId, user, account  } = useMoralis();
+  const { walletAddress } = useMoralisDapp();
+  const [ isAllowed, setIsAllowed ] = useState(false);
+
+  /** [V]
+   * Use Contract's balanceOf() Function
+   * @param {*} account 
+   * @param {*} contractAddress 
+   * @param {*} chainId 
+   * @returns 
+   */
+  const getBalance = async (account, contractAddress, chainId) => {
+    //Parameters
+    const options = { 
+      chain: '0x4', 
+      address: account, 
+      token_address: contractAddress,
+    };
+    // const balance = await Moralis.Web3API.account.getNFTs(options);
+    let balance = await Moralis.Web3API.account.getNFTsForContract(options).then(res => res.total);
+    //Log
+    // console.warn("[NFTCollections] getBalance()", {balance, options}); 
+    //Return
+    return balance;
+  }
+
+  useEffect(() => { /* Check if Account Owns Any of These Assets */
+    if(collectionHash){
+      //Fetch Balance
+      getBalance(account, collectionHash).then(balance => {
+        //Log
+        console.warn("[NFTCollections] Account's Balance for this Contract:"+balance, {balance, account, collectionHash}); 
+        //Set Permissions
+        setIsAllowed(balance > 0);
+      }, [collectionHash, account]);
+      /* ServerSide Validation 
+      let params = {userId:user.id, hash:collectionHash, chainId, account};
+      Moralis.Cloud.run("validateAccess", params).then(res => {
+          console.warn("validateAccess() is User Allowed:"+res, {user, params, account });
+      })
+      .catch(err => {
+          console.error("validateAccess() is User Allowed -- matchUserNFT Failed:", {user, err, params, account });
+      });
+      */
+    }else{
+      //Nothing Selected -- Allow to all
+      setIsAllowed(true);
+      return;
+    }
+  }, [accountHash, collectionHash]);
+  
+  // useEffect(() => {
+  // }, []);
 
   //Init Options
   let options = {
     // chain:"0x4", 
     // address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1'
   };
+
   if (accountHash) options.address = accountHash;    //No Dice... :(
   else accountHash = walletAddress; 
   // let guestOptions = {chain:"0x4", address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1'};
   
   // const { NFTBalance, getNFTBalance } = useNFTBalance();   //Using Colleciton Instead
-  const { Moralis, isWeb3Enabled } = useMoralis();
   const { NFTCollections } = useNFTCollections(options);
-
   // const { NFTBalances } = useNFTBalances(guestOptions);
   // const { data: NFTBalances, isLoading, error } = useNFTBalances(options);   //Get NFTs for Account
   // console.log("[TEST] NFTCollections() NFTBalance", NFTBalances);
@@ -151,6 +207,7 @@ function NFTCollections(props) {
         {collectionHash && <Breadcrumb.Item key="3"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash+'/'+collectionHash}}>Room</Link></Breadcrumb.Item>}
         {/* <Breadcrumb.Item key="4"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>SELECT</Link></Breadcrumb.Item> */}
         {/* <Breadcrumb.Item key="4">Post</Breadcrumb.Item> */}
+        {!isAllowed && <p>NOT ALLOWED</p>}
       </Breadcrumb>
       <div key="collections" className="collections">
           <div key="header" className="header">
@@ -170,6 +227,7 @@ function NFTCollections(props) {
                 };
                 return (
                   <>
+                  <p>{collection.owned ? 'Owned' : 'Not Owned'}</p>
                       <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
                         <h2 className="title">
                           <Link key={collection.hash+'Link'} to={dest}>

@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useMoralisWeb3Api, useNFTBalances } from "react-moralis";
 // import { useIPFS } from "./useIPFS";
-// import { useMoralis } from "react-moralis";
+import { useMoralis } from "react-moralis";
 // import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 
 import { useVerifyMetadata } from "hooks/useVerifyMetadata";
 
 
 export const useNFTCollections = (options) => {
-  // const { Moralis } = useMoralis();
-  const { account } = useMoralisWeb3Api();
+  const { account } = useMoralis();
+  // const { account } = useMoralisWeb3Api();
   // const { chainId } = useMoralisDapp();
     // const { resolveLink } = useIPFS();
   const [ NFTCollections, setNFTCollections ] = useState({});
@@ -32,7 +32,8 @@ export const useNFTCollections = (options) => {
       //Add NFT to Collection
       collections[NFT.token_address].items.push(NFT);
       //ANY - Ownes Something in This Collection
-      if(NFT.owned) collections[NFT.token_address].owned = true;
+      if(NFT.owner_of === account) collections[NFT.token_address].owned = true;
+      else console.warn("No Match", NFT.owner_of, account);
       // if(collections[NFT.token_address]?.est === undefined || collections[NFT.token_address].est > NFT.est) collections[NFT.token_address].est = NFT.est;   //Should be: Time sicne last TX
     }//Each NFT
     return collections;

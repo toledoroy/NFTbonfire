@@ -7,23 +7,24 @@ import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 import { Link } from "react-router-dom";
 import { Image, Avatar } from "antd";
 import { FireTwoTone } from '@ant-design/icons';
-import Post from "components/Room/Post"
+// import Post from "components/Room/Post"
 import VotePane from "components/Room/VotePane"
 import AddPost from "components/Room/AddPost"
 import Blockie from "components/Blockie";
 import Address from "components/Address/Address";
+import { Post, Room, Comment } from "common/objects";
+
 
 // function Room({id, collection}) {
 function RoomPage(props) {
     const { id } = props.match.params;
     const { Moralis, isWeb3Enabled } = useMoralis();
-    // const { account } = useMoralisWeb3Api();
-    // const { walletAddress } = useMoralisDapp();
     const [ room, setRoom ] = useState({});
     const [ posts, setPosts ] = useState([]);
     const { NFTCollections } = useNFTCollections();
     const [ collection, setCollection ] = useState(null);
 
+    /* Now IMPORTED
     //Objects
     // const Room = Moralis.Object.extend("Rooms", { 
     const Room = Moralis.Object.extend("Post", {});    //Container of Main Posts
@@ -35,6 +36,8 @@ function RoomPage(props) {
         },
     });
     const Comment = Moralis.Object.extend("Post");     //Sub-Posts
+    */
+
     const limit = 20;    //Posts per page
     // hash = '0xIUYASD&(&TEST'; //TEST Room Hash
     // id = 'r65dlvN0HDxTI3Sr41shucle';
@@ -163,8 +166,6 @@ function ConvoEntrance({convo}) {
             </div>
         </Link>
 
-        {/* <Post post={convo}/> */}   
-        
         {/* <p key="created">Created: {convo?.createdAt}</p> */}
         {/* <p key="updated">Last Updated: {convo?.updatedAt}</p> */}
         {/* <p key="account"> */}

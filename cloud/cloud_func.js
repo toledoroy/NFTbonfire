@@ -5,26 +5,64 @@ const logger = Moralis.Cloud.getLogger();
 //-- PRODUCTION
 
 /**
- * Check if User Owns NFT
- * @param {*} userId  User ID
- * @param {*} nftId   NFTs Hash
+ * Use Contract's balanceOf() Function
+ * @param {*} account 
+ * @param {*} contractAddress 
+ * @param {*} chainId 
  * @returns 
  */
-const matchUserNFT = (userId, nftId) => {
-  const query = new Moralis.Query("NFTs");
-  query.equalTo("userId", userId);
-  query.equalTo("nftId", nftId);
-  let res = query.find();
-  console.log("[TEST] matchUserNFT()", {res, userId, nftId});
-  // if(0) throw "User Not Autorized for Selected NFT:'"+nftId+"'";
+const getBalance = async (account, contractAddress, chainId) => {
+  const options = { 
+    chain: chainId ? chainId : "0x4", //Default to Rinkbey
+    address: account, 
+    token_address: contractAddress,
+  };
+  // const userEthNFTs = await Moralis.Web3API.account.getNFTs(options);  //All NFTs
+  let res = await Moralis.Web3API.account.getNFTsForContract(options).then(res => res.total); //NFTs for specified contract
+  //Log
+  logger.warn("[TEST] getBalance() Account:'"+account+"' Balance:"+res);
+  //Return
+  return res;
+}
+
+/**
+ * Check if User Owns NFT
+ * @param {*} userId  User ID
+ * @param {*} hash   NFTs Hash
+ * @returns 
+ */
+const matchUserNFT = (userId, hash, chainId) => {
+  // const query = new Moralis.Query("NFTs");
+  // query.equalTo("userId", userId);
+  // query.equalTo("hash", hash);
+  // let res = query.find();
+
+  //Log
+  // logger.info("[TEST] matchUserNFT() Result for User:'"+userId+"' Contract:'"+hash+"' - "+res);
+  // logger.info({res, userId, hash});
+  // if(0) throw "User Not Autorized for Selected NFT:'"+hash+"'";
   return true;
 }//matchUserNFT()
 
 
 //-- TESTING
 
-Moralis.Cloud.define("matchUserNFT", async (request) => {  
-  return matchUserNFT(request.params?.userId, request.params?.nftId);
+Moralis.Cloud.define("justLog", async (request) => {  
+  let valid = matchUserNFT(request?.params?.userId, request?.params?.hash, request?.params?.chainId);
+  logger.warn("[TEST] ******* justLog() User:"+request?.params?.userId+" is Valid: "+valid);
+  logger.info(request?.params?.hash);
+  return true;
+});
+
+Moralis.Cloud.define("validateAccess", async (request) => {  
+  //Get Balance
+  const balance = await getBalance(request?.params?.account, request?.params?.hash, request?.params?.chainId);
+  //Log
+  logger.warn("[TEST] validateAccess() Balance:"+balance);
+  //True if has any balance
+  return (balance > 0);
+  // return matchUserNFT(request?.params?.userId, request?.params?.hash, request?.params?.chainId);
+  // return true;
 });
 
 /* PERSONA FUNCTIONS */
@@ -72,12 +110,12 @@ Moralis.Cloud.define("postVote", async (request) => {
 Moralis.Cloud.define("voteUp", async (request) => {  
   // request.user
   // request.params?.postId
-  console.log("[TEST] voteUp() from user:"+request.user?.id, {user:request.user, postId:request.params?.postId});
+  logger.log("[TEST] voteUp() from user:"+request.user?.id, {user:request.user, postId:request.params?.postId});
   //Validate
   if(!request?.user?.id) throw "Unauthorized User - Must Log In";
 });
 Moralis.Cloud.define("voteDown", async (request) => {  
-  console.log("[TEST] voteDown() from user:"+request.user?.id, {user:request.user, postId:request.params?.postId});
+  logger.log("[TEST] voteDown() from user:"+request.user?.id, {user:request.user, postId:request.params?.postId});
   //Validate
   if(!request?.user?.id) throw "Unauthorized User - Must Log In";
 });
@@ -96,7 +134,7 @@ Moralis.Cloud.define("post", async (request) => {
   try{
     let data = request.params;
     //Log
-    // console.warn("[TEST] data()", request.params);
+    // logger.warn("[TEST] data()", request.params);
     logger.warn("[TEST] post()", request.params);
     if(request?.user?.id){
       //TODO: Further validation - Get NFT & Validte User's Relation to NFT

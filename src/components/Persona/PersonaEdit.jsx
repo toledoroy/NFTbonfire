@@ -31,13 +31,17 @@ console.error("personaFields", personaFields);
     const [ imageUrl, setImageUrl ] = useState();
     const [ imageLoading, setImageLoading ] = useState(false);
 
-    const { Moralis, setUserData, userError, isUserUpdating, user, isAuthenticated } = useMoralis();
+    const { Moralis, setUserData, userError, isUserUpdating, user, isAuthenticated, account, chainId } = useMoralis();
     const contractProcessor = useWeb3ExecuteFunction();
+
     //Contract Data
     const contractPersona = {
         address: '0x9E91a8dDF365622771312bD859A2B0063097ad34',
         abi: require('contracts/abi/PERSONA.json'),
-        // chainId: 4,
+        // chain: '0x4',
+        "0x4": {
+            address: '0x9E91a8dDF365622771312bD859A2B0063097ad34',
+        },//Rinkeby
     }
 
     /*
@@ -50,7 +54,19 @@ console.error("personaFields", personaFields);
         else console.error('PersonaEdit() No metadata provided');
     }, [props]);
     */
-    console.warn("PersonaEdit() MEtadata", {env:process.env, metadata, contract, tokenId, orig:props.metadata});
+    console.warn("PersonaEdit() MEtadata", {chainId, env:process.env, metadata, contract, tokenId, orig:props.metadata});
+
+    
+    /* All Tokens 
+    Moralis.Web3API.token.getAllTokenIds(contractPersona).then(ids => {
+        console.warn("PersonaEdit() Persona Token IDs", ids);
+    });
+    */
+   /* All Tokens W/Owners
+    Moralis.Web3API.token.getNFTOwners(contractPersona).then(ids => {
+        console.warn("PersonaEdit() Persona Owners", ids);
+    });
+    */
 
     /**
      * Save JSON File to IPFS
@@ -207,8 +223,6 @@ console.error("personaFields", personaFields);
         //TODO: Trimming any whitespace
         // .trim();
         let user = Moralis.User.current();
-
-
 
         saveJSONToIPFS(metadata).then(uri => {
             console.warn("[TODO] PersonaEdit() Should Now Save Persoa Contract:", {metadata, uri});
