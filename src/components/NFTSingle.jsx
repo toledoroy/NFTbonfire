@@ -6,7 +6,7 @@ import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 import NFTDisplayCollection from "components/Wallet/NFTDisplayCollection";
 import Space from "components/NFTSingle/Space";
 
-/**
+/** DEPRECATED
  * Page: Display Single NFT
  */
 function NFTSingle(props) {

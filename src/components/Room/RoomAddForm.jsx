@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Skeleton, Image,  Form, Input, Button } from 'antd';
+import { Skeleton, Image,  Form, Input, Button, Comment, Avatar, List } from 'antd';
 import { FireTwoTone } from '@ant-design/icons';
 import { useMoralis } from "react-moralis";
 import { useHistory } from 'react-router-dom';
@@ -9,7 +9,7 @@ import { Room } from "common/objects";
 /**
  * Component: Add New Post
  */
- function RoomAddForm({hash}) {
+ function RoomAddForm({hash, title}) {
     const { Moralis } = useMoralis();
     //Objects
     // const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
@@ -37,36 +37,31 @@ import { Room } from "common/objects";
   
     return(
       <div className="room_add">  
-        <h3>Start a new bonfire</h3>
+        <h3>{title ? title : 'Start a new bonfire'}</h3>
         {/* <p>Add a new Room to this Space!</p> */}
-  
-        <Form name="postAdd" 
-          onFinish={onFinish}
-          // onFinish={console.log}
-          onFinishFailed={console.error}
-          labelCol={{ span: 6, }}
-          wrapperCol={{ span: 16, }}
-          initialValues={{ remember: true, }}
-          // autoComplete="off"
-          >
-
-          {/* <input type="text" name="name" placeholder="Topic" /> */}
-          <Form.Item label="Topic" name="name" rules={[{ required: true, message: 'You forgot to fill in a Topic'}]}>
-            <Input />
-          </Form.Item>
-  
-          {/* <input type="text" name="text" placeholder="Description" /> */}
-          <Form.Item label="Description" name="text" rules={[{ required: true, message: "You'd need to enter some text as well..."}]}>
-            <Input />
-          </Form.Item>
-          
-          {/* <button type="submit">Light Up</button> */}
-          <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-            <Button type="primary" htmlType="submit"><FireTwoTone twoToneColor="red" />Light Up</Button>
-          </Form.Item>
-  
-        </Form>
-  
+        <Comment
+          avatar={<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
+          content={
+            <Form name="postAdd" 
+              onFinish={onFinish}
+              onFinishFailed={console.error}
+              labelCol={{ span: 6, }}
+              wrapperCol={{ span: 16, }}
+              initialValues={{ remember: true, }}
+              autoComplete="off"
+              >
+              <Form.Item label="Topic" name="name" rules={[{ required: true, message: 'You forgot to fill in a Topic'}]}>
+                <Input />
+              </Form.Item>
+              <Form.Item label="Description" name="text" rules={[{ required: true, message: "You'd need to enter some text as well..."}]}>
+                <Input.TextArea />
+              </Form.Item>
+              <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+                <Button type="primary" htmlType="submit"><FireTwoTone twoToneColor="red" />Light Up</Button>
+              </Form.Item>
+            </Form>
+          }
+        />
       </div>
     );
   }//RoomAddForm()

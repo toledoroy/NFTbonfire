@@ -3,6 +3,7 @@ import { Menu, Dropdown, Button } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { AvaxLogo, PolygonLogo, BSCLogo, ETHLogo } from "./Logos";
 import { useChain } from "react-moralis";
+import { getChainLogo } from "helpers/networks";    //Usage: getChainLogo("0x1")
 
 const styles = {
   item: {
