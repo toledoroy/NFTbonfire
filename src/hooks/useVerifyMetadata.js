@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useIPFS } from "./useIPFS";
+import { useMoralis } from "react-moralis";
 
 /**
  * This is a hook that loads the NFT metadata in case it doesn't alreay exist
@@ -9,12 +10,40 @@ import { useIPFS } from "./useIPFS";
 export const useVerifyMetadata = () => {
     const { resolveLink } = useIPFS();
     const [results, setResults] = useState({});
+    const { Moralis } = useMoralis();
 
-   /**
-    * Fet Metadata  from NFT and Cache Results
-    * @param {object} NFT 
-    * @returns NFT
-    */
+    /**
+     * Moralis sometimes gives the wrong token_uri
+     * Use this to feth Manually
+     * @param object NFT 
+     */
+    function updateTokenURI(NFT){
+        //Fetch URI
+
+        const options = {
+            contractAddress: NFT.token_address,
+            functionName: "tokenURI",
+            abi:"?",
+            params: { token_id:NFT.token_id },
+        };
+
+
+        Moralis.executeFunction(options).then((res) =>
+            //Log
+            console.warn("[TEST] updateTokenId() Returned Token ID From Chain", {NFT, options, res})
+
+            //TODO: Compare & Update Metadata if Needed
+        );
+
+        //Return Hooked NFT Object
+        return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT ;
+    }//updateTokenURI()
+
+    /**
+     * Fetch Metadata  from NFT and Cache Results
+     * @param {object} NFT 
+     * @returns NFT
+     */
     function verifyMetadata(NFT){
         //Pass Through if Metadata already present
         if(NFT.metadata) return NFT;
