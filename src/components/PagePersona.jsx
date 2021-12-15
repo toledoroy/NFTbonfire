@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 // import { useNFTCollections } from "hooks/useNFTCollections";
-import { useNFTCollections } from "hooks/useNFTCollectionsNew";
+// import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 // import { Link } from "react-router-dom";
 import { Avatar } from 'antd';
 // import { Space, Cascader } from 'antd';
@@ -11,6 +11,9 @@ import Address from "components/Address/Address";
 import { PersonaHelper } from "helpers/PersonaHelper";
 import { Collapse } from 'antd';
 import NFTCollections from "components/NFTCollections";
+import { getChainName, getChainLogo } from "helpers/networks";
+import { Persona } from "common/objects";
+
 import { Tabs } from 'antd';
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
@@ -35,11 +38,25 @@ const personaFields = require('schema/PersonaData.json');
 // console.log("PagePersona() personaABI:", personaABI);
 
 
-const personaContract = {
-    address: '0x9E91a8dDF365622771312bD859A2B0063097ad34', 
-    chain:4,
-    abi: personaABI,
-};
+// const contractPersona = {
+//     address: '0x9E91a8dDF365622771312bD859A2B0063097ad34', 
+//     chain:4,
+//     abi: personaABI,
+// };
+const contractPersona = Persona.getContractData();
+
+//Set User Data (Specific Persona)
+// let persona = { 
+//     chainId:'0x4', 
+//     address:contractPersona.address, 
+//     tokenId:'1'
+// };
+let persona = new Persona({ 
+    chainId:'0x4', 
+    address:Persona.getContractAddress('0x4'), 
+    tokenId:'1'
+});
+// console.log("PagePersona() persona:", persona, persona.get('tokenId'));
 
 // function Room({handle, collection}) {
 function PagePersona(props) {
@@ -61,10 +78,6 @@ function PagePersona(props) {
     // const { data, error, isLoading } = useMoralisCloudFunction("topScores", { limit, });
     // const { fetch, data, error, isLoading } = useMoralisCloudFunction("topScores", {limit}, { autoFetch: false } );  //Trigger Manually (via fetch func.)
       
-    //Objects
-    // const Room = Moralis.Object.extend("Rooms", { });
-
-
     // const route = useRoute();
     // console.log("Route Name:", route.name);
 
@@ -154,11 +167,15 @@ function PagePersona(props) {
         accounts: [
             {
                 "address": "0x874a6E7F5e9537C4F934Fa0d6cea906e24fc287D",
-                "chain": "ethereum",
+                "chain": "0x4",
+            },
+            {
+                "address": "0x874a6E7F5e9537C4F934Fa0d6cea906e24fc287D",
+                "chain": "0x1",
             },
             {
                 "address": "0x8b08BDA46eB904B18E8385F1423a135167647cA3",
-                "chain": "ethereum",
+                "chain": "0x1",
             },
         ],
             
@@ -166,18 +183,14 @@ function PagePersona(props) {
 
 
     
+
     //Multiple Personas
     // let personas = [metadata];
 
     //[DEV] - Test Func.
     // const updatUserData = () => {
     function updatUserData(data){
-        //[TEST] Set User Data
-        let persona = { 
-            chainId:4, 
-            address:personaContract.address, 
-            id:'1' 
-        };
+        
         setUserData({metadata, persona});        //Try This (As a Metadata Object)
         // setUserData(metadata);
         
@@ -186,6 +199,36 @@ function PagePersona(props) {
         setUserData({handle:'RandomNewHandle'});
 
     }
+    /**
+     * Tab Close/Add
+     * @param {*} targetKey 
+     * @param string action 
+     */
+    function handleTabEdit(targetKey, action){
+        
+        if(action === 'add'){
+            console.warn("[TODO] handleTabEdit() Action:'"+action+"'", {targetKey, action});
+        }//Add
+        else if(action === 'remove'){
+            const data = targetKey.split(":");
+            console.warn("[TODO] handleTabEdit() Action:'"+action+"'", {targetKey, action, data, metadata});
+            //Update Metadata
+            // let accounts = metadata.accounts;
+            for(let i=metadata.accounts.length-1; i>0; i--){
+                console.warn("[TODO] handleTabEdit() Account:"+i, {accounts:metadata.accounts, account:metadata.accounts[i], i});
+                if(metadata.accounts[i].address === data[0] && metadata.accounts[i].chain === data[1]){
+                    //Log
+                    console.warn("[TEST] handleTabEdit() Action:'"+action+"' to Remove Account", {targetKey, action, data, account:metadata.accounts[i]});   
+                    metadata.accounts.splice(i, 1);
+                    break;
+                }
+            }
+            //Update Metadata
+            // metadata = {...metadata, accounts};     //This is non-reactive
+        }//Remove
+        else console.error("[ERROR] handleTabEdit() Invalid Action:'"+action+"'", {targetKey, action});
+    }
+
     //Profile Image
     // let image = metadata?.image ? metadata.image : "https://joeschmoe.io/api/v1/random";
     // let coverImage = metadata?.cover ? metadata.cover : "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
@@ -273,36 +316,42 @@ function PagePersona(props) {
                         </div>
                         <div className="actions">
                             <div className="button">
-                                <Button variant="contained" color="primary" onClick={()=>updatUserData()}>Edit</Button>
+                                <Button variant="contained" color="primary" onClick={()=>{
+                                    setIsEditMore(isEditMode===false);  //Toggle
+                                    // updatUserData()
+                                }}>Edit</Button>
                             </div>
                         </div>
                     </div>
+
+                    {isEditMode && <div className="edit">
+                        <PersonaEdit metadata={metadata} contract={contractPersona} persona={persona} />
+                    </div>}
+
                     <div className="accounts framed">
 
-                    
-                        <Tabs       //https://ant.design/components/tabs/
+                        <Tabs      //https://ant.design/components/tabs/
                             type="editable-card"
                             // onChange={this.onChange}
                             // activeKey={activeKey}
-                            // onEdit={this.onEdit}
+                            onEdit={handleTabEdit}
                             hideAdd={!isEditMode}
                             >
                             {metadata?.accounts?.map((account, index) => (
-                                <TabPane tab={(<Address copyable address={account.address} size={5} />)} key={account.address+account.chain} closable={isEditMode}>
+                                <TabPane tab={(<span title={getChainName(account.chain)}><Address icon={getChainLogo(account.chain)} copyable address={account.address} size={5} /></span>)} key={account.address+':'+account.chain} closable={isEditMode}>
                                     <div className="item framed" key={index}>
-                                        {/* TODO: Add Network Icon */}
-
+                                        
                                         <div className="flex">
                                             <div className="chain">
-                                                <i className="bi bi-ethereum"></i>
-                                                Chain: {account.chain}
+                                                {/* Chain:  */}
+                                                {/* <span className="logo" title={account.chain}>{getChainLogo(account.chain)}</span> */}
+                                                {/* {getChainName(account.chain)} */}
                                             </div>
+                                            {/* <Address copyable address={account.address} size={5} /> */}
                                         </div>
 
-                                        <Address copyable address={account.address} size={5} />
-
                                         <div className="NFTs">
-                                            <NFTCollections match={{params:{accountHash:account.address}}} />
+                                            <NFTCollections match={{params:{accountHash:account.address, chain:account.chain, showBreadcrumbs:false}}} />
                                         </div>
 
                                     </div>
@@ -319,8 +368,6 @@ function PagePersona(props) {
             
             {userError && <p>{userError.message}</p>}
             
-            <PersonaEdit metadata={metadata} contract={personaContract} tokenId={"1"}/>
-
             {/* <h2>{room.get('name')} <FireTwoTone /> (For NFT Collection: {collection?.name})</h2> */}
             {/* {room.get('description') && <h3>{room.get('description')}</h3>} */}
             {/* <p key="addr">Addr:{collection?.token_address}</p> */}

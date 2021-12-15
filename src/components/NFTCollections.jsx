@@ -65,10 +65,11 @@ function NFTCollections(props) {
    * @param {*} chainId 
    * @returns 
    */
-  const getBalance = async (account, contractAddress, chainId) => {
+  const getBalance = async (account, contractAddress, chain) => {
     //Parameters
     const options = { 
-      chain: '0x4', 
+      // chain: '0x4', 
+      chain, 
       address: account, 
       token_address: contractAddress,
     };
@@ -82,8 +83,9 @@ function NFTCollections(props) {
 
   useEffect(() => { /* Check if Account Owns Any of These Assets */
     if(collectionHash){
+      let chain = props?.match?.params?.chain || chainId;
       //Fetch Balance
-      getBalance(account, collectionHash).then(balance => {
+      getBalance(account, collectionHash, chain).then(balance => {
         //Log
         console.warn("[NFTCollections] Account's Balance for this Contract:"+balance, {balance, account, collectionHash}); 
         //Set Permissions
@@ -116,6 +118,7 @@ function NFTCollections(props) {
 
   if (accountHash) options.address = accountHash;    //No Dice... :(
   else accountHash = walletAddress; 
+  if(props?.match?.params?.chain) options.chain = props.match.params.chain;
   // let guestOptions = {chain:"0x4", address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1'};
   
   // const { NFTBalance, getNFTBalance } = useNFTBalance();   //Using Colleciton Instead
@@ -201,6 +204,7 @@ function NFTCollections(props) {
   //style={styles.NFTs}
   return (
     <Skeleton loading={!isWeb3Enabled}>
+      {props?.match?.params?.showBreadcrumbs !== false && 
       <Breadcrumb separator=">">
         {/* <Breadcrumb.Item key="1">Home</Breadcrumb.Item> */}
         {accountHash && <Breadcrumb.Item key="2"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>NFT Collections</Link></Breadcrumb.Item>}
@@ -209,6 +213,7 @@ function NFTCollections(props) {
         {/* <Breadcrumb.Item key="4">Post</Breadcrumb.Item> */}
         {!isAllowed && <p>NOT ALLOWED</p>}
       </Breadcrumb>
+      }
       <div key="collections" className="collections">
           <div key="header" className="header">
             {accountHash ? <h2>{accountHash}'s NFTs</h2> : <h2>My NFTs</h2>}
@@ -227,20 +232,20 @@ function NFTCollections(props) {
                 };
                 return (
                   <>
-                  <p>{collection.owned ? 'Owned' : 'Not Owned'}</p>
-                      <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
-                        <h2 className="title">
-                          <Link key={collection.hash+'Link'} to={dest}>
-                            {collection.contract_type} Collection: {collection.name} ({collection.symbol})
-                          </Link>
-                        </h2>
-                        <div className="middle">
-                          <div key="cards" className="cards">
-                            <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} dest={dest} />
-                          </div>
-                          {collectionHash && <div key="space" className="space_container"><Space hash={collectionHash} collection={collection} /></div>}
+                    {/* <p>{collection.owned ? 'Owned' : 'Not Owned'}</p> */}
+                    <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
+                      <h2 className="title">
+                        <Link key={collection.hash+'Link'} to={dest}>
+                          {collection.contract_type} Collection: {collection.name} ({collection.symbol})
+                        </Link>
+                      </h2>
+                      <div className="middle">
+                        <div key="cards" className="cards">
+                          <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} dest={dest} />
                         </div>
+                        {collectionHash && <div key="space" className="space_container"><Space hash={collectionHash} collection={collection} /></div>}
                       </div>
+                    </div>
                   </>
                 );
               } else return '';

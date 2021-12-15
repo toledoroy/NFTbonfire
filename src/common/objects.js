@@ -1,5 +1,6 @@
 const Moralis = require("moralis/node");
 
+//** GLOBAL FUNCTIONS **/
 /**
  * Create a new Post
  * @var object values
@@ -9,10 +10,14 @@ const createPost = (values) => {
     return Moralis.Cloud.run("post", values);
 } 
 
-//Objects
+//** Objects **/
+
+//-- Posts
 export const Post = Moralis.Object.extend("Post", {
     create: createPost,
 });
+
+//-- Room 
 export const Room = Moralis.Object.extend("Post", { 
     sayHi: function() { console.log("Hi! I'm Room "+this.id); },
     getComments: function() { 
@@ -21,16 +26,38 @@ export const Room = Moralis.Object.extend("Post", {
         return '[COMMENTS]';
     },
 });
+
+//-- Comments
 export const Comment = Moralis.Object.extend("Post");     //Sub-Posts
-export const Persona = Moralis.Object.extend("Persona", {
-    getDefaultMetadata(){ return personaDefaultMetadata; },
-    insert(metadata){
 
-    },
-    update(){
+//-- Persona
+export const Persona = Moralis.Object.extend("Persona", 
+    { /* Instance Methods */
+        //Insert New Persona
+        insert(metadata){
 
-    },
-});     //Personas
+        },
+        //Update Persona
+        update(){
+            return "TODO";
+        },
+    }, 
+    { /* Class Methods */
+        //Persona Data
+        contractPersona: {
+            abi: require('contracts/abi/PERSONA.json'),
+            "0x4": { address: '0x9E91a8dDF365622771312bD859A2B0063097ad34', },  //Rinkeby
+        },
+        //Get ABI
+        getABI(){ return this.contractPersona.abi; },
+        //Contract Data
+        getContractData(chain){ return (chain) ? this.contractPersona[chain] : this.contractPersona; },
+        //Get Contract Address
+        getContractAddress(chain){ return (this.contractPersona?.[chain]?.address) ? this.contractPersona[chain].address : null; },
+        //Default Metadata
+        getDefaultMetadata(){ return personaDefaultMetadata; },
+    }
+);     //Personas
 
 
 //** ASSETS **/

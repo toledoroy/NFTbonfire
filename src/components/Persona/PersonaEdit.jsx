@@ -13,18 +13,24 @@ import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined } fro
 // import { Space, Cascader } from 'antd';
 import { Upload, message } from 'antd';
 import { IPFS } from "helpers/IPFS";
+import { Persona } from "common/objects";
 
 const { Option } = Select;
 
 //Persona Fields Mapping
 const personaFields = require('schema/PersonaData.json');
 console.error("personaFields", personaFields);
+// console.warn("[TEST] Pesona:", Persona);
+// console.warn("[TEST] Pesona:", Persona.update());
 
 /**
  * Component: Persoan Edit Form
  */
  function PersonaEdit(props) {
-    const { contract, tokenId } = props;
+    const { persona, contract } = props;
+    // const { contract } = props;
+    const tokenId = persona.tokenId;
+
     // const [ formSocial, setFormSocial ] = useState({});
     const [ metadata, setMetadata ] = useState(props?.metadata);
     //File Upload
@@ -35,14 +41,16 @@ console.error("personaFields", personaFields);
     const contractProcessor = useWeb3ExecuteFunction();
 
     //Contract Data
-    const contractPersona = {
-        address: '0x9E91a8dDF365622771312bD859A2B0063097ad34',
-        abi: require('contracts/abi/PERSONA.json'),
-        // chain: '0x4',
-        "0x4": {
-            address: '0x9E91a8dDF365622771312bD859A2B0063097ad34',
-        },//Rinkeby
-    }
+    const contractPersona = Persona.getContractData();
+    // const contractPersona = {
+    //     address: '0x9E91a8dDF365622771312bD859A2B0063097ad34',
+    //     abi: require('contracts/abi/PERSONA.json'),
+    //     // chain: '0x4',
+    //     "0x4": {
+    //         address: '0x9E91a8dDF365622771312bD859A2B0063097ad34',
+    //     },//Rinkeby
+    // }
+    
 
     /*
     //Initial Metadata State
