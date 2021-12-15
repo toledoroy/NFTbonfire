@@ -98,7 +98,7 @@ function PagePersona(props) {
 
     //Example Metadata Object
     let metadata = {
-        username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
+        // username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
         name: "Roy",
         image: "https://images.unsplash.com/photo-1636716642701-01754aef1066?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
         cover: "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
@@ -173,7 +173,11 @@ function PagePersona(props) {
     // const updatUserData = () => {
     function updatUserData(data){
         //[TEST] Set User Data
-        let persona = { chainId:4, address:personaContract.address, id:'1' };
+        let persona = { 
+            chainId:4, 
+            address:personaContract.address, 
+            id:'1' 
+        };
         setUserData({metadata, persona});        //Try This (As a Metadata Object)
         // setUserData(metadata);
         
@@ -194,7 +198,6 @@ function PagePersona(props) {
                 <div className="cover" style={{background:"url("+coverImage+")"}}>
                     {/* <img src={coverImage}/> */}
                 </div>
-                
             </div>
             
             <div className="main">

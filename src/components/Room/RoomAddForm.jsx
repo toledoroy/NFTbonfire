@@ -3,7 +3,8 @@ import { Skeleton, Image,  Form, Input, Button } from 'antd';
 import { FireTwoTone } from '@ant-design/icons';
 import { useMoralis } from "react-moralis";
 import { useHistory } from 'react-router-dom';
-
+import { Room } from "common/objects";
+    
 
 /**
  * Component: Add New Post
@@ -22,12 +23,13 @@ import { useHistory } from 'react-router-dom';
       //Additions
       values.parentId = hash;
       //Create
-      const newPost = await Moralis.Cloud.run("post", values);
+      // const newPost = await Moralis.Cloud.run("post", values);
+      const newPost = await Room.create(values);
       //Log
       console.log("Created new Post:", newPost);
   
       //Redirect -- Enter New Room      //https://stackoverflow.com/questions/34735580/how-to-do-a-redirect-to-another-route-with-react-router
-      history.push('/room/'+newPost.id);
+      // history.push('/room/'+newPost.id);
   
       //Return
       return newPost;
