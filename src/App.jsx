@@ -21,7 +21,7 @@ import Ramper from "components/Ramper";
 //Pages
 // import NFTSingle from "components/NFTSingle";
 import NFTCollections from "components/NFTCollections";
-import RoomPage from "components/RoomPage";
+// import RoomPage from "components/RoomPage";
 import PagePersona from "components/PagePersona";
 import Page404 from "components/Page404";
 
@@ -96,7 +96,7 @@ const App = ({ isServerInfo }) => {
             <Menu.Item key="nftCollections"><NavLink to="/nftCollections">NFTs</NavLink></Menu.Item>
             <Menu.Item key="nftCollections2"><NavLink to="/nftCollections/0x9e87f6bd0964300d2bde778b0a6444217d09f3c1">NFTs 2</NavLink></Menu.Item>
             <Menu.Item key="nftSingle"><NavLink to="/nftSingle/0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656/">nftSingle</NavLink></Menu.Item>
-            <Menu.Item key="room"><NavLink to="/room/bgqJwFMexah0ZqkI3Vu9OW5I/">Room</NavLink></Menu.Item>
+            {/* <Menu.Item key="room"><NavLink to="/room/bgqJwFMexah0ZqkI3Vu9OW5I/">Room</NavLink></Menu.Item> */}
             <Menu.Item key="persona"><NavLink to="/toledoroy/">Persona</NavLink></Menu.Item>
             
             <Menu.Item key="nfts"><NavLink to="/nftBalance">? NFTs</NavLink></Menu.Item>
@@ -155,7 +155,7 @@ const App = ({ isServerInfo }) => {
               <Route path="/nftSingle/:selected" component={NFTCollections} />
               
               {/* <Route path="/nftSingle/:hash" component={NFTSingle} /> */}
-              <Route path="/room/:id" component={RoomPage} />
+              {/* <Route path="/room/:id" component={RoomPage} /> */}
               
               <Route path="/contract"><Contract /></Route>
               <Route path="/nonauthenticated"><>Please login using the "Authenticate" button</></Route>
