@@ -33,7 +33,7 @@ export const useNFTCollections = (options) => {
       collections[NFT.token_address].items.push(NFT);
       //ANY - Ownes Something in This Collection
       if(NFT.owner_of === account) collections[NFT.token_address].owned = true;
-      else console.warn("No Match", NFT.owner_of, account);
+      // else console.warn("No Match", NFT.owner_of, account);  //V
       // if(collections[NFT.token_address]?.est === undefined || collections[NFT.token_address].est > NFT.est) collections[NFT.token_address].est = NFT.est;   //Should be: Time sicne last TX
     }//Each NFT
     return collections;
