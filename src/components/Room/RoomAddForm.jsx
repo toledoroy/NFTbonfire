@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { Room } from "common/objects";
     
 
+
 /**
  * Component: Add New Post
  */
@@ -26,7 +27,7 @@ import { Room } from "common/objects";
       // const newPost = await Moralis.Cloud.run("post", values);
       const newPost = await Room.create(values);
       //Log
-      console.log("Created new Post:", newPost);
+      console.log("RoomAddForm() Created new Post:", newPost);
   
       //Redirect -- Enter New Room      //https://stackoverflow.com/questions/34735580/how-to-do-a-redirect-to-another-route-with-react-router
       // history.push('/room/'+newPost.id);
