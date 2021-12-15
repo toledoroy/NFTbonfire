@@ -55,6 +55,7 @@ function Address(props) {
 
   return (
     <div className="crypto_addr" style={{ ...styles.address, ...props.style }}>
+      {props.icon && props.icon}
       {props.avatar === "left" && <Blockie address={address} size={7} />}
       <p>{props.size ? getEllipsisTxt(address, props.size) : address}</p>
       {props.avatar === "right" && <Blockie address={address} size={7} />}
