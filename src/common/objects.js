@@ -33,6 +33,12 @@ export const Comment = Moralis.Object.extend("Post");     //Sub-Posts
 //-- Persona
 export const Persona = Moralis.Object.extend("Persona", 
     { /* Instance Methods */
+        /* I Wouldn't Want to Save This...
+        defaults: {
+            image: "https://joeschmoe.io/api/v1/random",
+            cover: "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+        },
+        */
         //Insert New Persona
         insert(metadata){
 
@@ -43,8 +49,14 @@ export const Persona = Moralis.Object.extend("Persona",
         },
         //-- View
         //Get Persona Main Image
-        getImage(){ return this.get('metadata')?.image; },
-        getCover(){ return this.get('metadata')?.cover; },
+        getImage(){ 
+            return this.get('metadata')?.image || "https://joeschmoe.io/api/v1/random"; 
+            // return this.get('metadata')?.image || this.get('defaults')?.image;
+        },
+        getCover(){ 
+            return this.get('metadata')?.cover || "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"; 
+            // return this.get('metadata')?.cover || this.get('defaults')?.cover; 
+        },
     }, 
     { /* Class Methods */
         //Persona Data

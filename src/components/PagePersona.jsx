@@ -45,69 +45,6 @@ const personaFields = require('schema/PersonaData.json');
 // };
 const contractPersona = Persona.getContractData();
 
-//Set User Data (Specific Persona)
-// let persona = { 
-//     chainId:'0x4', 
-//     address:contractPersona.address, 
-//     tokenId:'1'
-// };
-let persona = new Persona({ 
-    chainId:'0x4', 
-    address:Persona.getContractAddress('0x4'), 
-    tokenId:'1'
-});
-// console.log("PagePersona() persona:", persona, persona.get('tokenId'));
-
-// function Room({handle, collection}) {
-function PagePersona(props) {
-    const { handle } = props.match.params;
-    // const { Moralis, isWeb3Enabled } = useMoralis();
-    const { Moralis, setUserData, userError, isUserUpdating, user } = useMoralis();
-    // const { account } = useMoralisWeb3Api();
-    // const { walletAddress } = useMoralisDapp();
-    // const { NFTCollections } = useNFTCollections();
-    // const [ collection, setCollection ] = useState(null);
-    const [ isEditMode, setIsEditMore ] = useState(false);
-
-    //https://github.com/MoralisWeb3/react-moralis#usemoralisweb3api
-    // const { data, error, isLoading } = useMoralisQuery("GameScore"); //Query All
-    // const { data, error, isLoading } = useMoralisQuery("GameScore", query => query.greaterThanOrEqualTo("score", 100).descending("score").limit(limit),);    //Query Some
-    // const { fetch, data, error, isLoading } = useMoralisQuery("GameScore", query => query.greaterThanOrEqualTo("score", 100).descending("score").limit(limit), [], { autoFetch: false },);  //Query Without Auto-Update
-    // const { data, error, isLoading } = useMoralisQuery("GameScore", query => query.greaterThanOrEqualTo("score", 100).descending("score").limit(limit), [limit], { live: true, },);  //Live Query - Update on limit Change
-    //Cloud Functions
-    // const { data, error, isLoading } = useMoralisCloudFunction("topScores", { limit, });
-    // const { fetch, data, error, isLoading } = useMoralisCloudFunction("topScores", {limit}, { autoFetch: false } );  //Trigger Manually (via fetch func.)
-      
-    // const route = useRoute();
-    // console.log("Route Name:", route.name);
-
-    
-    useEffect(() => {
-        /*
-        Moralis.Cloud.run("getPersonas", {})
-        .then(persona => {
-            //Log
-            console.error("getPersonas() Return:", persona);
-        })
-        .catch(function(error) { console.error("[CAUGHT] getPersonas() Error on Cloud Fucntion Call:", {error}); });
-        */
-        
-        /* Did Nothing...
-        //[DEV] Schema Stuff        https://parseplatform.org/Parse-SDK-JS/api/2.9.0/Parse.Schema.html
-        const schema = new Moralis.Schema('Post');
-        console.warn("[DEV] Moralis Schema:", schema);
-        const options = { required: true, defaultValue: 'hello world' };
-        schema.addString('TestField', options);
-        schema.addIndex('index_name', { 'TestField': 1 });
-        schema.save();
-        */
-    },[]);
-    
-
-
-    const currentuser = Moralis.User.current();
-    //Log
-    console.log("[DEV] PagePersona() ", {handle, user, currentuser});
 
     //Example Metadata Object
     let metadata = {
@@ -180,25 +117,83 @@ function PagePersona(props) {
         ],
             
     };
+   
+// function Room({handle, collection}) {
+function PagePersona(props) {
+    const { handle } = props.match.params;
+    // const { Moralis, isWeb3Enabled } = useMoralis();
+    const { Moralis, setUserData, userError, isUserUpdating, user } = useMoralis();
+    // const { account } = useMoralisWeb3Api();
+    // const { walletAddress } = useMoralisDapp();
+    // const { NFTCollections } = useNFTCollections();
+    // const [ collection, setCollection ] = useState(null);
+    const [ isEditMode, setIsEditMore ] = useState(false);
 
+    //https://github.com/MoralisWeb3/react-moralis#usemoralisweb3api
+    // const { data, error, isLoading } = useMoralisQuery("GameScore"); //Query All
+    // const { data, error, isLoading } = useMoralisQuery("GameScore", query => query.greaterThanOrEqualTo("score", 100).descending("score").limit(limit),);    //Query Some
+    // const { fetch, data, error, isLoading } = useMoralisQuery("GameScore", query => query.greaterThanOrEqualTo("score", 100).descending("score").limit(limit), [], { autoFetch: false },);  //Query Without Auto-Update
+    // const { data, error, isLoading } = useMoralisQuery("GameScore", query => query.greaterThanOrEqualTo("score", 100).descending("score").limit(limit), [limit], { live: true, },);  //Live Query - Update on limit Change
+    //Cloud Functions
+    // const { data, error, isLoading } = useMoralisCloudFunction("topScores", { limit, });
+    // const { fetch, data, error, isLoading } = useMoralisCloudFunction("topScores", {limit}, { autoFetch: false } );  //Trigger Manually (via fetch func.)
+      
+    // const route = useRoute();
+    // console.log("Route Name:", route.name);
 
+     
+    //Set User Data (Specific Persona)
+    // let persona = { 
+    //     chainId:'0x4', 
+    //     address:contractPersona.address, 
+    //     tokenId:'1'
+    // };
+    let persona = new Persona({ 
+        chainId:'0x4', 
+        address:Persona.getContractAddress('0x4'), 
+        tokenId:'1',
+        metadata
+    });
+    // console.log("PagePersona() persona:", persona, persona.get('tokenId'));
+
+    useEffect(() => {
+        /*
+        Moralis.Cloud.run("getPersonas", {})
+        .then(persona => {
+            //Log
+            console.error("getPersonas() Return:", persona);
+        })
+        .catch(function(error) { console.error("[CAUGHT] getPersonas() Error on Cloud Fucntion Call:", {error}); });
+        */
+        
+        /* Did Nothing...
+        //[DEV] Schema Stuff        https://parseplatform.org/Parse-SDK-JS/api/2.9.0/Parse.Schema.html
+        const schema = new Moralis.Schema('Post');
+        console.warn("[DEV] Moralis Schema:", schema);
+        const options = { required: true, defaultValue: 'hello world' };
+        schema.addString('TestField', options);
+        schema.addIndex('index_name', { 'TestField': 1 });
+        schema.save();
+        */
+    },[]);
     
 
-    //Multiple Personas
-    // let personas = [metadata];
+
+    // const currentuser = Moralis.User.current();
+    // console.log("[DEV] PagePersona() ", {handle, user, currentuser});
+
+
 
     //[DEV] - Test Func.
     // const updatUserData = () => {
     function updatUserData(data){
-        
-        setUserData({metadata, persona});        //Try This (As a Metadata Object)
+        // setUserData({metadata, persona});        //Try This (As a Metadata Object)
         // setUserData(metadata);
-        
         // setUserData({persona:{metadata, chainId:4, address:'0x000000000000000000000000000000000000000', id:'1' }});        //Too Much...?
         // getPersonas
         setUserData({handle:'RandomNewHandle'});
-
     }
+
     /**
      * Tab Close/Add
      * @param {*} targetKey 
@@ -233,10 +228,8 @@ function PagePersona(props) {
     // let image = metadata?.image ? metadata.image : "https://joeschmoe.io/api/v1/random";
     // let coverImage = metadata?.cover ? metadata.cover : "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
 
-    let thisPersona = new Persona({metadata})
-    let image = thisPersona.getImage();
-    let coverImage = thisPersona.getCover();
-    // let image = PersonaHelper.getImage(metadata);
+    let image = persona.getImage();
+    let coverImage = persona.getCover();
     // let coverImage = PersonaHelper.getCover(metadata);
     return (
         <div className="persona">
