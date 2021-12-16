@@ -41,6 +41,10 @@ export const Persona = Moralis.Object.extend("Persona",
         update(){
             return "TODO";
         },
+        //-- View
+        //Get Persona Main Image
+        getImage(){ return this.get('metadata')?.image; },
+        getCover(){ return this.get('metadata')?.cover; },
     }, 
     { /* Class Methods */
         //Persona Data

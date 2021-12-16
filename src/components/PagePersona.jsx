@@ -232,8 +232,12 @@ function PagePersona(props) {
     //Profile Image
     // let image = metadata?.image ? metadata.image : "https://joeschmoe.io/api/v1/random";
     // let coverImage = metadata?.cover ? metadata.cover : "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
-    let image = PersonaHelper.getImage(metadata);
-    let coverImage = PersonaHelper.getCover(metadata);
+
+    let thisPersona = new Persona({metadata})
+    let image = thisPersona.getImage();
+    let coverImage = thisPersona.getCover();
+    // let image = PersonaHelper.getImage(metadata);
+    // let coverImage = PersonaHelper.getCover(metadata);
     return (
         <div className="persona">
             

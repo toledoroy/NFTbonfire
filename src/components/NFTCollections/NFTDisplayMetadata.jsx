@@ -95,7 +95,7 @@ export default NFTDisplayMetadata;
     }
   }//Array
   else{
-    console.error("DisplayMetadataField() Datatype Not Supported", {label, value}, typeof value);
+    console.error("DisplayMetadataField() Datatype " + typeof value+" is Not Supported", {label, value});
     // logger.error("DisplayMetadataField() Datatype Not Supported", {label, value}, typeof value);
     //TODO: Try to Recurse on Objects...
   } 

@@ -1,4 +1,4 @@
-import Blockie from "components/Blockie";
+// import Blockie from "components/Blockie";
 
 // export const userImage = (hash) => ();   //?
 export const PersonaHelper = {
