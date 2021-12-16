@@ -17,27 +17,50 @@ export const useVerifyMetadata = () => {
      * Use this to feth Manually
      * @param object NFT 
      */
-    function updateTokenURI(NFT){
-        //Fetch URI
-
-        const options = {
+    function updateToken(NFT){
+        //W3 - Fetch URI from Contract
+        let options = {
             contractAddress: NFT.token_address,
             functionName: "tokenURI",
-            abi:"?",
-            params: { token_id:NFT.token_id },
+            params: { tokenId:NFT.token_id },
+            abi:[{
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "tokenId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "tokenURI",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }],
         };
-
-
-        Moralis.executeFunction(options).then((res) =>
+        Moralis.executeFunction(options).then((uri) => {
+            //Compare & Update Metadata if Needed
+            if(NFT.token_uri !== uri) {
+                //Log
+                console.error("[TEST] updateToken() NFT Has Different URI on Chain", {NFT, options, uri})
+                //Update NFT
+                NFT.token_uri = uri;
+                //Update Metadata
+                getMetadata(NFT);
+            }//Wrong URI
+        })
+        .catch((err) => {
             //Log
-            console.warn("[TEST] updateTokenId() Returned Token ID From Chain", {NFT, options, res})
-
-            //TODO: Compare & Update Metadata if Needed
-        );
-
+            console.error("[TEST] updateToken() Error", {NFT, options, err});
+        });
         //Return Hooked NFT Object
         return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT ;
-    }//updateTokenURI()
+    }//updateToken()
 
     /**
      * Fetch Metadata  from NFT and Cache Results
@@ -66,12 +89,13 @@ export const useVerifyMetadata = () => {
             return;
         }
         //Get Metadata
-        fetch(NFT.token_uri)
+        let uri = resolveLink(NFT.token_uri);
+        fetch(uri)
             .then(res => res.json())
             .then(metadata => {
                 if(!metadata){
                     //Log
-                    console.error("useVerifyMetadata.getMetadata() No Metadata found on URI:", {URI:NFT.token_uri, NFT});
+                    console.error("useVerifyMetadata.getMetadata() No Metadata found on URI:", {uri, NFT});
                 }
                 //Handle Setbacks
                 else if(metadata?.detail  && metadata.detail.includes("Request was throttled")){
@@ -88,7 +112,7 @@ export const useVerifyMetadata = () => {
                 }//Valid Result
             })
             .catch(err => {
-                console.error("useVerifyMetadata.getMetadata() Error Caught:", {err, NFT, URI:NFT.token_uri});
+                console.error("useVerifyMetadata.getMetadata() Error Caught:", {err, NFT, uri});
             });
     }//getMetadata()
 
@@ -106,6 +130,6 @@ export const useVerifyMetadata = () => {
         if(metadata && !results[NFT.token_uri]) setResults({...results, [NFT.token_uri]: NFT});
     }//setMetadata()
     
-    return { verifyMetadata };
+    return { verifyMetadata, updateToken };
 
 }//useVerifyMetadata()
