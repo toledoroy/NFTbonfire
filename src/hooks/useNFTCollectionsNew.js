@@ -13,7 +13,7 @@ export const useNFTCollections = (options) => {
   // const { chainId } = useMoralisDapp();
     // const { resolveLink } = useIPFS();
   const [ NFTCollections, setNFTCollections ] = useState({});
-  const {verifyMetadata} = useVerifyMetadata();
+  const { verifyMetadata, updateToken } = useVerifyMetadata();
 
 
   /**
@@ -25,8 +25,13 @@ export const useNFTCollections = (options) => {
     //Init Return
     let collections = {};
     for(let NFT of NFTs){
+
+      //Force Full Metadata Update (Moralis sometimes gives wrong token_uri)
+      if(NFT.symbol === "PERSONA") NFT = updateToken(NFT);
+      
       //Verify Metadata      
-      NFT = verifyMetadata(NFT);
+      else NFT = verifyMetadata(NFT);
+
       //Init Collection Slot
       if(!collections[NFT.token_address]) collections[NFT.token_address] = {owned:false, items:[], hash:NFT.token_address, symbol:NFT.symbol, name:NFT.name, contract_type:NFT.contract_type,};
       //Add NFT to Collection
