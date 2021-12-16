@@ -47,7 +47,7 @@ export const useVerifyMetadata = () => {
             //Compare & Update Metadata if Needed
             if(NFT.token_uri !== uri) {
                 //Log
-                console.error("[TEST] updateToken() NFT Has Different URI on Chain", {NFT, options, uri})
+                console.log("updateToken() NFT Has Different URI on Chain -- Run Update", {NFT, options, uri})
                 //Update NFT
                 NFT.token_uri = uri;
                 //Update Metadata

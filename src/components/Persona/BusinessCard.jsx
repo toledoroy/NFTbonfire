@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 
-// import { useNFTCollections } from "hooks/useNFTCollections";
 // import { Link } from "react-router-dom";
 // import { Form, Input, Button, Select, InputNumber } from 'antd';
 import { Image, Avatar } from 'antd';
@@ -11,11 +10,6 @@ import { Image, Avatar } from 'antd';
 // import { IPFS } from "helpers/IPFS";
 import { PersonaHelper } from "helpers/PersonaHelper";
 
-// const { Option } = Select;
-
-//Persona Fields Mapping
-const personaFields = require('schema/PersonaData.json');
-console.error("personaFields", personaFields);
 
 /**
  * Component: Persoan Edit Form
