@@ -1,13 +1,13 @@
+//Logos
 import { AvaxLogo, PolygonLogo, BSCLogo, ETHLogo } from "components/Chains/Logos";
 
-export const getNativeByChain = (chain) => networkConfigs[chain]?.currencySymbol || "NATIVE";
-
 export const getChainById = (chain) => networkConfigs[chain]?.chainId || null;
-
-export const getExplorer = (chain) => networkConfigs[chain]?.blockExplorerUrl;
-
+//Get Native Token
+export const getNativeByChain = (chain) => networkConfigs[chain]?.currencySymbol || "NATIVE";
+//Native Token's Contract
 export const getWrappedNative = (chain) => networkConfigs[chain]?.wrapped || null;
-
+//Get Blockchain Explorer URL
+export const getExplorer = (chain) => networkConfigs[chain]?.blockExplorerUrl || null;
 //Get Chain's Name
 export const getChainName = (chain) => networkConfigs[chain]?.name || null;
 //Get Chain's Logo

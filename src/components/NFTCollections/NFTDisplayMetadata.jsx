@@ -17,19 +17,14 @@ function NFTDisplayMetadata({nft}) {
     <> 
       <div className={nft.amount>1 ? 'metadata many' : 'metadata single'}>
           {/* <h3>{nft.name}: {nft?.metadata?.name}</h3> */}
-          <p>Type: {nft.contract_type}</p>
-          <p>Amount: {nft.amount}</p>
-          <p>Symbol: {nft.symbol}</p>
-          
+          {/* <p>Type: {nft.contract_type}</p> */}
+          {/* <p>Amount: {nft.amount}</p> */}
+          {/* <p>Symbol: {nft.symbol}</p> */}
+          <p>{nft.contract_type}: {nft.symbol}</p>
           {nft?.metadata && <dl>
             <dt>Metadata:</dt>
             {Object.keys(nft?.metadata).map((key, index) => {
-              if(shouldShow(key)){
-                // {console.log("NFT:", nft)}
-                // console.log("Metadata key:'"+key+"'", nft.metadata, key, nft?.metadata[key]);
-                //Only if Has Content
-                if(nft.metadata[key]) return <DisplayMetadataField key={key} label={key} value={nft.metadata[key]} />
-              }//Should Show
+              return (nft.metadata[key] && shouldShow(key)) ? <DisplayMetadataField key={key} label={key} value={nft.metadata[key]} /> : null;
             })}
           </dl>}
           {/* <p>Token ID:{nft.token_id}</p> */}

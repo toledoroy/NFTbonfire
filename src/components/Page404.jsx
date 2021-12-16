@@ -5,8 +5,15 @@ import { Link } from "react-router-dom";
  * 404 Page
  */
 function Page404(props){
-  return (<Result status="404" title="404" subTitle="Sorry, the page you're looking for does not exist." extra={
+  return (<Result status="404" title="404" subTitle={
+    <div>
+      <p>Oh no, you might be lost.</p>
+    </div>
+  } extra={
+    <>
+    <p>Maybe go </p>
     <Link to={{pathname:'/'}}><Button type="primary">Back Home</Button></Link>
+    </>
   } />);
 
     // return (
