@@ -49,24 +49,28 @@ const contractPersona = Persona.getContractData();
     //Example Metadata Object
     let metadata = {
         // username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
-        name: "Roy",
-        image: "https://images.unsplash.com/photo-1636716642701-01754aef1066?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+        name: "Anonymous",
+        // image: "https://images.unsplash.com/photo-1636716642701-01754aef1066?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",  //Random Dark Lady
+        // image: "https://ipfs.moralis.io:2053/ipfs/QmZ2oHHLUUARUTz3Jx2wSWYTtALUtEhQtT1hpxb7Fbvr5y",   //Anon in hood
+        image: "https://ipfs.moralis.io:2053/ipfs/QmWyKVFkUCfwUFQZyKjJ9ifqyWatUFStMi8B3MtT3CkhyP",      //Anon logo
         cover: "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
-        description: "A hardworking builder, I am",
+        // description: "A hardworking builder, I am",
+        description: "We are legion@",
         // email: "toledoroy@gmail.com",        //Don't 
         location: {
-            name:"Seattle, WA",
-            latitude: 47.60275857601884,
-            longitude: -122.33726455335282,
+            name:"World Wide", latitude: 0, longitude: 0,
+            // name:"Seattle, WA", latitude: 47.60275857601884, longitude: -122.33726455335282,
         },
         social: {
-            twitter: "toledoroy",
-            facebook: "toledoroy",
-            github: "toledoroy",
-            linkedin: "toledoroy",
-            instagram: "toledoroy",
-            youtube: "RoyToledo",
-            medium: "toledoroy",
+            // twitter: "toledoroy",
+            // facebook: "toledoroy",
+            // github: "toledoroy",
+            // linkedin: "toledoroy",
+            // instagram: "toledoroy",
+            // youtube: "RoyToledo",
+            // medium: "toledoroy",
+            twitter: "YourAnonNews",
+            twitter: "YourAnonCentral",    
         },
         links: [
             {
