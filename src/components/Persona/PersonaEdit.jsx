@@ -238,7 +238,7 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
             onChange={handleChangeFile}
             >
             {imageLoading ? <LoadingOutlined /> 
-                : imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> 
+                : imageUrl ? <img src={IPFS.resolveLink(imageUrl)} alt="avatar" style={{ width: '100%' }} /> 
                 // : imageUrl ? <Avatar size={220} src={imageUrl} />
                     // : uploadButton
                     : <div><PlusOutlined /><div style={{ marginTop: 8 }}>Upload</div></div>

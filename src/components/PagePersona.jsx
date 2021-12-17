@@ -13,6 +13,7 @@ import { Collapse } from 'antd';
 import NFTCollections from "components/NFTCollections";
 import { getChainName, getChainLogo } from "helpers/networks";
 import { Persona } from "common/objects";
+import { IPFS } from "helpers/IPFS";
 
 import { Tabs } from 'antd';
 const { TabPane } = Tabs;
@@ -88,6 +89,12 @@ const contractPersona = Persona.getContractData();
                 title: "Google",
                 url: "http://google.com",
             },
+            {
+                type: "page",
+                title: "Wikipedia",
+                url: "https://en.wikipedia.org/wiki/Anonymous_(hacker_group)",
+            },
+            
         ],
         "attributes": [	//OpenSea		https://docs.opensea.io/docs/metadata-standards
             {
@@ -121,7 +128,69 @@ const contractPersona = Persona.getContractData();
         ],
             
     };
-   
+    const defaultMetadata = {
+        // username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
+        name: "Anonymous",
+        // image: "https://images.unsplash.com/photo-1636716642701-01754aef1066?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",  //Random Dark Lady
+        // image: "https://ipfs.moralis.io:2053/ipfs/QmZ2oHHLUUARUTz3Jx2wSWYTtALUtEhQtT1hpxb7Fbvr5y",   //Anon in hood
+        image: "https://ipfs.moralis.io:2053/ipfs/QmWyKVFkUCfwUFQZyKjJ9ifqyWatUFStMi8B3MtT3CkhyP",      //Anon logo
+        cover: "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+        // description: "A hardworking builder, I am",
+        description: "We are legion@",
+        // email: "toledoroy@gmail.com",        //Don't 
+        location: {
+            name:"World Wide", latitude: 0, longitude: 0,
+            // name:"Seattle, WA", latitude: 47.60275857601884, longitude: -122.33726455335282,
+        },
+        social: {
+            twitter: "YourAnonNews",
+            twitter: "YourAnonCentral",    
+        },
+        links: [
+            {
+                type: "page",
+                title: "Wikipedia",
+                url: "https://en.wikipedia.org/wiki/Anonymous_(hacker_group)",
+            },
+            {
+                type: "media",
+                title: "News: donate $75M in Bitcoin",
+                url: "https://thenextweb.com/news/anonymous-supposedly-resurfaces-to-donate-75m-in-bitcoin-to-privacy-tech",
+            },
+            
+        ],
+        "attributes": [	//OpenSea		https://docs.opensea.io/docs/metadata-standards
+            {
+                "trait_type": "Base", 
+                "value": "Everywhere",
+            },
+            {
+                "trait_type": "Power", 
+                "value": "10",
+            },
+            {
+                "trait_type": "Size", 
+                "value": 100,
+
+                "display_type": "boost_percentage",     //"number", "boost_number", "boost_percentage"
+            },
+        ],
+        accounts: [
+            {
+                "address": "0x874a6E7F5e9537C4F934Fa0d6cea906e24fc287D",
+                "chain": "0x4",
+            },
+            {
+                "address": "0x874a6E7F5e9537C4F934Fa0d6cea906e24fc287D",
+                "chain": "0x1",
+            },
+            {
+                "address": "0x8b08BDA46eB904B18E8385F1423a135167647cA3",
+                "chain": "0x1",
+            },
+        ],
+            
+    };
 // function Room({handle, collection}) {
 function PagePersona(props) {
     const { handle } = props.match.params;
@@ -239,8 +308,8 @@ function PagePersona(props) {
         <div className="persona">
             
             <div className="header">
-                <div className="cover" style={{background:"url("+coverImage+")"}}>
-                    {/* <img src={coverImage}/> */}
+                <div className="cover" style={{background:"url("+IPFS.resolveLink(coverImage)+")"}}>
+                    {/* <img src={IPFS.resolveLink(coverImage)}/> */}
                 </div>
             </div>
             
@@ -302,7 +371,7 @@ function PagePersona(props) {
                     
                     <div className="details framed">
                         <div className="image">
-                            <Avatar size={200} src={image} />
+                            <Avatar size={200} src={IPFS.resolveLink(image)} />
                         </div>
                         <div className="info framed">
                             <h1 className="name">{metadata?.name}</h1>
