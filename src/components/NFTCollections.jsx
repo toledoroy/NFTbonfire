@@ -8,17 +8,18 @@ import { useMoralis, useNFTBalances } from "react-moralis";
 // import { useNFTBalance } from "hooks/useNFTBalance";
 import NFTDisplayCollection from "components/Wallet/NFTDisplayCollection";
 // import Space from "components/NFTSingle/Space";
+import BusinessCard from "components/Persona/BusinessCard";
 
 // import Address from "components/Address/Address";
 
 // import { useNFTCollections } from "hooks/useNFTCollections";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
-import { Post, Room } from "common/objects";
+import { Persona, Post, Room } from "common/objects";
 // import { useNFTBalance } from "hooks/useNFTBalance";
 import Space from "components/NFTSingle/Space";
 
 import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider"; //DEPRECATED
-
+    
 /**
  * Component: Display a Single NFT
  * 
@@ -122,7 +123,7 @@ function NFTCollections(props) {
   // let guestOptions = {chain:"0x4", address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1'};
   
   // const { NFTBalance, getNFTBalance } = useNFTBalance();   //Using Colleciton Instead
-  const { NFTCollections } = useNFTCollections(options);
+  const { NFTCollections, NFTpersonas } = useNFTCollections(options);
   // const { NFTBalances } = useNFTBalances(guestOptions);
   // const { data: NFTBalances, isLoading, error } = useNFTBalances(options);   //Get NFTs for Account
   // console.log("[TEST] NFTCollections() NFTBalance", NFTBalances);
@@ -219,6 +220,21 @@ function NFTCollections(props) {
             {accountHash ? <h2>{accountHash}'s NFTs</h2> : <h2>My NFTs</h2>}
             <h4 className="subheading">{Object.keys(NFTCollections).length} Collections</h4>
           </div>
+
+          {NFTpersonas && 
+          <div className="personas">
+            <h2>Personas:</h2>
+            {Object.values(NFTpersonas).map((NFTpersona, index) => {
+              //Wrap
+              let PersonaObject = new Persona(NFTpersona);
+              console.warn("[TEST] NFTCollection() This PersonaObject", PersonaObject);
+            return (
+              <BusinessCard key={index} persona={PersonaObject} metadata={NFTpersona.metadata} className="item"/>
+            );
+            })}
+          </div>
+          }
+
           {NFTCollections && Object.values(NFTCollections).map((collection, index) => {
             if(!collectionHash || collectionHash === collection.hash) {
               //Link Destination (Single Collection)

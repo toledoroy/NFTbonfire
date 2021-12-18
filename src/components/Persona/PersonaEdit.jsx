@@ -72,55 +72,47 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
     const loadmetadata = async () => {
         //Start Loading
         setIsLoading(true);
-        //Load Metadata from Chain
-        let metadata = await persona.loadMetadata();
-        console.warn("PersonaEdit() Freshly Loaded Metadata:", {metadata, persona});
-        // setMetadata( persona.get('metadata') );
-        setMetadata( metadata );
+        //Validate
+        if(persona.get('token_id') !== undefined) {
+            try{
+                //Load Metadata from Chain
+                let metadata = await persona.loadMetadata();
+                //Log
+                console.warn("PersonaEdit() Freshly Loaded Metadata:", {metadata, persona});
+                //Set State
+                setMetadata( metadata );
+            }catch(error){
+                //Log
+                console.error("PersonaEdit() Error Loading Metadata:", error);
+            }
+        }//Has Toekn ID
+        else{
+            //New Persona, Not yet on Chain
+        }
         //Ready
         setIsLoading(false);
-    }
+    }//loadmetadata()
+    //Load Metadata on Persona Change
     useEffect(() => { loadmetadata(); }, [persona]);
-
-    /**
-     * Save JSON File to IPFS
-     * @var object jsonObject
-     * @ret string URL
-     */
-    async function saveJSONToIPFS(jsonObject){
-        //Save Metadata to IPFS
-        const file = new Moralis.File("file.json", {base64 : btoa(JSON.stringify(jsonObject))});
-        return file.saveIPFS().then(result => {
-            //Return IPFS URL
-            // return result.ipfs();    //Moralis URL
-            return "ipfs://" + result.hash();   //General IPFS Conventional URL
-        });
-        // .catch(function(error) { console.error("[CAUGHT] PersonaEdit() IPFS Call Failed:", {error, user }); });
-    }
-    // saveJSONToIPFS(metadata);       //TEST
 
     /**
      * Form Validation
      */
     function beforeUpload(file) {
-        // console.log("[TEST] File Upload beforeUpload()", file);
-
         //Validations
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/svg+xml';
         if (!isJpgOrPng) message.error('Sorry, only JPG/PNG/GIF files are currently supported');
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) message.error('Image must smaller than 2MB!');
         // return isJpgOrPng && isLt2M;
-
         //Set Loading
         setImageLoading(true);
-
         //Always False - Manual Upload Via handleChangeFile()
         return false;   
     }
 
     /**
-     * 
+     * File Upload
      */
     const handleChangeFile = info => {
         // console.log("[TEST] File Upload handleChangeFile() Status:"+info?.file?.status, info);
@@ -142,8 +134,24 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
             //log
             console.error("[CAUGHT] handleChangeFile() File Upload Error:", error, info);
         }
-    }
+    }//handleChangeFile()
     
+    /**
+     * Save JSON File to IPFS
+     * @var object jsonObject
+     * @ret string URL
+     */
+     async function saveJSONToIPFS(jsonObject){
+        //Save Metadata to IPFS
+        const file = new Moralis.File("file.json", {base64 : btoa(JSON.stringify(jsonObject))});
+        return file.saveIPFS().then(result => {
+            //Return IPFS URL
+            // return result.ipfs();    //Moralis URL
+            return "ipfs://" + result.hash();   //General IPFS Conventional URL
+        });
+        // .catch(function(error) { console.error("[CAUGHT] PersonaEdit() IPFS Call Failed:", {error, user }); });
+    }//saveJSONToIPFS()
+
     /**
      * Save Image file to IPFS
      * @var object image

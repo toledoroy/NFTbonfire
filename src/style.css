@@ -50,6 +50,7 @@ footer { margin-top: 40px; }
 
 /* Components */
 .collections { transition: all 0.2s ease-in-out; }
+.collections .personas { display: flex; }
 .collection { margin-bottom: 20px; }
 .collection .title { font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; }
 .collection .title .ant-ribbon { top:0; }
@@ -181,6 +182,12 @@ footer { margin-top: 40px; }
   box-shadow: 0 0 10px #9ecaed;
   padding: 10px;
   margin: 10px;
+}
+.BusinessCard .top { display: flex; flex-direction: row; justify-content: space-between; }
+.BusinessCard .top .image {
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 7px;
 }
 
 /* Stack */

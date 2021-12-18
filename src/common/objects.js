@@ -164,16 +164,25 @@ export const Persona = Moralis.Object.extend("Persona",
         },//fetchMetadata()
 
         //-- View
+
+        /* DEPRECATED
         //Get Persona Main Image
-        getImage(){ 
-            // return this.get('metadata')?.image || personaDefaultMetadata.image; //"https://joeschmoe.io/api/v1/random"; 
-            return this.get('metadata')?.image || this.getDefaultMetadata()?.image;
+        getImage(){ //DEPRECATED - Use getFallback() 
+            return this.get('metadata')?.image || personaDefaultMetadata.image; //"https://joeschmoe.io/api/v1/random"; 
+            // return this.get('metadata')?.image || this.getDefaultMetadata()?.image;      //Error: getDefaultMetadata is not a func.
         },
-        getCover(){ 
-            // return this.get('metadata')?.cover || personaDefaultMetadata.cover; //"https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"; 
-            return this.get('metadata')?.cover || this.getDefaultMetadata()?.cover; 
+        getCover(){ //DEPRECATED - Use getFallback()
+            return this.get('metadata')?.cover || personaDefaultMetadata.cover; //"https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"; 
+            // return this.get('metadata')?.cover || this.getDefaultMetadata()?.cover;       //Error: getDefaultMetadata is not a func.
         },
-        
+        */
+
+        /**
+         * Get Requested Property from Metadata & Fallback to Defaults if Not Found
+         * @returns 
+         */
+        getFallback(property){ return this.get('metadata')?.[property] || personaDefaultMetadata[property]; },
+
     }, 
     { /* Class Methods */
         //Persona Data

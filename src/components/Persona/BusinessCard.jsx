@@ -8,7 +8,7 @@ import { Image, Avatar } from 'antd';
 // import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 // import { Space, Cascader } from 'antd';
 // import { IPFS } from "helpers/IPFS";
-import { PersonaHelper } from "helpers/PersonaHelper";
+// import { PersonaHelper } from "helpers/PersonaHelper";
 
 
 /**
@@ -16,13 +16,17 @@ import { PersonaHelper } from "helpers/PersonaHelper";
  */
  function BusinessCard(props) {
     // const { contract, tokenId } = props;
-    const { metadata } = props;
+    const { metadata, persona } = props;
     // const [ metadata, setMetadata ] = useState(props?.metadata);
     // const { Moralis, setUserData, userError, isUserUpdating, user } = useMoralis();
     
-    const image = PersonaHelper.getImage(metadata);
-    const coverImage = PersonaHelper.getCover(metadata);
-
+    // const image = PersonaHelper.getImage(metadata);
+    // const coverImage = PersonaHelper.getCover(metadata);
+    // const image = metadata?.image;
+    // const coverImage = metadata?.cover;
+    const image = persona.getFallback('image');
+    const coverImage = persona.getFallback('cover');
+    
     /*
     //Initial Metadata State
     useEffect(() => {
@@ -44,16 +48,27 @@ import { PersonaHelper } from "helpers/PersonaHelper";
      * |____| {desc}                   Write Code, I do
      * 
      */
+    //Class
+    let className = "BusinessCard";
+    if(props.className) className += ' '+props.className;
+
+    //Render
     return (
-    <div className="BusinessCard">
-        <div className="image">
-            <Avatar size={60} src={image} />
-            <div className="text">
-                <p key="name" className="name">Mr. {metadata?.name}</p>
-                <q key="desc" className="description">{metadata?.description}</q>
+        <div className={className}>
+            <div className="top">
+                <div className="image">
+                    <Avatar size={60} src={image} />
+                    
+                </div>
+                <div className="text">
+                    <p key="name" className="name">Mr. {metadata?.name}</p>
+                    <q key="desc" className="description">{metadata?.description}</q>
+                </div>
+            </div>
+            <div className="bottom">
+                
             </div>
         </div>
-    </div>
     );
 }//BusinessCard()
 
