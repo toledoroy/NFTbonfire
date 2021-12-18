@@ -7,13 +7,17 @@ import { useMoralisQuery, useWeb3ExecuteFunction } from "react-moralis";
 // import { useNFTCollections } from "hooks/useNFTCollections";
 // import { Link } from "react-router-dom";
 import { Form, Input, Button, Select, InputNumber } from 'antd';
-import { Image, Avatar } from 'antd';
+import { Image, Avatar, Skeleton } from 'antd';
 import { Row, Col } from 'antd';
 import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 // import { Space, Cascader } from 'antd';
 import { Upload, message } from 'antd';
 import { IPFS } from "helpers/IPFS";
 import { Persona } from "common/objects";
+
+// import { useVerifyMetadata } from "hooks/useVerifyMetadata";
+
+
 
 const { Option } = Select;
 
@@ -25,23 +29,31 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
 
 /**
  * Component: Persoan Edit Form
+ * 
+ *  TODO!! Load Metadata From W3
  */
  function PersonaEdit(props) {
     const { persona, contract } = props;
-    // const { contract } = props;
-    const tokenId = persona.tokenId;
+    // const tokenId = persona.get('token_id');
 
     // const [ formSocial, setFormSocial ] = useState({});
-    const [ metadata, setMetadata ] = useState(props?.metadata);
+    // const [ metadata, setMetadata ] = useState(props?.metadata);
+    // const [ metadata, setMetadata ] = useState(persona.get('metadata'));
+    const [ metadata, setMetadata ] = useState({});    //Start Empty
+
     //File Upload
-    const [ imageUrl, setImageUrl ] = useState();
+    const [ imageUrl, setImageUrl ] = useState(persona.get('image'));
     const [ imageLoading, setImageLoading ] = useState(false);
+    const [ isLoading, setIsLoading ] = useState(true);
+
+    // const { verifyMetadata, updateToken } = useVerifyMetadata();
 
     const { Moralis, setUserData, userError, isUserUpdating, user, isAuthenticated, account, chainId } = useMoralis();
     const contractProcessor = useWeb3ExecuteFunction();
-
+    
     //Contract Data
     const contractPersona = Persona.getContractData();
+    
 
     /* All Tokens 
     Moralis.Web3API.token.getAllTokenIds(contractPersona).then(ids => {
@@ -55,9 +67,21 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
     */
 
     //Log
-    console.warn("PersonaEdit() MEtadata", {chainId, env:process.env, metadata, contract, tokenId, orig:props.metadata});
+    console.warn("PersonaEdit() MEtadata", {chainId, env:process.env, metadata, imageUrl, contract, persona, contractPersona});
 
-    
+    const loadmetadata = async () => {
+        //Start Loading
+        setIsLoading(true);
+        //Load Metadata from Chain
+        let metadata = await persona.loadMetadata();
+        console.warn("PersonaEdit() Freshly Loaded Metadata:", {metadata, persona});
+        // setMetadata( persona.get('metadata') );
+        setMetadata( metadata );
+        //Ready
+        setIsLoading(false);
+    }
+    useEffect(() => { loadmetadata(); }, [persona]);
+
     /**
      * Save JSON File to IPFS
      * @var object jsonObject
@@ -166,6 +190,28 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
     }
 
     /**
+     * Update NFT URI
+     * @param string uri 
+     */
+    // async function updateNFT(uri, tokenId=1){
+        async function updateNFT(uri){
+            const options = {
+                // contractAddress: contractPersona.address,
+                contractAddress: persona.get('address'),
+                abi: contractPersona.abi,
+                functionName: 'update',
+                params: { tokenId: persona.get('token_id'), uri },
+            };
+    
+            //Update Contract
+            await contractProcessor.fetch({
+                params: options,
+                onSuccess: (data) => console.log("PersonaEdit.updateNFT() Success", {data, uri, persona, options}),
+                onError: (error) => console.error("PersonaEdit.updateNFT() Failed", {error, uri, persona, options}),
+            });
+        }
+    
+    /**
      * Form Submit Function
      */
      const onFinish = async (values) => {
@@ -184,6 +230,7 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
 
         //Save Metadata to IPFS
         saveJSONToIPFS(metadata).then(uri => {
+        // IPFS.saveJSONToIPFS(metadata).then(uri => {  //Failed
             console.warn("[TODO] PersonaEdit() Should Now Save Persoa Contract:", {metadata, uri});
             //Update Contract
             updateNFT(uri);
@@ -197,34 +244,17 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         // return newPost;
     };//onFinish()
     
-    /**
-     * Update NFT URI
-     * @param string uri 
-     */
-    async function updateNFT(uri, tokenId=1){
-        const options = {
-            contractAddress: contractPersona.address,
-            abi: contractPersona.abi,
-            functionName: 'update',
-            params: { tokenId, uri },
-        };
-
-        //Update Contract
-        await contractProcessor.fetch({
-            params: options,
-            onSuccess: (data) => console.log("updateNFT() Success", {data, uri, tokenId}),
-            onError: (error) => console.error("updateNFT() Failed", error, {uri, tokenId}),
-        });
-    }
-
     function formReset(){
         setMetadata(props?.metadata); 
-        
+        //Log
         console.log("(i) PersonaEdit() Metadata Form Reset", props?.metadata)
     }
 
     return (
     <>
+    <Skeleton active loading={isLoading}>
+
+
     <Col xs={24} lg={{ span: 20, offset: 2 }} className="personaEdit">
         {/* <input type="file" id="fileInput" onChange={handleChangeFileEvent}/> */}
         <Upload
@@ -303,7 +333,7 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
                         <h2><i className="bi bi-link"></i> Links</h2>
                         <div className="items">
                         <Row>
-                            {metadata.links.map((link, index) => {
+                            {metadata?.links?.map((link, index) => {
                                 // E.G. {type: 'blog', title: 'BayonEI', url: 'http://bayonei.com'}
                                 // console.log("[DEV] link to:"+link.type+" Title:'"+link.title+"'", link.url);
                                 return (
@@ -383,6 +413,7 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
             </Form.Item>
         </Form>
     </Col>
+    </Skeleton>
     </>
     );
 }//PersonaEdit()

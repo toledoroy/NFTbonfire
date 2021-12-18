@@ -18,7 +18,7 @@ export const useVerifyMetadata = () => {
      * @param object NFT 
      */
     function updateToken(NFT){
-        //W3 - Fetch URI from Contract
+        //W3 - Fetch Token URI
         let options = {
             contractAddress: NFT.token_address,
             functionName: "tokenURI",

@@ -113,7 +113,7 @@ footer { margin-top: 40px; }
 .persona .secondary .ant-collapse-header {flex-direction: row-reverse; justify-content: space-between; color: inherit; cursor: initial; flex-flow: row;}
 .persona .secondary .ant-collapse-arrow {margin: 0 0 0 12px !important;}
 .persona .secondary .item i { padding-right: 10px; font-size: 1.8em; vertical-align: middle; }
-.persona .secondary .item a { color:var(--color); }
+.persona .secondary .item a { color:var(--color); min-width: 120px; }
 .persona .secondary .ant-collapse-header { padding: 6px 12px; overflow: hidden; }
 .persona .secondary .ant-collapse-header:hover .network { top:-60px; }
 .persona .secondary .handle { top:60px; }

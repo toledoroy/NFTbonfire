@@ -1,4 +1,7 @@
+import { IPFS } from "helpers/IPFS";
 const Moralis = require("moralis/node");
+Moralis.enableWeb3();
+// const { chainId } = useMoralis();
 
 //** GLOBAL FUNCTIONS **/
 /**
@@ -33,12 +36,7 @@ export const Comment = Moralis.Object.extend("Post");     //Sub-Posts
 //-- Persona
 export const Persona = Moralis.Object.extend("Persona", 
     { /* Instance Methods */
-        /* I Wouldn't Want to Save This...
-        defaults: {
-            image: "https://joeschmoe.io/api/v1/random",
-            cover: "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
-        },
-        */
+
         //Insert New Persona
         insert(metadata){
 
@@ -47,6 +45,119 @@ export const Persona = Moralis.Object.extend("Persona",
         update(){
             return "TODO";
         },
+
+        //-- Loaders
+        /**
+         * Load Metadata from Chain
+         */
+         async loadMetadata(){
+            return await this.updateToken();
+        },
+        /**
+         * Update Token (URI & Metadata)
+         * @returns object metadata
+         */
+        async updateToken(){
+            let chain = this.get("chain") || this.get("chainId");
+            // console.log("[TEST] Persona.updateToken()  Address:", this.get('address'), Persona.getContractAddress(chain), chain, this);
+            // return;
+            
+            //TODO: Validate Current Chain Matches Contract's Chain
+
+            //W3 - Fetch Token URI
+            let options = {
+                contractAddress: Persona.getContractAddress(chain),
+                params: { tokenId:this.get('token_id') },
+                functionName: "tokenURI",
+                abi:[{
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "tokenId",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "tokenURI",
+                    "outputs": [
+                        {
+                            "internalType": "string",
+                            "name": "",
+                            "type": "string"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                }],
+            };
+            
+            try{
+                //Fetch Token URI
+                let uri = await Moralis.executeFunction(options);
+                
+                //Compare & Update Metadata if Needed
+                if(this.get('token_uri') !== uri) {
+                    //Log
+                    console.log("Persona.updateToken() Updating Token URI", {before:this.get('token_uri'), after:uri, perosna:this})
+                    //Update NFT
+                    this.set('token_uri', uri);
+                    //Update Metadata
+                    return await this.fetchMetadata(uri);
+                }//Different URI
+                else return this.get('metadata');
+            }
+            catch(error){
+                //Log
+               console.log("[TEST] Persona.updateToken() Error", {perosna:this, options, error});
+            }
+        },//updateToken()
+
+        /**
+         * Extract Metadata from NFT, 
+         *  Fallback: Fetch from URI
+         * @returns object metadata
+         */
+         async fetchMetadata(token_uri) {
+            // const token_uri = this.get('token_uri');
+            //Validate URI
+            if(!token_uri || !token_uri.includes('://')){
+                console.log('Persona.fetchMetadata() Invalid URI', {URI: token_uri});
+                return;
+            }
+            //Get Metadata
+            let uri = IPFS.resolveLink(token_uri);
+            //Log
+            // console.log('Persona.fetchMetadata() Running With ', {token_uri, uri});
+            try{
+                let metadata = await fetch(uri).then(res => res.json());
+                if(!metadata){
+                    //Log
+                    console.error("Persona.fetchMetadata() No Metadata found on URI:", {uri});
+                }
+                //Handle Setbacks
+                else if(metadata?.detail  && metadata.detail.includes("Request was throttled")){
+                    //Log
+                    console.warn("Persona.fetchMetadata() Bad Result for:"+uri+"  Will retry later", {metadata});
+                    //Retry That Again after 1s
+                    // setTimeout(function() { this.fetchMetadata(uri); }, 1000);
+                    await new Promise(resolve => setTimeout(resolve, 1000));        //WAIT 1s
+                    //Run Again
+                    return await this.fetchMetadata(uri);
+                }//Handle Opensea's {detail: "Request was throttled. Expected available in 1 second."}
+                else{//No Errors
+                    //Set
+                    this.set('metadata', metadata);
+                    //Log
+                    console.log("Persona.fetchMetadata() New Metadata From"+uri, {persona:this, metadata});
+                    //Return Metadata
+                    return metadata;
+                }//Valid Result
+            }
+            catch(error){
+                //Log
+               console.error("[TEST] Persona.updateToken() Error", {perosna:this, error});
+            }
+        },//fetchMetadata()
+
         //-- View
         //Get Persona Main Image
         getImage(){ 
@@ -57,6 +168,7 @@ export const Persona = Moralis.Object.extend("Persona",
             return this.get('metadata')?.cover || "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"; 
             // return this.get('metadata')?.cover || this.get('defaults')?.cover; 
         },
+        
     }, 
     { /* Class Methods */
         //Persona Data

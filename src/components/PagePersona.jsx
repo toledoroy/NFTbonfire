@@ -222,12 +222,12 @@ function PagePersona(props) {
     //     tokenId:'1'
     // };
     let persona = new Persona({ 
-        chainId:'0x4', 
+        chain:'0x4', 
         address:Persona.getContractAddress('0x4'), 
-        tokenId:'1',
+        token_id:'1',
         metadata
     });
-    // console.log("PagePersona() persona:", persona, persona.get('tokenId'));
+    // console.log("PagePersona() persona:", persona, persona.get('token_id'));
 
     useEffect(() => {
         /*
@@ -328,7 +328,7 @@ function PagePersona(props) {
                                 // let label = (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
                                 let headerContent = (
                                     <>
-                                    <a href={link} target="_blank" rel="noopener noreferrer" key={network} className="social-handle">
+                                    <a href={link} target="_blank" rel="noopener noreferrer" key={network} className="social-handle" data-color={personaFields.social.network[network]?.color || "#45668e"}>
                                         {label} 
                                         <span className="textSwitch">
                                         <span className="network">{network}</span>
@@ -388,15 +388,17 @@ function PagePersona(props) {
                             <div className="button">
                                 <Button variant="contained" color="primary" onClick={()=>{
                                     setIsEditMore(isEditMode===false);  //Toggle
-                                    // updatUserData()
-                                }}>Edit</Button>
+                                }}>{isEditMode ? "Cancel" : "Edit" }</Button>
                             </div>
                         </div>
                     </div>
 
-                    {isEditMode && <div className="edit">
-                        <PersonaEdit metadata={metadata} contract={contractPersona} persona={persona} />
-                    </div>}
+                    {isEditMode && 
+                    <div className="edit">
+                        {/* <PersonaEdit metadata={metadata} contract={contractPersona} persona={persona} /> */}
+                        <PersonaEdit persona={persona} />
+                    </div>
+                    }
 
                     <div className="accounts framed">
 
