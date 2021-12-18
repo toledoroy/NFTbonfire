@@ -70,6 +70,9 @@ export const Persona = Moralis.Object.extend("Persona",
                 params: { tokenId:this.get('token_id') },
                 functionName: "tokenURI",
                 abi:[{
+                    "name": "tokenURI",
+                    "type": "function",
+                    "stateMutability": "view",
                     "inputs": [
                         {
                             "internalType": "uint256",
@@ -77,7 +80,6 @@ export const Persona = Moralis.Object.extend("Persona",
                             "type": "uint256"
                         }
                     ],
-                    "name": "tokenURI",
                     "outputs": [
                         {
                             "internalType": "string",
@@ -85,8 +87,6 @@ export const Persona = Moralis.Object.extend("Persona",
                             "type": "string"
                         }
                     ],
-                    "stateMutability": "view",
-                    "type": "function"
                 }],
             };
             
@@ -95,15 +95,20 @@ export const Persona = Moralis.Object.extend("Persona",
                 let uri = await Moralis.executeFunction(options);
                 
                 //Compare & Update Metadata if Needed
-                if(this.get('token_uri') !== uri) {
+                if(1 || this.get('token_uri') !== uri) {    //Always Load New Metadata
                     //Log
                     console.log("Persona.updateToken() Updating Token URI", {before:this.get('token_uri'), after:uri, perosna:this})
                     //Update NFT
                     this.set('token_uri', uri);
                     //Update Metadata
                     return await this.fetchMetadata(uri);
+                    
                 }//Different URI
-                else return this.get('metadata');
+                else{
+                    //Log
+                    console.log("Persona.fetchMetadata() Metadata URI is Up to Date -- Return Saved Metadata", {persona:this});
+                    return this.get('metadata');
+                } 
             }
             catch(error){
                 //Log
@@ -161,12 +166,12 @@ export const Persona = Moralis.Object.extend("Persona",
         //-- View
         //Get Persona Main Image
         getImage(){ 
-            return this.get('metadata')?.image || "https://joeschmoe.io/api/v1/random"; 
-            // return this.get('metadata')?.image || this.get('defaults')?.image;
+            // return this.get('metadata')?.image || personaDefaultMetadata.image; //"https://joeschmoe.io/api/v1/random"; 
+            return this.get('metadata')?.image || this.getDefaultMetadata()?.image;
         },
         getCover(){ 
-            return this.get('metadata')?.cover || "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"; 
-            // return this.get('metadata')?.cover || this.get('defaults')?.cover; 
+            // return this.get('metadata')?.cover || personaDefaultMetadata.cover; //"https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"; 
+            return this.get('metadata')?.cover || this.getDefaultMetadata()?.cover; 
         },
         
     }, 
