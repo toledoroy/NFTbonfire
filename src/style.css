@@ -114,7 +114,7 @@ footer { margin-top: 40px; }
 .persona .secondary .ant-collapse-header {flex-direction: row-reverse; justify-content: space-between; color: inherit; cursor: initial; flex-flow: row;}
 .persona .secondary .ant-collapse-arrow {margin: 0 0 0 12px !important;}
 .persona .secondary .item i { padding-right: 10px; font-size: 1.8em; vertical-align: middle; }
-.persona .secondary .item a { color:var(--color); min-width: 120px; }
+.persona .secondary .item a { color:var(--color); min-width: 120px; white-space: nowrap; }
 .persona .secondary .ant-collapse-header { padding: 6px 12px; overflow: hidden; }
 .persona .secondary .ant-collapse-header:hover .network { top:-60px; }
 .persona .secondary .handle { top:60px; }
@@ -141,10 +141,19 @@ footer { margin-top: 40px; }
   transition: .32s ease-in;
   z-index: 2;
 }
-.persona .secondary .item:nth-child(1) a:after{ background: #3b5999; }
-.persona .secondary .item:nth-child(2) a:after{ background: #55acee; }
-.persona .secondary .item:nth-child(3) a:after { background: #0077b5; }
-.persona .secondary .item:nth-child(4) a:after { background: #dd4b39; }
+ 
+.persona .secondary .item a[data-network="twitter"]:after{ background: #1877f2; }
+.persona .secondary .item a[data-network="facebook"]:after{ background: #1da1f2; }
+.persona .secondary .item a[data-network="github"]:after{ background: #1da1f2; }
+.persona .secondary .item a[data-network="linkedin"]:after{ background: #0A66C2; }
+.persona .secondary .item a[data-network="telegram"]:after{ background: #1da1f2; }
+.persona .secondary .item a[data-network="instagram"]:after{ background: #c32aa3; }
+.persona .secondary .item a[data-network="youtube"]:after{ background: #ff0000; }
+.persona .secondary .item a[data-network="twitch"]:after{ background: #1da1f2; }
+.persona .secondary .item a[data-network="reddit"]:after{ background: #FF5700; }
+.persona .secondary .item a[data-network="medium"]:after{ background: #1da1f2; }
+.persona .secondary .item a[data-network="discord"]:after{ background: #1da1f2; }
+
 .persona .secondary .item:hover .textSwitch,
 .persona .secondary .item:hover i { color: #fff; z-index: 3; position:relative;}
 .persona .secondary .item:hover a:after { top: 0; }
@@ -189,6 +198,7 @@ footer { margin-top: 40px; }
   border-radius: 50%;
   padding: 7px;
 }
+.BusinessCard .bottom { display: flex; flex-direction: row; justify-content: end; }
 
 /* Stack */
 .stack {flex-wrap: nowrap;}

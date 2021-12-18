@@ -51,6 +51,7 @@ const contractPersona = Persona.getContractData();
     let metadata = {
         // username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
         name: "Anonymous",
+        role: "Hacker",
         // image: "https://images.unsplash.com/photo-1636716642701-01754aef1066?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",  //Random Dark Lady
         // image: "https://ipfs.moralis.io:2053/ipfs/QmZ2oHHLUUARUTz3Jx2wSWYTtALUtEhQtT1hpxb7Fbvr5y",   //Anon in hood
         image: "https://ipfs.moralis.io:2053/ipfs/QmWyKVFkUCfwUFQZyKjJ9ifqyWatUFStMi8B3MtT3CkhyP",      //Anon logo
@@ -131,12 +132,13 @@ const contractPersona = Persona.getContractData();
     const defaultMetadata = {
         // username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
         name: "Anonymous",
+        role: "Hacker",
         // image: "https://images.unsplash.com/photo-1636716642701-01754aef1066?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",  //Random Dark Lady
         // image: "https://ipfs.moralis.io:2053/ipfs/QmZ2oHHLUUARUTz3Jx2wSWYTtALUtEhQtT1hpxb7Fbvr5y",   //Anon in hood
         image: "https://ipfs.moralis.io:2053/ipfs/QmWyKVFkUCfwUFQZyKjJ9ifqyWatUFStMi8B3MtT3CkhyP",      //Anon logo
         cover: "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
         // description: "A hardworking builder, I am",
-        description: "We are legion@",
+        description: "We are legion",
         // email: "toledoroy@gmail.com",        //Don't 
         location: {
             name:"World Wide", latitude: 0, longitude: 0,
@@ -249,8 +251,6 @@ function PagePersona(props) {
         schema.save();
         */
     },[]);
-    
-
 
     // const currentuser = Moralis.User.current();
     // console.log("[DEV] PagePersona() ", {handle, user, currentuser});
@@ -327,7 +327,7 @@ function PagePersona(props) {
                                 // let label = (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
                                 let headerContent = (
                                     <>
-                                    <a href={link} target="_blank" rel="noopener noreferrer" key={network} className="social-handle" data-color={personaFields.social.network[network]?.color || "#45668e"}>
+                                    <a href={link} target="_blank" rel="noopener noreferrer" key={network} className="social-handle" data-network={network}>
                                         {label} 
                                         <span className="textSwitch">
                                         <span className="network">{network}</span>
