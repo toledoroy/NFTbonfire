@@ -48,9 +48,10 @@ footer { margin-top: 40px; }
 .clearfloat{  clear: both; width: 100%; display: block; }
 .framed{ padding: 15px; max-width: 1200px;} 
 
+
 /* Components */
 .collections { transition: all 0.2s ease-in-out; }
-.collections .personas { display: flex; }
+.collections .personas { display: flex; float:right; }
 .collection { margin-bottom: 20px; }
 .collection .title { font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; }
 .collection .title .ant-ribbon { top:0; }
@@ -94,9 +95,7 @@ footer { margin-top: 40px; }
 .item .flip-card-back dl dl dd { margin-left:10px; }
 
 /* Page:Persona */
-.persona .header .cover{ width:100%; height: 290px; overflow: hidden; 
-  /* border-radius: 0 0 12px 12px; */
-}
+.persona .header .cover{ width:100%; height: 230px; overflow: hidden; }
 .persona .details{ display: flex; }
 .persona .details .actions {margin-left:auto;}
 .persona .details .image{ 
@@ -119,6 +118,10 @@ footer { margin-top: 40px; }
 .persona .secondary .ant-collapse-header:hover .network { top:-60px; }
 .persona .secondary .handle { top:60px; }
 .persona .secondary .ant-collapse-header:hover .handle { top:0px; }
+
+.persona .secondary .ant-collapse {border:none; background: transparent; }
+.persona .secondary .ant-collapse-item { border:1px solid #d9d9d9; border-radius: 17px;  background-color: #fafafa; margin-bottom:5px; }
+
 .persona .textSwitch { display: inline-flex; flex-wrap: wrap; } 
 .persona .textSwitch span {
   position: relative;
@@ -180,6 +183,14 @@ footer { margin-top: 40px; }
 /* .personaEdit .links_wrapper .items .item { width: 90%; } */
 
 /* Persona Business Card */
+.business_card_container {
+  border: 2px solid rgb(231, 234, 243);
+  box-shadow: 0 0 10px #9ecaed;
+  padding: 10px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--background-color);
+}
 .BusinessCard {
   display: flex;
   flex-direction: column;
@@ -188,7 +199,7 @@ footer { margin-top: 40px; }
   max-width: 220px;
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 0 10px #9ecaed;
+  /* box-shadow: 0 0 10px #9ecaed; */
   padding: 10px;
   margin: 10px;
 }
@@ -199,6 +210,8 @@ footer { margin-top: 40px; }
   padding: 7px;
 }
 .BusinessCard .bottom { display: flex; flex-direction: row; justify-content: end; }
+.BusinessCard .bottom .actions {display: flex; justify-content: space-evenly;}
+
 
 /* Stack */
 .stack {flex-wrap: nowrap;}

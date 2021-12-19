@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 //import { Card, Image, Tooltip, Modal, Input } from "antd";
-import { Breadcrumb } from 'antd';
-import { Skeleton, Button } from "antd";
+import { Breadcrumb, Skeleton, Button, Dropdown, Avatar } from "antd";
 import { useMoralis, useNFTBalances } from "react-moralis";
-
 // import { useNFTBalance } from "hooks/useNFTBalance";
 import NFTDisplayCollection from "components/Wallet/NFTDisplayCollection";
-// import Space from "components/NFTSingle/Space";
-import BusinessCard from "components/Persona/BusinessCard";
-
+import PersonaChanger from "components/Persona/PersonaChanger";
 // import Address from "components/Address/Address";
-
 // import { useNFTCollections } from "hooks/useNFTCollections";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 import { Persona, Post, Room } from "common/objects";
-// import { useNFTBalance } from "hooks/useNFTBalance";
 import Space from "components/NFTSingle/Space";
+import { CollectionContext } from "common/context";
+import { NFTHelper } from "helpers/NFTHelper";
 
 import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider"; //DEPRECATED
     
@@ -44,54 +40,30 @@ import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvide
         synced_at: "2021-11-17T03:54:32.340Z"
     }
 */
-
-
-
-
-
+/**
+ * Component
+ * @param {*} props 
+ */
 function NFTCollections(props) {
-
+ 
   //Extract Props
   // const { accountHash } = props.match.params;
   let { accountHash, collectionHash } = props.match.params;
 
   const { Moralis, isWeb3Enabled , chainId, user, account  } = useMoralis();
-  const { walletAddress } = useMoralisDapp();
   const [ isAllowed, setIsAllowed ] = useState(false);
-
-  /** [V]
-   * Use Contract's balanceOf() Function
-   * @param {*} account 
-   * @param {*} contractAddress 
-   * @param {*} chainId 
-   * @returns 
-   */
-  const getBalance = async (account, contractAddress, chain) => {
-    //Parameters
-    const options = { 
-      // chain: '0x4', 
-      chain, 
-      address: account, 
-      token_address: contractAddress,
-    };
-    // const balance = await Moralis.Web3API.account.getNFTs(options);
-    let balance = await Moralis.Web3API.account.getNFTsForContract(options).then(res => res.total);
-    //Log
-    // console.warn("[NFTCollections] getBalance()", {balance, options}); 
-    //Return
-    return balance;
-  }
 
   useEffect(() => { /* Check if Account Owns Any of These Assets */
     if(collectionHash){
       let chain = props?.match?.params?.chain || chainId;
       //Fetch Balance
-      getBalance(account, collectionHash, chain).then(balance => {
+      NFTHelper.getBalance(Moralis, account, collectionHash, chain).then(balance => {
         //Log
         console.warn("[NFTCollections] Account's Balance for this Contract:"+balance, {balance, account, collectionHash}); 
         //Set Permissions
         setIsAllowed(balance > 0);
       }, [collectionHash, account]);
+      
       /* ServerSide Validation 
       let params = {userId:user.id, hash:collectionHash, chainId, account};
       Moralis.Cloud.run("validateAccess", params).then(res => {
@@ -107,39 +79,21 @@ function NFTCollections(props) {
       return;
     }
   }, [accountHash, collectionHash]);
-  
-  // useEffect(() => {
-  // }, []);
 
   //Init Options
   let options = {
     // chain:"0x4", 
     // address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1'
   };
-
   if (accountHash) options.address = accountHash;    //No Dice... :(
-  else accountHash = walletAddress; 
   if(props?.match?.params?.chain) options.chain = props.match.params.chain;
-  // let guestOptions = {chain:"0x4", address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1'};
-  
-  // const { NFTBalance, getNFTBalance } = useNFTBalance();   //Using Colleciton Instead
   const { NFTCollections, NFTpersonas } = useNFTCollections(options);
-  // const { NFTBalances } = useNFTBalances(guestOptions);
-  // const { data: NFTBalances, isLoading, error } = useNFTBalances(options);   //Get NFTs for Account
-  // console.log("[TEST] NFTCollections() NFTBalance", NFTBalances);
+
+  //Log
   console.warn("(i) Render NFTCollection() for Collections: ", {NFTCollections, collectionHash, options, params:props.match.params });
   
-  try {
-  
-    //Example
-    //const { runContractFunction, contractResponse, error, isLoading } = useAPIContract({
-    //   abi: usdcEthPoolAbi,
-    //   address: usdcEthPoolAddress,
-    //   functionName: "observe",
-    //   params: {secondsAgos: [0, 10],},
-    // });
-
-    async function testFunc() {
+  async function testFunc() {
+    try {
       if(isWeb3Enabled) {
         //Cloud Functions
         const msg = await Moralis.Cloud.run("sayHi");
@@ -162,43 +116,23 @@ function NFTCollections(props) {
         //Object Queries
         const queryPosts = new Moralis.Query(Post); //Query the Object
         // query.equalTo("roomId", "?"); //Filter           //TODO: Get Current Room ID
-        // query.notEqualTo("ownerName", "Daenerys");
-        // query.greaterThan("ownerAge", 18);
         queryPosts.limit(20); 
         // query.skip(10); 
         // query.withCount(); //Add Count
-        //Sorting
-        // query.ascending("strength");
-        // query.descending("strength");
-        // query.containedIn("ownerName", ["Jonathan Walsh", "Dario Wunsch", "Shawn Simon"]);
-        // query.exists("strength");
-        // query.exclude("ownerName");  //Fields That Aren't This
         const allPosts = await queryPosts.find();
         // const object = await query.first();
         console.warn("Moralis Object Queries:", {allPosts});
-
-        /* Queries of Queries 
-        // const Team = Moralis.Object.extend("Team");
-        const RoomQuery = new Moralis.Query(Room);
-        // teamQuery.greaterThan("winPct", 0.5);
-        // const userQuery = new Moralis.Query(Moralis.User);
-        const postQuery = new Moralis.Query(Post);
-        postQuery.matchesKeyInQuery("objectId", "roomId", RoomQuery);    //TEST THIS -- Need to Create Some Rooms & Match them to Posts
-        // results has the list of users with a hometown team with a winning record
-        const postsInRoom = await postQuery.find();
-        //Log
-        console.warn("Moralis Object Queries 2", {postsInRoom});
-        */
-
       }//Web3Enabled
       // else console.warn("NFTCollection() WAIT for Moralis Cloud");  
-    }//testFunc()
-    // testFunc();
-  }
-  catch (error) {
-    //Log
-    console.log("[CAUGHT] NFTCollection() Exception", {error});
-  }//SANDBOX
+    }
+    catch (error) {
+      //Log
+      console.log("[CAUGHT] NFTCollection() Exception", {error});
+    }//SANDBOX
+  }//testFunc()
+  // testFunc();
+
+ 
 
   
 
@@ -221,20 +155,6 @@ function NFTCollections(props) {
             <h4 className="subheading">{Object.keys(NFTCollections).length} Collections</h4>
           </div>
 
-          {NFTpersonas && 
-          <div className="personas">
-            <h2>Personas:</h2>
-            {Object.values(NFTpersonas).map((NFTpersona, index) => {
-              //Wrap
-              let PersonaObject = new Persona(NFTpersona);
-              console.warn("[TEST] NFTCollection() This PersonaObject", PersonaObject);
-            return (
-              <BusinessCard key={index} persona={PersonaObject} metadata={NFTpersona.metadata} className="item"/>
-            );
-            })}
-          </div>
-          }
-
           {NFTCollections && Object.values(NFTCollections).map((collection, index) => {
             if(!collectionHash || collectionHash === collection.hash) {
               //Link Destination (Single Collection)
@@ -248,6 +168,7 @@ function NFTCollections(props) {
                 };
                 return (
                   <>
+                  <CollectionContext.Provider value={collection}>
                     {/* <p>{collection.owned ? 'Owned' : 'Not Owned'}</p> */}
                     <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
                       <h2 className="title">
@@ -259,25 +180,22 @@ function NFTCollections(props) {
                         <div key="cards" className="cards">
                           <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} dest={dest} />
                         </div>
-                        {collectionHash && <div key="space" className="space_container"><Space hash={collectionHash} collection={collection} /></div>}
+                        {collectionHash && 
+                        <div key="space" className="space_container">
+                          <Space hash={collectionHash} collection={collection} NFTpersonas={NFTpersonas}/>
+                        </div>
+                        }
                       </div>
                     </div>
+                    </CollectionContext.Provider>
                   </>
                 );
               } else return '';
           })}
       </div>
-
-      {/* NFTs (Singles)
-        <div style={styles.NFTs}>
-          {NFTBalance &&
-            NFTBalance.map((nft, index) => (
-              <NFTDisplaySingle key={nft.token_id} nft={nft} />
-            ))}
-        </div>
-      */}  
     </Skeleton>
   );
 }//NFTCollections()
 
 export default NFTCollections;
+

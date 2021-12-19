@@ -155,11 +155,8 @@ function Space({hash, collection, NFTpersonas}) {
     */
   return (
     <CollectionContext.Consumer>
-      {collection => (
+    {collection => (
     <Skeleton active loading={!space}>
-      
-        
-  
       <div className="space">
           {NFTpersonas && 
           <div className="personas">
@@ -207,10 +204,9 @@ function Space({hash, collection, NFTpersonas}) {
           <ShowMore />
           <div className="clearfloat"></div>
       </div>
-      
     </Skeleton>
     )} 
-      </CollectionContext.Consumer> 
+    </CollectionContext.Consumer> 
   );
 }//Space()
 

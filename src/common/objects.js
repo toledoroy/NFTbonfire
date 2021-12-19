@@ -182,7 +182,14 @@ export const Persona = Moralis.Object.extend("Persona",
          * @returns 
          */
         getFallback(property){ return this.get('metadata')?.[property] || personaDefaultMetadata[property]; },
-
+        /**
+         * Link to Persona
+         */
+        getLink(){
+            let handle = this.get('handle');
+            let pathname = handle ? "/"+handle : "/persona/"+this.get('chain')+"/"+this.get('token_address')+"/"+this.get('token_id');
+            return pathname;
+        }
     }, 
     { /* Class Methods */
         //Persona Data
@@ -210,6 +217,7 @@ const personaDefaultMetadata = {
     // name: "Satoshi",
     "firstname": "Satoshi",
     "lastname": "Nakamoto",
+    "role": "Inventor",
     "image": "https://images.unsplash.com/photo-1636716642701-01754aef1066?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
     "cover": "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
     "description": "I'm a rather cryptic fellow",

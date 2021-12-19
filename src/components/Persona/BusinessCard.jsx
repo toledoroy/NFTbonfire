@@ -9,7 +9,8 @@ import { Image, Avatar } from 'antd';
 // import { Space, Cascader } from 'antd';
 // import { IPFS } from "helpers/IPFS";
 // import { PersonaHelper } from "helpers/PersonaHelper";
-
+import { Link } from "react-router-dom";
+   
 
 /**
  * Component: Persoan Edit Form
@@ -51,7 +52,6 @@ import { Image, Avatar } from 'antd';
     //Class
     let className = "BusinessCard";
     if(props.className) className += ' '+props.className;
-
     //Render
     return (
         <div className={className}>
@@ -66,7 +66,10 @@ import { Image, Avatar } from 'antd';
                 </div>
             </div>
             <div className="bottom">
-                
+                {(props.actions!==false) && <div className="actions flex">
+                    <Link  key="link" to={{ pathname:persona.getLink() }} className="inner flex">View</Link>
+                    <button className="button">Select</button>
+                </div>}
             </div>
         </div>
     );
