@@ -6,7 +6,7 @@ import { useMoralis, useNFTBalances } from "react-moralis";
 // import { useNFTBalance } from "hooks/useNFTBalance";
 import NFTDisplayCollection from "components/Wallet/NFTDisplayCollection";
 import PersonaChanger from "components/Persona/PersonaChanger";
-// import Address from "components/Address/Address";
+import Address from "components/Address/Address";
 // import { useNFTCollections } from "hooks/useNFTCollections";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 import { Persona, Post, Room } from "common/objects";
@@ -14,6 +14,7 @@ import Space from "components/NFTSingle/Space";
 import { CollectionContext } from "common/context";
 import { NFTHelper } from "helpers/NFTHelper";
 import __ from "helpers/__";
+import { getChainName, getChainLogo } from "helpers/networks";
 import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider"; //DEPRECATED
     
 /**
@@ -140,22 +141,32 @@ function NFTCollections(props) {
   return (
     <Skeleton loading={!isWeb3Enabled}>
       
-      {props?.match?.params?.showBreadcrumbs !== false && 
-      <Breadcrumb separator=">">
-        {/* <Breadcrumb.Item key="1">Home</Breadcrumb.Item> */}
-        {accountHash && <Breadcrumb.Item key="2"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>NFT Collections</Link></Breadcrumb.Item>}
-        {collectionHash && <Breadcrumb.Item key="3"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash+'/'+collectionHash}}>Room</Link></Breadcrumb.Item>}
-        {/* <Breadcrumb.Item key="4"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>SELECT</Link></Breadcrumb.Item> */}
-        {/* <Breadcrumb.Item key="4">Post</Breadcrumb.Item> */}
-        
-      </Breadcrumb>
-      }
-      
       {!isAllowed && <p className="debug" style={{float:'right'}}>NOT ALLOWED</p>}
+      
+      
+      
 
       <div key="collections" className="collections framed">
           <div key="header" className="header">
-            {accountHash ? <h2>{accountHash}'s NFTs</h2> : <h2>My NFTs</h2>}
+            {(props?.match?.params?.showBreadcrumbs !== false) && 
+              <>
+              <Breadcrumb separator=">">
+                {/* <Breadcrumb.Item key="1">Home</Breadcrumb.Item> */}
+                {accountHash && <Breadcrumb.Item key="2"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>NFT Collections 
+                {/* for <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
+                </Link></Breadcrumb.Item>}
+                {collectionHash && <Breadcrumb.Item key="3"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash+'/'+collectionHash}}>Room</Link></Breadcrumb.Item>}
+                {/* <Breadcrumb.Item key="4"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>SELECT</Link></Breadcrumb.Item> */}
+                {/* <Breadcrumb.Item key="4">Post</Breadcrumb.Item> */}
+                
+              </Breadcrumb>
+              {accountHash ? <h2>
+                    {/* <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
+                    {accountHash}'s NFTs
+                  </h2> 
+                : <h2>My NFTs</h2>}
+              </>
+            }
             {!collectionHash && <h4 className="subheading">{Object.keys(NFTCollections).length} Collections</h4>}
           </div>
 
