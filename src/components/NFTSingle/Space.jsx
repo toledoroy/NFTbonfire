@@ -7,8 +7,9 @@ import { FireTwoTone } from '@ant-design/icons';
 import { Skeleton, Collapse, Badge, List, Comment } from 'antd';
 // import { useMoralisQuery } from "react-moralis";
 import VotePane from "components/Room/VotePane";
-
+import PersonaChanger from "components/Persona/PersonaChanger";
 import PersonaHelper from "helpers/PersonaHelper";
+import { CollectionContext } from "common/context";
 import __ from "helpers/__";
 
 
@@ -19,7 +20,7 @@ import __ from "helpers/__";
 /**
  * Component: Space (W/Chat Room)
  */
-function Space({hash, collection}) {
+function Space({hash, collection, NFTpersonas}) {
   const { Moralis, isWeb3Enabled } = useMoralis();
   const [ space, setSpace ] = useState({});
   const [ rooms, setRooms ] = useState([]);
@@ -145,9 +146,27 @@ function Space({hash, collection}) {
   //Validate  
   // if(collection.contract_type!=="ERC1155") return <div>Unsupported Collection Type:'{collection.contract_type}'</div>;   //It's a mess out there, ERC721 0xcc14dd8e6673fee203366115d3f9240b079a4930 Contains Multiple NFTs (All Have amount=1)
   // if(!space) return <div className="loading">...LOADING SPACE...</div>;    //Enable
+  
+  /* Consumer -- Fail   //Unhandled Rejection (TypeError): render is not a function
+  console.log("Space() For CollectionContext:", {CollectionContext});
+  // <CollectionContext.Consumer>
+  //  {collection => {console.warn("[TEST] Space() CollectionContext: ", {collection})}} 
+  //  </CollectionContext.Consumer> 
+    */
   return (
+    <CollectionContext.Consumer>
+      {collection => (
     <Skeleton active loading={!space}>
+      
+        
+  
       <div className="space">
+          {NFTpersonas && 
+          <div className="personas">
+            {/* {console.warn("[TEST] NFTCollection() This NFTpersona", NFTpersonas, "First:", NFTpersonas[0])} */}
+            <PersonaChanger persona={NFTpersonas[0]} personas={NFTpersonas}/>
+          </div>
+          }
           <h2> Private Space for {collection.name}</h2>
           <h4>[Addr:{collection.hash}]</h4>
           {/* <span key="typs">Type: {collection.contract_type}</span> */}
@@ -190,6 +209,8 @@ function Space({hash, collection}) {
       </div>
       
     </Skeleton>
+    )} 
+      </CollectionContext.Consumer> 
   );
 }//Space()
 
