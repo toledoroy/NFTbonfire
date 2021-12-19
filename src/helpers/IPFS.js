@@ -11,20 +11,6 @@ export const IPFS = {
     },
     
 
-      
-    /*
-    sanitize: (str) => {
-        try{
-          return str.toString().replace(/_/g, ' '); 
-        }
-        catch(err){
-          console.error("IPFS.sanitize() Error sanitizing metadata field:", {str, err});
-          return str;
-        }
-    }//sanitize()
-    */
-
-    
     /** ...Needs Moralis...
      * Save JSON File to IPFS
      * /

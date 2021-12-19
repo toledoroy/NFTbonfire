@@ -13,7 +13,7 @@ import { Persona, Post, Room } from "common/objects";
 import Space from "components/NFTSingle/Space";
 import { CollectionContext } from "common/context";
 import { NFTHelper } from "helpers/NFTHelper";
-
+import __ from "helpers/__";
 import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider"; //DEPRECATED
     
 /**
@@ -139,6 +139,7 @@ function NFTCollections(props) {
   //style={styles.NFTs}
   return (
     <Skeleton loading={!isWeb3Enabled}>
+      
       {props?.match?.params?.showBreadcrumbs !== false && 
       <Breadcrumb separator=">">
         {/* <Breadcrumb.Item key="1">Home</Breadcrumb.Item> */}
@@ -146,13 +147,16 @@ function NFTCollections(props) {
         {collectionHash && <Breadcrumb.Item key="3"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash+'/'+collectionHash}}>Room</Link></Breadcrumb.Item>}
         {/* <Breadcrumb.Item key="4"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>SELECT</Link></Breadcrumb.Item> */}
         {/* <Breadcrumb.Item key="4">Post</Breadcrumb.Item> */}
-        {!isAllowed && <p>NOT ALLOWED</p>}
+        
       </Breadcrumb>
       }
-      <div key="collections" className="collections">
+      
+      {!isAllowed && <p className="debug" style={{float:'right'}}>NOT ALLOWED</p>}
+
+      <div key="collections" className="collections framed">
           <div key="header" className="header">
             {accountHash ? <h2>{accountHash}'s NFTs</h2> : <h2>My NFTs</h2>}
-            <h4 className="subheading">{Object.keys(NFTCollections).length} Collections</h4>
+            {!collectionHash && <h4 className="subheading">{Object.keys(NFTCollections).length} Collections</h4>}
           </div>
 
           {NFTCollections && Object.values(NFTCollections).map((collection, index) => {
@@ -172,9 +176,10 @@ function NFTCollections(props) {
                     {/* <p>{collection.owned ? 'Owned' : 'Not Owned'}</p> */}
                     <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
                       <h2 className="title">
+                        <span className="debug">{collection.contract_type}</span> 
                         <Link key={collection.hash+'Link'} to={dest}>
-                          {collection.contract_type} Collection: {collection.name} ({collection.symbol})
-                        </Link>
+                           Collection: {__.sanitize(collection.name)} ({collection.symbol})
+                        </Link> 
                       </h2>
                       <div className="middle">
                         <div key="cards" className="cards">

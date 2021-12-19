@@ -165,7 +165,7 @@ function Space({hash, collection, NFTpersonas}) {
           </div>
           }
           <h2> Private Space for {collection.name}</h2>
-          <h4>[Addr:{collection.hash}]</h4>
+          {/* <h4>[Addr:{collection.hash}]</h4> */}
           {/* <span key="typs">Type: {collection.contract_type}</span> */}
           {/* <span key="symbol">Symbol: {collection.symbol}</span> */}
           {/* TODO: Add Field: Creator, Total No. of Items, */}

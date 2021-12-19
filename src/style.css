@@ -46,7 +46,7 @@ footer { margin-top: 40px; }
 /* GLOBAL MODIFIERS */
 .flex {display: flex;}
 .clearfloat{  clear: both; width: 100%; display: block; }
-.framed{ padding: 15px; max-width: 1200px;} 
+.framed{ padding: 15px; max-width: 1200px; margin:auto;} 
 
 
 /* Components */
@@ -110,11 +110,16 @@ footer { margin-top: 40px; }
   justify-content: space-between;
 }
 .persona .primary { flex-grow: 1; }  
-.persona .secondary .ant-collapse-header {flex-direction: row-reverse; justify-content: space-between; color: inherit; cursor: initial; flex-flow: row;}
+.persona .secondary .ant-collapse-header {
+  flex-direction: row-reverse; justify-content: space-between; color: inherit; cursor: initial; 
+  flex-flow: row;
+  padding: 6px 12px; 
+  overflow: hidden; 
+}
 .persona .secondary .ant-collapse-arrow {margin: 0 0 0 12px !important;}
 .persona .secondary .item i { padding-right: 10px; font-size: 1.8em; vertical-align: middle; }
 .persona .secondary .item a { color:var(--color); min-width: 120px; white-space: nowrap; }
-.persona .secondary .ant-collapse-header { padding: 6px 12px; overflow: hidden; }
+
 .persona .secondary .ant-collapse-header:hover .network { top:-60px; }
 .persona .secondary .handle { top:60px; }
 .persona .secondary .ant-collapse-header:hover .handle { top:0px; }
@@ -229,7 +234,7 @@ footer { margin-top: 40px; }
 .space .ant-collapse-content { background: none;}
 
 /* Space - Room List */
-.room_list { }
+.room_list { clear: both; }
 .room_list .ant-collapse { border:none; background:none; }
 .room_list .room_entrance {
   display: flex;
@@ -244,10 +249,10 @@ footer { margin-top: 40px; }
   /* border-bottom: 1px solid #9ecaed; */
   /* margin-bottom:10px; */
 }
-
+.room_list .ant-collapse-header { display:block !important; }
 .room_entrance .image { width: 99px; flex: 0 0;}
 /* .room_entrance .img { width:100%; } */
-.room_entrance .content { padding:0 10px; }
+.room_entrance .content { padding:0 10px; flex: 1 1; }
 .room_entrance .anticon{ margin-right: 5px; }
 .room_entrance .vote { margin: auto 0 auto auto ; }
 .post { 
@@ -340,7 +345,8 @@ button:active {
   animation: slideIn 0.6s ease-in-out forwards;
   animation-delay: 0.15s;
   overflow-y: auto;
-  height: calc(100vh - 400px);
+  height: calc(100vh - 320px);
+  display: flex;
   flex-grow: 1;
 }
 .space_container:nth-child(odd) { animation-duration: 0.6s; /* So they look staggered */ }
