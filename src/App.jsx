@@ -159,6 +159,7 @@ const App = ({ isServerInfo }) => {
               
               <Route path="/contract"><Contract /></Route>
               <Route path="/nonauthenticated"><>Please login using the "Authenticate" button</></Route>
+              <Route path="/persona/:chain/:contract/:token_id" component={PagePersona} />
               <Route exact path="/:handle/" component={PagePersona} />
               <Route path="*"><Page404 /></Route>
             </Switch>
