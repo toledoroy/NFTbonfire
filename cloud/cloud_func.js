@@ -65,32 +65,6 @@ Moralis.Cloud.define("validateAccess", async (request) => {
   // return true;
 });
 
-/* PERSONA FUNCTIONS */
-/**
- * Get Personas for Account
- */
-Moralis.Cloud.define("getPersonas", async (request) => {  
-  let options = {
-    chainId: "rinkeby",
-  };
-
-  // options.account = request.params?.account ? request.params.account : "CURRENT_ACCOUNT";
-  if(request.params?.account) options.account = request.params.account;
-
-  //Log
-  logger.warn("[TEST] getPersonas() for Current User:"+request.user?.id, {options});
-
-  //Fetch 
-  let nfts = Moralis.getNFTBalance(options);
-  
-  
-  logger.warn(nfts);
-  logger.log(request.user);
-  
-
-  return nfts;
-});
-
 
 /* VOTES */
 /**
