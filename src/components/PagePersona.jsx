@@ -384,7 +384,7 @@ function PagePersona(props) {
                                     {/* {link.type} */}
                                      <a href={link.url} key={index}>
                                         <i className="bi bi-link"></i>
-                                        {link.title}
+                                        <span className="handle">{link.title}</span>
                                     </a>
                                 </>
                             } key={index} collapsible="disabled" showArrow={false}  className="item">
@@ -436,7 +436,8 @@ function PagePersona(props) {
                             hideAdd={!isEditMode}
                             >
                             {metadata?.accounts?.map((account, index) => (
-                                <TabPane tab={(<span title={getChainName(account.chain)}><Address icon={getChainLogo(account.chain)} copyable address={account.address} size={5} /></span>)} key={account.address+':'+account.chain} closable={isEditMode}>
+                                <TabPane tab={(<span title={getChainName(account.chain)}>
+                                    <Address icon={getChainLogo(account.chain)} copyable address={account.address} size={5} /></span>)} key={account.address+':'+account.chain} closable={isEditMode}>
                                     <div className="item framed" key={index}>
                                         
                                         <div className="flex">
