@@ -14,6 +14,7 @@ import { Menu, Layout, Skeleton } from "antd";
 import "antd/dist/antd.css";
 import NativeBalance from "components/NativeBalance";
 import "./style.css";
+import "./style.scss";
 // import QuickStart from "components/QuickStart";
 import Contract from "components/Contract/Contract";
 import Text from "antd/lib/typography/Text";
@@ -24,6 +25,8 @@ import NFTCollections from "components/NFTCollections";
 // import RoomPage from "components/RoomPage";
 import PagePersona from "components/PagePersona";
 import Page404 from "components/Page404";
+
+// lessc "./style.less"
 
 const { Header, Footer } = Layout;
 const styles = {

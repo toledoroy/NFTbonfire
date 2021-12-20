@@ -263,7 +263,7 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         console.log("(i) PersonaEdit() Metadata Form Reset", props?.metadata)
     }
 
-    let size = 200;
+    let size = 200; //Avater Circumference
     return (
     <>
     <Skeleton active loading={isLoading}>
