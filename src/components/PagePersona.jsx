@@ -8,37 +8,28 @@ import { Avatar } from 'antd';
 import { Button, Skeleton } from "antd";
 import PersonaEdit from "components/Persona/PersonaEdit";
 import Address from "components/Address/Address";
-import { PersonaHelper } from "helpers/PersonaHelper";
+// import { PersonaHelper } from "helpers/PersonaHelper";
 import { Collapse } from 'antd';
 import NFTCollections from "components/NFTCollections";
 import { getChainName, getChainLogo } from "helpers/networks";
 import { Persona } from "common/objects";
 import { IPFS } from "helpers/IPFS";
-
+// import { Form } from 'antd';
+import { Input, Select } from 'antd';
 import { Tabs } from 'antd';
+import { Row, Col } from 'antd';
+import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
+
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
-
-
-// import { FireTwoTone } from '@ant-design/icons';
-// import Post from "components/Room/Post"
-// import VotePane from "components/Room/VotePane"
-// import AddPost from "components/Room/AddPost"
-// import Blockie from "components/Blockie";
-// import Address from "components/Address/Address";
-
-// import {useRoute} from '@react-navigation/native';
-
-//Persona Contract ABI
-// import personaABI from "contracts/abi/PERSONA.json";
-const personaABI = require('contracts/abi/PERSONA.json');
 
 //Persona Fields Mapping
 const personaFields = require('schema/PersonaData.json');
 
+//Persona Contract ABI
+// import personaABI from "contracts/abi/PERSONA.json";
+// const personaABI = require('contracts/abi/PERSONA.json');
 // console.log("PagePersona() personaABI:", personaABI);
-
-
 // const contractPersona = {
 //     address: '0x9E91a8dDF365622771312bD859A2B0063097ad34', 
 //     chain:4,
@@ -46,90 +37,7 @@ const personaFields = require('schema/PersonaData.json');
 // };
 const contractPersona = Persona.getContractData();
 
-
-//Example Metadata Object
-let exampleMetadata = {
-    // username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
-    name: "Anonymous",
-    role: "Hacker",
-    // image: "https://images.unsplash.com/photo-1636716642701-01754aef1066?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",  //Random Dark Lady
-    // image: "https://ipfs.moralis.io:2053/ipfs/QmZ2oHHLUUARUTz3Jx2wSWYTtALUtEhQtT1hpxb7Fbvr5y",   //Anon in hood
-    image: "https://ipfs.moralis.io:2053/ipfs/QmWyKVFkUCfwUFQZyKjJ9ifqyWatUFStMi8B3MtT3CkhyP",      //Anon logo
-    cover: "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
-    // description: "A hardworking builder, I am",
-    description: "We are legion@",
-    // email: "toledoroy@gmail.com",        //Don't 
-    location: {
-        name:"World Wide", latitude: 0, longitude: 0,
-        // name:"Seattle, WA", latitude: 47.60275857601884, longitude: -122.33726455335282,
-    },
-    social: {
-        // twitter: "toledoroy",
-        // facebook: "toledoroy",
-        // github: "toledoroy",
-        // linkedin: "toledoroy",
-        // instagram: "toledoroy",
-        // youtube: "RoyToledo",
-        medium: "toledoroy",
-        twitter: "YourAnonNews",
-        twitter: "YourAnonCentral",    
-    },
-    links: [
-        {
-            type: "blog",
-            title: "BayonEI",
-            url: "http://bayonei.com",
-        },
-        {
-            type: "website",
-            title: "Virtual Brick",
-            url: "http://virtual-brick.com",
-        },
-        {
-            type: "website",
-            title: "Google",
-            url: "http://google.com",
-        },
-        {
-            type: "page",
-            title: "Wikipedia",
-            url: "https://en.wikipedia.org/wiki/Anonymous_(hacker_group)",
-        },
-        
-    ],
-    "attributes": [	//OpenSea		https://docs.opensea.io/docs/metadata-standards
-        {
-            "trait_type": "Base", 
-            "value": "Starfish",
-        },
-        {
-            "trait_type": "Strength", 
-            "value": "5",
-        },
-        {
-            "trait_type": "Aqua Power", 
-            "value": 40,
-
-            "display_type": "boost_number",     //"number", "boost_number", "boost_percentage"
-        },
-    ],
-    accounts: [
-        {
-            "address": "0x874a6E7F5e9537C4F934Fa0d6cea906e24fc287D",
-            "chain": "0x4",
-        },
-        {
-            "address": "0x874a6E7F5e9537C4F934Fa0d6cea906e24fc287D",
-            "chain": "0x1",
-        },
-        {
-            "address": "0x8b08BDA46eB904B18E8385F1423a135167647cA3",
-            "chain": "0x1",
-        },
-    ],
-        
-};
-
+/* MOVED TO Persona
 const defaultMetadata = {
     // username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
     name: "Anonymous",
@@ -178,7 +86,7 @@ const defaultMetadata = {
             "display_type": "boost_percentage",     //"number", "boost_number", "boost_percentage"
         },
     ],
-    accounts: [
+    "accounts": [
         {
             "address": "0x874a6E7F5e9537C4F934Fa0d6cea906e24fc287D",
             "chain": "0x4",
@@ -195,7 +103,7 @@ const defaultMetadata = {
         
 };
 // let defaultMetadata = {};
-
+*/
 
 /**
  * Component
@@ -214,7 +122,8 @@ function PagePersona(props) {
     // const { NFTCollections } = useNFTCollections();
     // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMore ] = useState(false);
-    const [ metadata, setMetadata ] = useState(defaultMetadata);    //Start Empty
+    // const [ metadata, setMetadata ] = useState(defaultMetadata);    //Start Empty
+    const [ metadata, setMetadata ] = useState(Persona.getDefaultMetadata());    //Start Empty
     const [ isLoading, setIsLoading ] = useState(false);    //Loading Edit Mode
 
     //https://github.com/MoralisWeb3/react-moralis#usemoralisweb3api
@@ -229,6 +138,7 @@ function PagePersona(props) {
     // const route = useRoute();
     // console.log("Route Name:", route.name);
 
+    // const [form] = Form.useForm();
 
     //Set User Data (Specific Persona)
     // let persona = { 
@@ -262,14 +172,8 @@ function PagePersona(props) {
     //Init Persona
     const persona = new Persona(personaData);
     
-    console.log("PagePersona() persona:",  {persona, personaTokenId: persona.get('token_id'), params});
+    console.log("PagePersona() persona:",  {metadata, defaultMetadata:Persona.getDefaultMetadata(), persona, personaTokenId: persona.get('token_id'), params});
 
-    
-    //TODO: When to Reload Metadata
-    //Load Metadata on Persona Change
-    // useEffect(() => { loadmetadata(); }, [persona]);
-    //Load Metadata on Props Change
-    // useEffect(() => { loadmetadata(); }, [props]);
     /**
      * Reload Persona Metadata from Chain
      */
@@ -324,6 +228,19 @@ function PagePersona(props) {
 
     
 
+    /** MADE EXPLICIT
+     * on Social Account Update
+     */
+     const formSocialOnChange = (e) => {
+        let change = {[e.target.name]: e.target.value.trim()};
+        //Log
+        // console.log("[DEV] formSocialOnChange() ", {e, change});
+        //Set
+        setMetadata({...metadata, social:{ ...metadata.social, ...change }});
+        //Log
+        console.log("[DEV] formSocialOnChange() Modified Metadata ", {metadata, social:metadata.social, change});
+        return true;
+    }
 
     //[DEV] - Test Func.
     // const updatUserData = () => {
@@ -336,33 +253,38 @@ function PagePersona(props) {
     }
 
     /**
-     * Tab Close/Add
+     * Tab Close/Add (Add/Remove Account)
      * @param {*} targetKey 
      * @param string action 
      */
     function handleTabEdit(targetKey, action){
-        
         if(action === 'add'){
-            console.warn("[TODO] handleTabEdit() Action:'"+action+"'", {targetKey, action});
-
+            let newAccount = {
+                // "address": "0xxxx",
+                // "chain": "0x1",
+            };
+            setMetadata({...metadata, accounts:[ ...metadata.accounts, newAccount ]});
+            //Log
+            console.error("[TODO] handleTabEdit() Action:'"+action+"' Add Account W/Modal!", {targetKey, action, newAccount, metadata});
         }//Add
         else if(action === 'remove'){
             const data = targetKey.split(":");
             console.warn("[TODO] handleTabEdit() Action:'"+action+"'", {targetKey, action, data, metadata});
             //Update Metadata
-            // let accounts = metadata.accounts;
-            for(let i=metadata.accounts.length-1; i>0; i--){
-                console.warn("[TODO] handleTabEdit() Account:"+i, {accounts:metadata.accounts, account:metadata.accounts[i], i});
-                if(metadata.accounts[i].address === data[0] && metadata.accounts[i].chain === data[1]){
+            let accounts = metadata.accounts;
+            for(let i=accounts.length-1; i>=0; i--){
+                console.warn("[TODO] handleTabEdit() Action:'"+action+"' Account:"+i, {accounts:accounts, account:accounts[i], i});
+                if(accounts[i].address === data[0] && accounts[i].chain === data[1]){
                     //Log
-                    console.warn("[TEST] handleTabEdit() Action:'"+action+"' to Remove Account", {targetKey, action, data, account:metadata.accounts[i]});   
-                    metadata.accounts.splice(i, 1);
+                    console.warn("[TEST] handleTabEdit() Action:'"+action+"' Found Account to Remove", {targetKey, action, data, account:accounts[i]});   
+                    accounts.splice(i, 1);
                     break;
                 }
             }
+            //Log
+            console.warn("[TEST] handleTabEdit() Action:'"+action+"'  After Account Removal ", {metadata, data, accounts:metadata.accounts});   
             //Update Metadata
-            // metadata = {...metadata, accounts};     //This is non-reactive
-            // setMetadata({...metadata, social:{ ...metadata.social, ...change }});
+            setMetadata({...metadata, accounts});
         }//Remove
         else console.error("[ERROR] handleTabEdit() Invalid Action:'"+action+"'", {targetKey, action});
     }
@@ -385,57 +307,135 @@ function PagePersona(props) {
             <div className="main framed">
             {/* <div className="persona-body"> */}
                 <div className="secondary framed">
-
-                    <div className="social">
-                        <Collapse accordion>
-                        {metadata?.social && Object.keys(metadata.social).map((network) => {
-                            let handle = metadata.social[network];
-                            if(handle){
-                                //Label (Icon/Name)
-                                let label = personaFields.social.network[network].label ? personaFields.social.network[network].label : (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
-                                let link = personaFields.social.network[network].url + handle;
-                                // let label = (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
-                                let headerContent = (
-                                    <>
-                                    <a href={link} target="_blank" rel="noopener noreferrer" key={network} className="social-handle" data-network={network}>
-                                        {label} 
-                                        <div className="textSwitch">
-                                            <div className="inner">
-                                                <div className="item network">{network}</div>
-                                                <div className="item handle">{handle}</div>
+                    <div className="view" style={{display:!isEditMode?'block':'none'}}>
+                        <div className="social">
+                            <Collapse accordion>
+                            {metadata?.social && Object.keys(metadata.social).map((network) => {
+                                let handle = metadata.social[network];
+                                if(handle){
+                                    //Label (Icon/Name)
+                                    let label = personaFields.social.network[network].label ? personaFields.social.network[network].label : (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
+                                    let link = personaFields.social.network[network].url + handle;
+                                    // let label = (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
+                                    let headerContent = (
+                                        <>
+                                        <a href={link} target="_blank" rel="noopener noreferrer" key={network} className="social-handle" data-network={network}>
+                                            {label} 
+                                            <div className="textSwitch">
+                                                <div className="inner">
+                                                    <div className="text network">{network}</div>
+                                                    <div className="text handle">{handle}</div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </a>
-                                    </>
+                                        </a>
+                                        </>
+                                        );
+                                        //collapsible="disabled" showArrow={false}
+                                    return (
+                                        <Panel header={headerContent} key={network} collapsible="disabled" showArrow={false} className="item">
+                                            <p>[Content]</p>
+                                        </Panel>
                                     );
-                                    //collapsible="disabled" showArrow={false}
-                                return (
-                                    <Panel header={headerContent} key={network} collapsible="disabled" showArrow={false} className="item">
-                                        <p>[Content]</p>
-                                    </Panel>
-                                );
-                            }
-                            else return null;
-                        })}
-                        </Collapse>
+                                }
+                                else return null;
+                            })}
+                            </Collapse>
+                        </div>
+                        
+                        <div className="links">
+                            <Collapse accordion>
+                            {metadata?.links?.map((link, index) => (   
+                                <Panel header={
+                                    <>
+                                        {/* {link.type} */}
+                                        <a href={link.url} key={index} target="_blank"> 
+                                            <i className="bi bi-link"></i>
+                                            <span className="handle">{link.title}</span>
+                                        </a>
+                                    </>
+                                } key={index} collapsible="disabled" showArrow={false}  className="item">
+                                </Panel>
+                            ))}
+                            </Collapse>
+                        </div>
                     </div>
-                
-                    
-                    <div className="links">
-                        <Collapse accordion>
-                        {metadata?.links?.map((link, index) => (   
-                            <Panel header={
-                                <>
-                                    {/* {link.type} */}
-                                     <a href={link.url} key={index}>
-                                        <i className="bi bi-link"></i>
-                                        <span className="handle">{link.title}</span>
-                                    </a>
-                                </>
-                            } key={index} collapsible="disabled" showArrow={false}  className="item">
-                            </Panel>
-                        ))}
-                        </Collapse>
+                    <div className="edit" style={{display:isEditMode?'block':'none'}}>
+                        <div className="social">    
+                            <div className="social_wrapper">
+                                <h2><i className="bi bi-emoji-sunglasses"></i> Social Accounts</h2>
+                                <div className="items">
+                                {Object.values(personaFields.social.network).map((network) => { 
+                                    let label = network.label ? network.label : (<i className={"bi bi-"+network.name}></i>);    //Default Label (Icon)
+                                    return ( 
+                                        <Input 
+                                            key={network.name} 
+                                            className="item" 
+                                            onChange={(e) => {
+                                                let change = {[e.target.name]: e.target.value.trim()};
+                                                //Set
+                                                setMetadata({...metadata, social:{ ...metadata.social, ...change }});
+                                                //Log
+                                                console.log("[DEV] formSocialOnChange() Modified Metadata ", {metadata, social:metadata.social, change});
+                                                // return true;
+                                            }} 
+                                            size="large"
+                                            placeholder={network.name} 
+                                            addonBefore={label} 
+                                            // defaultValue={metadata?.social?.[network.name]}
+                                            value={metadata?.social?.[network.name]}
+                                            name={network.name} />
+                                    );
+                                })}
+                                </div>
+                            </div>
+                        </div>
+                        {false && 
+                        <div className="links">
+                            <div className="links_wrapper">
+                                <h2><i className="bi bi-link"></i> Links
+                                    {/* Add Item */ }
+                                    <Button type="primary" shape="circle" style={{float:'right'}} icon={<PlusCircleOutlined />} onClick={() => {
+                                        let links = [...metadata.links];    //Clone
+                                        // links.splice(index, 1);
+                                        links.push({type:'', title:'', url:''});
+                                        setMetadata({...metadata, links});
+                                    }}/>
+                                </h2>
+                                <div className="items">
+                                    {metadata?.links?.map((link, index) => {
+                                        // E.G. {type: 'blog', title: 'BayonEI', url: 'http://bayonei.com'}
+                                        // console.log("[DEV] link to:"+link.type+" Title:'"+link.title+"'", link.url);
+                                        return (
+                                        // <Col xs={24} lg={12} key={link.title+index}>
+                                            <Input.Group compact className="item" style={{display: 'flex', }} >
+                                                <Input name="URL" defaultValue={link.url} placeholder="URL" 
+                                                    addonBefore={<Select defaultValue={link.type} style={{minWidth:'99px'}} className="select-before">
+                                                        <Select.Option value="website">Website</Select.Option>
+                                                        <Select.Option value="blog">Blog</Select.Option>
+                                                    </Select>}
+                                                />
+                                                <Input name="name" placeholder="Title" defaultValue={link.title} style={{flexShrink:'2'}}/>
+                                                {/* Remove Item */ }
+                                                <Button type="danger" shape="circle" icon={<DeleteOutlined />} onClick={() => {
+                                                    // let links = metadata.links;
+                                                    let links = [...metadata.links];    //Clone
+                                                    // console.warn("[TEST] Remove Link:"+index, {links:[...links], res:links.splice(index, 1)});
+                                                    //Remove Current
+                                                    links.splice(index, 1);
+                                                    //Update
+                                                    setMetadata({...metadata, links});
+                                                }}/>
+                                            </Input.Group>
+                                        // </Col>
+                                        );
+                                    })//Each Link
+                                    }
+                                    <div className="clearfloat"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                        }
                     </div>
                 </div>
                 <div className="primary framed">
@@ -445,7 +445,7 @@ function PagePersona(props) {
                             <Avatar size={200} src={IPFS.resolveLink(image)} />
                         </div>
                         <div className="info">
-                            <h1 className="name">{metadata?.name}</h1>
+                            <h1 className="name">{metadata?.name || metadata?.firstname+' '+metadata?.lastname}</h1>
                             {/* <div className="handle">@{metadata?.username}</div> */}
                             <q className="description">{metadata?.description}</q>
                             <div className="flex" style={{marginTop:5}}>
@@ -457,9 +457,9 @@ function PagePersona(props) {
                         </div>
                         <div className="actions">
                             <div className="button">
-                                {isEditMode && <Button className="debug" onClick={()=>{ console.warn("[TODO] PagePersona() Save Changes"); }} >[Save]</Button>}
+                                {isEditMode && <Button className="debug" onClick={()=>{ /*form.submit();*/ console.warn("[TODO] PagePersona() Save Changes"); }} >[Save]</Button>}
                                 {!isEditMode && <Button variant="contained" color="primary" onClick={()=>{setIsEditMore(isEditMode===false);}}>Edit</Button>}
-                                {isEditMode && <Button variant="contained" color="primary" onClick={()=>{setIsEditMore(isEditMode===false);}}>Cancel</Button>}
+                                {isEditMode && <Button variant="contained" color="primary" onClick={()=>{ loadmetadata(); setIsEditMore(isEditMode===false);}}>Cancel</Button>}
                             </div>
                         </div>
                     </div>
@@ -472,7 +472,6 @@ function PagePersona(props) {
                     }
 
                     <div className="accounts framed">
-
                         <Tabs      //https://ant.design/components/tabs/
                             type="editable-card"
                             // onChange={this.onChange}
@@ -481,8 +480,17 @@ function PagePersona(props) {
                             hideAdd={!isEditMode}
                             >
                             {metadata?.accounts?.map((account, index) => (
-                                <TabPane tab={(<span title={getChainName(account.chain)}>
-                                    <Address icon={getChainLogo(account.chain)} copyable address={account.address} size={5} /></span>)} key={account.address+':'+account.chain} closable={isEditMode}>
+                                
+                                <TabPane tab={(
+                                    <span title={getChainName(account.chain)}>
+                                        {console.warn("[TEST] Persona View Account", account)}
+                                        {account.address 
+                                        ? <Address icon={getChainLogo(account.chain)} copyable address={account.address} size={5} />
+                                        : <span>[NO HASH]</span>
+                                        }
+                                    </span>
+                                    )} key={account.address+':'+account.chain} closable={isEditMode}>
+
                                     <div className="item framed" key={index}>
                                         
                                         <div className="flex">
@@ -493,11 +501,15 @@ function PagePersona(props) {
                                             </div>
                                             {/* <Address copyable address={account.address} size={5} /> */}
                                         </div>
-
+                                        {Object.keys(account).length > 0 ? 
                                         <div className="NFTs">
                                             <NFTCollections match={{params:{accountHash:account.address, chain:account.chain, showBreadcrumbs:false}}} />
                                         </div>
-
+                                        :
+                                        <div className="new_account">
+                                            [NO ACCOUNT DATA]
+                                        </div>
+                                        }
                                     </div>
                                 </TabPane>
                             ))}

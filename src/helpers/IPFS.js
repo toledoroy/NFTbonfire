@@ -13,22 +13,42 @@ export const IPFS = {
 
     /** ...Needs Moralis...
      * Save JSON File to IPFS
-     * /
-     saveJSONToIPFS: async (jsonObject) => {
+     */
+     saveJSONToIPFS: async (Moralis, jsonObject, fileName="file.json") => {
         //Save Metadata to IPFS
-        const file = new Moralis.File("file.json", {base64 : btoa(JSON.stringify(jsonObject))});
-        file.saveIPFS().then(result => {
-            console.log("[DEV] PersonaEdit() IPFS Hash for Metadata:", {
+        const file = new Moralis.File(fileName, {base64 : btoa(JSON.stringify(jsonObject))});
+        return file.saveIPFS().then(result => {
+            console.log("[DEV] IPFS.saveJSONToIPFS() IPFS Hash for Metadata:", {
                 // result, 
                 hash:result.hash(), 
                 hash2:file.hash(), 
                 // jsonObject,
             });
-        })
-        .catch(function(error) { console.error("[CAUGHT] PersonaEdit() IPFS Call Failed:", {error, user, user2:Moralis.User.current() }); });
-    }
-    */
+            //Return IPFS URL
+            // return result.ipfs();    //Moralis URL
+            return "ipfs://" + result.hash();   //General IPFS Conventional URL
+        });
+        // .catch(function(error) { console.error("[CAUGHT] IPFS.saveJSONToIPFS() IPFS Call Failed:", {error, user:Moralis.User.current() }); });
+    },
+        
+    /**
+     * Save Image file to IPFS
+     * @var object image
+     * @ret string imageFile
+     * @ret string URL
+     */
+     saveImageToIPFS: async (Moralis, image, fileName="image.png") => {
+        // const data = fileInput.files[0]
+        // const file = new Moralis.File(data.name, data)
+        const file = new Moralis.File(fileName, image);
 
+        //Save File to Object
+        // const jobApplication = new Moralis.Object('Applications')
+        // jobApplication.set('resume', file)
+
+        //Save Image to IPFS
+        return await file.saveIPFS();
+    },//saveImageToIPFS()
     
     /**
      * Fetch File From IPFS by Hash (Works with JSON Filed)
@@ -40,24 +60,6 @@ export const IPFS = {
         const response = await fetch(url);
         return await response.json();
     },
-
-    /** Doesn't Work Here...
-     * Save JSON File to IPFS
-     * @var object jsonObject
-     * @ret string URL
-     * /
-    saveJSONToIPFS:  async (jsonObject) => {
-        //Save Metadata to IPFS
-        const file = new Moralis.File("file.json", {base64 : btoa(JSON.stringify(jsonObject))});
-        return file.saveIPFS().then(result => {
-            //Return IPFS URL
-            // return result.ipfs();    //Moralis URL
-            return "ipfs://" + result.hash();   //General IPFS Conventional URL
-        });
-        // .catch(function(error) { console.error("[CAUGHT] PersonaEdit() IPFS Call Failed:", {error, user }); });
-    },
-    */
-
 
 };
 

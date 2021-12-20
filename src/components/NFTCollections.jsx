@@ -116,7 +116,7 @@ function NFTCollections(props) {
         
         //Object Queries
         const queryPosts = new Moralis.Query(Post); //Query the Object
-        // query.equalTo("roomId", "?"); //Filter           //TODO: Get Current Room ID
+        // query.equalTo("roomId", "?"); //Filter      
         queryPosts.limit(20); 
         // query.skip(10); 
         // query.withCount(); //Add Count
@@ -134,7 +134,6 @@ function NFTCollections(props) {
   // testFunc();
 
  
-
   
 
   //style={styles.NFTs}
@@ -142,9 +141,6 @@ function NFTCollections(props) {
     <Skeleton loading={!isWeb3Enabled}>
       
       {!isAllowed && <p className="debug" style={{float:'right'}}>NOT ALLOWED</p>}
-      
-      
-      
 
       <div key="collections" className="collections framed">
           <div key="header" className="header">
@@ -153,7 +149,7 @@ function NFTCollections(props) {
               <Breadcrumb separator=">">
                 {/* <Breadcrumb.Item key="1">Home</Breadcrumb.Item> */}
                 {accountHash && <Breadcrumb.Item key="2"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>NFT Collections 
-                {/* for <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
+                  {/* for <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
                 </Link></Breadcrumb.Item>}
                 {collectionHash && <Breadcrumb.Item key="3"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash+'/'+collectionHash}}>Room</Link></Breadcrumb.Item>}
                 {/* <Breadcrumb.Item key="4"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>SELECT</Link></Breadcrumb.Item> */}

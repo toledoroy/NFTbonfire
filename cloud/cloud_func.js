@@ -5,7 +5,8 @@ const logger = Moralis.Cloud.getLogger();
 //-- PRODUCTION
 
 /**
- * Use Contract's balanceOf() Function
+ * Something Like Contract's balanceOf() Function
+ *  How many Tokens does Account owns on Contract
  * @param {*} account 
  * @param {*} contractAddress 
  * @param {*} chainId 
@@ -24,25 +25,6 @@ const getBalance = async (account, contractAddress, chainId) => {
   //Return
   return res;
 }
-
-/**
- * Check if User Owns NFT
- * @param {*} userId  User ID
- * @param {*} hash   NFTs Hash
- * @returns 
- */
-const matchUserNFT = (userId, hash, chainId) => {
-  // const query = new Moralis.Query("NFTs");
-  // query.equalTo("userId", userId);
-  // query.equalTo("hash", hash);
-  // let res = query.find();
-
-  //Log
-  // logger.info("[TEST] matchUserNFT() Result for User:'"+userId+"' Contract:'"+hash+"' - "+res);
-  // logger.info({res, userId, hash});
-  // if(0) throw "User Not Autorized for Selected NFT:'"+hash+"'";
-  return true;
-}//matchUserNFT()
 
 
 //-- TESTING
@@ -96,6 +78,25 @@ Moralis.Cloud.define("voteDown", async (request) => {
 */
 
 //-- DEV
+
+/**
+ * Check if User Owns NFT
+ * @param {*} userId  User ID
+ * @param {*} hash   NFTs Hash
+ * @returns 
+ */
+ const matchUserNFT = (userId, hash, chainId) => {
+  // const query = new Moralis.Query("NFTs");
+  // query.equalTo("userId", userId);
+  // query.equalTo("hash", hash);
+  // let res = query.find();
+
+  //Log
+  // logger.info("[TEST] matchUserNFT() Result for User:'"+userId+"' Contract:'"+hash+"' - "+res);
+  // logger.info({res, userId, hash});
+  // if(0) throw "User Not Autorized for Selected NFT:'"+hash+"'";
+  return true;
+}//matchUserNFT()
 
 /**
  * New Post

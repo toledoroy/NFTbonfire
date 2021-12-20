@@ -13,6 +13,7 @@ import { IPFS } from "helpers/IPFS";
 import { Persona } from "common/objects";
 
 import ImgCrop from 'antd-img-crop';
+import { Exception } from "sass";
 
 // import { useVerifyMetadata } from "hooks/useVerifyMetadata";
 
@@ -53,7 +54,7 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
     
     //Contract Data
     const contractPersona = Persona.getContractData();
-    
+    // const [form] = Form.useForm();
 
     /* All Tokens 
     Moralis.Web3API.token.getAllTokenIds(contractPersona).then(ids => {
@@ -69,7 +70,7 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
     //Log
     console.warn("PersonaEdit() MEtadata", {chainId, env:process.env, metadata, imageUrl, contract, persona, contractPersona});
 
-/** NOW SHARING METADATA W/Container
+    /** NOW SHARING METADATA W/Container
      * Reload Persona Metadata from Chain
      * /
     const loadmetadata = async () => {
@@ -93,12 +94,13 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
     }//loadmetadata()
     //Load Metadata on Persona Change
     useEffect(() => { loadmetadata(); }, [persona]);
-*/
+    */
 
     useEffect(() => { 
         //Refresh Metadata on Every Load! (After Updating Chain, This Component's metadata doesn't match the updated parent)
         console.log("PersonaEdit() Reloading Metadata", props.metadata);
         setMetadata(props.metadata); 
+        setImageUrl(props.metadata?.image);
     }, [props.metadata]);
 
     /**
@@ -124,7 +126,8 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         // console.log("[TEST] File Upload handleChangeFile() Status:"+info?.file?.status, info);
         try{
             if (info.file.status === undefined) {
-                saveImageToIPFS(info.file).then(result => {
+                // saveImageToIPFS(info.file).then(result => {
+                IPFS.saveImageToIPFS(Moralis, info.file).then(result => {
                     console.log("[TEST] File Upload handleChangeFile() IPFS Hash:", result);
                     // setImageUrl(result.hash());
                     // setImageUrl(result.ipfs());
@@ -141,45 +144,10 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
             console.error("[CAUGHT] handleChangeFile() File Upload Error:", error, info);
         }
     }//handleChangeFile()
-    
-    /**
-     * Save JSON File to IPFS
-     * @var object jsonObject
-     * @ret string URL
-     */
-     async function saveJSONToIPFS(jsonObject){
-        //Save Metadata to IPFS
-        const file = new Moralis.File("file.json", {base64 : btoa(JSON.stringify(jsonObject))});
-        return file.saveIPFS().then(result => {
-            //Return IPFS URL
-            // return result.ipfs();    //Moralis URL
-            return "ipfs://" + result.hash();   //General IPFS Conventional URL
-        });
-        // .catch(function(error) { console.error("[CAUGHT] PersonaEdit() IPFS Call Failed:", {error, user }); });
-    }//saveJSONToIPFS()
 
-    /**
-     * Save Image file to IPFS
-     * @var object image
-     * @ret string imageFile
-     * @ret string URL
-     */
-     async function saveImageToIPFS(image, fileName="image.png"){
-        // const data = fileInput.files[0]
-        // const file = new Moralis.File(data.name, data)
-        const file = new Moralis.File(fileName, image);
-
-        //Save File to Object
-        // const jobApplication = new Moralis.Object('Applications')
-        // jobApplication.set('resume', file)
-
-        //Save Image to IPFS
-        return await file.saveIPFS();
-    }//saveImageToIPFS()
-    
-    /**
+    /** MOVED to PagePersona.jsx
      * on Social Account Update
-     */
+     * /
     const formSocialOnChange = (e) => {
         let change = {[e.target.name]: e.target.value.trim()};
         //Log
@@ -190,6 +158,7 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         console.log("[DEV] formSocialOnChange() Modified Metadata ", {metadata, social:metadata.social, change});
         return true;
     }
+    */ 
     /**
      * Image Change
      */
@@ -209,6 +178,10 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
      */
     // async function updateNFT(uri, tokenId=1){
     async function updateNFT(uri){
+
+        // console.warn("[TEST] PersonaEdit.updateNFT() Will Save Persona", persona);
+        // persona.save({uri});
+
         const options = {
             // contractAddress: contractPersona.address,
             contractAddress: persona.get('address'),
@@ -217,24 +190,108 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
             params: { tokenId: persona.get('token_id'), uri },
         };
         //Update Contract
+        return await contractProcessor.fetch({
+        // return contractProcessor.fetch({
+            params: options,
+            onSuccess: (data) => {
+                console.log("PersonaEdit.updateNFT() Success", {data, uri, persona, options});
+                //Save Persona to DB
+                // persona.save();       //Error: TypeError: (intermediate value).save is not a function
+
+
+                // TESTING
+                //Register Persona to DB
+                let compId = {
+                    contract: persona.get('address'),
+                    token_id: persona.get('token_id'),
+                    chain: chainId,
+                };
+                console.warn("[TEST] PersonaEdit.updateNFT() Register Persona to DB", compId);
+                Moralis.Cloud.run("personaRegister", compId);
+
+
+                //Return Transaction...
+                return data;
+            },
+            onError: (error) => {
+                if(error.code === 4001) console.warn("PersonaEdit.updateNFT() Failed -- User Rejection", {error, uri, options})
+                else console.error("PersonaEdit.updateNFT() Failed", {error, uri, persona, options})
+            },
+        });
+    }//updateNFT()
+
+    /**
+     * Mint New NFT
+     * @param string uri 
+     */
+    async function mintNFT(uri){
+        //Validate
+        if(persona.get('token_id')) throw new Error("Can't Mint New Persona -- Persona Already Has TokenId:'"+persona.get('token_id')+"'");
+        const options = {
+            // contractAddress: contractPersona.address,
+            contractAddress: persona.get('address'),
+            abi: contractPersona.abi,
+            functionName: 'mint',
+            params: { tokenURI:uri },
+        };
+        //Mint New NFT
         await contractProcessor.fetch({
             params: options,
-            onSuccess: (data) => console.log("PersonaEdit.updateNFT() Success", {data, uri, persona, options}),
-            onError: (error) => console.error("PersonaEdit.updateNFT() Failed", {error, uri, persona, options}),
+            onSuccess: (data) => {  //TX Data
+                //Log
+                console.log("[TEST] PersonaEdit.mintNFT() Success -- Should Register New TokenID", {data, uri, persona, options});
+
+                //TODO: Update token_id
+
+                //TODO: Then,   Save Persona to DB
+                // persona.save();
+
+                //Return Transaction...
+                return data;
+            },
+            onError: (error) => {
+                if(error.code === 4001) console.warn("PersonaEdit.mintNFT() Failed -- User Rejection", {error, uri, options})
+                else console.error("PersonaEdit.mintNFT() Failed", {error, uri, persona, options})
+            },
         });
-    }
-    
+    }//mintNFT()
+
     /**
-     * Form Submit Function
+     * Sanitize Metadata Before Save
+     */
+     const metadataSanitize = (metadata) =>{
+        for(let i=metadata.accounts.length-1; i>=0; i--){
+            // console.warn("[TEST] metadataSanitize() Action:'"+action+"' Account:"+i, {accounts:metadata.accounts, account:metadata.accounts[i], i});
+            if(!metadata.accounts[i].address || !metadata.accounts[i].chain){
+                //Log
+                console.warn("[TEST] metadataSanitize() Removing Invalid Account ", {account:metadata.accounts[i]});   
+                metadata.accounts.splice(i, 1);
+                break;
+            }
+        }
+        return metadata;
+    }//metadataSanitize
+
+    /**
+     * Save Procedure (Form Submit Function)
+     * @var object values       Additional Metadata Values
+     * @ret void
      */
      const onFinish = async (values) => {
         //Additions
         // values.parentId = hash;
         //Create
         // const newPost = await Moralis.Cloud.run("post", values);
-        
+
+        let newMetadata = {...metadata, ...values}
+        //Sanitize
+        newMetadata = metadataSanitize(newMetadata);
         //Update Metadata
-        setMetadata({...metadata, ...values});
+        // setMetadata({...metadata, ...values});
+        setMetadata(newMetadata);
+        //Update Persona
+        persona.set('metadata', newMetadata);
+
         //Log
         // console.error("[TEST] Persona() Updated Values to Metadata", {values, metadata});
 
@@ -242,15 +299,27 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         // .trim();
 
         //Save Metadata to IPFS
-        saveJSONToIPFS(metadata).then(uri => {
-        // IPFS.saveJSONToIPFS(metadata).then(uri => {  //Failed
-            console.warn("[TODO] PersonaEdit() Should Now Save Persoa Contract:", {metadata, uri});
-            //Update Contract
-            updateNFT(uri);
+        // saveJSONToIPFS(metadata).then(uri => {
+        // IPFS.saveJSONToIPFS(Moralis, metadata).then(async uri => {
+        IPFS.saveJSONToIPFS(Moralis, newMetadata).then(async uri => {
+            //Log
+            console.warn("PersonaEdit() Saving Persoa to Contract:", {newMetadata, uri});
+            if(persona.get('token_id')){
+                //Update Contract
+                let res = await updateNFT(uri);   //Promise
+                //Log
+                console.warn("PersonaEdit() After Update:", {res, newMetadata, uri});
+            }else{
+                //Mint New NFT
+                mintNFT(uri);
+            }
         })
-        .catch(function(error) { console.error("[CAUGHT] PersonaEdit() IPFS Call Failed:", {error, isAuthenticated, user }); });
+        .catch(function(error) { 
+            console.error("[CAUGHT] PersonaEdit() IPFS Call Failed:", {error, isAuthenticated, user, persona}); 
+        });
 
         //Redirect
+        
         // history.push('/room/'+newPost.id);
     
         //Return
@@ -266,11 +335,9 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
     let size = 200; //Avater Circumference
     return (
     <>
-    <Skeleton active loading={isLoading}>
-
-
     {/* <Col xs={24} lg={{ span: 20, offset: 2 }} className="personaEdit"> */}
     <Col className="personaEdit">
+    <Skeleton active loading={isLoading}>
         {/* <input type="file" id="fileInput" onChange={handleChangeFileEvent}/> */}
         <div style={{width:size, height:size, borderRadius:"50%", overflow:'hidden'}}>
         {/* <ImgCrop rotate> TODO (It doesn't save Crop ) */}
@@ -297,6 +364,7 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         </div>
 
         <Form name="personaForm" 
+            id="personaEditForm"
             onFinish={onFinish}
             // onFinish={console.log}
             onFinishFailed={console.error}
@@ -324,7 +392,8 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
             ))*/}
             
             {Object.values(personaFields).map((field) => { if(field.element) return field.element; else{
-                if(field.name === 'social'){    //Social Accounts
+                /* MOVED to PagePersona
+                if(field.name === 'social'){    //Social Accounts     
                     return (
                     <div className="social_wrapper">
                         <h2><i className="bi bi-emoji-sunglasses"></i> Social Accounts</h2>
@@ -348,7 +417,8 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
                     </div>
                     );
                 }//Social
-                else if(field.name === 'links'){
+                else */
+                if(field.name === 'links'){
                     return( 
                     <div className="links_wrapper">
                         <h2><i className="bi bi-link"></i> Links</h2>
@@ -433,8 +503,8 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
                 <Button onClick={formReset} style={{marginLeft:'20px' }}> Reset</Button>
             </Form.Item>
         </Form>
+        </Skeleton>
     </Col>
-    </Skeleton>
     </>
     );
 }//PersonaEdit()

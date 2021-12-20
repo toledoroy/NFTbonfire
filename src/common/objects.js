@@ -37,24 +37,45 @@ export const Comment = Moralis.Object.extend("Post");     //Sub-Posts
 export const Persona = Moralis.Object.extend("Persona", 
     { /* Instance Methods */
 
-        //Insert New Persona
-        insert(metadata){
+        //Override Save
+        // save(){
+        //     console.warn("[TEST] save() Persona Override for Save Function");
+        //     this.saveToChain();
+        //     return super.save();
+        // },
+        // saveToChain(){
+        //     console.warn("[TEST] saveToChain() Called");
+        // },
 
-        },
+        //Insert New Persona
+        // insert(metadata){
+
+        // },
         //Update Persona
-        update(){
-            return "TODO";
-        },
+        // update(){
+            // return "TODO";
+        // },
 
         //-- Loaders
         /**
          * Load Metadata from Chain
+         * @ret object / null       Metadata or Default Metadata (or null)
          */
-         async loadMetadata(){
-            return await this.updateToken();
+         async loadMetadata(returnDefault=true){
+            if(this.get('token_id') !== undefined) {
+                return await this.updateToken();
+            }
+            else{ 
+                /* New Persona, Not yet on Chain */ 
+                //Random 
+                if(returnDefault) Persona.getDefaultMetadata(); //return personaDefaultMetadata[Math.floor(Math.random()*personaDefaultMetadata.length)];
+                return null;
+                
+                // return returnDefault ? personaDefaultMetadata : null;
+            }
         },
         /**
-         * Update Token (URI & Metadata)
+         * Update Token (Fetch from Chain -- URI & Metadata )
          * @returns object metadata
          */
         async updateToken(){
@@ -95,6 +116,7 @@ export const Persona = Moralis.Object.extend("Persona",
                 let uri = await Moralis.executeFunction(options);
                 
                 //Compare & Update Metadata if Needed
+                // if(this.get('token_uri') !== uri) {      //TODO: Enable
                 if(1 || this.get('token_uri') !== uri) {    //Always Load New Metadata
                     //Log
                     console.log("Persona.updateToken() Updating Token URI", {before:this.get('token_uri'), after:uri, perosna:this})
@@ -164,24 +186,12 @@ export const Persona = Moralis.Object.extend("Persona",
         },//fetchMetadata()
 
         //-- View
-
-        /* DEPRECATED
-        //Get Persona Main Image
-        getImage(){ //DEPRECATED - Use getFallback() 
-            return this.get('metadata')?.image || personaDefaultMetadata.image; //"https://joeschmoe.io/api/v1/random"; 
-            // return this.get('metadata')?.image || this.getDefaultMetadata()?.image;      //Error: getDefaultMetadata is not a func.
-        },
-        getCover(){ //DEPRECATED - Use getFallback()
-            return this.get('metadata')?.cover || personaDefaultMetadata.cover; //"https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"; 
-            // return this.get('metadata')?.cover || this.getDefaultMetadata()?.cover;       //Error: getDefaultMetadata is not a func.
-        },
-        */
-
         /**
          * Get Requested Property from Metadata & Fallback to Defaults if Not Found
          * @returns 
          */
-        getFallback(property){ return this.get('metadata')?.[property] || personaDefaultMetadata[property]; },
+        // getFallback(property){ return this.get('metadata')?.[property] || personaDefaultMetadata[property]; },
+        getFallback(property){ return this.get('metadata')?.[property] || Persona.getDefaultMetadata()?.[property]; },
         /**
          * Link to Persona
          */
@@ -203,62 +213,132 @@ export const Persona = Moralis.Object.extend("Persona",
         getContractData(chain){ return (chain) ? this.contractPersona[chain] : this.contractPersona; },
         //Get Contract Address
         getContractAddress(chain){ return (this.contractPersona?.[chain]?.address) ? this.contractPersona[chain].address : null; },
-        //Default Metadata
-        getDefaultMetadata(){ return personaDefaultMetadata; },
+        //Default Metadata (Random)
+        getDefaultMetadata(){  return personaDefaultMetadatas[Math.floor(Math.random()*personaDefaultMetadatas.length)]; },
     }
 );     //Personas
 
 
 //** ASSETS **/
-
-//Example Metadata Object
-const personaDefaultMetadata = {
-    // username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
-    // name: "Satoshi",
-    "firstname": "Satoshi",
-    "lastname": "Nakamoto",
-    "role": "Inventor",
-    "image": "https://images.unsplash.com/photo-1636716642701-01754aef1066?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-    "cover": "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
-    "description": "I'm a rather cryptic fellow",
-    "location": {
-        "name":"Seattle, WA",
-        "latitude": 47.60275857601884,
-        "longitude": -122.33726455335282,
+//Default Persona Details
+const personaDefaultMetadatas = [
+    /* Satoshi
+    {
+        // username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
+        // name: "Satoshi",
+        "firstname": "Satoshi",
+        "lastname": "Nakamoto",
+        "role": "Inventor",
+        "image": "https://images.unsplash.com/photo-1636716642701-01754aef1066?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+        "cover": "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+        "description": "I'm a rather cryptic fellow",
+        "location": {
+            "name":"Seattle, WA",
+            "latitude": 47.60275857601884,
+            "longitude": -122.33726455335282,
+        },
+        "social": {
+            // twitter: "toledoroy",
+            // facebook: "toledoroy",
+            // github: "toledoroy",
+        },
+        "links": [
+            {
+                "type": "website",
+                "title": "My Block Explorer",
+                "url": "https://www.blockchain.com/explorer?view=btc",
+            },
+        ],
+        "attributes": [	//OpenSea		https://docs.opensea.io/docs/metadata-standards
+            {
+                "trait_type": "Passion", 
+                "value": "Cryptography",
+            },
+            {
+                "trait_type": "Love", 
+                "value": "Dogs",
+            },
+            {
+                "trait_type": "Aqua Power", 
+                "value": 40,
+    
+                "display_type": "boost_number",     //"number", "boost_number", "boost_percentage"
+            },
+        ],
+        accounts: [
+            {
+                "address": "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
+                "chain": "bitcoin",
+            },
+        ],
     },
-    "social": {
-        // twitter: "toledoroy",
-        // facebook: "toledoroy",
-        // github: "toledoroy",
-    },
-    "links": [
-        {
-            "type": "website",
-            "title": "My Block Explorer",
-            "url": "https://www.blockchain.com/explorer?view=btc",
+    */
+    /* Anonymous */
+    {
+        // username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
+        "name": "Anonymous",
+        "role": "Hacker",
+        // "image": "https://images.unsplash.com/photo-1636716642701-01754aef1066?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",  //Random Dark Lady
+        "image": "https://ipfs.moralis.io:2053/ipfs/QmZ2oHHLUUARUTz3Jx2wSWYTtALUtEhQtT1hpxb7Fbvr5y",   //Anon in hood
+        // "image": "https://ipfs.moralis.io:2053/ipfs/QmWyKVFkUCfwUFQZyKjJ9ifqyWatUFStMi8B3MtT3CkhyP",      //Anon logo
+        "cover": "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+        "description": "We are legion",
+        "location": {
+            "name":"World Wide", latitude: 0, longitude: 0,
+            // name:"Seattle, WA", latitude: 47.60275857601884, longitude: -122.33726455335282,
         },
-    ],
-    "attributes": [	//OpenSea		https://docs.opensea.io/docs/metadata-standards
-        {
-            "trait_type": "Passion", 
-            "value": "Cryptography",
+        "social": {
+            // "twitter": "toledoroy",
+            // "facebook": "toledoroy",
+            // "github": "toledoroy",
+            // "linkedin": "toledoroy",
+            // "instagram": "toledoroy",
+            "youtube": "AnonymousWorldvoce",
+            // "medium": "toledoroy",
+            "twitter": "YourAnonNews",
+            // "twitter": "YourAnonCentral",           //TODO: Should Probably Allow Multiple
         },
-        {
-            "trait_type": "Love", 
-            "value": "Dogs",
-        },
-        {
-            "trait_type": "Aqua Power", 
-            "value": 40,
-
-            "display_type": "boost_number",     //"number", "boost_number", "boost_percentage"
-        },
-    ],
-    accounts: [
-        {
-            "address": "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
-            "chain": "bitcoin",
-        },
-    ],
-        
-};
+        "links": [
+            {
+                type: "page",
+                title: "Wikipedia",
+                url: "https://en.wikipedia.org/wiki/Anonymous_(hacker_group)",
+            },
+            {
+                type: "media",
+                title: "News: donate $75M in Bitcoin",
+                url: "https://thenextweb.com/news/anonymous-supposedly-resurfaces-to-donate-75m-in-bitcoin-to-privacy-tech",
+            },
+        ],
+        "attributes": [	//OpenSea		https://docs.opensea.io/docs/metadata-standards
+            {
+                "trait_type": "Base", 
+                "value": "Everywhere",
+            },
+            {
+                "trait_type": "Power", 
+                "value": "10",
+            },
+            {
+                "trait_type": "Size", 
+                "value": 100,
+    
+                "display_type": "boost_percentage",     //"number", "boost_number", "boost_percentage"
+            },
+        ],
+        "accounts": [
+            {
+                "address": "0x874a6E7F5e9537C4F934Fa0d6cea906e24fc287D",
+                "chain": "0x4",
+            },
+            {
+                "address": "0x874a6E7F5e9537C4F934Fa0d6cea906e24fc287D",
+                "chain": "0x1",
+            },
+            {
+                "address": "0x8b08BDA46eB904B18E8385F1423a135167647cA3",
+                "chain": "0x1",
+            },
+        ],
+    }
+];

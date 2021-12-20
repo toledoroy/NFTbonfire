@@ -17,7 +17,77 @@
         justify-content: space-between;
     }
     .primary { flex-grow: 1; }  
+    .social { 
+        .item {
+            
+            // border-radius: 17px;
+        }
+    }
     .secondary{
+        .item {
+            border:1px solid #d9d9d9; 
+            
+            background-color: #fafafa; 
+            margin-bottom:5px; 
+            position: relative; 
+            
+            i { 
+                padding-right: 10px; font-size: 1.8em; vertical-align: middle; 
+                transition: .32s ease-in; z-index: 3; 
+            }
+        }
+        .view {
+
+            .handle:hover {  }
+            // .ant-collapse-header:hover .textSwitch .handle { top:-20px; }
+            // .ant-collapse-header:hover .textSwitch .network { top:-60px; }
+            .ant-collapse-header:hover .inner  { bottom: 3rem; }
+    
+            .ant-collapse { border:none; background: transparent; }
+            
+        
+            .item {
+                border-radius: 17px;
+                overflow: hidden;
+                i:before { transition: transform 0.5s ease-in; }
+                a { display:flex; color:var(--color); min-width: 120px; white-space: nowrap; align-items: center; text-overflow: ellipsis; }
+                a:after {
+                    content: "";
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: gray;
+                    transition: .32s ease-in;
+                    z-index: 2;
+                }
+                a[data-network="twitter"]:after{ background: #1877f2; }
+                a[data-network="facebook"]:after{ background: #1da1f2; }
+                a[data-network="github"]:after{ background: #1da1f2; }
+                a[data-network="linkedin"]:after{ background: #0A66C2; }
+                a[data-network="telegram"]:after{ background: #1da1f2; }
+                a[data-network="instagram"]:after{ background: #c32aa3; }
+                a[data-network="youtube"]:after{ background: #ff0000; }
+                a[data-network="twitch"]:after{ background: #1da1f2; }
+                a[data-network="reddit"]:after{ background: #FF5700; }
+                a[data-network="medium"]:after{ background: #1da1f2; }
+                a[data-network="discord"]:after{ background: #1da1f2; }
+        
+            } 
+            .item:hover .handle,
+            .item:hover i { color: #fff; z-index: 3; position:relative;}
+            .item:hover a:after { top: 0; }
+            .item:hover i:before { transform: rotate(-180deg); }      
+        }
+        .edit {
+             max-width: 420px; 
+            .ant-input-group-addon,
+            .ant-input:hover,
+            .ant-input:focus,
+            .ant-input:focus-visible,
+            .ant-input { border: none; }
+        }
         .ant-collapse-header {
             flex-direction: row-reverse; justify-content: space-between; color: inherit; cursor: initial; 
             flex-flow: row;
@@ -40,7 +110,7 @@
                 position: relative;
                 bottom: 0;
                 transition: bottom .6s ease-in-out;
-                .item {
+                .text {
                     // transition: bottom 1s ;
                 }
 
@@ -48,53 +118,8 @@
             .handle { 
                 // top:60px; 
             }
-
         }
-
-        .handle:hover {  }
-        // .ant-collapse-header:hover .textSwitch .handle { top:-20px; }
-        // .ant-collapse-header:hover .textSwitch .network { top:-60px; }
-        .ant-collapse-header:hover .inner  { bottom: 3rem; }
-
-        .ant-collapse { border:none; background: transparent; }
-        .ant-collapse-item { border:1px solid #d9d9d9; border-radius: 17px;  background-color: #fafafa; margin-bottom:5px; }
-    
-        .item {
-            position: relative; overflow: hidden;
-            i { 
-                padding-right: 10px; font-size: 1.8em; vertical-align: middle; 
-                transition: .32s ease-in; z-index: 3; 
-            }
-            i:before { transition: transform 0.5s ease-in; }
-            a { display:flex; color:var(--color); min-width: 120px; white-space: nowrap; align-items: center; text-overflow: ellipsis; }
-            a:after {
-                content: "";
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: gray;
-                transition: .32s ease-in;
-                z-index: 2;
-            }
-            a[data-network="twitter"]:after{ background: #1877f2; }
-            a[data-network="facebook"]:after{ background: #1da1f2; }
-            a[data-network="github"]:after{ background: #1da1f2; }
-            a[data-network="linkedin"]:after{ background: #0A66C2; }
-            a[data-network="telegram"]:after{ background: #1da1f2; }
-            a[data-network="instagram"]:after{ background: #c32aa3; }
-            a[data-network="youtube"]:after{ background: #ff0000; }
-            a[data-network="twitch"]:after{ background: #1da1f2; }
-            a[data-network="reddit"]:after{ background: #FF5700; }
-            a[data-network="medium"]:after{ background: #1da1f2; }
-            a[data-network="discord"]:after{ background: #1da1f2; }
-    
-        } 
-        .item:hover .handle,
-        .item:hover i { color: #fff; z-index: 3; position:relative;}
-        .item:hover a:after { top: 0; }
-        .item:hover i:before { transform: rotate(-180deg); }            
+      
     }
     
     .accounts { 

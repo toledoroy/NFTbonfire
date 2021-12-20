@@ -30,17 +30,27 @@
  * Register Persona to Network
  */
 Moralis.Cloud.define("personaRegister", async (request) => {  
-    const handle = request?.params?.handle;
-    const personaId = request?.params?.personaId;
+  const { handle, contract, token_id, chain } = request.params;
+  // const handle = request?.params?.handle;
+  // const personaId = request?.params?.personaId;
 
-    //Log
-    logger.warn("[TODO] personaRegister() Request from  User:"+request.user?.id+" To Register Persona:"+personaId+" as "+handle);
+  //Log
+  logger.warn("[TEST] personaRegister() Request Params: chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"'");
+  logger.warn("[TODO] personaRegister() Request from  User:"+request.user?.id+" To Register Handle:'"+handle+"'");
 
+  if(token_id){
+    //Register Persona [?]
+  }
+  
+  if(handle){
+    //Validate
     if(isHandleFree(handle)){
         //TODO: Register Handle / Save Persona to DB
 
     }
     else throw "Handle Not Available";
+  }
+
 });
 
 /**
