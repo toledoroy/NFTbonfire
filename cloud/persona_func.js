@@ -1,6 +1,6 @@
 //https://docs.moralis.io/moralis-server/cloud-code/cloud-functions
 
-const logger = Moralis.Cloud.getLogger();
+// const logger = Moralis.Cloud.getLogger();
 
 /* PERSONA FUNCTIONS */
 /**
@@ -17,7 +17,7 @@ const logger = Moralis.Cloud.getLogger();
 
     // handle
     return true;
-  }//isHandleFree()
+  };//isHandleFree()
   
 
 //-- PRODUCTION
