@@ -46,8 +46,9 @@ const personaFields = require('schema/PersonaData.json');
 // };
 const contractPersona = Persona.getContractData();
 
+
 //Example Metadata Object
-let metadata = {
+let exampleMetadata = {
     // username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
     name: "Anonymous",
     role: "Hacker",
@@ -69,7 +70,7 @@ let metadata = {
         // linkedin: "toledoroy",
         // instagram: "toledoroy",
         // youtube: "RoyToledo",
-        // medium: "toledoroy",
+        medium: "toledoroy",
         twitter: "YourAnonNews",
         twitter: "YourAnonCentral",    
     },
@@ -128,6 +129,7 @@ let metadata = {
     ],
         
 };
+
 const defaultMetadata = {
     // username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
     name: "Anonymous",
@@ -192,6 +194,8 @@ const defaultMetadata = {
     ],
         
 };
+// let defaultMetadata = {};
+
 
 /**
  * Component
@@ -210,6 +214,8 @@ function PagePersona(props) {
     // const { NFTCollections } = useNFTCollections();
     // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMore ] = useState(false);
+    const [ metadata, setMetadata ] = useState(defaultMetadata);    //Start Empty
+    const [ isLoading, setIsLoading ] = useState(false);    //Loading Edit Mode
 
     //https://github.com/MoralisWeb3/react-moralis#usemoralisweb3api
     // const { data, error, isLoading } = useMoralisQuery("GameScore"); //Query All
@@ -223,7 +229,7 @@ function PagePersona(props) {
     // const route = useRoute();
     // console.log("Route Name:", route.name);
 
-     
+
     //Set User Data (Specific Persona)
     // let persona = { 
     //     chainId:'0x4', 
@@ -258,6 +264,39 @@ function PagePersona(props) {
     
     console.log("PagePersona() persona:",  {persona, personaTokenId: persona.get('token_id'), params});
 
+    
+    //TODO: When to Reload Metadata
+    //Load Metadata on Persona Change
+    // useEffect(() => { loadmetadata(); }, [persona]);
+    //Load Metadata on Props Change
+    // useEffect(() => { loadmetadata(); }, [props]);
+    /**
+     * Reload Persona Metadata from Chain
+     */
+    const loadmetadata = async () => {
+        //Start Loading
+        setIsLoading(true);
+        try{
+            //Load Metadata from Chain
+            let metadata = await persona.loadMetadata();
+            //Log
+            console.warn("PersonaEdit() Freshly Loaded Metadata:", {metadata, persona});
+            //Set State
+            setMetadata( metadata );
+        }catch(error){
+            //Log
+            console.error("PersonaEdit() Error Loading Metadata:", error);
+        }
+        //Ready
+        setIsLoading(false);
+    }//loadmetadata()
+    useEffect(  ()  =>  {
+        if(isEditMode){
+            //When Entering Edit More - Reload Persona from Contract
+            loadmetadata();
+        }
+    },[isEditMode]);
+
     useEffect(() => {
         /*
         Moralis.Cloud.run("getPersonas", {})
@@ -283,6 +322,8 @@ function PagePersona(props) {
     // console.log("[DEV] PagePersona() ", {handle, user, currentuser});
 
 
+    
+
 
     //[DEV] - Test Func.
     // const updatUserData = () => {
@@ -303,6 +344,7 @@ function PagePersona(props) {
         
         if(action === 'add'){
             console.warn("[TODO] handleTabEdit() Action:'"+action+"'", {targetKey, action});
+
         }//Add
         else if(action === 'remove'){
             const data = targetKey.split(":");
@@ -320,6 +362,7 @@ function PagePersona(props) {
             }
             //Update Metadata
             // metadata = {...metadata, accounts};     //This is non-reactive
+            // setMetadata({...metadata, social:{ ...metadata.social, ...change }});
         }//Remove
         else console.error("[ERROR] handleTabEdit() Invalid Action:'"+action+"'", {targetKey, action});
     }
@@ -339,7 +382,7 @@ function PagePersona(props) {
                 </div>
             </div>
             
-            <div className="main">
+            <div className="main framed">
             {/* <div className="persona-body"> */}
                 <div className="secondary framed">
 
@@ -356,10 +399,12 @@ function PagePersona(props) {
                                     <>
                                     <a href={link} target="_blank" rel="noopener noreferrer" key={network} className="social-handle" data-network={network}>
                                         {label} 
-                                        <span className="textSwitch">
-                                        <span className="network">{network}</span>
-                                        <span className="handle">{handle}</span>
-                                        </span>
+                                        <div className="textSwitch">
+                                            <div className="inner">
+                                                <div className="item network">{network}</div>
+                                                <div className="item handle">{handle}</div>
+                                            </div>
+                                        </div>
                                     </a>
                                     </>
                                     );
@@ -399,11 +444,11 @@ function PagePersona(props) {
                         <div className="image">
                             <Avatar size={200} src={IPFS.resolveLink(image)} />
                         </div>
-                        <div className="info framed">
+                        <div className="info">
                             <h1 className="name">{metadata?.name}</h1>
                             {/* <div className="handle">@{metadata?.username}</div> */}
                             <q className="description">{metadata?.description}</q>
-                            <div className="flex">
+                            <div className="flex" style={{marginTop:5}}>
                                 <div className="location">
                                     <i className="bi bi-geo-alt"></i>
                                     {metadata?.location?.name}
@@ -412,9 +457,9 @@ function PagePersona(props) {
                         </div>
                         <div className="actions">
                             <div className="button">
-                                <Button variant="contained" color="primary" onClick={()=>{
-                                    setIsEditMore(isEditMode===false);  //Toggle
-                                }}>{isEditMode ? "Cancel" : "Edit" }</Button>
+                                {isEditMode && <Button className="debug" onClick={()=>{ console.warn("[TODO] PagePersona() Save Changes"); }} >[Save]</Button>}
+                                {!isEditMode && <Button variant="contained" color="primary" onClick={()=>{setIsEditMore(isEditMode===false);}}>Edit</Button>}
+                                {isEditMode && <Button variant="contained" color="primary" onClick={()=>{setIsEditMore(isEditMode===false);}}>Cancel</Button>}
                             </div>
                         </div>
                     </div>
@@ -422,7 +467,7 @@ function PagePersona(props) {
                     {isEditMode && 
                     <div className="edit">
                         {/* <PersonaEdit metadata={metadata} contract={contractPersona} persona={persona} /> */}
-                        <PersonaEdit persona={persona} />
+                        <PersonaEdit persona={persona} metadata={metadata} isLoading={isLoading} />
                     </div>
                     }
 

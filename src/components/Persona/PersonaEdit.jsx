@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import { useMoralisQuery, useWeb3ExecuteFunction } from "react-moralis";
-
-
-
 // import { useNFTCollections } from "hooks/useNFTCollections";
 // import { Link } from "react-router-dom";
 import { Form, Input, Button, Select, InputNumber } from 'antd';
@@ -15,9 +12,9 @@ import { Upload, message } from 'antd';
 import { IPFS } from "helpers/IPFS";
 import { Persona } from "common/objects";
 
+import ImgCrop from 'antd-img-crop';
+
 // import { useVerifyMetadata } from "hooks/useVerifyMetadata";
-
-
 
 const { Option } = Select;
 
@@ -33,19 +30,22 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
  *  TODO!! Load Metadata From W3
  */
  function PersonaEdit(props) {
+    // const { persona, contract } = props;
     const { persona, contract } = props;
     // const tokenId = persona.get('token_id');
 
     // const [ formSocial, setFormSocial ] = useState({});
     // const [ metadata, setMetadata ] = useState(props?.metadata);
     // const [ metadata, setMetadata ] = useState(persona.get('metadata'));
-    const [ metadata, setMetadata ] = useState({});    //Start Empty
-
+    // const [ metadata, setMetadata ] = useState({});    //Start Empty     //Now Sharing Metadata with Container
+    const [ metadata, setMetadata ] = useState(props.metadata);    //From Parent
+    
     //File Upload
-    const [ imageUrl, setImageUrl ] = useState(persona.get('image'));
+    // const [ imageUrl, setImageUrl ] = useState(persona.getFallback('image'));
+    const [ imageUrl, setImageUrl ] = useState(metadata?.image);
     const [ imageLoading, setImageLoading ] = useState(false);
-    const [ isLoading, setIsLoading ] = useState(true);
-
+    // const [ isLoading, setIsLoading ] = useState(true);
+    const {isLoading } = props;
     // const { verifyMetadata, updateToken } = useVerifyMetadata();
 
     const { Moralis, setUserData, userError, isUserUpdating, user, isAuthenticated, account, chainId } = useMoralis();
@@ -69,31 +69,37 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
     //Log
     console.warn("PersonaEdit() MEtadata", {chainId, env:process.env, metadata, imageUrl, contract, persona, contractPersona});
 
+/** NOW SHARING METADATA W/Container
+     * Reload Persona Metadata from Chain
+     * /
     const loadmetadata = async () => {
         //Start Loading
         setIsLoading(true);
-        //Validate
-        if(persona.get('token_id') !== undefined) {
-            try{
-                //Load Metadata from Chain
-                let metadata = await persona.loadMetadata();
-                //Log
-                console.warn("PersonaEdit() Freshly Loaded Metadata:", {metadata, persona});
-                //Set State
-                setMetadata( metadata );
-            }catch(error){
-                //Log
-                console.error("PersonaEdit() Error Loading Metadata:", error);
-            }
-        }//Has Toekn ID
-        else{
-            //New Persona, Not yet on Chain
+
+        try{
+            //Load Metadata from Chain
+            let metadata = await persona.loadMetadata();
+            //Log
+            console.warn("PersonaEdit() Freshly Loaded Metadata:", {metadata, persona});
+            //Set State
+            setMetadata( metadata );
+        }catch(error){
+            //Log
+            console.error("PersonaEdit() Error Loading Metadata:", error);
         }
+
         //Ready
         setIsLoading(false);
     }//loadmetadata()
     //Load Metadata on Persona Change
     useEffect(() => { loadmetadata(); }, [persona]);
+*/
+
+    useEffect(() => { 
+        //Refresh Metadata on Every Load! (After Updating Chain, This Component's metadata doesn't match the updated parent)
+        console.log("PersonaEdit() Reloading Metadata", props.metadata);
+        setMetadata(props.metadata); 
+    }, [props.metadata]);
 
     /**
      * Form Validation
@@ -202,22 +208,21 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
      * @param string uri 
      */
     // async function updateNFT(uri, tokenId=1){
-        async function updateNFT(uri){
-            const options = {
-                // contractAddress: contractPersona.address,
-                contractAddress: persona.get('address'),
-                abi: contractPersona.abi,
-                functionName: 'update',
-                params: { tokenId: persona.get('token_id'), uri },
-            };
-    
-            //Update Contract
-            await contractProcessor.fetch({
-                params: options,
-                onSuccess: (data) => console.log("PersonaEdit.updateNFT() Success", {data, uri, persona, options}),
-                onError: (error) => console.error("PersonaEdit.updateNFT() Failed", {error, uri, persona, options}),
-            });
-        }
+    async function updateNFT(uri){
+        const options = {
+            // contractAddress: contractPersona.address,
+            contractAddress: persona.get('address'),
+            abi: contractPersona.abi,
+            functionName: 'update',
+            params: { tokenId: persona.get('token_id'), uri },
+        };
+        //Update Contract
+        await contractProcessor.fetch({
+            params: options,
+            onSuccess: (data) => console.log("PersonaEdit.updateNFT() Success", {data, uri, persona, options}),
+            onError: (error) => console.error("PersonaEdit.updateNFT() Failed", {error, uri, persona, options}),
+        });
+    }
     
     /**
      * Form Submit Function
@@ -258,16 +263,20 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         console.log("(i) PersonaEdit() Metadata Form Reset", props?.metadata)
     }
 
+    let size = 200;
     return (
     <>
     <Skeleton active loading={isLoading}>
 
 
-    <Col xs={24} lg={{ span: 20, offset: 2 }} className="personaEdit">
+    {/* <Col xs={24} lg={{ span: 20, offset: 2 }} className="personaEdit"> */}
+    <Col className="personaEdit">
         {/* <input type="file" id="fileInput" onChange={handleChangeFileEvent}/> */}
+        <div style={{width:size, height:size, borderRadius:"50%", overflow:'hidden'}}>
+        {/* <ImgCrop rotate> TODO (It doesn't save Crop ) */}
         <Upload
             name="avatar"
-            listType="picture-card"
+            // listType="picture-card"
             className="avatar-uploader"
             showUploadList={false}
             // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"    //Disabled
@@ -276,12 +285,16 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
             onChange={handleChangeFile}
             >
             {imageLoading ? <LoadingOutlined /> 
-                : imageUrl ? <img src={IPFS.resolveLink(imageUrl)} alt="avatar" style={{ width: '100%' }} /> 
+                // : imageUrl ? <img src={IPFS.resolveLink(imageUrl)} alt="avatar" style={{ width: '100%' }} /> 
+                : imageUrl ? <Avatar size={size} src={IPFS.resolveLink(imageUrl)} />
                 // : imageUrl ? <Avatar size={220} src={imageUrl} />
                     // : uploadButton
                     : <div><PlusOutlined /><div style={{ marginTop: 8 }}>Upload</div></div>
             }
         </Upload>
+        
+        {/* </ImgCrop> */}
+        </div>
 
         <Form name="personaForm" 
             onFinish={onFinish}
