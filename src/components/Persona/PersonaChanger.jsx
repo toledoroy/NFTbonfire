@@ -1,7 +1,7 @@
 import { Skeleton, Button, Dropdown, Avatar } from "antd";
 // import { Link } from "react-router-dom";
 import { DownOutlined } from '@ant-design/icons'; //UserOutlined
-import { Persona } from "common/objects";
+import { Persona } from "objects/Persona";
 import BusinessCard from "components/Persona/BusinessCard";
 
 /**

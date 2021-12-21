@@ -3,7 +3,7 @@ import { Skeleton, Image,  Form, Input, Button, Comment, Avatar, List } from 'an
 import { FireTwoTone } from '@ant-design/icons';
 import { useMoralis } from "react-moralis";
 import { useHistory } from 'react-router-dom';
-import { Room } from "common/objects";
+import { Room } from "objects/objects";
     
 
 

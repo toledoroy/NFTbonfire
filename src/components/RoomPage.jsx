@@ -12,10 +12,12 @@ import VotePane from "components/Room/VotePane"
 import AddPost from "components/Room/AddPost"
 import Blockie from "components/Blockie";
 import Address from "components/Address/Address";
-import { Post, Room, Comment } from "common/objects";
+import { Post, Room, Comment } from "objects/objects";
 
 
-// function Room({id, collection}) {
+/**
+ * Component Page:Room
+ */
 function RoomPage(props) {
     const { id } = props.match.params;
     const { Moralis, isWeb3Enabled } = useMoralis();

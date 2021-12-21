@@ -9,7 +9,7 @@ import PersonaChanger from "components/Persona/PersonaChanger";
 import Address from "components/Address/Address";
 // import { useNFTCollections } from "hooks/useNFTCollections";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
-import { Persona, Post, Room } from "common/objects";
+import { Post, Room } from "objects/objects";
 import Space from "components/NFTSingle/Space";
 import { CollectionContext } from "common/context";
 import { NFTHelper } from "helpers/NFTHelper";

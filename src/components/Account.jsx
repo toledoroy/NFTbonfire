@@ -58,7 +58,7 @@ function Account() {
           <Button size="large" type="primary"
             style={{ width: "100%", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "500", }}
             onClick={() => {logout()}}>
-            Disconnect Wallet
+            Disconnect
           </Button>
         </Menu.Item>
       </Menu>

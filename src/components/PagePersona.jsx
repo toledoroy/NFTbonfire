@@ -12,7 +12,7 @@ import Address from "components/Address/Address";
 import { Collapse } from 'antd';
 import NFTCollections from "components/NFTCollections";
 import { getChainName, getChainLogo } from "helpers/networks";
-import { Persona } from "common/objects";
+import { Persona } from "objects/Persona";
 import { IPFS } from "helpers/IPFS";
 // import { Form } from 'antd';
 import { Input, Select } from 'antd';
