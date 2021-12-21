@@ -41,7 +41,7 @@ export const Comment = Moralis.Object.extend("Post");     //Sub-Posts
 //-- Persona
 export const Persona = Moralis.Object.extend("Persona", 
     { /* Instance Methods */
-
+        
         //Override Save
         // save(){
             // console.warn("[TEST] save() Persona Override for Save Function");
@@ -220,6 +220,7 @@ export const Persona = Moralis.Object.extend("Persona",
         getContractAddress(chain){ return (this.contractPersona?.[chain]?.address) ? this.contractPersona[chain].address : null; },
         //Default Metadata (Random)
         getDefaultMetadata(){  return personaDefaultMetadatas[Math.floor(Math.random()*personaDefaultMetadatas.length)]; },
+        
     }
 );     //Personas
 

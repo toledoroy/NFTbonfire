@@ -14,6 +14,14 @@
     if(reserved.includes(handle)) return false;
 
     //TODO: Check if Handle Already Exists in DB
+    const Persona = Moralis.Object.extend("Persona");
+    const query = new Moralis.Query(Persona);
+    query.equalTo("handle", handle);
+    const results = await query.find();
+
+    logger.warn("[TEST] Found "+results.length+" Results for Requested Handle:"+handle);
+    logger.warn(results);
+
 
     // handle
     return true;
@@ -44,9 +52,13 @@ Moralis.Cloud.define("personaRegister", async (request) => {
   
   if(handle){
     //Validate
-    if(isHandleFree(handle)){
+    if(isHandleFree()){
         //TODO: Register Handle / Save Persona to DB
 
+        const Persona = Moralis.Object.extend("Persona");
+        Persona.save({handle, contract, token_id, chain});
+
+        logger.warn("[TEST] personaRegister() Saved Persona chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"' ");
     }
     else throw "Handle Not Available";
   }

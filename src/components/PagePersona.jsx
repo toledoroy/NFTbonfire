@@ -30,83 +30,10 @@ const personaFields = require('schema/PersonaData.json');
 // import personaABI from "contracts/abi/PERSONA.json";
 // const personaABI = require('contracts/abi/PERSONA.json');
 // console.log("PagePersona() personaABI:", personaABI);
-// const contractPersona = {
-//     address: '0x9E91a8dDF365622771312bD859A2B0063097ad34', 
-//     chain:4,
-//     abi: personaABI,
-// };
-const contractPersona = Persona.getContractData();
-
-/* MOVED TO Persona
-const defaultMetadata = {
-    // username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
-    name: "Anonymous",
-    role: "Hacker",
-    // image: "https://images.unsplash.com/photo-1636716642701-01754aef1066?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",  //Random Dark Lady
-    // image: "https://ipfs.moralis.io:2053/ipfs/QmZ2oHHLUUARUTz3Jx2wSWYTtALUtEhQtT1hpxb7Fbvr5y",   //Anon in hood
-    image: "https://ipfs.moralis.io:2053/ipfs/QmWyKVFkUCfwUFQZyKjJ9ifqyWatUFStMi8B3MtT3CkhyP",      //Anon logo
-    cover: "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
-    // description: "A hardworking builder, I am",
-    description: "We are legion",
-    // email: "toledoroy@gmail.com",        //Don't 
-    location: {
-        name:"World Wide", latitude: 0, longitude: 0,
-        // name:"Seattle, WA", latitude: 47.60275857601884, longitude: -122.33726455335282,
-    },
-    social: {
-        twitter: "YourAnonNews",
-        twitter: "YourAnonCentral",    
-    },
-    links: [
-        {
-            type: "page",
-            title: "Wikipedia",
-            url: "https://en.wikipedia.org/wiki/Anonymous_(hacker_group)",
-        },
-        {
-            type: "media",
-            title: "News: donate $75M in Bitcoin",
-            url: "https://thenextweb.com/news/anonymous-supposedly-resurfaces-to-donate-75m-in-bitcoin-to-privacy-tech",
-        },
-        
-    ],
-    "attributes": [	//OpenSea		https://docs.opensea.io/docs/metadata-standards
-        {
-            "trait_type": "Base", 
-            "value": "Everywhere",
-        },
-        {
-            "trait_type": "Power", 
-            "value": "10",
-        },
-        {
-            "trait_type": "Size", 
-            "value": 100,
-
-            "display_type": "boost_percentage",     //"number", "boost_number", "boost_percentage"
-        },
-    ],
-    "accounts": [
-        {
-            "address": "0x874a6E7F5e9537C4F934Fa0d6cea906e24fc287D",
-            "chain": "0x4",
-        },
-        {
-            "address": "0x874a6E7F5e9537C4F934Fa0d6cea906e24fc287D",
-            "chain": "0x1",
-        },
-        {
-            "address": "0x8b08BDA46eB904B18E8385F1423a135167647cA3",
-            "chain": "0x1",
-        },
-    ],
-        
-};
-// let defaultMetadata = {};
-*/
+// const contractPersona = Persona.getContractData();
 
 /**
- * Component
+ * Component - Page:Persona 
  * @param {handle} OR {chain, contract, token_id}
  * @returns 
  */
@@ -153,21 +80,34 @@ function PagePersona(props) {
         token_id:'1',
         metadata
     };
-    //Override 1
-    if(params.chain && params.contract && params.token_id) {
-        personaData = {
-            chainId: chain,
-            address: contract,
-            tokenId: token_id,
-        };
-        console.warn("[TEST] PagePersona() personaData From URL:", personaData );    
-    }
-    //Override 2    
-    if(params.handle){
-        console.warn("[TEST] PagePersona() Should Override personaData By Handle:", {personaData, handle, params } );    
-        //TODO: Override by handle
-        // personaData
-    }
+    
+    useEffect(() => {
+            
+        //Override 1
+        if(params.chain && params.contract && params.token_id) {
+            personaData = {
+                chainId: chain,
+                address: contract,
+                tokenId: token_id,
+            };
+            console.warn("[TEST] PagePersona() personaData From URL:", personaData );    
+        }
+        //Override 2    
+        if(params.handle){
+            console.warn("[TEST] PagePersona() Override personaData By Handle:", {personaData, handle, params } );    
+            const query = new Moralis.Query(Persona);
+            query.equalTo("handle", handle);
+            query.find().then((results) => {
+                //TODO: Override by handle
+                // personaData
+                console.warn("[TEST] PagePersona() Found Results for Handle:", {results} );    
+
+            });
+        }
+
+    },[params]);
+
+    
     
     //Init Persona
     const persona = new Persona(personaData);
@@ -230,7 +170,7 @@ function PagePersona(props) {
 
     /** MADE EXPLICIT
      * on Social Account Update
-     */
+     
      const formSocialOnChange = (e) => {
         let change = {[e.target.name]: e.target.value.trim()};
         //Log
@@ -241,7 +181,8 @@ function PagePersona(props) {
         console.log("[DEV] formSocialOnChange() Modified Metadata ", {metadata, social:metadata.social, change});
         return true;
     }
-
+    */
+    
     //[DEV] - Test Func.
     // const updatUserData = () => {
     function updatUserData(data){
@@ -466,7 +407,7 @@ function PagePersona(props) {
 
                     {isEditMode && 
                     <div className="edit">
-                        {/* <PersonaEdit metadata={metadata} contract={contractPersona} persona={persona} /> */}
+                        {/* <PersonaEdit metadata={metadata} contract={Persona.getContractData()} persona={persona} /> */}
                         <PersonaEdit persona={persona} metadata={metadata} isLoading={isLoading} />
                     </div>
                     }
@@ -540,6 +481,21 @@ function PagePersona(props) {
             <button onClick={updatUserData} disabled={isUserUpdating}>[DEV] Update User Details</button>
             */}
             
+            <button onClick={()=>{
+                let data = {
+                    chainId: '0x4',
+                    address: contract,
+                    tokenId: 1,
+                    handle:'toledoroy',
+                };
+                // const Persona = Moralis.Object.extend("Persona", {}, {});
+                let thisPersona = new Persona(
+                    data
+                );
+                Persona.register(data);
+                console.log("[TEST] ThisPersona:", {data, thisPersona});
+                // thisPersona.save();
+            }}>TEST BUTTON</button>
                 
         </div>
     );
