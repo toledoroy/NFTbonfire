@@ -67,7 +67,7 @@ const App = ({ isServerInfo }) => {
     if (!isWeb3Enabled && !isWeb3EnableLoading) enableWeb3();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, isWeb3Enabled]);
-
+  
 //quickstart
   return (
     <Layout style={{ height: "100vh", overflow: "auto" }}>
@@ -174,6 +174,7 @@ const App = ({ isServerInfo }) => {
       </Router>
       
       <div className="clearfloat"></div>
+
       <Footer style={{ textAlign: "center" }}>
         <Text style={{ display: "block" }}>
           🙋 You have questions? Ask them on the {""}

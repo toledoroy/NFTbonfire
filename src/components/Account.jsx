@@ -2,6 +2,7 @@ import { useMoralis } from "react-moralis";
 import { getEllipsisTxt } from "helpers/formatters";
 import Blockie from "./Blockie";
 import { Button, Card, Modal } from "antd";
+import { Menu, Dropdown } from "antd";
 import { useState } from "react";
 import Address from "./Address/Address";
 import { SelectOutlined } from "@ant-design/icons";
@@ -29,7 +30,7 @@ function Account() {
 
   if (!isAuthenticated) {
     return (
-      <div style={styles.account} onClick={() => authenticate({ signingMessage: "Log In!" })}>
+      <div style={styles.account} onClick={() => authenticate({ signingMessage: "Sign in" })}>
         <p style={styles.text}>Authenticate</p>
       </div>
     );
@@ -37,10 +38,40 @@ function Account() {
 
   return (
     <>
-      <div style={styles.account} onClick={() => setIsModalVisible(true)}>
-        <p style={{ marginRight: "5px", ...styles.text }}>{getEllipsisTxt(account, 6)}</p>
-        <Blockie currentWallet scale={3} />
-      </div>
+    <Dropdown trigger={['click']} overlay={(
+      <Menu style={{padding: "10px", borderRadius: "1rem",}}>
+        
+        <Menu.Item style={{padding: '10px'}}>
+          <Address avatar="left" size={6} copyable style={{ fontSize: "20px" }} />
+        </Menu.Item>
+
+        <Menu.Item>
+          <div style={{ padding: " 10px 0" }}>
+            <a href={`${getExplorer(chainId)}/address/${account}`} target="_blank" rel="noreferrer">
+              <SelectOutlined style={{ marginRight: "5px" }} />
+              View on Explorer
+            </a>
+          </div>
+        </Menu.Item>
+
+        <Menu.Item style={{padding: '10px'}}>
+          <Button size="large" type="primary"
+            style={{ width: "100%", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "500", }}
+            onClick={() => {logout()}}>
+            Disconnect Wallet
+          </Button>
+        </Menu.Item>
+      </Menu>
+      )} placement="bottomRight">
+      <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+        <div style={styles.account} onClick={() => setIsModalVisible(true)}>
+          <p style={{ marginRight: "5px", ...styles.text }}>{getEllipsisTxt(account, 6)}</p>
+          <Blockie currentWallet scale={3} />
+        </div>
+      </a>
+    </Dropdown>
+    
+      {/*
       <Modal
         visible={isModalVisible}
         footer={null}
@@ -54,13 +85,7 @@ function Account() {
         width="400px"
       >
         Account
-        <Card
-          style={{
-            marginTop: "10px",
-            borderRadius: "1rem",
-          }}
-          bodyStyle={{ padding: "15px" }}
-        >
+        <Card style={{marginTop: "10px", borderRadius: "1rem",}} bodyStyle={{ padding: "15px" }} >
           <Address avatar="left" size={6} copyable style={{ fontSize: "20px" }} />
           <div style={{ marginTop: "10px", padding: "0 10px" }}>
             <a href={`${getExplorer(chainId)}/address/${account}`} target="_blank" rel="noreferrer">
@@ -69,24 +94,17 @@ function Account() {
             </a>
           </div>
         </Card>
-        <Button
-          size="large"
-          type="primary"
-          style={{
-            width: "100%",
-            marginTop: "10px",
-            borderRadius: "0.5rem",
-            fontSize: "16px",
-            fontWeight: "500",
-          }}
+        <Button size="large" type="primary"
+          style={{ width: "100%", marginTop: "10px", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "500", }}
           onClick={() => {
             logout();
             setIsModalVisible(false);
           }}
-        >
+          >
           Disconnect Wallet
         </Button>
       </Modal>
+        */}
     </>
   );
 }
