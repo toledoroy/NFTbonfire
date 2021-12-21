@@ -8,7 +8,7 @@ import { useVerifyMetadata } from "hooks/useVerifyMetadata";
  * @returns 
  */
 export const useNFTCollections = (options) => {
-  const { account } = useMoralis();
+  const { account, chainId } = useMoralis();
   // const { account } = useMoralisWeb3Api();
   // const { chainId } = useMoralisDapp();
   const [ NFTCollections, setNFTCollections ] = useState({});
@@ -30,6 +30,8 @@ export const useNFTCollections = (options) => {
     let collections = {};
     let personas = [];
     for(let NFT of NFTs){
+      //Add Chain ID
+      NFT.chain = chainId;
       if(isPersona(NFT)){
         //Force Full Metadata Update (Moralis sometimes gives outdated token_uri)
         // if(NFT.symbol === "PERSONA") 
