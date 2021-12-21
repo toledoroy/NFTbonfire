@@ -315,7 +315,7 @@ function PagePersona(props) {
                                 if(handle){
                                     //Label (Icon/Name)
                                     let label = personaFields.social.network[network].label ? personaFields.social.network[network].label : (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
-                                    let link = personaFields.social.network[network].url + handle;
+                                    let link = personaFields.social.network[network].url ? personaFields.social.network[network].url + handle : '#';
                                     // let label = (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
                                     let headerContent = (
                                         <>

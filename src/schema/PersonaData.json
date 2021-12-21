@@ -24,17 +24,20 @@
         "name": "social",
         "type":"object",
         "network":{
-            "twitter": {"name":"twitter", "url":"http://twitter.com/"},
-            "facebook": {"name":"facebook", "url":"http://facebook.com/"},
-            "github": {"name":"github", "url":"http://github.com/"},
-            "linkedin": {"name":"linkedin", "url":"http://linkedin.com/in/"},
-            "telegram": {"name":"telegram", "url":"http://telegram.com/"},
-            "instagram": {"name":"instagram", "url":"http://instagram.com/"},
-            "youtube": {"name":"youtube", "url":"http://youtube.com/c/"},
-            "twitch": {"name":"twitch", "url":"http://twitch.com/"},
-            "reddit": {"name":"reddit", "url":"http://reddit.com/"},
-            "medium": {"name":"medium", "url":"http://medium.com/@"},
-            "discord": {"name":"discord", "url":"http://discord.com/"}
+            "twitter": {"name":"twitter", "url":"https://twitter.com/"},
+            "facebook": {"name":"facebook", "url":"https://facebook.com/"},
+            "github": {"name":"github", "url":"https://github.com/"},
+            "linkedin": {"name":"linkedin", "url":"https://linkedin.com/in/"},
+            "telegram": {"name":"telegram", "url":"https://telegram.com/"},
+            "instagram": {"name":"instagram", "url":"https://instagram.com/"},
+            "youtube": {"name":"youtube", "url":"https://youtube.com/c/"},
+            "twitch": {"name":"twitch", "url":"https://twitch.tv/"},
+            "reddit": {"name":"reddit", "url":"https://reddit.com/user/"},
+            "medium": {"name":"medium", "url":"https://medium.com/@"},
+            "discord": {"name":"discord"},
+            "pinterest": {"name":"pinterest", "url":"https://pinterest.com/"},
+            "vimeo": {"name":"vimeo", "url":"https://vimeo.com/"},
+            "quora": {"name":"quora", "url":"https://www.quora.com/profile/"}
         }
     },
     "links":{
