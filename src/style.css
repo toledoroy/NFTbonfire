@@ -222,7 +222,7 @@ button:active {
   animation: slideIn 0.6s ease-in-out forwards;
   animation-delay: 0.15s;
   overflow-y: auto;
-  height: calc(100vh - 320px);
+  /* height: calc(100vh - 320px); */
   display: flex;
   flex-grow: 1;
 }
