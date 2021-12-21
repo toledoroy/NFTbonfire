@@ -74,7 +74,8 @@ export const useNFTCollections = (options) => {
       setNFTCollections( collections );
       setPersonas( personas );
     }//Has Results
-  }, [NFTBalances, account, options]);
+    // eslint-disable-next-line
+  }, [NFTBalances]);
 
   return { NFTCollections, NFTpersonas, error, isLoading };
 };//useNFTCollections
