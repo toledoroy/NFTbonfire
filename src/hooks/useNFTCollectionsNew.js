@@ -9,8 +9,6 @@ import { useVerifyMetadata } from "hooks/useVerifyMetadata";
  */
 export const useNFTCollections = (options) => {
   const { account, chainId } = useMoralis();
-  // const { account } = useMoralisWeb3Api();
-  // const { chainId } = useMoralisDapp();
   const [ NFTCollections, setNFTCollections ] = useState({});
   const [ NFTpersonas, setPersonas ] = useState({});
   const { verifyMetadata, updateToken } = useVerifyMetadata();

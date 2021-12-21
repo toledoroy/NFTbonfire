@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FileSearchOutlined, SendOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { Card, Image, Tooltip, Modal, Input } from "antd";
 import { useMoralis } from "react-moralis";
-import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
+// import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 import { getExplorer } from "helpers/networks";
 import AddressInput from "components/AddressInput";
 import NFTDisplayMetadata from "components/NFTCollections/NFTDisplayMetadata";
@@ -14,8 +14,8 @@ const { Meta } = Card;
  * Display a Single NFT
  */
  function NFTDisplaySingle({nft, index}) {
-    const { Moralis } = useMoralis();
-    const { chainId } = useMoralisDapp();
+    const { Moralis, chainId } = useMoralis();
+    // const { chainId } = useMoralisDapp();
     const [nftToSend, setNftToSend] = useState(null);
     const [receiverToSend, setReceiver] = useState(null);
     const [amountToSend, setAmount] = useState(null);

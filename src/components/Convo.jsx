@@ -9,7 +9,6 @@ function Convo(props) {
     // const [ room, setRoom ] = useState({});
     const [ convo, setConvo ] = useState({});
     const [ posts, setPosts ] = useState([]);
-    // const { walletAddress } = useMoralisDapp();
 
     //Extract ID from props
     const { id } = props.match.params;
