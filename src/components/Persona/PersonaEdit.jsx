@@ -185,7 +185,7 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         const options = {
             // contractAddress: contractPersona.address,
             contractAddress: persona.get('address'),
-            abi: contractPersona.abi,
+            abi: Persona.getABI(),   //contractPersona.abi,
             functionName: 'update',
             params: { tokenId: persona.get('token_id'), uri },
         };
@@ -230,7 +230,7 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         const options = {
             // contractAddress: contractPersona.address,
             contractAddress: persona.get('address'),
-            abi: contractPersona.abi,
+            abi: Persona.getABI(),  //contractPersona.abi,
             functionName: 'mint',
             params: { tokenURI:uri },
         };
