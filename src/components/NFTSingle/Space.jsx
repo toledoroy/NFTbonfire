@@ -213,27 +213,24 @@ function Space({hash, collection, NFTpersonas}) {
 export default Space;
 
 /**
- * Empty Space
+ * Component: Empty Space
  */
  function SpaceEmpty({collection}) {
   return(
     <div className="SpaceEmpty">
       {/* <div>Loading Rooms...</div> */}
-      <p key="1">Congradulations! You're the first person in this Space</p>
-      <p key="2">Why don't you go ahead and light up a new bonfire for your {__.sanitize(collection.name)} NFT buddies</p>
+      <p key="R1">Congradulations! You're the first person in this Space</p>
+      <p key="R2">Why don't you go ahead and light up a new bonfire for your {__.sanitize(collection.name)} NFT buddies</p>
       <RoomAddForm hash={collection.hash} collection={collection} />
     </div>
   );
  }//SpaceEmpty()
 
 /**
- * Link To Room
+ * Component: Link To Room
  */
 function RoomEntrance({hash, collection, room}) {
-
-  // console.log("[TEST] RoomEntrance ", room, PersonaHelper.userImage(room.get('userId')));
-
-  return(
+  return (
     <div className="room_entrance">
       <Badge.Ribbon placement="start" text="0x...AAA">
         <div className="image">
@@ -257,19 +254,19 @@ function RoomEntrance({hash, collection, room}) {
         {/* <p key="">Total Items: {room.total_items}</p> */}
         {/* <p key="">Total Users: {room.total_users}</p> */}
         {/* <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn">Go!</Link> */}
-      
         <div className="clearfloat"></div>
       </div> 
       <div className="vote framed">
         <VotePane post={room} />        
       </div>
     </div>
-    
   );
 }//RoomEntrance()
 
 
-
+/**
+ * Component - Show More Button
+ */
 function ShowMore() {
   return (
       <div className="showMore flex">

@@ -42,7 +42,7 @@ function PageNFTs({hash, collection, NFTpersonas}) {
     {collection => (
     <Skeleton active loading={!PageNFTs}>
         <div className="content">
-            
+            [DISPLAY NFTs]
         </div>
         <Pagination
             total={85}
