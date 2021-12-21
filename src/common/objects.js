@@ -1,6 +1,11 @@
 import { IPFS } from "helpers/IPFS";
 const Moralis = require("moralis/node");
-Moralis.enableWeb3();
+const APP_ID = process.env.REACT_APP_MORALIS_APPLICATION_ID;
+const SERVER_URL = process.env.REACT_APP_MORALIS_SERVER_URL;
+Moralis.initialize(APP_ID);
+Moralis.serverURL = SERVER_URL;
+
+
 // const { chainId } = useMoralis();
 
 //** GLOBAL FUNCTIONS **/
@@ -39,9 +44,9 @@ export const Persona = Moralis.Object.extend("Persona",
 
         //Override Save
         // save(){
-        //     console.warn("[TEST] save() Persona Override for Save Function");
+            // console.warn("[TEST] save() Persona Override for Save Function");
         //     this.saveToChain();
-        //     return super.save();
+            // return super.save();
         // },
         // saveToChain(){
         //     console.warn("[TEST] saveToChain() Called");
