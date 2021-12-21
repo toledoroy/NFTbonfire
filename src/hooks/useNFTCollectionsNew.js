@@ -65,19 +65,16 @@ export const useNFTCollections = (options) => {
         //Check if Owned By Current User
         NFT.owned = (NFT.owner_of === account?.address);  //?
       }//Each NFT
-
       //Organize Into Collections
       // let collections = collect(NFTs);
       let { collections, personas } = collect(NFTs);
-
-
       //Log
       console.log("(i) useNFTCollections() collections:", {options, NFTs, collections});
       //Set
       setNFTCollections( collections );
       setPersonas( personas );
     }//Has Results
-  }, [NFTBalances]);
+  }, [NFTBalances, account, options]);
 
   return { NFTCollections, NFTpersonas, error, isLoading };
 };//useNFTCollections
