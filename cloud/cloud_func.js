@@ -98,7 +98,7 @@ Moralis.Cloud.define("voteDown", async (request) => {
   return true;
 }//matchUserNFT()
 
-/**
+/** THIS SHOUD MOVE TO CLIENTSIDE!
  * New Post
  *  name: String
  *  text: String      
@@ -125,7 +125,7 @@ Moralis.Cloud.define("post", async (request) => {
       logger.warn(data);
       
       const Post = Moralis.Object.extend("Post");
-      const post = new Post();
+      // const post = new Post();
       // post.set("userId", request.user?.id);
       data.userId = request.user?.id;
       
@@ -134,9 +134,23 @@ Moralis.Cloud.define("post", async (request) => {
       const post = new Post(data);
 
       //ACL - Own + Public Read
-      const postACL = new Moralis.ACL(Moralis.User.current());
-      postACL.setPublicReadAccess(true);
-      post.setACL(postACL);
+      // const acl = new Moralis.ACL(request.user);
+      
+      logger.error(JSON.stringify(Moralis.User.current()));
+      logger.error(JSON.stringify(request?.user));
+      logger.error(JSON.stringify(data));
+      logger.warn("[TEST] post() Current User:"+request.user?.id);
+
+      // const acl = new Moralis.ACL();
+      const acl = new Moralis.ACL(Moralis.User.current());
+      acl.setPublicReadAccess(true);
+
+      // acl.setRoleWriteAccess("admins", true);
+      acl.setRoleReadAccess("opensea", true);   //TEST
+      // acl.setWriteAccess(request.user?.id, true);
+      post.setACL(acl);
+
+      logger.warn("[TEST] post() ACL: "+JSON.stringify(acl));
 
       return post.save();
 

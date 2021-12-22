@@ -28,57 +28,12 @@ function SpaceView({hash, collection, NFTpersonas}) {
   const { Moralis, isWeb3Enabled } = useMoralis();
   const [ space, setSpace ] = useState({});
   const [ rooms, setRooms ] = useState([]);
-  const limit = 6;
-
-  //Objects
-  // const Space = Moralis.Object.extend("Space");
-  // const Room = Moralis.Object.extend("Rooms");
-  // const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
-  /*
-  const RoomTest = Moralis.Object.extend("Post", {
-    sayHi: function() { console.log("Hi! I'm Room "+this.id); },
-  }); //Use Posts as Rooms
-  
-  const RoomQuery = new Moralis.Query(Room);
-  RoomQuery.equalTo("parentId", hash);  //By Hash
-  console.log("Get RoomTest for Space:"+hash);
-  RoomQuery.limit(limit).find().then(result => {
-    
-    for(let testRoom of result){ 
-      console.log("Get RoomTest for Space:"+hash, testRoom);
-      testRoom.sayHi();
-    }
-  });
-*/
-
-
-
-
-  /* isLoading turns false before the data is actually loaded :( 
-  const res = useMoralisQuery("Post",
-    (query) => query.equalTo("parentId", hash),
-    [hash],
-    { live: true }
-  );
-  const { data:rooms, isLoading, error} = res;
-  useEffect(() => {
-    if(!isLoading && !error) {
-      //Validate
-      if(rooms.length === 0) {
-        //Log
-        console.error("[TODO] SpaceView() No Rooms Found -- Should Run Init", {isLoading, rooms, error, res:{...res}});
-      }
-    }
-  }, [isLoading, rooms]);
-  //Log
-  console.log("[TEST] Space's' Rooms Query:", {isLoading, rooms,});
-  */
+  const [ limit, setLimit ] = useState(8);
 
   /**
    * [DEV] Insert Rooms
    */
   function initRooms(hash){
-    
     let roomsInit = [
       new Room().set("name", 'Introduction').set("text", 'Say Hi! and introduce yourself'),
       new Room().set("name", 'News').set("text", 'Things people like you should know about'),
@@ -134,14 +89,13 @@ function SpaceView({hash, collection, NFTpersonas}) {
    */
   useEffect(() => {
     //Log
-    console.log("[TEST] SpaceView() RUNNUING W/Hash:"+hash);
-        
+    // console.log("[TEST] SpaceView() RUNNUING W/Hash:"+hash);
     //Get Rooms for Space (by Space's hash)
     const RoomQuery = new Moralis.Query(Room);
     RoomQuery.equalTo("parentId", hash);  //By Hash
-    //Log
-    console.log("Get Rooms for Space:"+hash);
     RoomQuery.limit(limit).find().then(result => {
+      //Log
+      console.log("Got "+result.length+" Rooms for Space:"+hash);
       if(result && result.length > 0) {
         //Log
         // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, result); //V
