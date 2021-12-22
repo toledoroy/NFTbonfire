@@ -1,6 +1,5 @@
 // eslint-disable-next-line
-import { useState, useEffect } from "react";
-// import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
+// import { useState, useEffect } from "react";
 import { useMoralis, useMoralisQuery } from "react-moralis";
 
 

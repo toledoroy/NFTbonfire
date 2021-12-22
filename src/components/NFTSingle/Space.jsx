@@ -4,33 +4,56 @@ import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
 import { FireTwoTone } from '@ant-design/icons';
 // import { Skeleton, Image, Form, Input, Button, Checkbox } from "antd";
-import { Skeleton, Collapse, Badge, List, Comment } from 'antd';
+import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip } from 'antd';
 // import { useMoralisQuery } from "react-moralis";
 import VotePane from "components/Room/VotePane";
 import PersonaChanger from "components/Persona/PersonaChanger";
 import PersonaHelper from "helpers/PersonaHelper";
 import { CollectionContext } from "common/context";
 import __ from "helpers/__";
+import moment from 'moment';
+
+import { useMoralisQuery } from "react-moralis";
 
 
+import { Space, Room, Comment as CommentObj } from "objects/objects";
 
 
 //TODO!! Check if Authorized to View Space
 
 /**
- * Component: Space (W/Chat Room)
+ * Component: SpaceView (W/Chat Room)
  */
-function Space({hash, collection, NFTpersonas}) {
+function SpaceView({hash, collection, NFTpersonas}) {
   const { Moralis, isWeb3Enabled } = useMoralis();
   const [ space, setSpace ] = useState({});
   const [ rooms, setRooms ] = useState([]);
   const limit = 6;
 
   //Objects
-  const Space = Moralis.Object.extend("Space");
+  // const Space = Moralis.Object.extend("Space");
   // const Room = Moralis.Object.extend("Rooms");
-  const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
+  // const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
+  /*
+  const RoomTest = Moralis.Object.extend("Post", {
+    sayHi: function() { console.log("Hi! I'm Room "+this.id); },
+  }); //Use Posts as Rooms
   
+  const RoomQuery = new Moralis.Query(Room);
+  RoomQuery.equalTo("parentId", hash);  //By Hash
+  console.log("Get RoomTest for Space:"+hash);
+  RoomQuery.limit(limit).find().then(result => {
+    
+    for(let testRoom of result){ 
+      console.log("Get RoomTest for Space:"+hash, testRoom);
+      testRoom.sayHi();
+    }
+  });
+*/
+
+
+
+
   /* isLoading turns false before the data is actually loaded :( 
   const res = useMoralisQuery("Post",
     (query) => query.equalTo("parentId", hash),
@@ -43,7 +66,7 @@ function Space({hash, collection, NFTpersonas}) {
       //Validate
       if(rooms.length === 0) {
         //Log
-        console.error("[TODO] Space() No Rooms Found -- Should Run Init", {isLoading, rooms, error, res:{...res}});
+        console.error("[TODO] SpaceView() No Rooms Found -- Should Run Init", {isLoading, rooms, error, res:{...res}});
       }
     }
   }, [isLoading, rooms]);
@@ -103,7 +126,7 @@ function Space({hash, collection, NFTpersonas}) {
         }//New Space
       });
     }//Web3 Enabled
-    else console.log("Space() Waiting for Web3...");
+    else console.log("SpaceView() Waiting for Web3...");
   }, [isWeb3Enabled, hash]);
 
   /**
@@ -111,7 +134,7 @@ function Space({hash, collection, NFTpersonas}) {
    */
   useEffect(() => {
     //Log
-    console.log("[TEST] Space() RUNNUING W/Hash:"+hash);
+    console.log("[TEST] SpaceView() RUNNUING W/Hash:"+hash);
         
     //Get Rooms for Space (by Space's hash)
     const RoomQuery = new Moralis.Query(Room);
@@ -121,7 +144,9 @@ function Space({hash, collection, NFTpersonas}) {
     RoomQuery.limit(limit).find().then(result => {
       if(result && result.length > 0) {
         //Log
-        // console.log("[TEST] Space() Got Rooms for Space:"+hash, result);
+        // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, result); //V
+        // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, result[0].sayHi());
+        // for(let room of result) console.error("[TEST] Comments:", room, room.getComments());    //FAILS
         //Set Rooms
         setRooms(result);
       }//Found Rooms
@@ -132,7 +157,7 @@ function Space({hash, collection, NFTpersonas}) {
         //Set Rooms
         // setRooms(roomsInit); //Try Without... Also Use Live Query
         //Log
-        // console.log("[TEST] Space() No Rooms Found for Space:"+hash+" --> Init Rooms", roomsInit);
+        // console.log("[TEST] SpaceView() No Rooms Found for Space:"+hash+" --> Init Rooms", roomsInit);
       }//No Rooms
       */
     });
@@ -141,16 +166,16 @@ function Space({hash, collection, NFTpersonas}) {
   }, [hash]);
  
   //Log
-  console.log("Space() For collection:", {collection, rooms});
+  console.log("SpaceView() For collection:", {collection, rooms});
 
   //Validate  
   // if(collection.contract_type!=="ERC1155") return <div>Unsupported Collection Type:'{collection.contract_type}'</div>;   //It's a mess out there, ERC721 0xcc14dd8e6673fee203366115d3f9240b079a4930 Contains Multiple NFTs (All Have amount=1)
   // if(!space) return <div className="loading">...LOADING SPACE...</div>;    //Enable
   
   /* Consumer -- Fail   //Unhandled Rejection (TypeError): render is not a function
-  console.log("Space() For CollectionContext:", {CollectionContext});
+  console.log("SpaceView() For CollectionContext:", {CollectionContext});
   // <CollectionContext.Consumer>
-  //  {collection => {console.warn("[TEST] Space() CollectionContext: ", {collection})}} 
+  //  {collection => {console.warn("[TEST] SpaceView() CollectionContext: ", {collection})}} 
   //  </CollectionContext.Consumer> 
     */
   return (
@@ -173,22 +198,11 @@ function Space({hash, collection, NFTpersonas}) {
           {(rooms && rooms.length>0) ?
               <Collapse accordion>
                 {/* collapsible="disabled" */}
-                 {rooms.map((room, index) => (
-                <Collapse.Panel header={<RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />} key={room.id} showArrow={false} className="item">
-                    
-                    <RoomAddForm hash={hash} collection={collection} title="Comment"/>
-                    
-                    [...COMMENTS...]
-                    {/* https://ant.design/components/comment/#components-comment-demo-nested
-                    {comments.length > 0 && <CommentList comments={<List
-                      dataSource={comments}
-                      header={`${comments.length} ${comments.length > 1 ? 'replies' : 'reply'}`}
-                      itemLayout="horizontal"
-                      renderItem={props => <Comment {...props} />}
-                      />} 
-                    />} */}
-
-                </Collapse.Panel>
+                {rooms.map((room, index) => (
+                  <Collapse.Panel header={<RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />} key={room.id} showArrow={false} className="item">
+                      <ShowComments room={room} />
+                      <RoomAddForm parentId={room.id} collection={collection} title="Add Comment"/>
+                  </Collapse.Panel>
                 ))}
               </Collapse>
               :
@@ -200,7 +214,6 @@ function Space({hash, collection, NFTpersonas}) {
             {/* {roomsTest && roomsTest.map((room, index) => (<RoomEntrance hash collection room key={collection.hash} />))} */}
             {/* {(rooms && rooms.length>0) ? rooms.map((room, index) => (<RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />)) : <SpaceEmpty collection={collection} />} */}
           </div>
-          
           <ShowMore />
           <div className="clearfloat"></div>
       </div>
@@ -208,9 +221,9 @@ function Space({hash, collection, NFTpersonas}) {
     )} 
     </CollectionContext.Consumer> 
   );
-}//Space()
+}//SpaceView()
 
-export default Space;
+export default SpaceView;
 
 /**
  * Component: Empty Space
@@ -221,7 +234,7 @@ export default Space;
       {/* <div>Loading Rooms...</div> */}
       <p key="R1">Congradulations! You're the first person in this Space</p>
       <p key="R2">Why don't you go ahead and light up a new bonfire for your {__.sanitize(collection.name)} NFT buddies</p>
-      <RoomAddForm hash={collection.hash} collection={collection} />
+      <RoomAddForm parentId={collection.hash} collection={collection} />
     </div>
   );
  }//SpaceEmpty()
@@ -276,3 +289,52 @@ function ShowMore() {
       </div>
   );
 }//ShowMore()
+
+/**
+ * Component: Show Comments
+ */
+function ShowComments({room}) {
+  const { Moralis } = useMoralis();
+  // const [ comments, setComments ] = useState([]);
+  const [ limit, setLimit ] = useState(10);
+  
+  const { data:comments, error, isLoading } = useMoralisQuery(CommentObj, query =>
+    query.equalTo("parentId", room.id)
+      // .greaterThanOrEqualTo("score", 100)
+      // .descending("score")
+      // .limit(limit),
+      ,[room, limit]
+      ,{ live: true }
+    );
+
+  console.warn("ShowComments() Loaded "+comments.length+" Comments for Room:"+room.id, {comments});
+
+  //Render
+  return (
+      <div className="comment_list">
+          <div className="inner">
+              {/* <p>[...COMMENTS for Room:{room.id}]</p> */}
+              {comments && comments.map((comment) => (
+                <div className="comment">
+                  <Comment
+                    actions={[<span key="comment-nested-reply-to">Reply</span>]}
+                    author={<a>Han Solo</a>}
+                    avatar={<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
+                    content={
+                      <>
+                        <h3>{comment.get('name')}</h3>
+                        <p>{comment.get('text')}</p>
+                      </>
+                    }
+                    datetime={
+                      <Tooltip title={moment(comment.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss')}>
+                        <span>{moment(comment.get('updatedAt')).fromNow()}</span>
+                      </Tooltip>
+                    }
+                  />
+                </div>
+              ))}
+          </div>
+      </div>
+  );
+}//ShowComments()

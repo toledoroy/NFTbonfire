@@ -9,7 +9,7 @@
  * @param {*} hash   NFTs Hash
  * @returns 
  */
- const isHandleFree = (handle) => {
+ const isHandleFree = async (handle) => {
     const reserved = ['persona','...'];
     if(reserved.includes(handle)) return false;
 
@@ -52,7 +52,7 @@ Moralis.Cloud.define("personaRegister", async (request) => {
   
   if(handle){
     //Validate
-    if(isHandleFree()){
+    if(await isHandleFree()){
         //TODO: Register Handle / Save Persona to DB
 
         const Persona = Moralis.Object.extend("Persona");

@@ -3,31 +3,38 @@ import { Skeleton, Image,  Form, Input, Button, Comment, Avatar, List } from 'an
 import { FireTwoTone } from '@ant-design/icons';
 import { useMoralis } from "react-moralis";
 import { useHistory } from 'react-router-dom';
-import { Room } from "common/objects";
+import { Room } from "objects/objects";
     
 
 
 /**
  * Component: Add New Post
  */
- function RoomAddForm({hash, title}) {
-    const { Moralis } = useMoralis();
+ function RoomAddForm({parentId, title}) {
+    const { Moralis, account, chainId } = useMoralis();
     //Objects
     // const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
     // const { isSaving, error, save:savePost } = useNewMoralisObject('post');
     const history = useHistory();
     
+    //Validate
+    if(!parentId) throw new Error("RoomAddForm() Missing Parent");
+
     /**
      * Form Submit Function
      */
     const onFinish = async (values) => {
       //Additions
-      values.parentId = hash;
+      values.parentId = parentId;
+      values.account = account;
+      values.chain = chainId;
       //Create
       // const newPost = await Moralis.Cloud.run("post", values);
-      const newPost = await Room.create(values);
+      // const newPost = await Room.create(values);
+      const newPost = await Moralis.Cloud.run("post", values);
       //Log
-      console.log("RoomAddForm() Created new Post:", newPost);
+      console.log("RoomAddForm() Created new Post:", {values, newPost});
+      
   
       //Redirect -- Enter New Room      //https://stackoverflow.com/questions/34735580/how-to-do-a-redirect-to-another-route-with-react-router
       // history.push('/room/'+newPost.id);

@@ -10,7 +10,7 @@ import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined } fro
 // import { Space, Cascader } from 'antd';
 import { Upload, message } from 'antd';
 import { IPFS } from "helpers/IPFS";
-import { Persona } from "common/objects";
+import { Persona } from "objects/Persona";
 
 import ImgCrop from 'antd-img-crop';
 import { Exception } from "sass";

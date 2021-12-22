@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-// import {useState} from "react";
-import {useMoralisDapp} from "providers/MoralisDappProvider/MoralisDappProvider";
+// import React, { useEffect, useState } from "react";
+import React, {useState} from "react";
 import {useMoralisFile} from "react-moralis";
 import {useWeb3ExecuteFunction} from "react-moralis";
 import {message} from "antd";
@@ -8,7 +7,6 @@ import { Image, Avatar } from "antd";
 import UserAvatar from "components/common/UserAvatar"
 
 const AddPost = () => {
-    // const {contractABI, contractAddress, selectedCategory} = useMoralisDapp();
     // const contractABIJson = JSON.parse(contractABI);
     const ipfsProcessor = useMoralisFile();
     const contractProcessor = useWeb3ExecuteFunction();
