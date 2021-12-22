@@ -5,15 +5,13 @@ import RoomAddForm from "components/Room/RoomAddForm";
 import { FireTwoTone } from '@ant-design/icons';
 // import { Skeleton, Image, Form, Input, Button, Checkbox } from "antd";
 import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip } from 'antd';
-// import { useMoralisQuery } from "react-moralis";
+import { useMoralisQuery } from "react-moralis";
 import VotePane from "components/Room/VotePane";
 import PersonaChanger from "components/Persona/PersonaChanger";
 import PersonaHelper from "helpers/PersonaHelper";
 import { CollectionContext } from "common/context";
 import __ from "helpers/__";
 import moment from 'moment';
-
-import { useMoralisQuery } from "react-moralis";
 
 
 import { Space, Room, Comment as CommentObj } from "objects/objects";
@@ -25,7 +23,7 @@ import { Space, Room, Comment as CommentObj } from "objects/objects";
  * Component: SpaceView (W/Chat Room)
  */
 function SpaceView({hash, collection, NFTpersonas}) {
-  const { Moralis, isWeb3Enabled } = useMoralis();
+  const { Moralis, isWeb3Enabled, isAuthenticated,  } = useMoralis();
   const [ space, setSpace ] = useState({});
   const [ rooms, setRooms ] = useState([]);
   const [ limit, setLimit ] = useState(8);
@@ -55,7 +53,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
    * Fetch Current Space
    */
   useEffect(() => {
-    if (isWeb3Enabled) {
+    if (isWeb3Enabled && isAuthenticated) {
       const query = new Moralis.Query(Space);
       query.equalTo("hash", hash);
       query.first().then(result => {
@@ -215,7 +213,7 @@ function RoomEntrance({hash, collection, room}) {
           <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</Link>
         </h3>
         {/* <span key="id">ID: {room.id}</span> */}
-        <p key="desc">text: {room.get('text')}</p>
+        <p key="desc">{room.get('text')}</p>
         {/* <p key="created">Created: {room?.createdAt}</p> */}
         {/* <p key="updated">Last Updated: {room?.updatedAt}</p> */}
         {/* <p key="">Total Items: {room.total_items}</p> */}
@@ -262,6 +260,7 @@ function ShowComments({room}) {
     );
 
   console.warn("ShowComments() Loaded "+comments.length+" Comments for Room:"+room.id, {comments});
+
 
   //Render
   return (

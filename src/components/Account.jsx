@@ -32,9 +32,9 @@ function Account() {
   useEffect(() => { 
     /* Make sure to change User when account changes */
     if(account !== lastAccount){
-      console.log("Account() Account Changed -- Auto Log Out", {account, lastAccount});
+      if(lastAccount!==null) console.log("Account() Account Changed -- Auto Log Out", {account, lastAccount});
       setLastAccount(account);
-      logout();
+      if(lastAccount!==null) logout();
       /* Alternativly, You can link the accounts
       //Another Option is to Link Accounts  //https://docs.moralis.io/moralis-server/web3/web3#linking
       Moralis.link(account, { signingMessage: "Sign this to link your accounts"} );
