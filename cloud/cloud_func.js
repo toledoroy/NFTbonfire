@@ -4,6 +4,8 @@ const logger = Moralis.Cloud.getLogger();
 
 //-- PRODUCTION
 
+const isHash = (string) => (string.substr(0,2) === '0x');
+
 /**
  * Something Like Contract's balanceOf() Function
  *  How many Tokens does Account owns on Contract
@@ -43,8 +45,6 @@ Moralis.Cloud.define("isAllowed", async (request) => {
   //True if has any balance
   return (balance > 0);
 });
-
-const isHash = (string) => (string.substr(0,2) === '0x');
 
 /**
  * Something Like Contract's balanceOf() Function
