@@ -25,7 +25,7 @@ const styles = {
 };
 
 function Account() {
-  const { authenticate, isAuthenticated, logout, account, chainId } = useMoralis();
+  const { Moralis, authenticate, isAuthenticated, logout, account, chainId } = useMoralis();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [lastAccount, setLastAccount] = useState(account);  //Remember Last Account
 
@@ -35,6 +35,11 @@ function Account() {
       console.log("Account() Account Changed -- Auto Log Out", {account, lastAccount});
       setLastAccount(account);
       logout();
+      /* Alternativly, You can link the accounts
+      //Another Option is to Link Accounts  //https://docs.moralis.io/moralis-server/web3/web3#linking
+      Moralis.link(account, { signingMessage: "Sign this to link your accounts"} );
+      console.log("Account() Account Changed -- Account:"+account, Moralis.User.current());
+      */
     }
   }, [account]);
 
@@ -65,9 +70,8 @@ function Account() {
         </Menu.Item>
 
         <Menu.Item style={{padding: '10px'}}>
-          <Button size="large" type="primary"
-            style={{ width: "100%", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "500", }}
-            onClick={() => {logout()}}>
+          <Button size="large" type="primary" onClick={()=>{logout()}}
+            style={{ width: "100%", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "500", }}>
             Disconnect
           </Button>
         </Menu.Item>

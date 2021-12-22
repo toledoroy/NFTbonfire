@@ -21,7 +21,7 @@ const getBalance = async (account, contractAddress, chainId) => {
   // const userEthNFTs = await Moralis.Web3API.account.getNFTs(options);  //All NFTs
   let res = await Moralis.Web3API.account.getNFTsForContract(options).then(res => res.total); //NFTs for specified contract
   //Log
-  logger.warn("[TEST] getBalance() Account:'"+account+"' Balance:"+res);
+  // logger.warn("[TEST] getBalance() Account:'"+account+"' Balance:"+res); //V
   //Return
   return res;
 }
@@ -51,68 +51,61 @@ const isHash = (string) => (string.substr(0,2) === '0x');
  * @param string parentId
  * @returns ?
  */
- const hashByPostId = async (parentId) => {
-  // const options = { 
-  //   chain: chainId ? chainId : "0x4", //Default to Rinkbey
-  //   address: account, 
-  //   token_address: contractAddress,
-  // };
-  // // const userEthNFTs = await Moralis.Web3API.account.getNFTs(options);  //All NFTs
-  // let res = await Moralis.Web3API.account.getNFTsForContract(options).then(res => res.total); //NFTs for specified contract
-  // //Log
-  // logger.warn("[TEST] hashByPostId() Account:'"+account+"' Balance:"+res);
-  // //Return
-  // return res;
+const hashByPostId = async (parentId) => {
+  if(!parentId || isHash(parentId)) return parentId;
+  let ret = parentId;
+  try{
+    const query = new Moralis.Query("Post");
+    //Climb up the Parent Ladder untill hitting a Hash (or Empty)
+    while(ret && !isHash(ret)){
+      // logger.warn("hashByPostId() '"+ret+"' is Not Hash");
+      //Fetch Parent
+      // let parentPost = await query.get(ret);
+      let parentPost = await query.get(ret, {useMasterKey: true});
+      // logger.error("hashByPostId() Parent Post for id:'"+ret+"' -- "+JSON.stringify(parentPost)); 
+      logger.warn("hashByPostId() Climb from:"+ret+" to "+parentPost.get('parentId')); 
+      //Get its Parent
+      ret = parentPost.get('parentId');
+    }
+  }
+  catch(error){ 
+    logger.error("hashByPostId() Exception Caught: "+JSON.stringify(error)); 
+    // logger.error(error);
+  }
+  //Return
+  return ret;
 }
 
-//-- TESTING
-
 /**
- * Post Validation
+ * DB - Custom Post Save Validation
  * Make sure that author has access to Room
  */
-Moralis.Cloud.beforeSave('Post', async request => {
-
+ Moralis.Cloud.beforeSave('Post', async request => {
+  //Fetch Post Object
   const object = request.object;
-  logger.warn("Post Object: "+JSON.stringify(object));
-  // logger.warn("Post User: "+JSON.stringify(request.user));
-  logger.warn("Post User Account: "+request.user?.get('ethAddress'));
-  // logger.warn("Post User Accounts: "+JSON.stringify(request.user?.get('accounts')));
-  // logger.warn("Post Context: "+JSON.stringify(request.context));  
-
+  // logger.warn("Post Object: "+JSON.stringify(object)); //V
+  // logger.warn("Post User: "+JSON.stringify(request.user)); //V
+  // logger.warn("Post User Accout: "+request.user?.get('ethAddress')); //V
+  // logger.warn("Post User Accounts: "+JSON.stringify(request.user?.get('accounts'))); //V
+  // logger.warn("Post Context: "+JSON.stringify(request.context));  //Nothing
+  //Fetch Top Hash
+  let hash = await hashByPostId(object.get('parentId'));
+  // logger.warn("[TEST] beforeSave(Post) parentId:"+object.get('parentId')+"  hash:"+hash);
+  //Validate Hash
+  if(!hash) throw new Error("Failed to find Hash for Post:'"+object.get('parentId')+"'");
   let data = {
+    hash,
     account: request.user?.get('ethAddress'),
-    
-    account2: object.account, //X
-    isHashTest:isHash(request.user?.get('ethAddress')),
-
-    // hash:
-    chainId: object.chain,
+    chainId: object.get('chain'),
   }
-  logger.warn("Post Data: "+JSON.stringify(data));  
-
-  try{
-    //Get Balance
-    const balance = await getBalance(data.account, data.hash, data.chainId);
-    if(balance <= 0) throw new Error("User Not Allowed in Room");
-  }catch(error){  
-    console.log("Exception Caught: "+JSON.stringify(error));
-  }
-  
-  throw new Error("TEST FAILURE");
-  
-  // const user = request.object;
-  // if (!user.get("email")) throw "Every user must have an email address.";
-
+  // logger.warn("beforeSave(Post) Post Data: "+JSON.stringify(data));  
+  //Get Balance
+  const balance = await getBalance(data.account, data.hash, data.chainId);
+  if(balance <= 0) throw new Error("User Not Allowed in Room (balance:"+balance+")");
 });
 
 
-Moralis.Cloud.define("justLog", async (request) => {  
-  let valid = matchUserNFT(request?.params?.userId, request?.params?.hash, request?.params?.chainId);
-  logger.warn("[TEST] ******* justLog() User:"+request?.params?.userId+" is Valid: "+valid);
-  logger.info(request?.params?.hash);
-  return true;
-});
+//-- TESTING
 
 
 /* VOTES */
@@ -127,53 +120,60 @@ Moralis.Cloud.define("postVote", async (request) => {
   logger.warn("[TEST] postVote() for Current User:"+request.user?.id+" PostId:"+request.params?.postId+" Vote:"+request.params?.vote);
   //Validate
   if(!request?.user?.id) throw "Unauthorized User - Must Log In";
+  //...
+});
 
 
-});
-/*
-Moralis.Cloud.define("voteUp", async (request) => {  
-  // request.user
-  // request.params?.postId
-  logger.log("[TEST] voteUp() from user:"+request.user?.id, {user:request.user, postId:request.params?.postId});
-  //Validate
-  if(!request?.user?.id) throw "Unauthorized User - Must Log In";
-});
-Moralis.Cloud.define("voteDown", async (request) => {  
-  logger.log("[TEST] voteDown() from user:"+request.user?.id, {user:request.user, postId:request.params?.postId});
-  //Validate
-  if(!request?.user?.id) throw "Unauthorized User - Must Log In";
-});
-*/
 
 //-- DEV
 
-/**
- * Check if User Owns NFT
- * @param {*} userId  User ID
- * @param {*} hash   NFTs Hash
- * @returns 
+const validationRules = request => {
+  if (request.master) { return; }
+  if (!request.user || request.user?.id !== 'masterUser') { throw 'Unauthorized'; }
+}
+
+Moralis.Cloud.define('adminFunction', request => {
+  // do admin code here, confident that request.user?.id is masterUser, or masterKey is provided
+},validationRules)
+
+/** TEST Func.
+ * 
  */
- const matchUserNFT = (userId, hash, chainId) => {
-  // const query = new Moralis.Query("NFTs");
-  // query.equalTo("userId", userId);
-  // query.equalTo("hash", hash);
-  // let res = query.find();
+Moralis.Cloud.define("sayHi", async (request) => {  
+    return "Hi! 👋"; 
+});
 
-  //Log
-  // logger.info("[TEST] matchUserNFT() Result for User:'"+userId+"' Contract:'"+hash+"' - "+res);
-  // logger.info({res, userId, hash});
-  // if(0) throw "User Not Autorized for Selected NFT:'"+hash+"'";
-  return true;
-}//matchUserNFT()
 
-/** THIS SHOUD MOVE TO CLIENTSIDE!
+/** UNUSED
+ * 
+
+Moralis.Cloud.define("getPosts", async (request) => {  
+  //Extract Parent ID
+  let parentId = request?.params?.parentId;
+  //Validate
+  if(!parentId) throw new Error("Parameter parentId Missing");
+  // let limit = request?.params?.limit;
+  const query = new Moralis.Query("Posts");
+  query.equalTo("parentId", parentId);
+  const results = await query.find();
+  return results;
+});
+
+Moralis.Cloud.define("getRooms", async (request) => {  
+  const query = new Moralis.Query("Rooms");
+  const results = await query.find();
+  return results;
+});
+*/
+  
+/** UNUSED - THIS SHOUD MOVE TO CLIENTSIDE!
  * New Post
  *  name: String
  *  text: String      
  *  parentId: String  
  *  userId: String      
  */
-Moralis.Cloud.define("post", async (request) => {  
+ Moralis.Cloud.define("post", async (request) => {  
   try{
     let data = request.params;
     //Log
@@ -229,50 +229,3 @@ Moralis.Cloud.define("post", async (request) => {
     logger.error("[CAUGHT] post() Error:"+err, {err, request});
   }
 });
-
-
-const validationRules = request => {
-  if (request.master) {
-    return;
-  }
-  if (!request.user || request.user?.id !== 'masterUser') {
-    throw 'Unauthorized';
-  }
-}
-
-Moralis.Cloud.define('adminFunction', request => {
-  // do admin code here, confident that request.user?.id is masterUser, or masterKey is provided
-},validationRules)
-
-/** TEST Func.
- * 
- */
-Moralis.Cloud.define("sayHi", async (request) => {  
-    return "Hi! 👋"; 
-});
-
-/** UNUSED
- * 
- */
-Moralis.Cloud.define("getPosts", async (request) => {  
-  //Extract Parent ID
-  let parentId = request?.params?.parentId;
-  //Validate
-  if(!parentId) throw new Error("Parameter parentId Missing");
-  // let limit = request?.params?.limit;
-
-  const query = new Moralis.Query("Posts");
-  query.equalTo("parentId", parentId);
-  const results = await query.find();
-  return results;
-});
-
-Moralis.Cloud.define("getRooms", async (request) => {  
-  const query = new Moralis.Query("Rooms");
-  const results = await query.find();
-  return results;
-});
-
-
-  
-  
