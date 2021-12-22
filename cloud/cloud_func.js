@@ -36,11 +36,11 @@ Moralis.Cloud.define("justLog", async (request) => {
   return true;
 });
 
-Moralis.Cloud.define("validateAccess", async (request) => {  
+Moralis.Cloud.define("isAllowed", async (request) => {  
   //Get Balance
   const balance = await getBalance(request?.params?.account, request?.params?.hash, request?.params?.chainId);
   //Log
-  logger.warn("[TEST] validateAccess() Balance:"+balance);
+  logger.warn("[TEST] isAllowed() Balance:"+balance);
   //True if has any balance
   return (balance > 0);
   // return matchUserNFT(request?.params?.userId, request?.params?.hash, request?.params?.chainId);

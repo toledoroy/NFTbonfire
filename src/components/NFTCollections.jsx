@@ -66,11 +66,11 @@ function NFTCollections(props) {
       
       /* ServerSide Validation 
       let params = {userId:user.id, hash:collectionHash, chainId, account};
-      Moralis.Cloud.run("validateAccess", params).then(res => {
-          console.warn("validateAccess() is User Allowed:"+res, {user, params, account });
+      Moralis.Cloud.run("isAllowed", params).then(res => {
+          console.warn("isAllowed() is User Allowed:"+res, {user, params, account });
       })
       .catch(err => {
-          console.error("validateAccess() is User Allowed -- matchUserNFT Failed:", {user, err, params, account });
+          console.error("isAllowed() is User Allowed -- matchUserNFT Failed:", {user, err, params, account });
       });
       */
     }else{
