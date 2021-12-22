@@ -1,5 +1,10 @@
-// Moralis.Cloud.afterSave("Monster", async (req) => {
-//     const notifyMonsterGuild = req.context.notifyMonsterGuild;
+
+
+
+//-- Examples
+
+// Moralis.Cloud.afterSave("Monster", async (request) => {
+//     const notifyMonsterGuild = request.context.notifyMonsterGuild;
 //     if (notifyMonsterGuild) {
 //       // Notify the guild about new monster.
 //     }

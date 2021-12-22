@@ -178,15 +178,15 @@ export const Persona = Moralis.Object.extend("Persona",
     { /* Class Methods */
         //Persona Data
         contractPersona: {
-            abi: require('contracts/abi/PERSONA.json'),
+            abi: require('contracts/abi/PERSONA.json'),     //Default ABI
             "0x4": { address: '0x9E91a8dDF365622771312bD859A2B0063097ad34', },  //Rinkeby
         },
-        //Get ABI
-        getABI(){ return this.contractPersona.abi; },
         //Contract Data
         getContractData(chain){ return (chain) ? this.contractPersona[chain] : this.contractPersona; },
+        //Get ABI
+        getABI(chain){ return (chain) ? this.contractPersona[chain].abi : this.contractPersona.abi; },
         //Get Contract Address
-        getContractAddress(chain){ return (this.contractPersona?.[chain]?.address) ? this.contractPersona[chain].address : null; },
+        getContractAddress(chain){ return (this.contractPersona[chain]?.address) ? this.contractPersona[chain].address : null; },
         //Default Metadata (Random)
         getDefaultMetadata(){  return personaDefaultMetadatas[Math.floor(Math.random()*personaDefaultMetadatas.length)]; },
         

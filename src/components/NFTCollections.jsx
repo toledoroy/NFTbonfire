@@ -155,11 +155,21 @@ function NFTCollections(props) {
                 {/* <Breadcrumb.Item key="4">Post</Breadcrumb.Item> */}
                 
               </Breadcrumb>
-              {accountHash ? <h2>
-                    {/* <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
-                    {accountHash}'s NFTs
-                  </h2> 
-                : <h2>My NFTs</h2>}
+              <h2>
+
+              {accountHash ? 
+                <>
+                  {accountHash}'s NFTs
+                  {/* <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
+                </>
+                : 
+                <>{collectionHash ? 
+                  <>Private Space for {NFTCollections[collectionHash].name}</>
+                  :
+                  <>My NFTs</>
+                }
+                </>}
+              </h2>
               </>
             }
             {!collectionHash && <h4 className="subheading">{Object.keys(NFTCollections).length} Collections</h4>}

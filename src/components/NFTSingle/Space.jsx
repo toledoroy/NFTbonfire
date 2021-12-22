@@ -155,7 +155,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
                 {rooms.map((room, index) => (
                   <Collapse.Panel header={<RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />} key={room.id} showArrow={false} className="item">
                       <ShowComments room={room} />
-                      <RoomAddForm parentId={room.id} collection={collection} title="Add Comment"/>
+                      <RoomAddForm parent={room} parentId={room.id} collection={collection} title="Add Comment"/>
                   </Collapse.Panel>
                 ))}
               </Collapse>

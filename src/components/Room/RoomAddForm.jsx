@@ -10,7 +10,7 @@ import { Room } from "objects/objects";
 /**
  * Component: Add New Post
  */
- function RoomAddForm({parentId, title}) {
+ function RoomAddForm({parent, parentId, title}) {
     const { Moralis, account, chainId } = useMoralis();
     //Objects
     // const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
@@ -43,13 +43,17 @@ import { Room } from "objects/objects";
 
         const post = new Post(values);
 
+        post.set('parent', parent);   //TESTING
+
+        console.warn("[TEST] post() User: ", Moralis.User.current());
+
         //ACL - Own + Public Read
         const acl = new Moralis.ACL(Moralis.User.current());
         acl.setPublicReadAccess(true);
         acl.setRoleWriteAccess("admins", true);
         if(parentId.substr(0,2) === '0x') acl.setRoleWriteAccess(parentId, true);
         else console.error("RoomAddForm() Parent is not a Hash", {parentId});
-        acl.setRoleReadAccess("opensea", true);   //TEST
+        // acl.setRoleReadAccess("opensea", true);   //TEST
         // acl.setWriteAccess(request.user?.id, true);
         post.setACL(acl);
         //Log

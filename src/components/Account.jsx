@@ -3,7 +3,7 @@ import { getEllipsisTxt } from "helpers/formatters";
 import Blockie from "./Blockie";
 import { Button, Card, Modal } from "antd";
 import { Menu, Dropdown } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Address from "./Address/Address";
 import { SelectOutlined } from "@ant-design/icons";
 import { getExplorer } from "helpers/networks";
@@ -27,6 +27,16 @@ const styles = {
 function Account() {
   const { authenticate, isAuthenticated, logout, account, chainId } = useMoralis();
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const [lastAccount, setLastAccount] = useState(account);
+
+  useEffect(() => { /* Make sure to log out when account changes */
+    if(account !== lastAccount){
+      console.log("Account() Account Changed -- Auto Log Out", {account, lastAccount});
+      setLastAccount(account);
+      logout();
+    }
+  }, [account]);
 
   if (!isAuthenticated) {
     return (

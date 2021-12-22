@@ -17,7 +17,7 @@ Moralis.serverURL = SERVER_URL;
 const createPost = async (values) => {
     return Moralis.Cloud.run("post", values);    //Server Side
 
-    /* Doesn't Work. Needs to be in Context
+    /* Doesn't Work. Needs to be in Context. There's no Authenricated User here...
     // const Post = Moralis.Object.extend("Post");
     // const post = new Post();
     // post.set("userId", request.user?.id);

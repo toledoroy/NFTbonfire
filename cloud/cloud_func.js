@@ -7,10 +7,10 @@ const logger = Moralis.Cloud.getLogger();
 /**
  * Something Like Contract's balanceOf() Function
  *  How many Tokens does Account owns on Contract
- * @param {*} account 
- * @param {*} contractAddress 
- * @param {*} chainId 
- * @returns 
+ * @param string account 
+ * @param string contractAddress 
+ * @param string chainId 
+ * @returns number
  */
 const getBalance = async (account, contractAddress, chainId) => {
   const options = { 
@@ -26,8 +26,86 @@ const getBalance = async (account, contractAddress, chainId) => {
   return res;
 }
 
+/**
+ * Check if User is Owns any assets in a Contract (Has Positive balance)
+ * @var string account      Requesting Account
+ * @var string hash         Contract
+ * @var string chainId      Chain ID
+ * @ret bool
+ */
+Moralis.Cloud.define("isAllowed", async (request) => { 
+  //Validate
+  if(!request?.params?.account || !request?.params?.hash || !request?.params?.chainId) throw new Error("Missing Request Parameters (account, hash, chainId)");
+  //Get Balance
+  const balance = await getBalance(request?.params?.account, request?.params?.hash, request?.params?.chainId);
+  //Log
+  logger.warn("[TEST] isAllowed() Chain:"+request?.params?.chainId+" Account:"+request?.params?.account+" Balance:"+balance);
+  //True if has any balance
+  return (balance > 0);
+});
+
+const isHash = (string) => (string.substr(0,2) === '0x');
+
+/**
+ * Something Like Contract's balanceOf() Function
+ * @param string parentId
+ * @returns ?
+ */
+ const hashByPostId = async (parentId) => {
+  // const options = { 
+  //   chain: chainId ? chainId : "0x4", //Default to Rinkbey
+  //   address: account, 
+  //   token_address: contractAddress,
+  // };
+  // // const userEthNFTs = await Moralis.Web3API.account.getNFTs(options);  //All NFTs
+  // let res = await Moralis.Web3API.account.getNFTsForContract(options).then(res => res.total); //NFTs for specified contract
+  // //Log
+  // logger.warn("[TEST] hashByPostId() Account:'"+account+"' Balance:"+res);
+  // //Return
+  // return res;
+}
 
 //-- TESTING
+
+/**
+ * Post Validation
+ * Make sure that author has access to Room
+ */
+Moralis.Cloud.beforeSave('Post', async request => {
+
+  const object = request.object;
+  logger.warn("Post Object: "+JSON.stringify(object));
+  logger.warn("Post User: "+JSON.stringify(request.user));
+  logger.warn("Post User Account: "+request.user?.get('ethAddress'));
+  logger.warn("Post User Accounts: "+JSON.stringify(request.user?.get('accounts')));
+  // logger.warn("Post Context: "+JSON.stringify(request.context));  
+
+  let data = {
+    account: request.user?.ethAddress,
+    
+    account2: object.account, //X
+    isHashTest:isHash(object.account),
+
+    // hash:
+    chainId: object.chain,
+  }
+  logger.warn("Post Data: "+JSON.stringify(data));  
+
+  try{
+    //Get Balance
+    const balance = await getBalance(data.account, data.hash, data.chainId);
+    if(balance <= 0) throw new Error("User Not Allowed in Room");
+  }catch(error){  
+    console.log("Exception Caught: "+JSON.stringify(error));
+  }
+  
+  throw new Error("TEST FAILURE");
+  
+  // const user = request.object;
+  // if (!user.get("email")) throw "Every user must have an email address.";
+
+});
+
 
 Moralis.Cloud.define("justLog", async (request) => {  
   let valid = matchUserNFT(request?.params?.userId, request?.params?.hash, request?.params?.chainId);
@@ -36,19 +114,9 @@ Moralis.Cloud.define("justLog", async (request) => {
   return true;
 });
 
-Moralis.Cloud.define("isAllowed", async (request) => {  
-  //Get Balance
-  const balance = await getBalance(request?.params?.account, request?.params?.hash, request?.params?.chainId);
-  //Log
-  logger.warn("[TEST] isAllowed() Balance:"+balance);
-  //True if has any balance
-  return (balance > 0);
-  // return matchUserNFT(request?.params?.userId, request?.params?.hash, request?.params?.chainId);
-  // return true;
-});
-
 
 /* VOTES */
+
 /**
  * Vote on Post 
  * @var string postId
