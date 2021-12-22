@@ -110,7 +110,9 @@ Moralis.Cloud.define("post", async (request) => {
     let data = request.params;
     //Log
     // logger.warn("[TEST] data()", request.params);
-    logger.warn("[TEST] post()", request.params);
+    logger.warn("[TEST] post() by User:"+request?.user?.id);
+    logger.warn(request.params);
+    logger.warn(request.user);
     if(request?.user?.id){
       //TODO: Further validation - Get NFT & Validte User's Relation to NFT
 
@@ -149,12 +151,25 @@ Moralis.Cloud.define('adminFunction', request => {
   // do admin code here, confident that request.user?.id is masterUser, or masterKey is provided
 },validationRules)
 
-
+/** TEST Func.
+ * 
+ */
 Moralis.Cloud.define("sayHi", async (request) => {  
     return "Hi! 👋"; 
 });
+
+/** UNUSED
+ * 
+ */
 Moralis.Cloud.define("getPosts", async (request) => {  
+  //Extract Parent ID
+  let parentId = request?.params?.parentId;
+  //Validate
+  if(!parentId) throw new Error("Parameter parentId Missing");
+  // let limit = request?.params?.limit;
+
   const query = new Moralis.Query("Posts");
+  query.equalTo("parentId", parentId);
   const results = await query.find();
   return results;
 });
