@@ -27,10 +27,10 @@ const styles = {
 function Account() {
   const { authenticate, isAuthenticated, logout, account, chainId } = useMoralis();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [lastAccount, setLastAccount] = useState(account);  //Remember Last Account
 
-  const [lastAccount, setLastAccount] = useState(account);
-
-  useEffect(() => { /* Make sure to log out when account changes */
+  useEffect(() => { 
+    /* Make sure to change User when account changes */
     if(account !== lastAccount){
       console.log("Account() Account Changed -- Auto Log Out", {account, lastAccount});
       setLastAccount(account);

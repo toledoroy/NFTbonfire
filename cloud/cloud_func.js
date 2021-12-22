@@ -75,16 +75,16 @@ Moralis.Cloud.beforeSave('Post', async request => {
 
   const object = request.object;
   logger.warn("Post Object: "+JSON.stringify(object));
-  logger.warn("Post User: "+JSON.stringify(request.user));
+  // logger.warn("Post User: "+JSON.stringify(request.user));
   logger.warn("Post User Account: "+request.user?.get('ethAddress'));
-  logger.warn("Post User Accounts: "+JSON.stringify(request.user?.get('accounts')));
+  // logger.warn("Post User Accounts: "+JSON.stringify(request.user?.get('accounts')));
   // logger.warn("Post Context: "+JSON.stringify(request.context));  
 
   let data = {
-    account: request.user?.ethAddress,
+    account: request.user?.get('ethAddress'),
     
     account2: object.account, //X
-    isHashTest:isHash(object.account),
+    isHashTest:isHash(request.user?.get('ethAddress')),
 
     // hash:
     chainId: object.chain,
