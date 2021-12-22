@@ -61,8 +61,8 @@ const hashByPostId = async (parentId) => {
       // logger.warn("hashByPostId() '"+ret+"' is Not Hash");
       //Fetch Parent
       // let parentPost = await query.get(ret);
-      let parentPost = await query.get(ret, {useMasterKey: true});
-      // logger.error("hashByPostId() Parent Post for id:'"+ret+"' -- "+JSON.stringify(parentPost)); 
+      let parentPost = await query.select("parentId").get(ret, {useMasterKey: true});
+      logger.error("hashByPostId() Parent Post for id:'"+ret+"' -- "+JSON.stringify(parentPost)); 
       logger.warn("hashByPostId() Climb from:"+ret+" to "+parentPost.get('parentId')); 
       //Get its Parent
       ret = parentPost.get('parentId');
