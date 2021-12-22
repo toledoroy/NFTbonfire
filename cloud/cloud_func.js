@@ -126,7 +126,18 @@ Moralis.Cloud.define("post", async (request) => {
       const post = new Post();
       // post.set("userId", request.user?.id);
       data.userId = request.user?.id;
-      return post.save(data);
+      
+      // return post.save(data);
+
+      const post = new Post(data);
+
+      //ACL - Own + Public Read
+      const postACL = new Moralis.ACL(Moralis.User.current());
+      postACL.setPublicReadAccess(true);
+      post.setACL(postACL);
+
+      return post.save();
+
     }//Has User
     else logger.error("[TEST] post() Missing User ID:"+request?.user?.id+"'");
   }
