@@ -7,7 +7,7 @@ import { Button, Avatar, Modal, Skeleton } from 'antd';
 import { Collapse, Tabs, Input, Select } from 'antd';
 // import { Form, Space, Cascader } from 'antd';
 // import { Row, Col } from 'antd';
-import { Card } from 'antd';    //Modal
+import { Card, Dropdown, Menu } from 'antd';
 import PersonaEdit from "components/Persona/PersonaEdit";
 import Address from "components/Address/Address";
 // import { PersonaHelper } from "helpers/PersonaHelper";
@@ -16,9 +16,10 @@ import { getChainName, getChainLogo } from "helpers/networks";
 import { Persona } from "objects/Persona";
 import { IPFS } from "helpers/IPFS";
 
-import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined, SelectOutlined } from '@ant-design/icons';
+import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 
 import AddressInput from "components/AddressInput";     //TODO: Use This to Input Address
+import ChainData from "components/Chains/ChainData";     //TODO: Use This to Input Address
    
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
@@ -42,12 +43,11 @@ function PagePersona(props) {
     const { params } = props.match;
     // const { handle } = props.match.params;
     const { handle, chain, contract, token_id } = params;
-    // const { Moralis, isWeb3Enabled } = useMoralis();
-    const { Moralis, setUserData, userError, isUserUpdating, user } = useMoralis();
-        // const [ collection, setCollection ] = useState(null);
+    const { Moralis, setUserData, userError, user } = useMoralis();     //isWeb3Enabled, isUserUpdating
+    // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMore ] = useState(false);
     // const [ metadata, setMetadata ] = useState(defaultMetadata);    //Start Empty
-    const [ metadata, setMetadata ] = useState(Persona.getDefaultMetadata());    //Start Empty
+    const [ metadata, setMetadata ] = useState(Persona.getDefaultMetadata());
     const [ isLoading, setIsLoading ] = useState(false);    //Loading Edit Mode
     const [isAddAccModalVisible, setIsAddAccModalVisible] = useState(false);
     
@@ -56,22 +56,14 @@ function PagePersona(props) {
     // const { data, error, isLoading } = useMoralisQuery("GameScore", query => query.greaterThanOrEqualTo("score", 100).descending("score").limit(limit),);    //Query Some
     // const { fetch, data, error, isLoading } = useMoralisQuery("GameScore", query => query.greaterThanOrEqualTo("score", 100).descending("score").limit(limit), [], { autoFetch: false },);  //Query Without Auto-Update
     // const { data, error, isLoading } = useMoralisQuery("GameScore", query => query.greaterThanOrEqualTo("score", 100).descending("score").limit(limit), [limit], { live: true, },);  //Live Query - Update on limit Change
+    
     //Cloud Functions
     // const { data, error, isLoading } = useMoralisCloudFunction("topScores", { limit, });
     // const { fetch, data, error, isLoading } = useMoralisCloudFunction("topScores", {limit}, { autoFetch: false } );  //Trigger Manually (via fetch func.)
       
-    // const route = useRoute();
-    // console.log("Route Name:", route.name);
-
     // const [form] = Form.useForm();
 
-    //Set User Data (Specific Persona)
-    // let persona = { 
-    //     chainId:'0x4', 
-    //     address:contractPersona.address, 
-    //     tokenId:'1'
-    // };
-    //Default Persona Data
+    //[DEV] Default Persona Data  
     let personaData = { 
         chain:'0x4', 
         address:Persona.getContractAddress('0x4'), 
@@ -81,25 +73,27 @@ function PagePersona(props) {
     
     useEffect(() => {
             
-        //Override 1
+        //Override 1 (Unregistered)
         if(params.chain && params.contract && params.token_id) {
             personaData = {
                 chainId: chain,
                 address: contract,
                 tokenId: token_id,
             };
-            console.warn("[TEST] PagePersona() personaData From URL:", personaData );    
+            console.warn("[TEST] PagePersona() Manually Set personaData From URL:", {personaData});
         }
-        //Override 2    
+        //Override 2 (Registered)
         if(params.handle){
             console.warn("[TEST] PagePersona() Override personaData By Handle:", {personaData, handle, params } );    
             const query = new Moralis.Query(Persona);
             query.equalTo("handle", handle);
             query.find().then((results) => {
-                //TODO: Override by handle
-                // personaData
-                console.warn("[TEST] PagePersona() Found Results for Handle:", {results} );    
-
+                if(results){
+                    //Override by handle
+                    personaData = results[0].attributes;
+                    console.warn("[TEST] PagePersona() Results for Handle:"+params.handle, {results, personaData});    
+                }
+                else console.error("PagePersona() No Results for Handle:"+params.handle, {results} );    
             });
         }
 
@@ -210,11 +204,11 @@ function PagePersona(props) {
         }//Add
         else if(action === 'remove'){
             const data = targetKey.split(":");
-            console.warn("[TODO] handleTabEdit() Action:'"+action+"'", {targetKey, action, data, metadata});
+            console.warn("[TEST] handleTabEdit() Action:'"+action+"'", {targetKey, action, data, metadata});
             //Update Metadata
             let accounts = metadata.accounts;
             for(let i=accounts.length-1; i>=0; i--){
-                console.warn("[TODO] handleTabEdit() Action:'"+action+"' Account:"+i, {accounts:accounts, account:accounts[i], i});
+                console.warn("[TEST] handleTabEdit() Action:'"+action+"' Account:"+i, {accounts:accounts, account:accounts[i], i});
                 if(accounts[i].address === data[0] && accounts[i].chain === data[1]){
                     //Log
                     console.warn("[TEST] handleTabEdit() Action:'"+action+"' Found Account to Remove", {targetKey, action, data, account:accounts[i]});   
@@ -527,16 +521,16 @@ export default PagePersona;
     const addAccount = () => {
         //Validate
         if(chain && address){
-            
             //Update Metadata
             let newAccount = { chain, address };
             if(metadata?.accounts) setMetadata({...metadata, accounts:[ ...metadata.accounts, newAccount ]});
             else setMetadata({...metadata, accounts:[ newAccount ]});   //First Account
 
-            //TODO: Reset Modal
-
             //Close Modal
             setIsModalVisible(false);
+
+            //TODO: Reset Modal
+
         }
         else console.error("AccountAddModal() Missing Parameters", {chain, address});
     }//addAccount()
@@ -559,18 +553,30 @@ export default PagePersona;
                 Address:
                 <AddressInput autoFocus placeholder="Receiver" onChange={setAddress} />
                 
-
                 Chain:
-                
+                <Dropdown overlay={
+                    <Menu onClick={setChain}>
+                        {Object.values(ChainData).map((item) => (
+                        //if(item.live)
+                        <Menu.Item key={item.key} icon={item.icon}>
+                            <span style={{ marginLeft: "5px" }}>{item.name}</span>
+                        </Menu.Item>
+                        ))}
+                    </Menu>
+                    } 
+                    trigger={["click"]}>
+
+                    { console.warn("[TEST] AccountAddModal() CUrrently Selected Chain", {chain, selected:ChainData[chain]}) }
+
+                    <Button key={ChainData[chain]?.key} icon={ChainData[chain]?.icon}>
+                        <span style={{ marginLeft: "5px" }}>{ChainData[chain]?.value}</span>
+                        <DownOutlined />
+                    </Button>
+                </Dropdown>
             </Card>
 
-            <Button size="large" type="primary"
-                style={{ width: "100%", marginTop: "10px", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "500", }}
-                onClick={() => {
-                addAccount();
-                
-                }}
-                >
+            <Button size="large" type="primary" onClick={() => { addAccount(); }}
+                style={{ width: "100%", marginTop: "10px", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "500", }}>
                 Add
             </Button>
         </Modal>
