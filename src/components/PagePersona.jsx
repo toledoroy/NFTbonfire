@@ -17,9 +17,12 @@ import { IPFS } from "helpers/IPFS";
 // import { Form } from 'antd';
 import { Input, Select } from 'antd';
 import { Tabs } from 'antd';
-import { Row, Col } from 'antd';
+
 import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 
+import { Row, Col } from 'antd';
+import AddressInput from "components/AddressInput";     //TODO: Use This to Input Address
+   
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
 
