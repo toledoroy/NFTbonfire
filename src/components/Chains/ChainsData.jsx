@@ -1,7 +1,8 @@
 import React from 'react';
 import { AvaxLogo, PolygonLogo, BSCLogo, ETHLogo } from "./Logos";
 
-export const ChainData = {
+
+export const ChainsData = {
   "0x1":{
     key: "0x1",
     name: "Ethereum",
@@ -97,3 +98,5 @@ export const ChainData = {
     live: false,
   },
 }
+
+export default ChainsData;
