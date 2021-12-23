@@ -106,7 +106,11 @@ const hashByPostId = async (parentId) => {
 
 
 //-- TESTING
-
+/*
+Moralis.Cloud.beforeSubscribe('Post', async request => {
+  logger.warn("[TEST] beforeSubscribe(Post) Running! "+ JSON.stringify(request));
+});
+*/
 
 /* VOTES */
 
