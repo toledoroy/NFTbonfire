@@ -30,14 +30,6 @@ import Page404 from "components/Page404";
 
 const { Header, Footer } = Layout;
 const styles = {
-  content: {
-    display: "flex",
-    justifyContent: "center",
-    fontFamily: "Roboto, sans-serif",
-    color: "#041836",
-    marginTop: "130px",
-    padding: "10px",
-  },
   header: {
     position: "fixed",
     zIndex: 100,
@@ -82,7 +74,8 @@ const App = ({ isServerInfo }) => {
       <Router>
         <Header style={styles.header}>
         <div style={{ display: "flex" }}><Logo /></div>
-          <Menu
+		{/*<MenuItems />*/}
+        <Menu
             theme="light"
             mode="horizontal"
             style={{
@@ -110,15 +103,9 @@ const App = ({ isServerInfo }) => {
             <Menu.Item key="nfts"><NavLink to="/nftBalance">? NFTs</NavLink></Menu.Item>
             <Menu.Item key="contract"><NavLink to="/contract">? Contract</NavLink></Menu.Item>
           </Menu>
+
           <div style={styles.headerRight}>
             <Chains />
-
-            {/* <TokenPrice
-              address="0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
-              chain="eth"
-              image="https://cloudflare-ipfs.com/ipfs/QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg/"
-              size="40px"
-            /> */}
             <NativeBalance />
             <Account />
           </div>
