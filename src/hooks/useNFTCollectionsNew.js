@@ -28,8 +28,6 @@ export const useNFTCollections = (options) => {
     let collections = {};
     let personas = [];
     for(let NFT of NFTs){
-      //Add Chain ID
-      NFT.chain = chainId;
       if(isPersona(NFT)){
         //Force Full Metadata Update (Moralis sometimes gives outdated token_uri)
         // if(NFT.symbol === "PERSONA") 
@@ -60,6 +58,8 @@ export const useNFTCollections = (options) => {
     if (NFTBalances?.result) {
       const NFTs = NFTBalances.result;
       for (let NFT of NFTs) {
+        //Add Chain ID
+        NFT.chain = options?.chain || chainId;
         //Check if Owned By Current User
         NFT.owned = (NFT.owner_of === account?.address);  //?
       }//Each NFT
