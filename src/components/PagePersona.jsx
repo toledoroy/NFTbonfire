@@ -10,7 +10,7 @@ import { Collapse, Tabs, Input, Select } from 'antd';
 import { Card, Dropdown, Menu } from 'antd';
 import PersonaEdit from "components/Persona/PersonaEdit";
 import Address from "components/Address/Address";
-// import { PersonaHelper } from "helpers/PersonaHelper";
+import { PersonaHelper } from "helpers/PersonaHelper";
 import NFTCollections from "components/NFTCollections";
 import { getChainName, getChainLogo } from "helpers/networks";
 import { Persona } from "objects/Persona";
@@ -18,8 +18,8 @@ import { IPFS } from "helpers/IPFS";
 
 import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 
-import AddressInput from "components/AddressInput";     //TODO: Use This to Input Address
-import ChainData from "components/Chains/ChainData";     //TODO: Use This to Input Address
+import AddressInput from "components/AddressInput";
+import ChainsData from "components/Chains/ChainsData";
    
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
@@ -43,7 +43,7 @@ function PagePersona(props) {
     const { params } = props.match;
     // const { handle } = props.match.params;
     const { handle, chain, contract, token_id } = params;
-    const { Moralis, setUserData, userError, user } = useMoralis();     //isWeb3Enabled, isUserUpdating
+    const { Moralis, setUserData, userError, user, chainId } = useMoralis();     //isWeb3Enabled, isUserUpdating
     // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMore ] = useState(false);
     // const [ metadata, setMetadata ] = useState(defaultMetadata);    //Start Empty
@@ -68,7 +68,8 @@ function PagePersona(props) {
         chain:'0x4', 
         address:Persona.getContractAddress('0x4'), 
         token_id:'1',
-        metadata
+        metadata,
+        debug:"Default Persona Object",
     };
     
     useEffect(() => {
@@ -84,14 +85,28 @@ function PagePersona(props) {
         }
         //Override 2 (Registered)
         if(params.handle){
-            console.warn("[TEST] PagePersona() Override personaData By Handle:", {personaData, handle, params } );    
+            console.warn("[TEST] PagePersona() Override personaData By Handle:'"+handle+"'", {personaData, params } );    
             const query = new Moralis.Query(Persona);
-            query.equalTo("handle", handle);
-            query.find().then((results) => {
+            query.equalTo("handle", handle).find().then((results) => {
+            // query.get({handle}).then((results) => {
                 if(results){
                     //Override by handle
+                    let result = results[0];
                     personaData = results[0].attributes;
-                    console.warn("[TEST] PagePersona() Results for Handle:"+params.handle, {results, personaData});    
+                    
+                    console.warn("[TEST] PagePersona() Results for Handle:"+params.handle, {results, result});    
+
+                    //Reload Metadata
+                    if(!result.get('metadata')){
+                        //Validate
+                        if(result.get('chainId') == chainId){
+                            //Load Fresh Metadata
+                            PersonaHelper.loadMetadata(Moralis, result).then((freshMetadata) => {
+                                console.warn("[TEST] PagePersona() Loaded Fresh Metadata For:'"+params.handle+"'", {freshMetadata, result});    
+                            });
+                        }
+                        else console.error("PagePersona() Wrong Network for Persona:'"+params.handle+"' Can't Update", {result, chainId, expected:result.get('chainId')});
+                    }
                 }
                 else console.error("PagePersona() No Results for Handle:"+params.handle, {results} );    
             });
@@ -114,14 +129,15 @@ function PagePersona(props) {
         setIsLoading(true);
         try{
             //Load Metadata from Chain
-            let metadata = await persona.loadMetadata();
+            // let metadata = await persona.loadMetadata();    //Doesn't Work   Error: Missing web3 instance, make sure to call Moralis.enableWeb3() or Moralis.authenticate()
+            let metadata = await PersonaHelper.loadMetadata(Moralis, persona);
             //Log
-            console.warn("PersonaEdit() Freshly Loaded Metadata:", {metadata, persona});
+            console.warn("PagePersona() Freshly Loaded Metadata:", {metadata, persona});
             //Set State
             setMetadata( metadata );
         }catch(error){
             //Log
-            console.error("PersonaEdit() Error Loading Metadata:", error);
+            console.error("PagePersona() Error Loading Metadata:", error);
         }
         //Ready
         setIsLoading(false);
@@ -418,7 +434,7 @@ function PagePersona(props) {
                                 
                                 <TabPane tab={(
                                     <span title={getChainName(account.chain)}>
-                                        {console.warn("[TEST] Persona View Account", account)}
+                                        {/* {console.warn("[TEST] PagePersona() View Account", account)} */}
                                         {account.address 
                                         ? <Address icon={getChainLogo(account.chain)} copyable address={account.address} size={5} />
                                         : <span>[NO HASH]</span>
@@ -556,7 +572,7 @@ export default PagePersona;
                 Chain:
                 <Dropdown overlay={
                     <Menu onClick={setChain}>
-                        {Object.values(ChainData).map((item) => (
+                        {Object.values(ChainsData).map((item) => (
                         //if(item.live)
                         <Menu.Item key={item.key} icon={item.icon}>
                             <span style={{ marginLeft: "5px" }}>{item.name}</span>
@@ -566,10 +582,10 @@ export default PagePersona;
                     } 
                     trigger={["click"]}>
 
-                    { console.warn("[TEST] AccountAddModal() CUrrently Selected Chain", {chain, selected:ChainData[chain]}) }
+                    { console.warn("[TEST] AccountAddModal() CUrrently Selected Chain", {chain, selected:ChainsData[chain]}) }
 
-                    <Button key={ChainData[chain]?.key} icon={ChainData[chain]?.icon}>
-                        <span style={{ marginLeft: "5px" }}>{ChainData[chain]?.value}</span>
+                    <Button key={ChainsData[chain]?.key} icon={ChainsData[chain]?.icon}>
+                        <span style={{ marginLeft: "5px" }}>{ChainsData[chain]?.value}</span>
                         <DownOutlined />
                     </Button>
                 </Dropdown>

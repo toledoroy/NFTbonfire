@@ -1,4 +1,6 @@
 import { IPFS } from "helpers/IPFS";
+import { PersonaHelper } from "helpers/PersonaHelper";
+
 const Moralis = require("moralis/node");
 const APP_ID = process.env.REACT_APP_MORALIS_APPLICATION_ID;
 const SERVER_URL = process.env.REACT_APP_MORALIS_SERVER_URL;
@@ -21,28 +23,21 @@ export const Persona = Moralis.Object.extend("Persona",
         //     console.warn("[TEST] saveToChain() Called");
         // },
 
-        //Insert New Persona
-        // insert(metadata){
-
-        // },
-        //Update Persona
-        // update(){
-            // return "TODO";
-        // },
-
         //-- Loaders
         /**
          * Load Metadata from Chain
          * @ret object / null       Metadata or Default Metadata (or null)
          */
          async loadMetadata(returnDefault=true){
-            if(this.get('token_id') !== undefined) {
-                return await this.updateToken();
-            }
+            if(this.get('token_id') !== undefined) return await this.updateToken();
             else{ 
-                /* New Persona, Not yet on Chain */ 
+                //-- New Persona, Not yet on Chain
                 //Random 
-                if(returnDefault) Persona.getDefaultMetadata(); //return personaDefaultMetadata[Math.floor(Math.random()*personaDefaultMetadata.length)];
+                if(returnDefault){
+                    let defaultMetadata = Persona.getDefaultMetadata(); //return personaDefaultMetadata[Math.floor(Math.random()*personaDefaultMetadata.length)];
+                    console.warn("[TEST] Persona.loadMetadata() Return Default Metadata:", defaultMetadata)
+                    return defaultMetadata;
+                }
                 return null;
                 
                 // return returnDefault ? personaDefaultMetadata : null;
@@ -102,13 +97,13 @@ export const Persona = Moralis.Object.extend("Persona",
                 }//Different URI
                 else{
                     //Log
-                    console.log("Persona.fetchMetadata() Metadata URI is Up to Date -- Return Saved Metadata", {persona:this});
+                    console.log("Persona.updateToken() Metadata URI is Up to Date -- Return Saved Metadata", {persona:this});
                     return this.get('metadata');
                 } 
             }
             catch(error){
                 //Log
-               console.log("[TEST] Persona.updateToken() Error", {perosna:this, options, error});
+               console.error("[TEST] Persona.updateToken() Error", {perosna:this, options, error});
             }
         },//updateToken()
 
@@ -184,7 +179,7 @@ export const Persona = Moralis.Object.extend("Persona",
         //Contract Data
         getContractData(chain){ return (chain) ? this.contractPersona[chain] : this.contractPersona; },
         //Get ABI
-        getABI(chain){ return (chain) ? this.contractPersona[chain].abi : this.contractPersona.abi; },
+        getABI(chain){ return (this.contractPersona[chain].abi) ? this.contractPersona[chain].abi : this.contractPersona.abi; },
         //Get Contract Address
         getContractAddress(chain){ return (this.contractPersona[chain]?.address) ? this.contractPersona[chain].address : null; },
         //Default Metadata (Random)
