@@ -467,11 +467,11 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
                     );
                 }//Links
                 else if(field.type === 'object'){
-                    console.log("[UNHANDLED] PersonaEdit() object field:", {field, fieldData:metadata[field.name]});
+                    console.log("[UNHANDLED] PersonaEdit() object field:", {field, fieldData:metadata?.[field.name]});
                 }//object
                 else if(field.type === 'items'){
                     //Log
-                    console.log("[UNHANDLED] PersonaEdit() items field:", {field, fieldData:metadata[field.name]});
+                    console.log("[UNHANDLED] PersonaEdit() items field:", {field, fieldData:metadata?.[field.name]});
                 }//Object Array
                 else if(field.type === 'array'){    //Tags
                     // const children = [];

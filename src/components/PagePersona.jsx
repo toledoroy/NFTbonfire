@@ -3,24 +3,21 @@ import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 // import { useNFTCollections } from "hooks/useNFTCollections";
 // import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 // import { Link } from "react-router-dom";
-import { Avatar } from 'antd';
-// import { Space, Cascader } from 'antd';
-import { Button, Skeleton } from "antd";
+import { Button, Avatar, Modal, Skeleton } from 'antd';
+import { Collapse, Tabs, Input, Select } from 'antd';
+// import { Form, Space, Cascader } from 'antd';
+// import { Row, Col } from 'antd';
+import { Card } from 'antd';    //Modal
 import PersonaEdit from "components/Persona/PersonaEdit";
 import Address from "components/Address/Address";
 // import { PersonaHelper } from "helpers/PersonaHelper";
-import { Collapse } from 'antd';
 import NFTCollections from "components/NFTCollections";
 import { getChainName, getChainLogo } from "helpers/networks";
 import { Persona } from "objects/Persona";
 import { IPFS } from "helpers/IPFS";
-// import { Form } from 'antd';
-import { Input, Select } from 'antd';
-import { Tabs } from 'antd';
 
-import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
+import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined, SelectOutlined } from '@ant-design/icons';
 
-import { Row, Col } from 'antd';
 import AddressInput from "components/AddressInput";     //TODO: Use This to Input Address
    
 const { TabPane } = Tabs;
@@ -47,15 +44,13 @@ function PagePersona(props) {
     const { handle, chain, contract, token_id } = params;
     // const { Moralis, isWeb3Enabled } = useMoralis();
     const { Moralis, setUserData, userError, isUserUpdating, user } = useMoralis();
-    // const { account } = useMoralisWeb3Api();
-    // const { walletAddress } = useMoralisDapp();
-    // const { NFTCollections } = useNFTCollections();
-    // const [ collection, setCollection ] = useState(null);
+        // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMore ] = useState(false);
     // const [ metadata, setMetadata ] = useState(defaultMetadata);    //Start Empty
     const [ metadata, setMetadata ] = useState(Persona.getDefaultMetadata());    //Start Empty
     const [ isLoading, setIsLoading ] = useState(false);    //Loading Edit Mode
-
+    const [isAddAccModalVisible, setIsAddAccModalVisible] = useState(false);
+    
     //https://github.com/MoralisWeb3/react-moralis#usemoralisweb3api
     // const { data, error, isLoading } = useMoralisQuery("GameScore"); //Query All
     // const { data, error, isLoading } = useMoralisQuery("GameScore", query => query.greaterThanOrEqualTo("score", 100).descending("score").limit(limit),);    //Query Some
@@ -168,9 +163,6 @@ function PagePersona(props) {
     // const currentuser = Moralis.User.current();
     // console.log("[DEV] PagePersona() ", {handle, user, currentuser});
 
-
-    
-
     /** MADE EXPLICIT
      * on Social Account Update
      
@@ -203,13 +195,18 @@ function PagePersona(props) {
      */
     function handleTabEdit(targetKey, action){
         if(action === 'add'){
+
+            // AccountAddModal
+            // const [isAddAccModalVisible, setIsAddAccModalVisible] = useState(false);
+            setIsAddAccModalVisible(true);
+            /* MOVED TO MODAL
             let newAccount = {
                 // "address": "0xxxx",
                 // "chain": "0x1",
             };
-            setMetadata({...metadata, accounts:[ ...metadata.accounts, newAccount ]});
-            //Log
-            console.error("[TODO] handleTabEdit() Action:'"+action+"' Add Account W/Modal!", {targetKey, action, newAccount, metadata});
+            if(metadata?.accounts) setMetadata({...metadata, accounts:[ ...metadata.accounts, newAccount ]});
+            else setMetadata({...metadata, accounts:[ newAccount ]});   //First Account
+            */
         }//Add
         else if(action === 'remove'){
             const data = targetKey.split(":");
@@ -436,7 +433,6 @@ function PagePersona(props) {
                                     )} key={account.address+':'+account.chain} closable={isEditMode}>
 
                                     <div className="item framed" key={index}>
-                                        
                                         <div className="flex">
                                             <div className="chain">
                                                 {/* Chain:  */}
@@ -458,6 +454,7 @@ function PagePersona(props) {
                                 </TabPane>
                             ))}
                         </Tabs>
+                        <AccountAddModal visible={isAddAccModalVisible} setVisible={setIsAddAccModalVisible} metadata={metadata} setMetadata={setMetadata} />
                     </div>
                 </div>
             </div>
@@ -505,3 +502,77 @@ function PagePersona(props) {
 }//PagePersona()
 
 export default PagePersona;
+
+/**
+ * Component: Account Add Modal
+ */
+ function AccountAddModal(props){
+    const { visible:isModalVisible, setVisible:setIsModalVisible } = props;
+    const { metadata, setMetadata } = props;
+    // const [isModalVisible, setIsModalVisible] = useState(props.visible===true);
+    const [chain, setChain] = useState(null);
+    const [address, setAddress] = useState(null);
+
+    // useEffect(() => { 
+    //     setIsModalVisible(props.visible===true);
+    //     console.log("Change Modal Visibility:"+props.visible)
+    // }, [props]);
+    /* CANCELLED
+    useEffect(() => { 
+        if(isModalVisible) console.warn("AccountAddModal() Modal Became Visible:"+isModalVisible+" Should Reset");
+    }, [isModalVisible]);
+    */
+
+    //Handle Account Add
+    const addAccount = () => {
+        //Validate
+        if(chain && address){
+            
+            //Update Metadata
+            let newAccount = { chain, address };
+            if(metadata?.accounts) setMetadata({...metadata, accounts:[ ...metadata.accounts, newAccount ]});
+            else setMetadata({...metadata, accounts:[ newAccount ]});   //First Account
+
+            //TODO: Reset Modal
+
+            //Close Modal
+            setIsModalVisible(false);
+        }
+        else console.error("AccountAddModal() Missing Parameters", {chain, address});
+    }//addAccount()
+
+    return (
+        <Modal
+            visible={isModalVisible}
+            footer={null}
+            onCancel={() => setIsModalVisible(false)}
+            bodyStyle={{
+            padding: "15px",
+            fontSize: "17px",
+            fontWeight: "500",
+            }}
+            style={{ fontSize: "16px", fontWeight: "500" }}
+            width="400px"
+            >
+            Add Account
+            <Card style={{marginTop: "10px", borderRadius: "1rem",}} bodyStyle={{ padding: "15px" }} >
+                Address:
+                <AddressInput autoFocus placeholder="Receiver" onChange={setAddress} />
+                
+
+                Chain:
+                
+            </Card>
+
+            <Button size="large" type="primary"
+                style={{ width: "100%", marginTop: "10px", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "500", }}
+                onClick={() => {
+                addAccount();
+                
+                }}
+                >
+                Add
+            </Button>
+        </Modal>
+    )
+}//AccountAddModal()
