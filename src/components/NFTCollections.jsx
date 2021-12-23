@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Breadcrumb, Skeleton, Button, Dropdown, Avatar } from "antd";
 import { useMoralis, useNFTBalances } from "react-moralis";
 // import { useNFTBalance } from "hooks/useNFTBalance";
-import NFTDisplayCollection from "components/Wallet/NFTDisplayCollection";
+import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
 import PersonaChanger from "components/Persona/PersonaChanger";
 import Address from "components/Address/Address";
 // import { useNFTCollections } from "hooks/useNFTCollections";

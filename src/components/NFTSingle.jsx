@@ -3,7 +3,7 @@ import { useMoralis } from "react-moralis";
 // import { useNFTCollections } from "hooks/useNFTCollections";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 // import { getEllipsisTxt } from "../../helpers/formatters";
-import NFTDisplayCollection from "components/Wallet/NFTDisplayCollection";
+import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
 import Space from "components/NFTSingle/Space";
 
 /** DEPRECATED
