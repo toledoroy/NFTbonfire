@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useIPFS } from "./useIPFS";
 import { useMoralis } from "react-moralis";
+import { Exception } from "sass";
 
 /**
  * This is a hook that loads the NFT metadata in case it doesn't alreay exist
@@ -10,7 +11,7 @@ import { useMoralis } from "react-moralis";
 export const useVerifyMetadata = () => {
     const { resolveLink } = useIPFS();
     const [results, setResults] = useState({});
-    const { Moralis } = useMoralis();
+    const { Moralis, chainId } = useMoralis();
 
     /**
      * Moralis sometimes gives the wrong token_uri
@@ -18,36 +19,41 @@ export const useVerifyMetadata = () => {
      * @param object NFT 
      */
     function updateToken(NFT){
+        //Validate
+        if(NFT.chain && NFT.chain !== chainId){
+            throw new Exception ("useVerifyMetadata.updateToken() '"+chainId+"' is the Wrong Chain. Token is from:'"+NFT.chain+"'")
+        }
+        let abi = [{
+            "name": "tokenURI",
+            "stateMutability": "view",
+            "type": "function",
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "tokenId",
+                    "type": "uint256"
+                }
+            ],
+            "outputs": [
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                }
+            ]
+        }];
         //W3 - Fetch Token URI
         let options = {
             contractAddress: NFT.token_address,
             functionName: "tokenURI",
             params: { tokenId:NFT.token_id },
-            abi:[{
-                "inputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "tokenId",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "tokenURI",
-                "outputs": [
-                    {
-                        "internalType": "string",
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            }],
+            abi,
         };
         Moralis.executeFunction(options).then((uri) => {
             //Compare & Update Metadata if Needed
             if(NFT.token_uri !== uri) {
                 //Log
-                console.log("updateToken() NFT Has Different URI on Chain -- Run Update", {NFT, options, uri})
+                console.log("useVerifyMetadata.updateToken() NFT Has Different URI on Chain -- Run Update", {NFT, options, uri})
                 //Update NFT
                 NFT.token_uri = uri;
                 //Update Metadata
@@ -56,7 +62,7 @@ export const useVerifyMetadata = () => {
         })
         .catch((err) => {
             //Log
-            console.error("[TEST] updateToken() Error", {NFT, options, err});
+            console.error("[TEST] useVerifyMetadata.updateToken() Error", {NFT, options, err});
         });
         //Return Hooked NFT Object
         return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT ;
