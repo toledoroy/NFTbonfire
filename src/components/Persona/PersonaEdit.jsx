@@ -28,7 +28,7 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
 /**
  * Component: Persoan Edit Form
  * 
- *  TODO!! Load Metadata From W3
+ *  TODO! Move File Upload to PagePersona
  */
  function PersonaEdit(props) {
     // const { persona, contract } = props;

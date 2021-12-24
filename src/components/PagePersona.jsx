@@ -277,7 +277,7 @@ function PagePersona(props) {
     let coverImage = metadata?.cover ? metadata.cover : "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
     // let image = persona.getFallback('image');        //Don't work when Loading ParseObjeect from DB
     // let coverImage = persona.getFallback('cover');
-
+    let size = 200; //Avater Circumference
     return (
         <div className="persona">
             
@@ -434,8 +434,8 @@ function PagePersona(props) {
                     
                     <div className="details framed">
                         <div className="image">
-                            {isLoading ? <Skeleton.Avatar active size={200} shape='circle' />
-                            : <Avatar size={200} src={IPFS.resolveLink(image)} />}
+                            {isLoading ? <Skeleton.Avatar active size={size} shape='circle' />
+                            : <Avatar size={size} src={IPFS.resolveLink(image)} />}
                         </div>
                         <Skeleton loading={isLoading} active >
                             <div className="info">
