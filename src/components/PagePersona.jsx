@@ -78,13 +78,18 @@ function PagePersona(props) {
     useEffect(() => {
             
         //Override 1 (Unregistered)
-        if(params.chain && params.contract && params.token_id) {
-            personaData = {
-                chainId: chain,
-                address: contract,
-                tokenId: token_id,
-            };
-            console.warn("[TEST] PagePersona() Manually Set personaData From URL:", {personaData});
+        if(params.chain && params.contract) {
+            if(params.token_id) {
+                personaData = {
+                    chainId: chain,
+                    address: contract,
+                    tokenId: token_id,
+                };
+                console.warn("[TEST] PagePersona() Manually Set personaData From URL:", {personaData});
+            }
+            else{
+                console.warn("[TODO] PagePersona() This is a Request for New Persona Token", {params});
+            }
         }//Requested: Specific Token
 
         //Override 2 (Registered)
@@ -98,7 +103,7 @@ function PagePersona(props) {
                     let result = results[0];
                     personaData = results[0].attributes;
                     
-                    console.warn("[TEST] PagePersona() Results for Handle:"+params.handle, {results, result});    
+                    // console.warn("[TEST] PagePersona() Results for Handle:"+params.handle, {results, result});    
 
                     //Reload Metadata
                     if(result.get('metadata')) setMetadata( result.get('metadata') );
@@ -123,8 +128,12 @@ function PagePersona(props) {
     //Init Persona
     const persona = new Persona(personaData);
     
-    console.log("PagePersona() persona:",  {metadata, persona, personaTokenId: persona.get('token_id'), params});
+    console.log("PagePersona() persona:",  {user, metadata, persona, personaTokenId: persona.get('token_id'), params});
 
+    useEffect(()  =>  {
+        //When Entering Edit More - Reload Persona from Contract
+        if(isEditMode) loadmetadata();
+    },[isEditMode]);
     /**
      * Reload Persona Metadata from Chain
      */
@@ -138,10 +147,20 @@ function PagePersona(props) {
             console.warn("PagePersona() Freshly Loaded Metadata:", {metadata, persona});
             //Validate
             if(!metadata || typeof metadata !== 'object'){
+                /*
                 //Fallback to Default Metadata
                 metadata = Persona.getDefaultMetadata();
                 console.warn("[TEST] PagePersona() Faild to load Load Metadata -- Fallback to Default", {metadata, persona});
-            }
+                */
+                //Init Metadata
+                metadata = { social:{}, accounts:[] };
+                //Default to Current User Addresses
+                for(let address of user.get('accounts')){
+                    //Add Account
+                    metadata.accounts.push({address, chain:chainId});
+                }
+                console.warn("[TEST] PagePersona() Default Accounts:", {user, persona, metadata});
+            }//No Metadata
             //Set Metadata to State
             setMetadata( metadata );
         }catch(error){
@@ -150,12 +169,7 @@ function PagePersona(props) {
         //Ready
         setIsLoading(false);
     }//loadmetadata()
-    useEffect(()  =>  {
-        if(isEditMode){
-            //When Entering Edit More - Reload Persona from Contract
-            loadmetadata();
-        }
-    },[isEditMode]);
+   
 
     useEffect(() => {
         /*  Master Key Required
