@@ -14,7 +14,7 @@ export const useNFT = () => {
      * Load Metadata from Chain
      * @ret object / null       Metadata or Default Metadata (or null)
      */
-     async function loadMetadata(parseObj, returnDefault=true){
+     async function loadMetadata(parseObj){
         // if(parseObj.get('token_id') !== undefined) return await updateToken(parseObj);
         if(parseObj.get('token_id') !== undefined){
             let metadata = await updateToken(parseObj);
@@ -22,19 +22,9 @@ export const useNFT = () => {
             return metadata;
         }
         else{
-
-            //-- New Persona, Not yet on Chain
-            /* DISABLED
-            //Random 
-            if(returnDefault){
-                let defaultMetadata = Persona.getDefaultMetadata(); //return personaDefaultMetadata[Math.floor(Math.random()*personaDefaultMetadata.length)];
-                console.warn("[TEST] useNFT.loadMetadata() Return Default Metadata:", defaultMetadata)
-                return defaultMetadata;
-            }
-            */
-
+            console.error("[TEST] useNFT.loadMetadata() Missing Token ID:"+parseObj.get('token_id'), {parseObj});
             return null;
-        }
+        } 
     }//loadMetadata()
     
     /**
