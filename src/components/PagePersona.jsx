@@ -10,11 +10,12 @@ import { Collapse, Tabs, Input, Select } from 'antd';
 import { Card, Dropdown, Menu } from 'antd';
 import PersonaEdit from "components/Persona/PersonaEdit";
 import Address from "components/Address/Address";
-import { PersonaHelper } from "helpers/PersonaHelper";
+// import { PersonaHelper } from "helpers/PersonaHelper";
 import NFTCollections from "components/NFTCollections";
 import { getChainName, getChainLogo } from "helpers/networks";
 import { Persona } from "objects/Persona";
 import { IPFS } from "helpers/IPFS";
+import { useNFT } from "hooks/useNFT";
 
 import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 
@@ -50,7 +51,8 @@ function PagePersona(props) {
     const [ metadata, setMetadata ] = useState(Persona.getDefaultMetadata());
     const [ isLoading, setIsLoading ] = useState(false);    //Loading Edit Mode
     const [isAddAccModalVisible, setIsAddAccModalVisible] = useState(false);
-    
+    const { fetchMetadata, loadMetadata } = useNFT(); 
+
     //https://github.com/MoralisWeb3/react-moralis#usemoralisweb3api
     // const { data, error, isLoading } = useMoralisQuery("GameScore"); //Query All
     // const { data, error, isLoading } = useMoralisQuery("GameScore", query => query.greaterThanOrEqualTo("score", 100).descending("score").limit(limit),);    //Query Some
@@ -101,7 +103,8 @@ function PagePersona(props) {
                         //Validate
                         if(result.get('chainId') == chainId){
                             //Load Fresh Metadata
-                            PersonaHelper.loadMetadata(Moralis, result).then((freshMetadata) => {
+                            // PersonaHelper.loadMetadata(Moralis, result).then((freshMetadata) => {
+                            loadMetadata(result).then((freshMetadata) => {
                                 console.warn("[TEST] PagePersona() Loaded Fresh Metadata For:'"+params.handle+"'", {freshMetadata, result});    
                             });
                         }
@@ -130,7 +133,8 @@ function PagePersona(props) {
         try{
             //Load Metadata from Chain
             // let metadata = await persona.loadMetadata();    //Doesn't Work   Error: Missing web3 instance, make sure to call Moralis.enableWeb3() or Moralis.authenticate()
-            let metadata = await PersonaHelper.loadMetadata(Moralis, persona);
+            // let metadata = await PersonaHelper.loadMetadata(Moralis, persona);
+            let metadata = await loadMetadata(persona);
             //Log
             console.warn("PagePersona() Freshly Loaded Metadata:", {metadata, persona});
             //Set State

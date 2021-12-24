@@ -127,11 +127,14 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         try{
             if (info.file.status === undefined) {
                 // saveImageToIPFS(info.file).then(result => {
-                IPFS.saveImageToIPFS(Moralis, info.file).then(result => {
-                    console.log("[TEST] File Upload handleChangeFile() IPFS Hash:", result);
-                    // setImageUrl(result.hash());
-                    // setImageUrl(result.ipfs());
-                    setImage(result);
+                // IPFS.saveImageToIPFS(Moralis, info.file).then(result => {
+                IPFS.saveImageToIPFS(Moralis, info.file).then(url => {
+                    console.log("[TEST] File Upload handleChangeFile() IPFS Hash:", url);
+                    //Set New Image URL
+                    setImageUrl(url);
+                    //Set to Metadata
+                    setMetadata({...metadata, image:url});
+                    //Done Loading
                     setImageLoading(false);
                 });
             }//Manual Upload
@@ -158,10 +161,11 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         console.log("[DEV] formSocialOnChange() Modified Metadata ", {metadata, social:metadata.social, change});
         return true;
     }
-    */ 
-    /**
+    */
+    
+    /** Made Implicit
      * Image Change
-     */
+     * /
     function setImage(file){
         //Image URL
         // let url = file.ipfs();
@@ -171,6 +175,7 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         // setMetadata({...metadata, image:file.hash()});
         setMetadata({...metadata, image:url});
     }
+    */
 
     /**
      * Update NFT URI
@@ -334,178 +339,176 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
 
     let size = 200; //Avater Circumference
     return (
-    <>
-    {/* <Col xs={24} lg={{ span: 20, offset: 2 }} className="personaEdit"> */}
-    <Col className="personaEdit">
-    <Skeleton active loading={isLoading}>
-        {/* <input type="file" id="fileInput" onChange={handleChangeFileEvent}/> */}
-        <div style={{width:size, height:size, borderRadius:"50%", overflow:'hidden'}}>
-        {/* <ImgCrop rotate> TODO (It doesn't save Crop ) */}
-        <Upload
-            name="avatar"
-            // listType="picture-card"
-            className="avatar-uploader"
-            showUploadList={false}
-            // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"    //Disabled
-            multiple={false}
-            beforeUpload={beforeUpload}
-            onChange={handleChangeFile}
-            >
-            {imageLoading ? <LoadingOutlined /> 
-                // : imageUrl ? <img src={IPFS.resolveLink(imageUrl)} alt="avatar" style={{ width: '100%' }} /> 
-                : imageUrl ? <Avatar size={size} src={IPFS.resolveLink(imageUrl)} />
-                // : imageUrl ? <Avatar size={220} src={imageUrl} />
-                    // : uploadButton
-                    : <div><PlusOutlined /><div style={{ marginTop: 8 }}>Upload</div></div>
-            }
-        </Upload>
-        
-        {/* </ImgCrop> */}
-        </div>
-
-        <Form name="personaForm" 
-            id="personaEditForm"
-            onFinish={onFinish}
-            // onFinish={console.log}
-            onFinishFailed={console.error}
-            labelCol={{ span: 6, }}
-            wrapperCol={{ span: 16, }}
-            // initialValues={{ remember: true, }}
-            initialValues={metadata}
-            // initialValues={{name: "name",}}  //V
-            // autoComplete="off"
-            >
-
-            {/* 
-            <Form.Item label="Topic" name="name" rules={[{ required: true, message: 'You forgot to fill in a Topic'}]}>
-                <Input />
-            </Form.Item>
-            */}
-            {/*
-            <Form.Item label="Description" name="text" rules={[{ required: true, message: "You'd need to enter some text as well..."}]}>
-                <Input />
-            </Form.Item>
-            */}
-
-            {/*fields.map((field) => (
-                <Form.Item {...field}><Input /></Form.Item>
-            ))*/}
-            
-            {Object.values(personaFields).map((field) => { if(field.element) return field.element; else{
-                /* MOVED to PagePersona
-                if(field.name === 'social'){    //Social Accounts     
-                    return (
-                    <div className="social_wrapper">
-                        <h2><i className="bi bi-emoji-sunglasses"></i> Social Accounts</h2>
-                        <div className="items">
-                        {Object.values(field.network).map((network) => { 
-                            let label = network.label ? network.label : (<i className={"bi bi-"+network.name}></i>);    //Default Label (Icon)
-                            return ( 
-                                <Input 
-                                    key={network.name} 
-                                    className="item" 
-                                    onChange={formSocialOnChange} 
-                                    size="large"
-                                    placeholder={network.name} 
-                                    addonBefore={label} 
-                                    // defaultValue={metadata?.social?.[network.name]}
-                                    value={metadata?.social?.[network.name]}
-                                    name={network.name} />
-                            );
-                        })}
-                        </div>
-                    </div>
-                    );
-                }//Social
-                else */
-                if(field.name === 'links'){
-                    return( 
-                    <div className="links_wrapper">
-                        <h2><i className="bi bi-link"></i> Links</h2>
-                        <div className="items">
-                        <Row>
-                            {metadata?.links?.map((link, index) => {
-                                // E.G. {type: 'blog', title: 'BayonEI', url: 'http://bayonei.com'}
-                                // console.log("[DEV] link to:"+link.type+" Title:'"+link.title+"'", link.url);
-                                return (
-                                <>
-                                <Col xs={24} lg={12} key={link.title+index}>
-                                    <Input.Group compact className="item" style={{display: 'flex', width:'100%', paddingRight:'10px'}} >
-                                        <Input name="URL" defaultValue={link.url} placeholder="URL" 
-                                            addonBefore={<Select defaultValue={link.type} style={{minWidth:'99px'}} className="select-before">
-                                                <Option value="website">Website</Option>
-                                                <Option value="blog">Blog</Option>
-                                            </Select>}
-                                        />
-                                        <Input name="name" placeholder="Title" defaultValue={link.title} style={{flexShrink:'2'}}/>
-                                        {/* Remove Item */ }
-                                        <Button type="danger" shape="circle" icon={<DeleteOutlined />} onClick={() => {
-                                            // let links = metadata.links;
-                                            let links = [...metadata.links];    //Clone
-                                            // console.warn("[TEST] Remove Link:"+index, {links:[...links], res:links.splice(index, 1)});
-                                            links.splice(index, 1);
-                                            setMetadata({...metadata, links});
-                                        }}/>
-                                    </Input.Group>
-                                </Col>
-                                </>
-                                );
-                            })//Each Link
-                            }
-                            <div className="clearfloat"></div>
-                            {/* Add Item */ }
-                            <Button type="primary" shape="circle" icon={<PlusCircleOutlined />} onClick={() => {
-                                    let links = [...metadata.links];    //Clone
-                                    // links.splice(index, 1);
-                                    links.push({type:'', title:'', url:''});
-                                    setMetadata({...metadata, links});
-                                }}/>
-                                
-                            </Row>
-                        </div>
-                    </div>
-                    );
-                }//Links
-                else if(field.type === 'object'){
-                    console.log("[UNHANDLED] PersonaEdit() object field:", {field, fieldData:metadata?.[field.name]});
-                }//object
-                else if(field.type === 'items'){
-                    //Log
-                    console.log("[UNHANDLED] PersonaEdit() items field:", {field, fieldData:metadata?.[field.name]});
-                }//Object Array
-                else if(field.type === 'array'){    //Tags
-                    // const children = [];
-                    // for (let i = 10; i < 36; i++) { children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>); }
-                    // function handleChange(value) { console.log(`selected ${value}`); }
-                    console.log("[TEST] PersonaEdit() array field:"+field.name, {type:field.type, field, metadata, fieldData:metadata[field.name]});
-                    return (
-                        <Select key={field.name} mode="tags" style={{ width: '100%' }} label={field.label} name={field.name} placeholder={field.placeholder}>
-                            {metadata[field.name] && metadata[field.name].map((item, index) => {
-                                return <Option key={index}>{item}</Option>
-                            })}
-                        </Select>
-                    );
-                }//Array (Tags)
-                else{
-                    //Default (Single String Input)
-                    return (
-                        // <Form.Item {...field}><Input /></Form.Item>
-                        <Form.Item key={field.name} name={field.name} label={field.label} rules={field.rules}>
-                            <Input placeholder={field.placeholder}/>
-                        </Form.Item>
-                    );
+        <Col className="personaEdit">
+        {/* <Col xs={24} lg={{ span: 20, offset: 2 }} className="personaEdit"> */}
+        <Skeleton active loading={isLoading}>
+            {/* <input type="file" id="fileInput" onChange={handleChangeFileEvent}/> */}
+            <div style={{width:size, height:size, borderRadius:"50%", overflow:'hidden'}}>
+            {/* <ImgCrop rotate> TODO (It doesn't save Crop ) */}
+            <Upload
+                name="avatar"
+                // listType="picture-card"
+                className="avatar-uploader"
+                showUploadList={false}
+                // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"    //Disabled
+                multiple={false}
+                beforeUpload={beforeUpload}
+                onChange={handleChangeFile}
+                >
+                {imageLoading ? <LoadingOutlined /> 
+                    // : imageUrl ? <img src={IPFS.resolveLink(imageUrl)} alt="avatar" style={{ width: '100%' }} /> 
+                    : imageUrl ? <Avatar size={size} src={IPFS.resolveLink(imageUrl)} />
+                    // : imageUrl ? <Avatar size={220} src={imageUrl} />
+                        // : uploadButton
+                        : <div><PlusOutlined /><div style={{ marginTop: 8 }}>Upload</div></div>
                 }
-            }//Each Field
-            })}
+            </Upload>
             
-            <Form.Item wrapperCol={{ offset: 6, span: 6 }}>
-                <Button type="primary" htmlType="submit">Save</Button>
-                <Button onClick={formReset} style={{marginLeft:'20px' }}> Reset</Button>
-            </Form.Item>
-        </Form>
+            {/* </ImgCrop> */}
+            </div>
+
+            <Form name="personaForm" 
+                id="personaEditForm"
+                onFinish={onFinish}
+                // onFinish={console.log}
+                onFinishFailed={console.error}
+                labelCol={{ span: 6, }}
+                wrapperCol={{ span: 16, }}
+                // initialValues={{ remember: true, }}
+                initialValues={metadata}
+                // initialValues={{name: "name",}}  //V
+                // autoComplete="off"
+                >
+
+                {/* 
+                <Form.Item label="Topic" name="name" rules={[{ required: true, message: 'You forgot to fill in a Topic'}]}>
+                    <Input />
+                </Form.Item>
+                */}
+                {/*
+                <Form.Item label="Description" name="text" rules={[{ required: true, message: "You'd need to enter some text as well..."}]}>
+                    <Input />
+                </Form.Item>
+                */}
+
+                {/*fields.map((field) => (
+                    <Form.Item {...field}><Input /></Form.Item>
+                ))*/}
+                
+                {Object.values(personaFields).map((field) => { if(field.element) return field.element; else{
+                    /* MOVED to PagePersona
+                    if(field.name === 'social'){    //Social Accounts     
+                        return (
+                        <div className="social_wrapper">
+                            <h2><i className="bi bi-emoji-sunglasses"></i> Social Accounts</h2>
+                            <div className="items">
+                            {Object.values(field.network).map((network) => { 
+                                let label = network.label ? network.label : (<i className={"bi bi-"+network.name}></i>);    //Default Label (Icon)
+                                return ( 
+                                    <Input 
+                                        key={network.name} 
+                                        className="item" 
+                                        onChange={formSocialOnChange} 
+                                        size="large"
+                                        placeholder={network.name} 
+                                        addonBefore={label} 
+                                        // defaultValue={metadata?.social?.[network.name]}
+                                        value={metadata?.social?.[network.name]}
+                                        name={network.name} />
+                                );
+                            })}
+                            </div>
+                        </div>
+                        );
+                    }//Social
+                    else */
+                    if(field.name === 'links'){
+                        return( 
+                        <div className="links_wrapper">
+                            <h2><i className="bi bi-link"></i> Links</h2>
+                            <div className="items">
+                            <Row>
+                                {metadata?.links?.map((link, index) => {
+                                    // E.G. {type: 'blog', title: 'BayonEI', url: 'http://bayonei.com'}
+                                    // console.log("[DEV] link to:"+link.type+" Title:'"+link.title+"'", link.url);
+                                    return (
+                                    <>
+                                    <Col xs={24} lg={12} key={link.title+index}>
+                                        <Input.Group compact className="item" style={{display: 'flex', width:'100%', paddingRight:'10px'}} >
+                                            <Input name="URL" defaultValue={link.url} placeholder="URL" 
+                                                addonBefore={<Select defaultValue={link.type} style={{minWidth:'99px'}} className="select-before">
+                                                    <Option value="website">Website</Option>
+                                                    <Option value="blog">Blog</Option>
+                                                </Select>}
+                                            />
+                                            <Input name="name" placeholder="Title" defaultValue={link.title} style={{flexShrink:'2'}}/>
+                                            {/* Remove Item */ }
+                                            <Button type="danger" shape="circle" icon={<DeleteOutlined />} onClick={() => {
+                                                // let links = metadata.links;
+                                                let links = [...metadata.links];    //Clone
+                                                // console.warn("[TEST] Remove Link:"+index, {links:[...links], res:links.splice(index, 1)});
+                                                links.splice(index, 1);
+                                                setMetadata({...metadata, links});
+                                            }}/>
+                                        </Input.Group>
+                                    </Col>
+                                    </>
+                                    );
+                                })//Each Link
+                                }
+                                <div className="clearfloat"></div>
+                                {/* Add Item */ }
+                                <Button type="primary" shape="circle" icon={<PlusCircleOutlined />} onClick={() => {
+                                        let links = [...metadata.links];    //Clone
+                                        // links.splice(index, 1);
+                                        links.push({type:'', title:'', url:''});
+                                        setMetadata({...metadata, links});
+                                    }}/>
+                                    
+                                </Row>
+                            </div>
+                        </div>
+                        );
+                    }//Links
+                    else if(field.type === 'object'){
+                        console.log("[UNHANDLED] PersonaEdit() object field:", {field, fieldData:metadata?.[field.name]});
+                    }//object
+                    else if(field.type === 'items'){
+                        //Log
+                        console.log("[UNHANDLED] PersonaEdit() items field:", {field, fieldData:metadata?.[field.name]});
+                    }//Object Array
+                    else if(field.type === 'array'){    //Tags
+                        // const children = [];
+                        // for (let i = 10; i < 36; i++) { children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>); }
+                        // function handleChange(value) { console.log(`selected ${value}`); }
+                        console.log("[TEST] PersonaEdit() array field:"+field.name, {type:field.type, field, metadata, fieldData:metadata[field.name]});
+                        return (
+                            <Select key={field.name} mode="tags" style={{ width: '100%' }} label={field.label} name={field.name} placeholder={field.placeholder}>
+                                {metadata[field.name] && metadata[field.name].map((item, index) => {
+                                    return <Option key={index}>{item}</Option>
+                                })}
+                            </Select>
+                        );
+                    }//Array (Tags)
+                    else{
+                        //Default (Single String Input)
+                        return (
+                            // <Form.Item {...field}><Input /></Form.Item>
+                            <Form.Item key={field.name} name={field.name} label={field.label} rules={field.rules}>
+                                <Input placeholder={field.placeholder}/>
+                            </Form.Item>
+                        );
+                    }
+                }//Each Field
+                })}
+                
+                <Form.Item wrapperCol={{ offset: 6, span: 6 }}>
+                    <Button type="primary" htmlType="submit">Save</Button>
+                    <Button onClick={formReset} style={{marginLeft:'20px' }}> Reset</Button>
+                </Form.Item>
+            </Form>
         </Skeleton>
-    </Col>
-    </>
+        </Col>
     );
 }//PersonaEdit()
 
