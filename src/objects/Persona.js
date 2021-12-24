@@ -27,7 +27,7 @@ export const Persona = Moralis.Object.extend("Persona",
         /**
          * Load Metadata from Chain
          * @ret object / null       Metadata or Default Metadata (or null)
-         */
+         * /
          async loadMetadata(returnDefault=true){
             if(this.get('token_id') !== undefined) return await this.updateToken();
             else{ 
@@ -46,7 +46,7 @@ export const Persona = Moralis.Object.extend("Persona",
         /**
          * Update Token (Fetch from Chain -- URI & Metadata )
          * @returns object metadata
-         */
+         * /
         async updateToken(){
             let chain = this.get("chain") || this.get("chainId");
             // console.log("[TEST] Persona.updateToken()  Address:", this.get('address'), Persona.getContractAddress(chain), chain, this);
@@ -111,7 +111,7 @@ export const Persona = Moralis.Object.extend("Persona",
          * Extract Metadata from NFT, 
          *  Fallback: Fetch from URI
          * @returns object metadata
-         */
+         * /
          async fetchMetadata(token_uri) {
             // const token_uri = this.get('token_uri');
             //Validate URI

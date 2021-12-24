@@ -103,7 +103,6 @@ function PagePersona(props) {
                         //Validate
                         if(result.get('chainId') == chainId){
                             //Load Fresh Metadata
-                            // PersonaHelper.loadMetadata(Moralis, result).then((freshMetadata) => {
                             loadMetadata(result).then((freshMetadata) => {
                                 console.warn("[TEST] PagePersona() Loaded Fresh Metadata For:'"+params.handle+"'", {freshMetadata, result});    
                             });
@@ -132,8 +131,6 @@ function PagePersona(props) {
         setIsLoading(true);
         try{
             //Load Metadata from Chain
-            // let metadata = await persona.loadMetadata();    //Doesn't Work   Error: Missing web3 instance, make sure to call Moralis.enableWeb3() or Moralis.authenticate()
-            // let metadata = await PersonaHelper.loadMetadata(Moralis, persona);
             let metadata = await loadMetadata(persona);
             //Log
             console.warn("PagePersona() Freshly Loaded Metadata:", {metadata, persona});

@@ -70,32 +70,6 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
     //Log
     console.warn("PersonaEdit() MEtadata", {chainId, env:process.env, metadata, imageUrl, contract, persona, contractPersona});
 
-    /** NOW SHARING METADATA W/Container
-     * Reload Persona Metadata from Chain
-     * /
-    const loadmetadata = async () => {
-        //Start Loading
-        setIsLoading(true);
-
-        try{
-            //Load Metadata from Chain
-            let metadata = await persona.loadMetadata();
-            //Log
-            console.warn("PersonaEdit() Freshly Loaded Metadata:", {metadata, persona});
-            //Set State
-            setMetadata( metadata );
-        }catch(error){
-            //Log
-            console.error("PersonaEdit() Error Loading Metadata:", error);
-        }
-
-        //Ready
-        setIsLoading(false);
-    }//loadmetadata()
-    //Load Metadata on Persona Change
-    useEffect(() => { loadmetadata(); }, [persona]);
-    */
-
     useEffect(() => { 
         //Refresh Metadata on Every Load! (After Updating Chain, This Component's metadata doesn't match the updated parent)
         console.log("PersonaEdit() Reloading Metadata", props.metadata);
@@ -162,7 +136,7 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         return true;
     }
     */
-    
+
     /** Made Implicit
      * Image Change
      * /
