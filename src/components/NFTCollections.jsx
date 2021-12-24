@@ -187,8 +187,7 @@ function NFTCollections(props) {
                   // state: { fromDashboard: true }
                 };
                 return (
-                  <>
-                  <CollectionContext.Provider value={collection}>
+                  <CollectionContext.Provider key={collection.hash+'Prov'} value={collection}>
                     {/* <p>{collection.owned ? 'Owned' : 'Not Owned'}</p> */}
                     <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
                       <h2 className="title">
@@ -208,8 +207,7 @@ function NFTCollections(props) {
                         }
                       </div>
                     </div>
-                    </CollectionContext.Provider>
-                  </>
+                  </CollectionContext.Provider>
                 );
               } else return '';
           })}
