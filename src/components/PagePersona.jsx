@@ -50,10 +50,12 @@ function PagePersona(props) {
     // const [ metadata, setMetadata ] = useState(defaultMetadata);    //Start Empty
     // const [ metadata, setMetadata ] = useState(Persona.getDefaultMetadata());
     const [ metadata, setMetadata ] = useState(null);
-    const [ isLoading, setIsLoading ] = useState(false);    //Loading Edit Mode
-    const [isAddAccModalVisible, setIsAddAccModalVisible] = useState(false);
+    const [ isLoading, setIsLoading ] = useState(true);
+    const [ persona, setPersona ] = useState( new Persona() );
+    const [ isAddAccModalVisible, setIsAddAccModalVisible ] = useState(false);
     const { fetchMetadata, loadMetadata } = useNFT(); 
 
+    
     //https://github.com/MoralisWeb3/react-moralis#usemoralisweb3api
     // const { data, error, isLoading } = useMoralisQuery("GameScore"); //Query All
     // const { data, error, isLoading } = useMoralisQuery("GameScore", query => query.greaterThanOrEqualTo("score", 100).descending("score").limit(limit),);    //Query Some
@@ -94,7 +96,10 @@ function PagePersona(props) {
 
         //Override 2 (Registered)
         if(params.handle){
-            console.warn("[TEST] PagePersona() Override personaData By Handle:'"+handle+"'", {personaData, params } );    
+            console.warn("[TEST] PagePersona() Override personaData By Handle:'"+handle+"'", {personaData, params } ); 
+            //Start Loading
+            setIsLoading(true);
+            //Query
             const query = new Moralis.Query(Persona);
             query.equalTo("handle", handle).find().then((results) => {
             // query.get({handle}).then((results) => {
@@ -106,38 +111,58 @@ function PagePersona(props) {
                     // console.warn("[TEST] PagePersona() Results for Handle:"+params.handle, {results, result});    
 
                     //Reload Metadata
-                    if(result.get('metadata')) setMetadata( result.get('metadata') );
+                    if(result.get('metadata')){
+                        setMetadata( result.get('metadata') );
+                        //Done Loading
+                        setIsLoading(false);
+                        setPersona(result);
+                    }
                     else{
+
                         //Validate
-                        if(result.get('chainId') == chainId){
+                        // if(result.get('chainId') == chainId){    //Trying to now support cross-chain reads
+
                             //Load Fresh Metadata
                             loadMetadata(result).then((freshMetadata) => {
                                 console.warn("[TEST] PagePersona() Loaded Fresh Metadata For:'"+params.handle+"'", {freshMetadata, result});    
                                 setMetadata(freshMetadata);
+                                //Done Loading
+                                setIsLoading(false);
+                                setPersona(result);
                             });
-                        }
-                        else console.error("PagePersona() Wrong Network for Persona:'"+params.handle+"' Can't Update", {result, chainId, expected:result.get('chainId')});
-                    }
+
+                        // } else console.error("PagePersona() Wrong Network for Persona:'"+params.handle+"' Can't Update", {result, chainId, expected:result.get('chainId')});
+                    }//No Metadata
                 }
                 else console.error("PagePersona() No Results for Handle:"+params.handle, {results} );    
             });
         }//Requsted: Handle
+
+        persona && console.log("PagePersona() persona:",  {user, metadata, personaTokenId: persona?.get('token_id'), params});
+
     },[params]);
 
     
     //Init Persona
-    const persona = new Persona(personaData);
+    // const persona = new Persona(personaData);
+    // console.log("PagePersona() persona:",  {user, metadata, personaTokenId: persona?.get('token_id'), params});
     
-    console.log("PagePersona() persona:",  {user, metadata, persona, personaTokenId: persona.get('token_id'), params});
-
+    
     useEffect(()  =>  {
         //When Entering Edit More - Reload Persona from Contract
-        if(isEditMode) loadmetadata();
+        if(isEditMode){
+            if(persona) loadmetadata();
+            else console.error("PagePersona() No Persona", persona);
+        } 
     },[isEditMode]);
     /**
      * Reload Persona Metadata from Chain
      */
     const loadmetadata = async () => {
+        
+        //Validate
+        // if(!persona.get('token_id')) throw {msg:"[DEV] persna Missing Token ID", persona};
+
         //Start Loading
         setIsLoading(true);
         try{
@@ -163,33 +188,16 @@ function PagePersona(props) {
             }//No Metadata
             //Set Metadata to State
             setMetadata( metadata );
+            //Ready
+            setIsLoading(false);
         }catch(error){
             console.error("[CAUGHT] PagePersona() Error Loading Metadata:", error);
         }
-        //Ready
-        setIsLoading(false);
+        
     }//loadmetadata()
    
 
     useEffect(() => {
-        /*  Master Key Required
-        //[DEV] Schema Stuff        https://parseplatform.org/Parse-SDK-JS/api/2.9.0/Parse.Schema.html
-        const schema = new Moralis.Schema('Persona');
-        console.warn("[DEV] Moralis Persona Schema:", schema);
-        // const options = { required: true, defaultValue: 'hello world' };
-        // schema.addString('TestField', options);
-        schema.addIndex('i_handle', { 'handle': 1 });
-        schema.save();
-
-        /* TODO: Edit Schema
-        const schema = new Moralis.Schema('Post');
-        console.warn("[DEV] Moralis Schema:", schema);
-        const options = { required: true, defaultValue: 'hello world' };
-        schema.addString('TestField', options);
-        schema.addIndex('index_name', { 'TestField': 1 });
-        schema.save();
-        */
-
         //Get & Set Metadata
 
     },[]);
@@ -263,18 +271,18 @@ function PagePersona(props) {
         }//Remove
         else console.error("[ERROR] handleTabEdit() Invalid Action:'"+action+"'", {targetKey, action});
     }
-
+    
     //Profile Image
-    // let image = metadata?.image ? metadata.image : "https://joeschmoe.io/api/v1/random";
-    // let coverImage = metadata?.cover ? metadata.cover : "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
+    let image = metadata?.image ? IPFS.resolveLink(metadata.image) : "https://joeschmoe.io/api/v1/random";
+    let coverImage = metadata?.cover ? metadata.cover : "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
+    // let image = persona.getFallback('image');        //Don't work when Loading ParseObjeect from DB
+    // let coverImage = persona.getFallback('cover');
 
-    let image = persona.getFallback('image');
-    let coverImage = persona.getFallback('cover');
     return (
         <div className="persona">
             
             <div className="header">
-                <div className="cover" style={{background:"url("+IPFS.resolveLink(coverImage)+")"}}>
+                <div className="cover" style={{background:"url("+coverImage+")"}}>
                     {/* <img src={IPFS.resolveLink(coverImage)}/> */}
                 </div>
             </div>
@@ -284,54 +292,58 @@ function PagePersona(props) {
                 <div className="secondary framed">
                     <div className="view" style={{display:!isEditMode?'block':'none'}}>
                         <div className="social">
-                            <Collapse accordion>
-                            {metadata?.social && Object.keys(metadata.social).map((network) => {
-                                let handle = metadata.social[network];
-                                if(handle){
-                                    //Label (Icon/Name)
-                                    let label = personaFields.social.network[network].label ? personaFields.social.network[network].label : (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
-                                    let link = personaFields.social.network[network].url ? personaFields.social.network[network].url + handle : '#';
-                                    // let label = (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
-                                    let headerContent = (
-                                        <>
-                                        <a href={link} target="_blank" rel="noopener noreferrer" key={network} className="social-handle" data-network={network}>
-                                            {label} 
-                                            <div className="textSwitch">
-                                                <div className="inner">
-                                                    <div className="text network">{network}</div>
-                                                    <div className="text handle">{handle}</div>
+                            <Skeleton loading={isLoading} active>
+                                <Collapse accordion>
+                                {metadata?.social && Object.keys(metadata.social).map((network) => {
+                                    let handle = metadata.social[network];
+                                    if(handle){
+                                        //Label (Icon/Name)
+                                        let label = personaFields.social.network[network].label ? personaFields.social.network[network].label : (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
+                                        let link = personaFields.social.network[network].url ? personaFields.social.network[network].url + handle : '#';
+                                        // let label = (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
+                                        let headerContent = (
+                                            <>
+                                            <a href={link} target="_blank" rel="noopener noreferrer" key={network} className="social-handle" data-network={network}>
+                                                {label} 
+                                                <div className="textSwitch">
+                                                    <div className="inner">
+                                                        <div className="text network">{network}</div>
+                                                        <div className="text handle">{handle}</div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </a>
-                                        </>
+                                            </a>
+                                            </>
+                                            );
+                                            //collapsible="disabled" showArrow={false}
+                                        return (
+                                            <Panel header={headerContent} key={network} collapsible="disabled" showArrow={false} className="item">
+                                                <p>[Content]</p>
+                                            </Panel>
                                         );
-                                        //collapsible="disabled" showArrow={false}
-                                    return (
-                                        <Panel header={headerContent} key={network} collapsible="disabled" showArrow={false} className="item">
-                                            <p>[Content]</p>
-                                        </Panel>
-                                    );
-                                }
-                                else return null;
-                            })}
-                            </Collapse>
+                                    }
+                                    else return null;
+                                })}
+                                </Collapse>
+                            </Skeleton>
                         </div>
                         
                         <div className="links">
-                            <Collapse accordion>
-                            {metadata?.links?.map((link, index) => (   
-                                <Panel header={
-                                    <>
-                                        {/* {link.type} */}
-                                        <a href={link.url} key={index} target="_blank"> 
-                                            <i className="bi bi-link"></i>
-                                            <span className="handle">{link.title}</span>
-                                        </a>
-                                    </>
-                                } key={index} collapsible="disabled" showArrow={false}  className="item">
-                                </Panel>
-                            ))}
-                            </Collapse>
+                            <Skeleton loading={isLoading} active>
+                                <Collapse accordion>
+                                {metadata?.links?.map((link, index) => (   
+                                    <Panel header={
+                                        <>
+                                            {/* {link.type} */}
+                                            <a href={link.url} key={index} target="_blank"> 
+                                                <i className="bi bi-link"></i>
+                                                <span className="handle">{link.title}</span>
+                                            </a>
+                                        </>
+                                    } key={index} collapsible="disabled" showArrow={false}  className="item">
+                                    </Panel>
+                                ))}
+                                </Collapse>
+                            </Skeleton>
                         </div>
                     </div>
                     <div className="edit" style={{display:isEditMode?'block':'none'}}>
@@ -339,6 +351,7 @@ function PagePersona(props) {
                             <div className="social_wrapper">
                                 <h2><i className="bi bi-emoji-sunglasses"></i> Social Accounts</h2>
                                 <div className="items">
+                                <Skeleton loading={isLoading} active>
                                 {Object.values(personaFields.social.network).map((network) => { 
                                     let label = network.label ? network.label : (<i className={"bi bi-"+network.name}></i>);    //Default Label (Icon)
                                     return ( 
@@ -361,9 +374,11 @@ function PagePersona(props) {
                                             name={network.name} />
                                     );
                                 })}
+                                </Skeleton>
                                 </div>
                             </div>
                         </div>
+
                         {false && 
                         <div className="links">
                             <div className="links_wrapper">
@@ -377,6 +392,7 @@ function PagePersona(props) {
                                     }}/>
                                 </h2>
                                 <div className="items">
+                                <Skeleton loading={isLoading} active>
                                     {metadata?.links?.map((link, index) => {
                                         // E.G. {type: 'blog', title: 'BayonEI', url: 'http://bayonei.com'}
                                         // console.log("[DEV] link to:"+link.type+" Title:'"+link.title+"'", link.url);
@@ -405,6 +421,7 @@ function PagePersona(props) {
                                         );
                                     })//Each Link
                                     }
+                                    </Skeleton>
                                     <div className="clearfloat"></div>
                                 </div>
                             </div>
@@ -417,25 +434,32 @@ function PagePersona(props) {
                     
                     <div className="details framed">
                         <div className="image">
-                            <Avatar size={200} src={IPFS.resolveLink(image)} />
+                            {isLoading ? <Skeleton.Avatar active size={200} shape='circle' />
+                            : <Avatar size={200} src={IPFS.resolveLink(image)} />}
                         </div>
-                        <div className="info">
-                            <h1 className="name">{metadata?.name || metadata?.firstname+' '+metadata?.lastname}</h1>
-                            {/* <div className="handle">@{metadata?.username}</div> */}
-                            <q className="description">{metadata?.description}</q>
-                            <div className="flex" style={{marginTop:5}}>
-                                <div className="location">
-                                    <i className="bi bi-geo-alt"></i>
-                                    {metadata?.location?.name}
+                        <Skeleton loading={isLoading} active >
+                            <div className="info">
+                                <h1 className="name">{metadata?.name || metadata?.firstname+' '+metadata?.lastname}</h1>
+                                {/* <div className="handle">@{metadata?.username}</div> */}
+                                <q className="description">{metadata?.description}</q>
+                                <div className="flex" style={{marginTop:5}}>
+                                    <div className="location">
+                                        <i className="bi bi-geo-alt"></i>
+                                        {metadata?.location?.name}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </Skeleton>
+                    
                         <div className="actions">
+                            {isLoading ? <Skeleton.Button active />
+                            :
                             <div className="button">
                                 {isEditMode && <Button className="debug" onClick={()=>{ /*form.submit();*/ console.warn("[TODO] PagePersona() Save Changes"); }} >[Save]</Button>}
                                 {!isEditMode && <Button variant="contained" color="primary" onClick={()=>{setIsEditMore(isEditMode===false);}}>Edit</Button>}
                                 {isEditMode && <Button variant="contained" color="primary" onClick={()=>{ loadmetadata(); setIsEditMore(isEditMode===false);}}>Cancel</Button>}
                             </div>
+                            }                    
                         </div>
                     </div>
 
@@ -523,9 +547,7 @@ function PagePersona(props) {
                     handle:'toledoroy',
                 };
                 // const Persona = Moralis.Object.extend("Persona", {}, {});
-                let thisPersona = new Persona(
-                    data
-                );
+                let thisPersona = new Persona( data );
                 Persona.register(data);
                 console.log("[TEST] ThisPersona:", {data, thisPersona});
                 // thisPersona.save();
@@ -588,6 +610,7 @@ export default PagePersona;
             style={{ fontSize: "16px", fontWeight: "500" }}
             width="400px"
             >
+            <>
             Add Account
             <Card style={{marginTop: "10px", borderRadius: "1rem",}} bodyStyle={{ padding: "15px" }} >
                 Address:
@@ -596,20 +619,20 @@ export default PagePersona;
                 Chain:
                 <Dropdown overlay={
                     <Menu onClick={setChain}>
-                        {Object.values(ChainsData).map((item) => (
+                    {Object.values(ChainsData).map((item) => (
                         //if(item.live)
                         <Menu.Item key={item.key} icon={item.icon}>
                             <span style={{ marginLeft: "5px" }}>{item.name}</span>
                         </Menu.Item>
-                        ))}
+                    ))}
                     </Menu>
                     } 
                     trigger={["click"]}>
 
-                    { console.warn("[TEST] AccountAddModal() CUrrently Selected Chain", {chain, selected:ChainsData[chain]}) }
-
-                    <Button key={ChainsData[chain]?.key} icon={ChainsData[chain]?.icon}>
-                        <span style={{ marginLeft: "5px" }}>{ChainsData[chain]?.value}</span>
+                    {/* { console.warn("[TEST] AccountAddModal() CUrrently Selected Chain", {chain, selected:ChainsData[chain]}) } */}
+                    <Button key={ChainsData[chain?.key]?.key} icon={ChainsData[chain?.key]?.icon}>
+                        {console.warn("Selected Chain"+chain, {chain, ChainsData})}
+                        <span style={{ marginLeft: "5px" }}>{ChainsData[chain?.key]?.name}</span>
                         <DownOutlined />
                     </Button>
                 </Dropdown>
@@ -619,6 +642,7 @@ export default PagePersona;
                 style={{ width: "100%", marginTop: "10px", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "500", }}>
                 Add
             </Button>
+            </>
         </Modal>
     )
 }//AccountAddModal()
