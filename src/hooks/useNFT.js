@@ -21,8 +21,7 @@ export const useNFT = () => {
             console.warn("[TEST] useNFT.loadMetadata() Return Extracted Metadata:", metadata)
             return metadata;
         }
-
-        else{ 
+        else{
 
             //-- New Persona, Not yet on Chain
             /* DISABLED
@@ -50,7 +49,7 @@ export const useNFT = () => {
         // console.log("[TEST] useNFT.updateToken()  Address:", parseObj.get('address'), Persona.getContractAddress(chain), chain, this);
         
         //Validate Current Chain Matches Contract's Chain
-        if(chain != chainId) throw "Wrong Chain. Current:"+chainId+" needed:"+chain;
+        // if(chain != chainId) throw "Wrong Chain. Current:"+chainId+" needed:"+chain;
 
         //Fetch ABI
         // const abi = Persona.getABI(chain);
@@ -77,16 +76,26 @@ export const useNFT = () => {
         }];
 
         //W3 - Fetch Token URI
-        let options = {
-            contractAddress: Persona.getContractAddress(chain),
-            params: { tokenId:parseObj.get('token_id') },
-            functionName: "tokenURI",
+        // let options = {
+        //     contractAddress: Persona.getContractAddress(chain),
+        //     abi,
+        //     params: { tokenId:parseObj.get('token_id') },
+        //     functionName: "tokenURI",
+        // };
+        let options2 = {
+            address: Persona.getContractAddress(chain),
             abi,
+            params: { tokenId: parseObj.get('token_id') },
+            function_name: "tokenURI",
+            chain,
         };
-        
         try{
             //Fetch Token URI
-            let uri = await Moralis.executeFunction(options);
+            // let uri = await Moralis.executeFunction(options);   //From Wallet - Only Current Chain 
+            let uri = await Moralis.Web3API.native.runContractFunction(options2);
+            // console.error("useNFT.updateToken()  Token Data:", {...parseObj.attributes});
+
+
             //Validate Response
             if(uri){
                 //Compare & Update Metadata if Needed
@@ -101,7 +110,10 @@ export const useNFT = () => {
                     //Update Token
                     parseObj.set('metadata', newMetadata);
                     //Save
-                    parseObj.save();
+                    parseObj.save()
+                    .catch(error => {
+                        console.error("useNFT.updateToken() Failed to Save Token to DB:", {error, parseObj});
+                    });
                     //Return
                     return newMetadata;
                 }//Different URI
@@ -116,7 +128,7 @@ export const useNFT = () => {
         }
         catch(error){
             //Log
-            console.error("[TEST] useNFT.updateToken() Error", {options, error});
+            console.error("[TEST] useNFT.updateToken() Error", {options:options2, error});
         }
     }//updateToken()
 
