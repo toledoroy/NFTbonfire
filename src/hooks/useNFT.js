@@ -20,18 +20,21 @@ export const useNFT = () => {
             let metadata = await updateToken(parseObj);
             console.warn("[TEST] useNFT.loadMetadata() Return Extracted Metadata:", metadata)
             return metadata;
-        } 
+        }
+
         else{ 
+
             //-- New Persona, Not yet on Chain
+            /* DISABLED
             //Random 
             if(returnDefault){
                 let defaultMetadata = Persona.getDefaultMetadata(); //return personaDefaultMetadata[Math.floor(Math.random()*personaDefaultMetadata.length)];
                 console.warn("[TEST] useNFT.loadMetadata() Return Default Metadata:", defaultMetadata)
                 return defaultMetadata;
             }
+            */
+
             return null;
-            
-            // return returnDefault ? personaDefaultMetadata : null;
         }
     }//loadMetadata()
     

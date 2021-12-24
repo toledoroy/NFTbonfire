@@ -48,7 +48,8 @@ function PagePersona(props) {
     // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMore ] = useState(false);
     // const [ metadata, setMetadata ] = useState(defaultMetadata);    //Start Empty
-    const [ metadata, setMetadata ] = useState(Persona.getDefaultMetadata());
+    // const [ metadata, setMetadata ] = useState(Persona.getDefaultMetadata());
+    const [ metadata, setMetadata ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(false);    //Loading Edit Mode
     const [isAddAccModalVisible, setIsAddAccModalVisible] = useState(false);
     const { fetchMetadata, loadMetadata } = useNFT(); 
@@ -84,7 +85,8 @@ function PagePersona(props) {
                 tokenId: token_id,
             };
             console.warn("[TEST] PagePersona() Manually Set personaData From URL:", {personaData});
-        }
+        }//Requested: Specific Token
+
         //Override 2 (Registered)
         if(params.handle){
             console.warn("[TEST] PagePersona() Override personaData By Handle:'"+handle+"'", {personaData, params } );    
@@ -99,12 +101,14 @@ function PagePersona(props) {
                     console.warn("[TEST] PagePersona() Results for Handle:"+params.handle, {results, result});    
 
                     //Reload Metadata
-                    if(!result.get('metadata')){
+                    if(result.get('metadata')) setMetadata( result.get('metadata') );
+                    else{
                         //Validate
                         if(result.get('chainId') == chainId){
                             //Load Fresh Metadata
                             loadMetadata(result).then((freshMetadata) => {
                                 console.warn("[TEST] PagePersona() Loaded Fresh Metadata For:'"+params.handle+"'", {freshMetadata, result});    
+                                setMetadata(freshMetadata);
                             });
                         }
                         else console.error("PagePersona() Wrong Network for Persona:'"+params.handle+"' Can't Update", {result, chainId, expected:result.get('chainId')});
@@ -112,16 +116,14 @@ function PagePersona(props) {
                 }
                 else console.error("PagePersona() No Results for Handle:"+params.handle, {results} );    
             });
-        }
-
+        }//Requsted: Handle
     },[params]);
 
-    
     
     //Init Persona
     const persona = new Persona(personaData);
     
-    console.log("PagePersona() persona:",  {metadata, defaultMetadata:Persona.getDefaultMetadata(), persona, personaTokenId: persona.get('token_id'), params});
+    console.log("PagePersona() persona:",  {metadata, persona, personaTokenId: persona.get('token_id'), params});
 
     /**
      * Reload Persona Metadata from Chain
@@ -134,16 +136,21 @@ function PagePersona(props) {
             let metadata = await loadMetadata(persona);
             //Log
             console.warn("PagePersona() Freshly Loaded Metadata:", {metadata, persona});
-            //Set State
+            //Validate
+            if(!metadata || typeof metadata !== 'object'){
+                //Fallback to Default Metadata
+                metadata = Persona.getDefaultMetadata();
+                console.warn("[TEST] PagePersona() Faild to load Load Metadata -- Fallback to Default", {metadata, persona});
+            }
+            //Set Metadata to State
             setMetadata( metadata );
         }catch(error){
-            //Log
-            console.error("PagePersona() Error Loading Metadata:", error);
+            console.error("[CAUGHT] PagePersona() Error Loading Metadata:", error);
         }
         //Ready
         setIsLoading(false);
     }//loadmetadata()
-    useEffect(  ()  =>  {
+    useEffect(()  =>  {
         if(isEditMode){
             //When Entering Edit More - Reload Persona from Contract
             loadmetadata();
@@ -151,17 +158,16 @@ function PagePersona(props) {
     },[isEditMode]);
 
     useEffect(() => {
-        /*
-        Moralis.Cloud.run("getPersonas", {})
-        .then(persona => {
-            //Log
-            console.error("getPersonas() Return:", persona);
-        })
-        .catch(function(error) { console.error("[CAUGHT] getPersonas() Error on Cloud Fucntion Call:", {error}); });
-        */
-        
-        /* Did Nothing...
+        /*  Master Key Required
         //[DEV] Schema Stuff        https://parseplatform.org/Parse-SDK-JS/api/2.9.0/Parse.Schema.html
+        const schema = new Moralis.Schema('Persona');
+        console.warn("[DEV] Moralis Persona Schema:", schema);
+        // const options = { required: true, defaultValue: 'hello world' };
+        // schema.addString('TestField', options);
+        schema.addIndex('i_handle', { 'handle': 1 });
+        schema.save();
+
+        /* TODO: Edit Schema
         const schema = new Moralis.Schema('Post');
         console.warn("[DEV] Moralis Schema:", schema);
         const options = { required: true, defaultValue: 'hello world' };
@@ -169,6 +175,9 @@ function PagePersona(props) {
         schema.addIndex('index_name', { 'TestField': 1 });
         schema.save();
         */
+
+        //Get & Set Metadata
+
     },[]);
 
     // const currentuser = Moralis.User.current();
