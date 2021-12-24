@@ -35,7 +35,7 @@ export const IPFS = {
      * Save Image file to IPFS
      * @var object image
      * @ret string imageFile
-     * @ret string URL
+     * @ret String URL
      */
      saveImageToIPFS: async (Moralis, image, fileName="image.png") => {
         // const data = fileInput.files[0]
@@ -46,8 +46,11 @@ export const IPFS = {
         // const jobApplication = new Moralis.Object('Applications')
         // jobApplication.set('resume', file)
 
-        //Save Image to IPFS
-        return await file.saveIPFS();
+        //Save Image to IPFS & Return Parse File
+        // return await file.saveIPFS();
+        await file.saveIPFS();
+        let url = "ipfs://" + file.hash();   //General IPFS Conventional URL
+        return url;
     },//saveImageToIPFS()
     
     /**
