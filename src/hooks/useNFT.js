@@ -76,12 +76,12 @@ export const useNFT = () => {
         }];
 
         //W3 - Fetch Token URI
-        // let options = {
-        //     contractAddress: Persona.getContractAddress(chain),
-        //     abi,
-        //     params: { tokenId:parseObj.get('token_id') },
-        //     functionName: "tokenURI",
-        // };
+        let options = {
+            contractAddress: Persona.getContractAddress(chain),
+            abi,
+            params: { tokenId:parseObj.get('token_id') },
+            functionName: "tokenURI",
+        };
         let options2 = {
             address: Persona.getContractAddress(chain),
             abi,
@@ -92,9 +92,11 @@ export const useNFT = () => {
         try{
             //Fetch Token URI
             // let uri = await Moralis.executeFunction(options);   //From Wallet - Only Current Chain 
-            let uri = await Moralis.Web3API.native.runContractFunction(options2);
+            // let uri = await Moralis.Web3API.native.runContractFunction(options2);
             // console.error("useNFT.updateToken()  Token Data:", {...parseObj.attributes});
-
+            let uri = (chain == chainId)
+                ? await Moralis.executeFunction(options)   //From Wallet - Only Current Chain 
+                : await Moralis.Web3API.native.runContractFunction(options2);   //Through RPC - All Chains
 
             //Validate Response
             if(uri){
