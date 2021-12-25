@@ -280,9 +280,10 @@ function PagePersona(props) {
         }//Remove
         else console.error("[ERROR] handleTabEdit() Invalid Action:'"+action+"'", {targetKey, action});
     }
-    /**
+
+    /** MOVED
      * File Upload Validation
-     */
+     * /
      function beforeUpload(file) {
         //Validations
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/svg+xml';
@@ -296,9 +297,9 @@ function PagePersona(props) {
         return false;   
     }
 
-    /**
+    /** MOVED
      * File Upload
-     */
+     * /
      const handleChangeFile = info => {
         // console.log("[TEST] File Upload handleChangeFile() Status:"+info?.file?.status, info);
         try{
@@ -325,6 +326,7 @@ function PagePersona(props) {
             console.error("[CAUGHT] handleChangeFile() File Upload Error:", error, info);
         }
     }//handleChangeFile()
+    */
 
     //Profile Image
     let image = metadata?.image ? IPFS.resolveLink(metadata.image) : "https://joeschmoe.io/api/v1/random";
@@ -346,7 +348,10 @@ function PagePersona(props) {
                 <div className="secondary framed">
                     <div className="view" style={{display:!isEditMode?'block':'none'}}>
                         <div className="social">
-                            <Skeleton loading={isLoading} active>
+
+                            {isLoading && <Skeleton.Input style={{ width: '100%' }} active size={'100%'} />}
+
+                            <Skeleton loading={isLoading} active style={{minWidth:'160px'}}>
                                 <Collapse accordion>
                                 {metadata?.social && Object.keys(metadata.social).map((network) => {
                                     let handle = metadata.social[network];
@@ -488,37 +493,15 @@ function PagePersona(props) {
                     
                     <div className="details framed">
                         <div className="image">
-
                             {isLoading ? <Skeleton.Avatar active size={size} shape='circle' />
                             : isEditMode 
-                                ? <div className="upload_container" style={{height:size, width:size}}>
-                                    {/* <ImgCrop rotate> TODO (It doesn't save Crop ) */}
-                                    <Upload
-                                        name="avatar"
-                                        // listType="picture-card"
-                                        className="avatar-uploader"
-                                        showUploadList={false}
-                                        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"    //Disabled
-                                        multiple={false}
-                                        beforeUpload={beforeUpload}
-                                        onChange={handleChangeFile}
-                                        style={{position:'relative'}}
-                                        >
-                                        {imageLoading ? <LoadingOutlined /> 
-                                            : imageUrl ? <Avatar size={size} src={IPFS.resolveLink(imageUrl)} />: '' }
-                                        <div className="upload_icons">
-                                            <CameraFilled />
-                                        </div>
-                                    </Upload>
-                                     {/* </ImgCrop> */}
-                                    
-                                    {/* <div className="clearfloat"></div> */}
-                                </div>
+                            ? <AvatarChangable metadata={metadata} setMetadata={updateMetadata} imageUrl={imageUrl} size={size} />
                             : <Avatar size={size} src={IPFS.resolveLink(image)} />
                             }
                         </div>
-                        <Skeleton loading={isLoading} active >
-                            <div className="info">
+                        
+                        <div className="info">
+                            <Skeleton loading={isLoading} active >
                                 <h1 className="name">{metadata?.name || metadata?.firstname+' '+metadata?.lastname}</h1>
                                 {/* <div className="handle">@{metadata?.username}</div> */}
                                 <q className="description">{metadata?.description}</q>
@@ -528,8 +511,8 @@ function PagePersona(props) {
                                         {metadata?.location?.name}
                                     </div>
                                 </div>
-                            </div>
-                        </Skeleton>
+                            </Skeleton>
+                        </div>
                     
                         <div className="actions">
                             {isLoading ? <Skeleton.Button active />
@@ -726,3 +709,90 @@ export default PagePersona;
         </Modal>
     )
 }//AccountAddModal()
+
+
+/**
+ * Component: Avatar Changable Upload
+ */
+ function AvatarChangable(props){
+    const { Moralis } = useMoralis();
+    const [ imageLoading, setImageLoading ] = useState(false);
+    const { metadata, setMetadata, imageUrl, size } = props;
+    const updateMetadata = setMetadata;
+
+    /**
+     * File Upload Validation
+     */
+     function beforeUpload(file) {
+        //Validations
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/svg+xml';
+        if (!isJpgOrPng) message.error('Sorry, only JPG/PNG/GIF files are currently supported');
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) message.error('Image must smaller than 2MB!');
+        // return isJpgOrPng && isLt2M;
+        //Set Loading
+        setImageLoading(true);
+        //Always False - Manual Upload Via handleChangeFile()
+        return false;   
+    }
+
+    /**
+     * File Upload
+     */
+     const handleChangeFile = info => {
+        // console.log("[TEST] File Upload handleChangeFile() Status:"+info?.file?.status, info);
+        try{
+            if (info.file.status === undefined) {
+                // saveImageToIPFS(info.file).then(result => {
+                // IPFS.saveImageToIPFS(Moralis, info.file).then(result => {
+                IPFS.saveImageToIPFS(Moralis, info.file).then(url => {
+                    console.log("[TEST] File Upload handleChangeFile() IPFS Hash:", url);
+                    //Set New Image URL
+                    // setImageUrl(url);
+                    //Set to Metadata
+                    // setMetadata({...metadata, image:url});
+                    updateMetadata({...metadata, image:url});
+                    //Done Loading
+                    setImageLoading(false);
+                });
+            }//Manual Upload
+            else if (info.file.status === 'error') {
+                console.error("handleChangeFile() File Upload Error:", info.file.error, info);
+            }   
+            else console.error("handleChangeFile() File Upload Error -- Unhandled Status:"+info.file.status, info);
+        }catch(error) {
+            //log
+            console.error("[CAUGHT] handleChangeFile() File Upload Error:", error, info);
+        }
+    }//handleChangeFile()
+
+    return (
+        <div className="upload_container" style={{height:size, width:size}}>
+            {/* <ImgCrop rotate> TODO (It doesn't save Crop ) */}
+            <Upload
+                name="avatar"
+                // listType="picture-card"
+                className="avatar-uploader"
+                showUploadList={false}
+                // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"    //Disabled
+                multiple={false}
+                beforeUpload={beforeUpload}
+                onChange={handleChangeFile}
+                style={{position:'relative'}}
+                >
+                {imageLoading ? <div style={{textAlign:'center'}}>
+                        <LoadingOutlined /> 
+                        <br/>
+                        <div className="details">Uploading to IPFS</div>
+                    </div>
+                    : imageUrl ? <Avatar size={size} src={IPFS.resolveLink(imageUrl)} />: '' }
+                <div className="upload_icons">
+                    <CameraFilled />
+                </div>
+            </Upload>
+                {/* </ImgCrop> */}
+            
+            {/* <div className="clearfloat"></div> */}
+        </div>
+    );
+}//AvatarChangable()
