@@ -3,6 +3,7 @@ import { useMoralis } from "react-moralis";
 import { BrowserRouter as Router, Switch, Route, NavLink, Redirect } from "react-router-dom";
 import Account from "components/Account";
 import Chains from "components/Chains";
+import MenuItems from "components/MenuItems";
 // import TokenPrice from "components/TokenPrice";
 import ERC20Balance from "components/ERC20Balance";
 // import ERC20Transfers from "components/ERC20Transfers";
@@ -75,36 +76,7 @@ const App = ({ isServerInfo }) => {
       <Router>
         <Header style={styles.header}>
         <div style={{ display: "flex" }}><Logo /></div>
-		{/*<MenuItems />*/}
-        <Menu
-            theme="light"
-            mode="horizontal"
-            style={{
-              display: "flex",
-              fontSize: "17px",
-              fontWeight: "500",
-              width: "100%",
-              justifyContent: "center",
-            }}
-            // defaultSelectedKeys={["quickstart"]}
-          >
-            <Menu.Item key="nftCollections"><NavLink to="/nftCollections">NFTs</NavLink></Menu.Item>
-            <Menu.Item key="nftCollections2"><NavLink to="/nftCollections/0x9e87f6bd0964300d2bde778b0a6444217d09f3c1">NFTs 2</NavLink></Menu.Item>
-            <Menu.Item key="nftSingle"><NavLink to="/nftSingle/0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656/">nftSingle</NavLink></Menu.Item>
-            {/* <Menu.Item key="room"><NavLink to="/room/bgqJwFMexah0ZqkI3Vu9OW5I/">Room</NavLink></Menu.Item> */}
-            <Menu.Item key="persona"><NavLink to="/toledoroy/">Persona</NavLink></Menu.Item>
-
-
-            {/* <Menu.Item key="quickstart"><NavLink to="/quickstart">? Quick Start</NavLink></Menu.Item> */}
-            <Menu.Item key="wallet"><NavLink to="/wallet">? Wallet</NavLink></Menu.Item>
-            {/* <Menu.Item key="onramp"><NavLink to="/onramp">? Fiat</NavLink></Menu.Item> */}
-            {/* <Menu.Item key="dex"><NavLink to="/1inch">? Dex</NavLink></Menu.Item> */}
-            <Menu.Item key="balances"><NavLink to="/erc20balance">? Balances</NavLink></Menu.Item>
-            {/* <Menu.Item key="transfers"><NavLink to="/erc20transfers">? Transfers</NavLink></Menu.Item> */}
-            <Menu.Item key="nfts"><NavLink to="/nftBalance">? NFTs</NavLink></Menu.Item>
-            <Menu.Item key="contract"><NavLink to="/contract">? Contract</NavLink></Menu.Item>
-          </Menu>
-
+		      <MenuItems />
           <div style={styles.headerRight}>
             <Chains />
             <NativeBalance />
@@ -112,7 +84,7 @@ const App = ({ isServerInfo }) => {
           </div>
         </Header>
         <div className="mainContent">
-          <Skeleton active loading={!isWeb3Enabled}>
+          {/* <Skeleton active loading={!isWeb3Enabled}> */}
             <Switch>
               <Route
                 exact
@@ -159,7 +131,7 @@ const App = ({ isServerInfo }) => {
               <Route exact path="/:handle/" component={PagePersona} />
               <Route path="*"><Page404 /></Route>
             </Switch>
-          </Skeleton>
+          {/* </Skeleton> */}
           {/*<Redirect to="/quickstart" />*/}
           
             
@@ -183,6 +155,7 @@ const App = ({ isServerInfo }) => {
           Built with <a target="_blank" rel="noopener noreferrer" href="https://moralis.io?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplat">Moralis <Logo /></a>
         </Text>
       </Footer>
+
     </Layout>
   );
 };
