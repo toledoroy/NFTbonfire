@@ -33,8 +33,9 @@ const styles = {
   header: {
     position: "fixed",
     zIndex: 100,
-    width: "100%",
-    background: "#fff",
+    // width: "100%",
+    // background: "rgb(255, 255, 255, 0.7)",
+    
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",

@@ -39,7 +39,7 @@ body{
 }
 dt { text-transform: capitalize; }
 .ant-layout-header { z-index: 100;}
-.mainContent{ margin-top: 70px; /* Header Adjustment */ }
+.mainContent{ margin-top: var(--headerHeight); /* Header Adjustment */ }
 footer { margin-top: 40px; }
 /* .mainContent { min-height: 64vh;} */
 
