@@ -1,6 +1,4 @@
 
-
-
 //-- Examples
 
 // Moralis.Cloud.afterSave("Monster", async (request) => {
@@ -10,14 +8,22 @@
 //     }
 // });
   
-
 // Moralis.Cloud.beforeSave('_User', request => {
 //     const user = request.object;
 //     if (!user.get("email")) {
 //       throw "Every user must have an email address.";
 //     }
 // });
-  
+
+/*
+Moralis.Cloud.beforeSubscribe('Post', async request => {
+  logger.warn("[TEST] beforeSubscribe(Post) Running! "+ JSON.stringify(request));
+});
+*/
+
+
+//-- TESTING
+
 Moralis.Cloud.beforeSave('dbSchema', request => {
     
     //TODO: Test This

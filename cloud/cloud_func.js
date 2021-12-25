@@ -105,14 +105,15 @@ const hashByPostId = async (parentId) => {
 });
 
 
-//-- TESTING
-/*
-Moralis.Cloud.beforeSubscribe('Post', async request => {
-  logger.warn("[TEST] beforeSubscribe(Post) Running! "+ JSON.stringify(request));
-});
-*/
-
 /* VOTES */
+
+//-- TESTING
+
+
+
+//-- DEV
+
+
 
 /**
  * Vote on Post 
@@ -120,16 +121,41 @@ Moralis.Cloud.beforeSubscribe('Post', async request => {
  * @var num vote [0/1/-1]
  */
 Moralis.Cloud.define("postVote", async (request) => {  
-  //Log
-  logger.warn("[TEST] postVote() for Current User:"+request.user?.id+" PostId:"+request.params?.postId+" Vote:"+request.params?.vote);
+  
   //Validate
   if(!request?.user?.id) throw "Unauthorized User - Must Log In";
-  //...
+  
+  //Log
+  logger.warn("[TEST] postVote() for Current User:"+request.user?.id+" PostId:"+request.params?.postId+" Vote:"+request.params?.vote);
+
+  //Extract Parameters
+  const { postId, vote } = request.params;
+  //Validate
+  if(!postId || !vote) throw new Error("Missing Request Parameters (postId, vote)");
+
+  /**
+   * TODO: 
+   * - Opinon Add
+   *  - Add Vote to Post
+   *  - Calculate Score
+   *  - Fire Event -> Update User Score
+   * 
+   * - Opinion Change
+   *  - Remove Current Vote
+   *    - Undo Last Vote (Cascade Deletion)
+   *      - Cancel Event
+   *     - Recalculate Post Score
+   *  - Add New Vote
+   *   - ... Recalc
+   * 
+   *  --> Need a vote event & need to connect that event to all Effects
+   */
+
+    //...
+
+
 });
 
-
-
-//-- DEV
 
 const validationRules = request => {
   if (request.master) { return; }
