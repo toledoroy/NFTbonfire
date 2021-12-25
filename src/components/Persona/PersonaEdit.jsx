@@ -45,8 +45,9 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
     // const [ imageUrl, setImageUrl ] = useState(persona.getFallback('image'));
     const [ imageUrl, setImageUrl ] = useState(metadata?.image);
     const [ imageLoading, setImageLoading ] = useState(false);
+
     // const [ isLoading, setIsLoading ] = useState(true);
-    const {isLoading } = props;
+    const { isLoading } = props;
     // const { verifyMetadata, updateToken } = useVerifyMetadata();
 
     const { Moralis, setUserData, userError, isUserUpdating, user, isAuthenticated, account, chainId } = useMoralis();
@@ -77,9 +78,9 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         setImageUrl(props.metadata?.image);
     }, [props.metadata]);
 
-    /**
-     * Form Validation
-     */
+    /** MOVED
+     * File Upload Validation
+     * /
     function beforeUpload(file) {
         //Validations
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/svg+xml';
@@ -93,9 +94,9 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         return false;   
     }
 
-    /**
+    /** MOVED
      * File Upload
-     */
+     * /
     const handleChangeFile = info => {
         // console.log("[TEST] File Upload handleChangeFile() Status:"+info?.file?.status, info);
         try{
@@ -317,8 +318,8 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         {/* <Col xs={24} lg={{ span: 20, offset: 2 }} className="personaEdit"> */}
         <Skeleton active loading={isLoading}>
             {/* <input type="file" id="fileInput" onChange={handleChangeFileEvent}/> */}
+            {/*
             <div style={{width:size, height:size, borderRadius:"50%", overflow:'hidden'}}>
-            {/* <ImgCrop rotate> TODO (It doesn't save Crop ) */}
             <Upload
                 name="avatar"
                 // listType="picture-card"
@@ -337,9 +338,8 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
                         : <div><PlusOutlined /><div style={{ marginTop: 8 }}>Upload</div></div>
                 }
             </Upload>
-            
-            {/* </ImgCrop> */}
             </div>
+            */}
 
             <Form name="personaForm" 
                 id="personaEditForm"

@@ -7,7 +7,7 @@ import { Button, Avatar, Modal, Skeleton } from 'antd';
 import { Collapse, Tabs, Input, Select } from 'antd';
 // import { Form, Space, Cascader } from 'antd';
 // import { Row, Col } from 'antd';
-import { Card, Dropdown, Menu } from 'antd';
+import { Card, Dropdown, Menu, Upload, message } from 'antd';
 import PersonaEdit from "components/Persona/PersonaEdit";
 import Address from "components/Address/Address";
 // import { PersonaHelper } from "helpers/PersonaHelper";
@@ -17,7 +17,7 @@ import { Persona } from "objects/Persona";
 import { IPFS } from "helpers/IPFS";
 import { useNFT } from "hooks/useNFT";
 
-import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
+import { LoadingOutlined, CameraFilled, PlusOutlined, PlusCircleOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 
 import AddressInput from "components/AddressInput";
 import ChainsData from "components/Chains/ChainsData";
@@ -54,6 +54,9 @@ function PagePersona(props) {
     const [ persona, setPersona ] = useState( new Persona() );
     const [ isAddAccModalVisible, setIsAddAccModalVisible ] = useState(false);
     const { fetchMetadata, loadMetadata } = useNFT(); 
+    //File Upload
+    const [ imageUrl, setImageUrl ] = useState(metadata?.image);
+    const [ imageLoading, setImageLoading ] = useState(false);
 
     
     //https://github.com/MoralisWeb3/react-moralis#usemoralisweb3api
@@ -112,9 +115,7 @@ function PagePersona(props) {
 
                     //Reload Metadata
                     if(result.get('metadata')){
-                        setMetadata( result.get('metadata') );
-                        //Done Loading
-                        setIsLoading(false);
+                        updateMetadata( result.get('metadata') );
                         setPersona(result);
                     }
                     else{
@@ -125,9 +126,7 @@ function PagePersona(props) {
                             //Load Fresh Metadata
                             loadMetadata(result).then((freshMetadata) => {
                                 console.warn("[TEST] PagePersona() Loaded Fresh Metadata For:'"+params.handle+"'", {freshMetadata, result});    
-                                setMetadata(freshMetadata);
-                                //Done Loading
-                                setIsLoading(false);
+                                updateMetadata(freshMetadata);
                                 setPersona(result);
                             });
 
@@ -183,13 +182,12 @@ function PagePersona(props) {
                 for(let address of user.get('accounts')){
                     //Add Account
                     metadata.accounts.push({address, chain:chainId});
+                    // metadata.accounts.push({address, chain:'0x1'}); //Default to Ethereum Mainnet?   //Search for Assets?
                 }
                 console.warn("[TEST] PagePersona() Default Accounts:", {user, persona, metadata});
             }//No Metadata
             //Set Metadata to State
-            setMetadata( metadata );
-            //Ready
-            setIsLoading(false);
+            updateMetadata( metadata );
         }catch(error){
             console.error("[CAUGHT] PagePersona() Error Loading Metadata:", error);
         }
@@ -231,6 +229,17 @@ function PagePersona(props) {
     }
 
     /**
+     * Full Metadata Update Procedure
+     * @param {*} metadata 
+     */
+     function updateMetadata(metadata){
+        setMetadata(metadata);
+        setImageUrl(metadata?.image);
+         //Done Loading
+         setIsLoading(false);
+     }//updateMetadata()
+ 
+    /**
      * Tab Close/Add (Add/Remove Account)
      * @param {*} targetKey 
      * @param string action 
@@ -271,7 +280,52 @@ function PagePersona(props) {
         }//Remove
         else console.error("[ERROR] handleTabEdit() Invalid Action:'"+action+"'", {targetKey, action});
     }
-    
+    /**
+     * File Upload Validation
+     */
+     function beforeUpload(file) {
+        //Validations
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/svg+xml';
+        if (!isJpgOrPng) message.error('Sorry, only JPG/PNG/GIF files are currently supported');
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) message.error('Image must smaller than 2MB!');
+        // return isJpgOrPng && isLt2M;
+        //Set Loading
+        setImageLoading(true);
+        //Always False - Manual Upload Via handleChangeFile()
+        return false;   
+    }
+
+    /**
+     * File Upload
+     */
+     const handleChangeFile = info => {
+        // console.log("[TEST] File Upload handleChangeFile() Status:"+info?.file?.status, info);
+        try{
+            if (info.file.status === undefined) {
+                // saveImageToIPFS(info.file).then(result => {
+                // IPFS.saveImageToIPFS(Moralis, info.file).then(result => {
+                IPFS.saveImageToIPFS(Moralis, info.file).then(url => {
+                    console.log("[TEST] File Upload handleChangeFile() IPFS Hash:", url);
+                    //Set New Image URL
+                    // setImageUrl(url);
+                    //Set to Metadata
+                    // setMetadata({...metadata, image:url});
+                    updateMetadata({...metadata, image:url});
+                    //Done Loading
+                    setImageLoading(false);
+                });
+            }//Manual Upload
+            else if (info.file.status === 'error') {
+                console.error("handleChangeFile() File Upload Error:", info.file.error, info);
+            }   
+            else console.error("handleChangeFile() File Upload Error -- Unhandled Status:"+info.file.status, info);
+        }catch(error) {
+            //log
+            console.error("[CAUGHT] handleChangeFile() File Upload Error:", error, info);
+        }
+    }//handleChangeFile()
+
     //Profile Image
     let image = metadata?.image ? IPFS.resolveLink(metadata.image) : "https://joeschmoe.io/api/v1/random";
     let coverImage = metadata?.cover ? metadata.cover : "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
@@ -434,8 +488,34 @@ function PagePersona(props) {
                     
                     <div className="details framed">
                         <div className="image">
+
                             {isLoading ? <Skeleton.Avatar active size={size} shape='circle' />
-                            : <Avatar size={size} src={IPFS.resolveLink(image)} />}
+                            : isEditMode 
+                                ? <div className="upload_container" style={{height:size, width:size}}>
+                                    {/* <ImgCrop rotate> TODO (It doesn't save Crop ) */}
+                                    <Upload
+                                        name="avatar"
+                                        // listType="picture-card"
+                                        className="avatar-uploader"
+                                        showUploadList={false}
+                                        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"    //Disabled
+                                        multiple={false}
+                                        beforeUpload={beforeUpload}
+                                        onChange={handleChangeFile}
+                                        style={{position:'relative'}}
+                                        >
+                                        {imageLoading ? <LoadingOutlined /> 
+                                            : imageUrl ? <Avatar size={size} src={IPFS.resolveLink(imageUrl)} />: '' }
+                                        <div className="upload_icons">
+                                            <CameraFilled />
+                                        </div>
+                                    </Upload>
+                                     {/* </ImgCrop> */}
+                                    
+                                    {/* <div className="clearfloat"></div> */}
+                                </div>
+                            : <Avatar size={size} src={IPFS.resolveLink(image)} />
+                            }
                         </div>
                         <Skeleton loading={isLoading} active >
                             <div className="info">
