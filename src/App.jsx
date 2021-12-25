@@ -31,7 +31,7 @@ import Page404 from "components/Page404";
 const { Header, Footer } = Layout;
 const styles = {
   header: {
-    position: "fixed",
+    // position: "fixed",
     zIndex: 100,
     // width: "100%",
     // background: "rgb(255, 255, 255, 0.7)",
