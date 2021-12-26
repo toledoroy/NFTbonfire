@@ -7,7 +7,7 @@ import { Persona } from "objects/Persona";
 /**
  * Check if User is Allowed to Access a Collection 
  */
-export const useNFT = () => {
+export const usePersona = () => {
      const { Moralis, chainId } = useMoralis();
 
      /**
@@ -18,11 +18,11 @@ export const useNFT = () => {
         // if(parseObj.get('token_id') !== undefined) return await updateToken(parseObj);
         if(parseObj.get('token_id') !== undefined){
             let metadata = await updateToken(parseObj);
-            console.warn("[TEST] useNFT.loadMetadata() Return Extracted Metadata:", metadata)
+            console.warn("[TEST] usePersona.loadMetadata() Return Extracted Metadata:", metadata)
             return metadata;
         }
         else{
-            console.error("[TEST] useNFT.loadMetadata() Missing Token ID:"+parseObj.get('token_id'), {parseObj});
+            console.error("[TEST] usePersona.loadMetadata() Missing Token ID:"+parseObj.get('token_id'), {parseObj});
             return null;
         } 
     }//loadMetadata()
@@ -76,28 +76,28 @@ export const useNFT = () => {
                     //Compare & Update if Needed
                     if(parseObj.get('owner') !== owner) {
                         //Log
-                        console.log("[TEST] useNFT.getOwner() Updating Token Owner", {before:parseObj.get('owner'), after:owner, parseObj})
+                        console.log("[TEST] usePersona.getOwner() Updating Token Owner", {before:parseObj.get('owner'), after:owner, parseObj})
                         //Update Token
                         parseObj.set('owner', owner);
                         //Save
                         parseObj.save().catch(error => {
-                            console.error("useNFT.getOwner() Failed to Save Token to DB:", {error, parseObj});
+                            console.error("usePersona.getOwner() Failed to Save Token to DB:", {error, parseObj});
                         });
                         //Return
                         return owner;
                     }//Different Owner
                     else{
                         //Log
-                        console.log("[TEST] useNFT.getOwner() Owner Up to Date", {parseObj});
+                        console.log("[TEST] usePersona.getOwner() Owner Up to Date", {parseObj});
                         //Same URI - No Change
                         return parseObj.get('owner');
                     } 
                 }
-                else console.error("useNFT.getOwner() Failed to Fetch Token Owner", {owner, parseObj}) 
+                else console.error("usePersona.getOwner() Failed to Fetch Token Owner", {owner, parseObj}) 
             }
             catch(error){
                 //Log
-                console.error("[TEST] useNFT.getOwner() Error", {parseObj, error});
+                console.error("[TEST] usePersona.getOwner() Error", {parseObj, error});
             }
         }
     }//getOwner()
@@ -129,7 +129,7 @@ export const useNFT = () => {
                 if(parseObj.get('token_uri') !== uri) {
                 // if(1 || parseObj.get('token_uri') !== uri || !parseObj.get('metadata')) {    //Always Load New Metadata
                     //Log
-                    console.log("[TEST] useNFT.updateToken() Updating Token URI", {before:parseObj.get('token_uri'), after:uri, parseObj})
+                    console.log("[TEST] usePersona.updateToken() Updating Token URI", {before:parseObj.get('token_uri'), after:uri, parseObj})
                     //Update Token
                     parseObj.set('token_uri', uri);
                     //Update Metadata
@@ -138,23 +138,23 @@ export const useNFT = () => {
                     parseObj.set('metadata', newMetadata);
                     //Save
                     parseObj.save().catch(error => {
-                        console.error("useNFT.updateToken() Failed to Save Token to DB:", {error, parseObj});
+                        console.error("usePersona.updateToken() Failed to Save Token to DB:", {error, parseObj});
                     });
                     //Return
                     return newMetadata;
                 }//Different URI
                 else{
                     //Log
-                    console.log("[TEST] useNFT.updateToken() Metadata URI is Up to Date -- Return Saved Metadata", {parseObj});
+                    console.log("[TEST] usePersona.updateToken() Metadata URI is Up to Date -- Return Saved Metadata", {parseObj});
                     //Same URI - No Change
                     return parseObj.get('metadata');
                 } 
             }
-            else console.error("useNFT.updateToken() Failed to Fetch URI", {uri, parseObj}) 
+            else console.error("usePersona.updateToken() Failed to Fetch URI", {uri, parseObj}) 
         }
         catch(error){
             //Log
-            console.error("[TEST] useNFT.updateToken() Error", {parseObj, error});
+            console.error("[TEST] usePersona.updateToken() Error", {parseObj, error});
         }
     }//updateToken()
 
@@ -166,20 +166,20 @@ export const useNFT = () => {
      async function fetchMetadata(token_uri) {
         //Validate URI
         if(!token_uri || !token_uri.includes('://')){
-            console.log('useNFT.fetchMetadata() Invalid URI', {URI: token_uri});
+            console.log('usePersona.fetchMetadata() Invalid URI', {URI: token_uri});
             return;
         }
         //Get Metadata
         let uri = IPFS.resolveLink(token_uri);
         //Log
-        // console.log('useNFT.fetchMetadata() Running With ', {token_uri, uri});
+        // console.log('usePersona.fetchMetadata() Running With ', {token_uri, uri});
         try{
             let metadata = await fetch(uri).then(res => res.json());
-            if(!metadata) console.error("useNFT.fetchMetadata() No Metadata found on URI:", {uri});
+            if(!metadata) console.error("usePersona.fetchMetadata() No Metadata found on URI:", {uri});
             //Handle Setbacks
             else if(metadata?.detail  && metadata.detail.includes("Request was throttled")){
                 //Log
-                console.warn("useNFT.fetchMetadata() Bad Result for:"+uri+"  Will retry later", {metadata});
+                console.warn("usePersona.fetchMetadata() Bad Result for:"+uri+"  Will retry later", {metadata});
                 //Retry That Again after 1s
                 // setTimeout(function() { fetchMetadata(uri); }, 1000);
                 await new Promise(resolve => setTimeout(resolve, 1000));        //WAIT 1s
@@ -188,17 +188,17 @@ export const useNFT = () => {
             }//Handle Opensea's {detail: "Request was throttled. Expected available in 1 second."}
             else{//No Errors
                 //Log
-                console.log("useNFT.fetchMetadata() New Metadata From"+uri, {metadata});
+                console.log("usePersona.fetchMetadata() New Metadata From"+uri, {metadata});
                 //Return Metadata
                 return metadata;
             }//Valid Result
         }
         catch(error){
             //Log
-            console.error("[CAUGHT] useNFT.updateToken() Error", {error, token_uri});
+            console.error("[CAUGHT] usePersona.updateToken() Error", {error, token_uri});
         }
     }//fetchMetadata()
 
     return { loadMetadata, updateToken, fetchMetadata };
  
-}//useNFT()
+}//usePersona()

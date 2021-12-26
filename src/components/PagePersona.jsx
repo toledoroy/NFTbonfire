@@ -15,7 +15,7 @@ import NFTCollections from "components/NFTCollections";
 import { getChainName, getChainLogo } from "helpers/networks";
 import { Persona } from "objects/Persona";
 import { IPFS } from "helpers/IPFS";
-import { useNFT } from "hooks/useNFT";
+import { usePersona } from "hooks/usePersona";
 
 import { LoadingOutlined, CameraFilled, PlusOutlined, PlusCircleOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 
@@ -53,17 +53,12 @@ function PagePersona(props) {
     const [ isLoading, setIsLoading ] = useState(true);
     const [ persona, setPersona ] = useState( new Persona() );
     const [ isAddAccModalVisible, setIsAddAccModalVisible ] = useState(false);
-    const { fetchMetadata, loadMetadata } = useNFT(); 
+    const { fetchMetadata, loadMetadata } = usePersona(); 
     //File Upload
     const [ imageUrl, setImageUrl ] = useState(metadata?.image);
     const [ imageLoading, setImageLoading ] = useState(false);
 
-    
     //https://github.com/MoralisWeb3/react-moralis#usemoralisweb3api
-    // const { data, error, isLoading } = useMoralisQuery("GameScore"); //Query All
-    // const { data, error, isLoading } = useMoralisQuery("GameScore", query => query.greaterThanOrEqualTo("score", 100).descending("score").limit(limit),);    //Query Some
-    // const { fetch, data, error, isLoading } = useMoralisQuery("GameScore", query => query.greaterThanOrEqualTo("score", 100).descending("score").limit(limit), [], { autoFetch: false },);  //Query Without Auto-Update
-    // const { data, error, isLoading } = useMoralisQuery("GameScore", query => query.greaterThanOrEqualTo("score", 100).descending("score").limit(limit), [limit], { live: true, },);  //Live Query - Update on limit Change
     
     //Cloud Functions
     // const { data, error, isLoading } = useMoralisCloudFunction("topScores", { limit, });
