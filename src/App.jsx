@@ -25,6 +25,7 @@ import Ramper from "components/Ramper";
 import NFTCollections from "components/NFTCollections";
 // import RoomPage from "components/RoomPage";
 import PagePersona from "components/PagePersona";
+import PageAuthenticate from "components/PageAuthenticate";
 import Page404 from "components/Page404";
 
 // lessc "./style.less"
@@ -57,7 +58,8 @@ const App = ({ isServerInfo }) => {
   const { isWeb3Enabled, enableWeb3, isInitialized, isAuthenticated, isWeb3EnableLoading } = useMoralis();
 
   useEffect(() => {
-    if(isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading){
+    // if(isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading){
+    if(!isWeb3Enabled && !isWeb3EnableLoading){
       console.log("(i) App() Running enableWeb3()", {isInitialized, isWeb3Enabled, isWeb3EnableLoading, isAuthenticated})
       enableWeb3();
     } 
@@ -84,7 +86,8 @@ const App = ({ isServerInfo }) => {
           </div>
         </Header>
         <div className="mainContent">
-          {/* <Skeleton active loading={!isWeb3Enabled}> */}
+          {/*<Redirect to="/quickstart" />*/}
+          {/* <Skeleton loading={!isWeb3Enabled}> */}
             <Switch>
               <Route
                 exact
@@ -93,6 +96,7 @@ const App = ({ isServerInfo }) => {
                     return (<Redirect to="/nftCollections" />)
                 }}
               />
+              
               {/* <Route path="/quickstart"><QuickStart isServerInfo={isServerInfo} /></Route> */}
               {/*
               <Route path="/1inch">
@@ -114,27 +118,27 @@ const App = ({ isServerInfo }) => {
               <Route path="/onramp"><Ramper /></Route>
               {/*<Route path="/erc20transfers"><ERC20Transfers /></Route>*/}
               {/*<Route path="/nftBalance/:id" component={NFTBalance} />*/} {/* Breaks Things... */}
-              <Route path="/nftBalance"><NFTBalance /></Route>
+              {/* <Route path="/nftSingle/:hash" component={NFTSingle} /> */}
               <Route path="/nftCollections/:accountHash/:collectionHash/:roomId/:postId" component={NFTCollections} />
               <Route path="/nftCollections/:accountHash/:collectionHash/:roomId" component={NFTCollections} />
               <Route path="/nftCollections/:accountHash/:collectionHash" component={NFTCollections} />
               <Route path="/nftCollections/:accountHash" component={NFTCollections} />
-              <Route path="/nftCollections" component={NFTCollections} />
               <Route path="/nftSingle/:selected" component={NFTCollections} />
+              <Route path="/persona/:chain/:contract/:token_id" component={PagePersona} />
+              <Route exact path="/:handle/" component={PagePersona} />
               
-              {/* <Route path="/nftSingle/:hash" component={NFTSingle} /> */}
+              {!isAuthenticated && <Route path="*" component={PageAuthenticate} />} {/* pages below this point require authentication */}
+
+              <Route path="/nftCollections" component={NFTCollections} />
+              <Route path="/nftBalance"><NFTBalance /></Route>
+
               {/* <Route path="/room/:id" component={RoomPage} /> */}
               
               <Route path="/contract"><Contract /></Route>
-              <Route path="/nonauthenticated"><>Please login using the "Authenticate" button</></Route>
-              <Route path="/persona/:chain/:contract/:token_id" component={PagePersona} />
-              <Route exact path="/:handle/" component={PagePersona} />
+              {/* <Route path="/nonauthenticated"><>Please login using the "Authenticate" button</></Route> */}
               <Route path="*"><Page404 /></Route>
             </Switch>
           {/* </Skeleton> */}
-          {/*<Redirect to="/quickstart" />*/}
-          
-            
         </div>
       </Router>
       
