@@ -125,9 +125,11 @@ const App = ({ isServerInfo }) => {
               <Route path="/nftCollections/:accountHash" component={NFTCollections} />
               <Route path="/nftSingle/:selected" component={NFTCollections} />
               <Route path="/personaToken/:chain/:contract/:token_id" component={PagePersona} />
-              <Route exact path="/:handle/" component={PagePersona} />
-              
-              {!isAuthenticated && <Route path="*" component={PageAuthenticate} />} {/* pages below this point require authentication */}
+
+
+              {/* {!isAuthenticated && <Route path="*" component={PageAuthenticate} />}  */}
+              {/* pages below this point require authentication (CANCELLED) */}
+
 
               <Route path="/nftCollections" component={NFTCollections} />
               <Route path="/nftBalance"><NFTBalance /></Route>
@@ -136,7 +138,8 @@ const App = ({ isServerInfo }) => {
               
               <Route path="/contract"><Contract /></Route>
               {/* <Route path="/nonauthenticated"><>Please login using the "Authenticate" button</></Route> */}
-              <Route path="*"><Page404 /></Route>
+              <Route exact path="/:handle/" component={PagePersona} />  {/* CatchAll */}
+              {/* <Route path="*"><Page404 /></Route> */}
             </Switch>
           {/* </Skeleton> */}
         </div>
