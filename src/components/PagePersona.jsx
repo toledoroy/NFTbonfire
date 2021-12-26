@@ -21,7 +21,8 @@ import { LoadingOutlined, CameraFilled, PlusOutlined, PlusCircleOutlined, Delete
 
 import AddressInput from "components/AddressInput";
 import ChainsData from "components/Chains/ChainsData";
-   
+import Page404 from "components/Page404";
+
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
 
@@ -44,7 +45,7 @@ function PagePersona(props) {
     const { params } = props.match;
     // const { handle } = props.match.params;
     const { handle, chain, contract, token_id } = params;
-    const { Moralis, setUserData, userError, user, chainId } = useMoralis();     //isWeb3Enabled, isUserUpdating
+    const { Moralis, isWeb3Enabled, setUserData, userError, user, chainId } = useMoralis();     //isWeb3Enabled, isUserUpdating
     // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMore ] = useState(false);
     // const [ metadata, setMetadata ] = useState(defaultMetadata);    //Start Empty
@@ -66,21 +67,11 @@ function PagePersona(props) {
       
     // const [form] = Form.useForm();
 
-    //[DEV] Default Persona Data  
-    let personaData = { 
-        chain:'0x4', 
-        address:Persona.getContractAddress('0x4'), 
-        token_id:'1',
-        metadata,
-        debug:"Default Persona Object",
-    };
-    
     useEffect(() => {
-            
-        //Override 1 (Unregistered)
-        if(params.chain && params.contract) {
+        if(!isWeb3Enabled){ console.log("Waiting for W3"); }
+        else if(params.chain && params.contract) {//By (Full) Token Address
             if(params.token_id) {
-                personaData = {
+                let personaData = {
                     chainId: chain,
                     address: contract,
                     tokenId: token_id,
@@ -91,22 +82,18 @@ function PagePersona(props) {
                 console.warn("[TODO] PagePersona() This is a Request for New Persona Token", {params});
             }
         }//Requested: Specific Token
-
-        //Override 2 (Registered)
-        if(params.handle){
-            console.warn("[TEST] PagePersona() Override personaData By Handle:'"+handle+"'", {personaData, params } ); 
+        else if(params.handle){ //By Registered Handle
+            console.warn("[TEST] PagePersona() Get persona By Handle:'"+handle+"'", { params, isWeb3Enabled } ); 
             //Start Loading
             setIsLoading(true);
             //Query
             const query = new Moralis.Query(Persona);
             query.equalTo("handle", handle).find().then((results) => {
             // query.get({handle}).then((results) => {
-                if(results){
+                if(results.length > 0){
                     //Override by handle
                     let result = results[0];
-                    personaData = results[0].attributes;
-                    
-                    // console.warn("[TEST] PagePersona() Results for Handle:"+params.handle, {results, result});    
+                    console.warn("[TEST] PagePersona() Results for Handle:"+params.handle, {results, result, isWeb3Enabled});    
 
                     //Reload Metadata
                     if(result.get('metadata')){
@@ -114,34 +101,46 @@ function PagePersona(props) {
                         setPersona(result);
                     }
                     else{
-
-                        //Validate
-                        // if(result.get('chainId') == chainId){    //Trying to now support cross-chain reads
-
-                            //Load Fresh Metadata
-                            loadMetadata(result).then((freshMetadata) => {
-                                console.warn("[TEST] PagePersona() Loaded Fresh Metadata For:'"+params.handle+"'", {freshMetadata, result});    
-                                updateMetadata(freshMetadata);
-                                setPersona(result);
-                            });
-
-                        // } else console.error("PagePersona() Wrong Network for Persona:'"+params.handle+"' Can't Update", {result, chainId, expected:result.get('chainId')});
+                        //Load Fresh Metadata
+                        loadMetadata(result).then((freshMetadata) => {
+                            console.warn("[TEST] PagePersona() Loaded Fresh Metadata For:'"+params.handle+"'", {freshMetadata, result});    
+                            updateMetadata(freshMetadata);
+                            setPersona(result);
+                        });
                     }//No Metadata
                 }
-                else console.error("PagePersona() No Results for Handle:"+params.handle, {results} );    
+                else{
+                    //Log
+                    console.error("PagePersona() No Results for Handle:"+params.handle, {results, metadata} ); 
+                    //Done Loading
+                    setIsLoading(false);
+                }
             });
         }//Requsted: Handle
+        else{//New Persona
+            try{
+                //[DEV] Default Persona Data  
+                let personaData = { 
+                    chain:'0x4', 
+                    address:Persona.getContractAddress('0x4'), 
+                    // token_id:'1',
+                    metadata: Persona.getDefaultMetadata(),
+                    // owner: user
+                    debug:"Default Persona Object",
+                };
+                //Init Faux Persona
+                const persona = new Persona(personaData);
+                console.log("PagePersona() Started W/Default Persona:",  {user, metadata, personaTokenId: persona?.get('token_id'), params});
+            }
+            catch(error){
+                console.error("PagePersona() Failed Initiating w/New Persona ", {error, params});
+            }
+        }//New Persona
 
         persona && console.log("PagePersona() persona:",  {user, metadata, personaTokenId: persona?.get('token_id'), params});
 
-    },[params]);
+    },[params, isWeb3Enabled]);
 
-    
-    //Init Persona
-    // const persona = new Persona(personaData);
-    // console.log("PagePersona() persona:",  {user, metadata, personaTokenId: persona?.get('token_id'), params});
-    
-    
     useEffect(()  =>  {
         //When Entering Edit More - Reload Persona from Contract
         if(isEditMode){
@@ -329,6 +328,14 @@ function PagePersona(props) {
     // let image = persona.getFallback('image');        //Don't work when Loading ParseObjeect from DB
     // let coverImage = persona.getFallback('cover');
     let size = 200; //Avater Circumference
+    // if(0 && !isLoading && !persona.chain){
+    if(!isLoading && metadata===null){
+        //Log
+        console.warn("Persona Handle Not Found :"+persona.id, {handle, persona, isLoading, metadata});
+        //404 - Persona Not Found
+        return (<Page404 />);
+    }
+    // console.warn("Persona ID:"+persona.id, {persona, isLoading, metadata});
     return (
         <div className="persona">
             
