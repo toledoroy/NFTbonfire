@@ -124,7 +124,7 @@ const App = ({ isServerInfo }) => {
               <Route path="/nftCollections/:accountHash/:collectionHash" component={NFTCollections} />
               <Route path="/nftCollections/:accountHash" component={NFTCollections} />
               <Route path="/nftSingle/:selected" component={NFTCollections} />
-              <Route path="/persona/:chain/:contract/:token_id" component={PagePersona} />
+              <Route path="/personaToken/:chain/:contract/:token_id" component={PagePersona} />
               <Route exact path="/:handle/" component={PagePersona} />
               
               {!isAuthenticated && <Route path="*" component={PageAuthenticate} />} {/* pages below this point require authentication */}
