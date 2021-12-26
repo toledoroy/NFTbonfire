@@ -27,6 +27,81 @@ export const useNFT = () => {
         } 
     }//loadMetadata()
     
+    /** [TEST]
+     * Wrapper for Contract Calls via Moralis 
+     * @param string funcName 
+     * @param object params 
+     * @param {*} chain             [Optional] Default to current chain
+     * @param array abi             [Optional]
+     */
+    async function contractCall(funcName, params, chain, abi){
+        if(!abi) abi = Persona.getABI(chain);   //Default ABI
+        //Validate ABI
+        if(!abi) throw "No Default ABI Found for Chain:"+chain;
+        if(chain===undefined || chain == chainId){//Current Chain
+            let options = {
+                contractAddress: Persona.getContractAddress(chain),
+                abi,
+                params,
+                functionName: funcName,
+            };
+            return Moralis.executeFunction(options);   //From Wallet - Only Current Chain 
+        }
+        else{//Other Chains
+            let options = {
+                address: Persona.getContractAddress(chain),
+                abi,
+                params,
+                function_name: funcName,
+                chain,
+            };
+            return Moralis.Web3API.native.runContractFunction(options);   //Through Server (All Chains)
+        }
+    }//contractCall()
+
+    /**
+     * Fetch Token's Owner Account
+     * @param {*} parseObj 
+     */
+    async function getOwner(parseObj){
+        if(!parseObj.get('owner')){
+            //Token's Chain ID
+            let chain = parseObj.get("chain") || parseObj.get("chainId");
+            //Fetch Token Owner
+            try{
+                //Fetch Token Owner
+                let owner = await this.contractCall('ownerOf', { tokenId: parseObj.get('token_id') }, chain);
+                //Validate Response
+                if(owner){
+                    //Compare & Update if Needed
+                    if(parseObj.get('owner') !== owner) {
+                        //Log
+                        console.log("[TEST] useNFT.getOwner() Updating Token Owner", {before:parseObj.get('owner'), after:owner, parseObj})
+                        //Update Token
+                        parseObj.set('owner', owner);
+                        //Save
+                        parseObj.save().catch(error => {
+                            console.error("useNFT.getOwner() Failed to Save Token to DB:", {error, parseObj});
+                        });
+                        //Return
+                        return owner;
+                    }//Different Owner
+                    else{
+                        //Log
+                        console.log("[TEST] useNFT.getOwner() Owner Up to Date", {parseObj});
+                        //Same URI - No Change
+                        return parseObj.get('owner');
+                    } 
+                }
+                else console.error("useNFT.getOwner() Failed to Fetch Token Owner", {owner, parseObj}) 
+            }
+            catch(error){
+                //Log
+                console.error("[TEST] useNFT.getOwner() Error", {parseObj, error});
+            }
+        }
+    }//getOwner()
+
     /**
      * Update Token 
      *  Fetch from Chain & URI & Metadata (if Needed)
@@ -34,60 +109,20 @@ export const useNFT = () => {
      * @returns object metadata
      */
      async function updateToken(parseObj){
-         //Token's Chain ID
+        //Token's Chain ID
         let chain = parseObj.get("chain") || parseObj.get("chainId");
-        // console.log("[TEST] useNFT.updateToken()  Address:", parseObj.get('address'), Persona.getContractAddress(chain), chain, this);
-        
-        //Validate Current Chain Matches Contract's Chain
-        // if(chain != chainId) throw "Wrong Chain. Current:"+chainId+" needed:"+chain;
+        //ABI
+        // const abi = [{
+        //     "name": "tokenURI",
+        //     "stateMutability": "view",
+        //     "type": "function",
+        //     "inputs": [{"internalType": "uint256", "name": "tokenId", "type": "uint256"}],
+        //     "outputs": [{"internalType": "string", "name": "", "type": "string"}]
+        // }];
 
-        //Fetch ABI
-        // const abi = Persona.getABI(chain);
-        //Validate
-        // if(!abi) throw "No ABI Found for Chain:"+chain;
-        const abi = [{
-            "name": "tokenURI",
-            "stateMutability": "view",
-            "type": "function",
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "tokenId",
-                    "type": "uint256"
-                }
-            ],
-            "outputs": [
-                {
-                    "internalType": "string",
-                    "name": "",
-                    "type": "string"
-                }
-            ]
-        }];
-
-        //W3 - Fetch Token URI
-        let options = {
-            contractAddress: Persona.getContractAddress(chain),
-            abi,
-            params: { tokenId:parseObj.get('token_id') },
-            functionName: "tokenURI",
-        };
-        let options2 = {
-            address: Persona.getContractAddress(chain),
-            abi,
-            params: { tokenId: parseObj.get('token_id') },
-            function_name: "tokenURI",
-            chain,
-        };
         try{
             //Fetch Token URI
-            // let uri = await Moralis.executeFunction(options);   //From Wallet - Only Current Chain 
-            // let uri = await Moralis.Web3API.native.runContractFunction(options2);
-            // console.error("useNFT.updateToken()  Token Data:", {...parseObj.attributes});
-            let uri = (chain == chainId)
-                ? await Moralis.executeFunction(options)   //From Wallet - Only Current Chain 
-                : await Moralis.Web3API.native.runContractFunction(options2);   //Through RPC - All Chains
-
+            let uri = await contractCall('tokenURI', { tokenId: parseObj.get('token_id') }, chain);       //TODO: Try to use this instead
             //Validate Response
             if(uri){
                 //Compare & Update Metadata if Needed
@@ -102,8 +137,7 @@ export const useNFT = () => {
                     //Update Token
                     parseObj.set('metadata', newMetadata);
                     //Save
-                    parseObj.save()
-                    .catch(error => {
+                    parseObj.save().catch(error => {
                         console.error("useNFT.updateToken() Failed to Save Token to DB:", {error, parseObj});
                     });
                     //Return
@@ -120,7 +154,7 @@ export const useNFT = () => {
         }
         catch(error){
             //Log
-            console.error("[TEST] useNFT.updateToken() Error", {options:options2, error});
+            console.error("[TEST] useNFT.updateToken() Error", {parseObj, error});
         }
     }//updateToken()
 
