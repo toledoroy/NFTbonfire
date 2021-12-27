@@ -28,7 +28,7 @@ import { IPFS } from "helpers/IPFS";
     // const image = persona.getFallback('image');
     // const coverImage = persona.getFallback('cover');
     let image = metadata?.image ? IPFS.resolveLink(metadata.image) : "https://joeschmoe.io/api/v1/random";
-    // let coverImage = metadata?.cover ? IPFS.resolveLink(metadata.cover) : "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
+    let coverImage = metadata?.cover ? IPFS.resolveLink(metadata.cover) : "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
     let link = PersonaHelper.getLink(persona);
     /*
     //Initial Metadata State
@@ -57,10 +57,9 @@ import { IPFS } from "helpers/IPFS";
     //Render
     return (
         <div className={className}>
-            <div className="top">
-                <div className="image">
+            <div className="top"  >
+                <div className="image" style={{background:"url("+coverImage+")"}}>
                     <Avatar size={60} src={image} />
-                    
                 </div>
                 <div className="text">
                     <p key="name" className="name">Mr. {metadata?.name}</p>
