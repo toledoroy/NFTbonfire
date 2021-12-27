@@ -45,7 +45,7 @@ function PagePersona(props) {
     const { params } = props.match;
     // const { handle } = props.match.params;
     const { handle, chain, contract, token_id } = params;
-    const { Moralis, isWeb3Enabled, setUserData, userError, user, chainId } = useMoralis();     //isWeb3Enabled, isUserUpdating
+    const { Moralis, isWeb3Enabled, setUserData, userError, user, chainId } = useMoralis();     //isUserUpdating
     // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMore ] = useState(false);
     // const [ metadata, setMetadata ] = useState(defaultMetadata);    //Start Empty
@@ -138,7 +138,6 @@ function PagePersona(props) {
         }//New Persona
 
         persona && console.log("PagePersona() persona:",  {user, metadata, personaTokenId: persona?.get('token_id'), params});
-
     },[params, isWeb3Enabled]);
 
     useEffect(()  =>  {
@@ -324,7 +323,7 @@ function PagePersona(props) {
 
     //Profile Image
     let image = metadata?.image ? IPFS.resolveLink(metadata.image) : "https://joeschmoe.io/api/v1/random";
-    let coverImage = metadata?.cover ? metadata.cover : "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
+    let coverImage = metadata?.cover ? IPFS.resolveLink(metadata.cover) : "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
     // let image = persona.getFallback('image');        //Don't work when Loading ParseObjeect from DB
     // let coverImage = persona.getFallback('cover');
     let size = 200; //Avater Circumference
@@ -338,7 +337,7 @@ function PagePersona(props) {
     // console.warn("Persona ID:"+persona.id, {persona, isLoading, metadata});
     return (
         <div className="persona">
-            
+            {/* <Skeleton loading={!isWeb3Enabled}></Skeleton> */}
             <div className="header">
                 <div className="cover" style={{background:"url("+coverImage+")"}}>
                     {/* <img src={IPFS.resolveLink(coverImage)}/> */}

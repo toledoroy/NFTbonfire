@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { BrowserRouter as Router, Switch, Route, NavLink, Redirect } from "react-router-dom";
-import Account from "components/Account";
+import Account from "components/Account/Account";
 import Chains from "components/Chains";
 import MenuItems from "components/MenuItems";
 // import TokenPrice from "components/TokenPrice";
@@ -119,6 +119,7 @@ const App = ({ isServerInfo }) => {
               {/*<Route path="/erc20transfers"><ERC20Transfers /></Route>*/}
               {/*<Route path="/nftBalance/:id" component={NFTBalance} />*/} {/* Breaks Things... */}
               {/* <Route path="/nftSingle/:hash" component={NFTSingle} /> */}
+              {/* <Route path="/room/:id" component={RoomPage} /> */}
               <Route path="/nftCollections/:accountHash/:collectionHash/:roomId/:postId" component={NFTCollections} />
               <Route path="/nftCollections/:accountHash/:collectionHash/:roomId" component={NFTCollections} />
               <Route path="/nftCollections/:accountHash/:collectionHash" component={NFTCollections} />
@@ -133,12 +134,9 @@ const App = ({ isServerInfo }) => {
 
               <Route path="/nftCollections" component={NFTCollections} />
               <Route path="/nftBalance"><NFTBalance /></Route>
-
-              {/* <Route path="/room/:id" component={RoomPage} /> */}
-              
               <Route path="/contract"><Contract /></Route>
+              <Route exact path="/:handle/" component={PagePersona} />{/* CatchAll */}
               {/* <Route path="/nonauthenticated"><>Please login using the "Authenticate" button</></Route> */}
-              <Route exact path="/:handle/" component={PagePersona} />  {/* CatchAll */}
               {/* <Route path="*"><Page404 /></Route> */}
             </Switch>
           {/* </Skeleton> */}
