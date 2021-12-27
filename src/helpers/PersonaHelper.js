@@ -18,6 +18,15 @@ export const PersonaHelper = {
         }
     },
 
+    /**
+     * Link to Persona
+     */
+    getLink(persona){
+        let handle = persona.get('handle');
+        let pathname = handle ? "/"+handle : "/persona/"+persona.get('chain')+"/"+persona.get('token_address')+"/"+persona.get('token_id');
+        return pathname;
+    }
+
 };//personaHelper{}
 
 export default PersonaHelper;

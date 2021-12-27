@@ -5,6 +5,13 @@
     background: rgb(255, 255, 255, 0.85);
     .ant-menu { background: transparent; border: none; }
 }
+.corner_menu {
+    .persona_select{
+        .item{
+
+        }
+    }
+}
 
 /* Page:Persona */
 .persona {
@@ -91,7 +98,7 @@
         
             } 
             .item:hover .handle,
-            .item:hover i { color: #fff; z-index: 3; position:relative;}
+            .item:hover i { color: var(--monochrome); z-index: 3; position:relative;}
             .item:hover a:after { top: 0; }
             .item:hover i:before { transform: rotate(-180deg); }      
         }
@@ -141,7 +148,7 @@
         flex-grow: 1; border-radius: 12px;
         .ant-tabs-nav-add,
         .ant-tabs-tab {border-radius: 12px 12px 0 0 !important; border:0; }
-        .ant-tabs-content-holder { background: #fff; border-radius: 0 12px 12px 12px; }
+        .ant-tabs-content-holder { background: var(--monochrome); border-radius: 0 12px 12px 12px; }
         .ant-tabs-nav {margin:0; }
     }    
 
@@ -212,7 +219,7 @@
     justify-content: center;
     align-items: center;
     max-width: 220px;
-    background-color: #fff;
+    background-color: var(--monochrome);
     border-radius: 12px;
     /* box-shadow: 0 0 10px #9ecaed; */
     padding: 10px;
@@ -221,9 +228,11 @@
     .top { 
         display: flex; flex-direction: row; justify-content: space-between; 
         .image {
-            background-color: #fff;
+            background-color: var(--monochrome);
             border-radius: 50%;
-            padding: 7px;
+            padding: 4px;
+            position: relative;
+            left: -5px;
         }
     }
 
