@@ -9,6 +9,7 @@ import { SelectOutlined } from "@ant-design/icons";
 import { getExplorer } from "helpers/networks";
 import BusinessCard from "components/Persona/BusinessCard";
 import { Persona } from "objects/Persona";
+import { Link } from "react-router-dom";
 
 import Text from "antd/lib/typography/Text";
 import { connectors } from "./config";
@@ -103,6 +104,10 @@ function Account() {
 
         <Menu.Item key="persona_select">
           <div className="persona_select">
+            {!personas ? <div className="title">No Personas</div> : <div className="title">Personas</div>}
+            {!personas && <p className="add">
+              <Link key="link" to={{ pathname:'/persona' }} className="inner flex">Mint New Persona</Link>
+              </p>}
             {personas.map((persona, index) => (<BusinessCard key={index} persona={persona} className="item"/>))}
           </div>
         </Menu.Item>
