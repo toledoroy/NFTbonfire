@@ -45,7 +45,7 @@ function PagePersona(props) {
     const { params } = props.match;
     // const { handle } = props.match.params;
     const { handle, chain, contract, token_id } = params;
-    const { Moralis, isWeb3Enabled, setUserData, userError, user, chainId } = useMoralis();     //isUserUpdating
+    const { Moralis, isWeb3Enabled, isAuthenticated, setUserData, userError, user, chainId } = useMoralis();     //isUserUpdating
     // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMore ] = useState(false);
     // const [ metadata, setMetadata ] = useState(defaultMetadata);    //Start Empty
@@ -118,23 +118,10 @@ function PagePersona(props) {
             });
         }//Requsted: Handle
         else{//New Persona
-            try{
-                //[DEV] Default Persona Data  
-                let personaData = { 
-                    chain:'0x4', 
-                    address:Persona.getContractAddress('0x4'), 
-                    // token_id:'1',
-                    metadata: Persona.getDefaultMetadata(),
-                    // owner: user
-                    debug:"Default Persona Object",
-                };
-                //Init Faux Persona
-                const persona = new Persona(personaData);
-                console.log("PagePersona() Started W/Default Persona:",  {user, metadata, personaTokenId: persona?.get('token_id'), params});
-            }
-            catch(error){
-                console.error("PagePersona() Failed Initiating w/New Persona ", {error, params});
-            }
+            //Validate Authenticated User
+            isAuthenticated && initNewPersona();
+            //Ready
+            setIsLoading(false);
         }//New Persona
 
         persona && console.log("PagePersona() persona:",  {user, metadata, personaTokenId: persona?.get('token_id'), params});
@@ -147,6 +134,48 @@ function PagePersona(props) {
             else console.error("PagePersona() No Persona", persona);
         } 
     },[isEditMode]);
+    const loadDefaultMetadata = async () => {
+        let defaultMetadata = Persona.getDefaultMetadata();
+        //Default Accounts
+        for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
+        console.warn("[TEST] PagePersona.loadDefaultMetadata() Added Default Accounts:", {user, persona, metadata});
+
+        //Set
+        updateMetadata(defaultMetadata);
+        console.log("PagePersona.loadDefaultMetadata() Loaded Default Metadata",  {defaultMetadata, metadata, params});
+    };
+    /**
+     * Init New Persona
+     */
+    const initNewPersona = async () => {
+        try{
+            const contractAddr = Persona.getContractAddress(chainId);
+            //Validate
+            if(!contractAddr) throw "No Persona Contract on Chain:"+chainId+"";
+
+            //[DEV] Default Persona Data  
+            let personaData = { 
+                // chain:'0x4', 
+                chain:chainId, 
+                // address:Persona.getContractAddress('0x4'), 
+                address: contractAddr,
+                // token_id:'1',
+                // metadata: Persona.getDefaultMetadata(),
+                owner: user,
+                debug:"Default Persona Object",
+            };
+            //Init Faux Persona
+            const persona = new Persona(personaData);
+            setPersona(persona);
+            //Load Default Metadata
+            loadDefaultMetadata();
+            
+            console.log("PagePersona.initNewPersona() New Persona w/Default Metadata",  {persona, user, metadata, params});
+        }
+        catch(error){
+            console.error("PagePersona.initNewPersona() Failed Initiating w/New Persona ", {error, params});
+        }
+    };//initNewPersona
     /**
      * Reload Persona Metadata from Chain
      */
@@ -162,6 +191,7 @@ function PagePersona(props) {
             let metadata = await loadMetadata(persona);
             //Log
             console.warn("PagePersona() Freshly Loaded Metadata:", {metadata, persona});
+            
             //Validate
             if(!metadata || typeof metadata !== 'object'){
                 /*
@@ -172,13 +202,10 @@ function PagePersona(props) {
                 //Init Metadata
                 metadata = { social:{}, accounts:[] };
                 //Default to Current User Addresses
-                for(let address of user.get('accounts')){
-                    //Add Account
-                    metadata.accounts.push({address, chain:chainId});
-                    // metadata.accounts.push({address, chain:'0x1'}); //Default to Ethereum Mainnet?   //Search for Assets?
-                }
-                console.warn("[TEST] PagePersona() Default Accounts:", {user, persona, metadata});
+                for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
+                console.warn("[TEST] PagePersona() Added Default Accounts:", {user, persona, metadata});
             }//No Metadata
+
             //Set Metadata to State
             updateMetadata( metadata );
         }catch(error){
