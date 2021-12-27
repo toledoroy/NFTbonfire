@@ -109,7 +109,7 @@ function PagePersona(props) {
                         });
                     }//No Metadata
                 }
-                else{
+                else{//404
                     //Log
                     console.error("PagePersona() No Results for Handle:"+params.handle, {results, metadata} ); 
                     //Done Loading
