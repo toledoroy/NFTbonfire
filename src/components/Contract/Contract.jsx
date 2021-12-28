@@ -5,6 +5,7 @@ import Address from "components/Address/Address";
 import { useMoralis, useMoralisQuery } from "react-moralis";
 import { getEllipsisTxt } from "helpers/formatters";
 import { useEffect } from "react";
+// import { Contract } from "objects/objects";
 
 // import contractInfo from "contracts/contractInfo.json";
 //Persona ABI
@@ -12,8 +13,29 @@ import { useEffect } from "react";
 const personaABI = require('contracts/abi/PERSONA.json');
 
 
-//Flat Instance
-const personaContract = { 
+const { Text } = Typography;
+
+export default function Contract() {
+  const { Moralis, chainId } = useMoralis();
+  const [responses, setResponses] = useState({});
+  const [allContracts, setAllContracts] = useState([]);
+  const [contract, setContract] = useState(null);
+
+  useEffect(async () => {
+    const query = new Moralis.Query("Contract");
+    query.equalTo("chain", chainId);
+    // query.equalTo("address", address);
+    const results = await query.find();
+    setAllContracts(results);
+    //Default to First
+    if(results.length) setContract(results[0]);
+    else setContract(null); //Unset Current Contract
+  },[chainId]);
+  //TODO: use contract State Instead of hardcoded Stuff
+
+  
+  //Flat Instance
+  const personaContract = { 
     address: '0x9E91a8dDF365622771312bD859A2B0063097ad34', 
     chain:4,
     abi: personaABI,
@@ -28,15 +50,8 @@ const personaContract = {
       }
     },
     */
-};
-console.log("Contract() Perosna Contract:", personaContract);
-
-const { Text } = Typography;
-
-export default function Contract() {
-  const { Moralis } = useMoralis();
-  const [responses, setResponses] = useState({});
-
+  };
+  console.log("Contract() Perosna Contract:", personaContract);
   // const { contractName, networks, abi } = contractInfo;
   const contractAddress = personaContract.address;
   const abi = personaContract.abi;
@@ -45,6 +60,7 @@ export default function Contract() {
   // const contractAddress = '0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656';
   // let contractName = 'OpenSea Collections';
   // let abi = Moralis.Web3.abis.erc1155;
+
 
   /**Live query */
   const { data } = useMoralisQuery("Events", (query) => query, [], {live: true,});
