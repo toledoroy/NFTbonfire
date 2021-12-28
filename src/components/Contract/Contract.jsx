@@ -7,55 +7,59 @@ import { getEllipsisTxt } from "helpers/formatters";
 import { useEffect } from "react";
 // import { Contract } from "objects/objects";
 
+const { Text } = Typography;
+
+
 // import contractInfo from "contracts/contractInfo.json";
 //Persona ABI
 // import personaABI from "contracts/abi/PERSONA.json";
-const personaABI = require('contracts/abi/PERSONA.json');
+// const personaABI = require('contracts/abi/PERSONA.json');
+//Flat Instance
+// const personaContract = { 
+//   address: '0x9E91a8dDF365622771312bD859A2B0063097ad34', 
+//   chain:4,
+//   abi: personaABI,
+//   name:'PERSONA',
+// };
 
-
-const { Text } = Typography;
 
 export default function Contract() {
-  const { Moralis, chainId } = useMoralis();
+  const { Moralis, chainId, isWeb3Enabled } = useMoralis();
   const [responses, setResponses] = useState({});
   const [allContracts, setAllContracts] = useState([]);
-  const [contract, setContract] = useState(null);
+  const [contract, setContractActual] = useState(null);
+  // const [contract, setContractActual] = useState(personaContract);  //Testing
+
+  //Set Contract Wrapper
+  const setContract = (contract) => {
+    //Resolve ABI
+    if(typeof contract.abi == 'string') contract.abi = JSON.parse(contract.abi);
+    setContractActual(contract);
+  }
 
   useEffect(async () => {
-    const query = new Moralis.Query("Contract");
-    query.equalTo("chain", chainId);
-    // query.equalTo("address", address);
-    const results = await query.find();
-    setAllContracts(results);
-    //Default to First
-    if(results.length) setContract(results[0]);
-    else setContract(null); //Unset Current Contract
-  },[chainId]);
+    console.error('Running Contract Query', {isWeb3Enabled})
+    if(isWeb3Enabled){
+      const query = new Moralis.Query("Contract");
+      query.equalTo("chain", chainId);
+      // query.equalTo("address", address);
+      const results = await query.find();
+      setAllContracts(results);
+      console.error('All Contracts:', {results})
+
+      //Default to First
+      if(results.length) setContract({...results[0].attributes});
+      else setContract(null); //Unset Current Contract
+    }
+  },[chainId, isWeb3Enabled]);
   //TODO: use contract State Instead of hardcoded Stuff
 
   
-  //Flat Instance
-  const personaContract = { 
-    address: '0x9E91a8dDF365622771312bD859A2B0063097ad34', 
-    chain:4,
-    abi: personaABI,
-    name:'PERSONA',
-    /*
-    "networks": {
-      "4": {
-        // "events": {},
-        // "links": { "ConvertLib": "0x" },
-        "address": "0x9E91a8dDF365622771312bD859A2B0063097ad34",
-        // "transactionHash": "0x"
-      }
-    },
-    */
-  };
-  console.log("Contract() Perosna Contract:", personaContract);
+  // console.log("Contract() Perosna Contract:", personaContract);
   // const { contractName, networks, abi } = contractInfo;
-  const contractAddress = personaContract.address;
-  const abi = personaContract.abi;
-  const contractName = personaContract.name;
+  // const contractAddress = personaContract.address;
+  // const abi = personaContract.abi;
+  // const contractName = personaContract.name;
   // const contractAddress = networks[1337].address;
   // const contractAddress = '0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656';
   // let contractName = 'OpenSea Collections';
@@ -67,9 +71,10 @@ export default function Contract() {
 
 
   const displayedContractFunctions = useMemo(() => {
-    if (!abi) return [];
-    return abi.filter((method) => method["type"] === "function");
-  }, [abi]);
+    if (!contract?.abi) return [];
+    return contract.abi.filter((method) => method["type"] === "function");
+  // }, [abi]);
+  }, [contract]);
 
   const openNotification = ({ message, description }) => {
     notification.open({
@@ -81,6 +86,7 @@ export default function Contract() {
       },
     });
   };
+  if(!contract) return (<h2>No Contract Selected</h2>);
 
   return (
     <div style={{ margin: "auto", display: "flex", gap: "20px", marginTop: "25", width: "70vw" }}>
@@ -98,8 +104,9 @@ export default function Contract() {
       <Card
         title={
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            Your contract: {contractName}
-            <Address avatar="left" copyable address={contractAddress} size={8} />
+            {/* Your contract: {contractName} */}
+            {contract?.name && <span>Your contract: {contract.name}</span>}
+            <Address avatar="left" copyable address={contract.address} size={8} />
           </div>
         }
         size="large"
@@ -116,15 +123,17 @@ export default function Contract() {
 
             let isView = false;
 
-            for (let method of abi) {
+            // for (let method of abi) {
+            for (let method of contract.abi) {
               if (method.name !== name) continue;
               if (method.stateMutability === "view") isView = true;
             }
 
             const options = {
-              contractAddress,
+              contractAddress: contract.address,
               functionName: name,
-              abi,
+              // abi,
+              abi: contract.abi,
               params,
             };
 
@@ -172,14 +181,15 @@ export default function Contract() {
                       required
                       style={{ marginBottom: "15px" }}
                     >
-                      <Input placeholder={`${input.name} (${input.type})`} />
+                      {/* <Input placeholder={`${input.name} (${input.type})`} /> */}
+                      <Input placeholder={input.type} />
                     </Form.Item>
                   ))}
                   
                   <Form.Item style={{ marginBottom: "5px" }}>
                     <Text style={{ display: "block" }}>{responses[item.name]?.result && `Response: ${JSON.stringify(responses[item.name]?.result)}`}</Text>
                     <Button type="primary" htmlType="submit" loading={responses[item?.name]?.isLoading}>
-                      {item.stateMutability === "view" ? "Read?" : "Transact?"}
+                      {item.stateMutability === "view" ? "Read" : "Transact"}
                     </Button>
                   </Form.Item>
 
