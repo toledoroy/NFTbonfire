@@ -52,6 +52,7 @@ const styles = {
 function Account() {
   const { Moralis, authenticate, isAuthenticated, account, chainId, logout, web3 } = useMoralis();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);
   const [lastAccount, setLastAccount] = useState(account);  //Remember Last Account
   const [personas, setPersonas] = useState([]);
 
@@ -78,9 +79,50 @@ function Account() {
 
   if (!isAuthenticated) {
     return (
-      <div style={styles.account} onClick={() => authenticate({ signingMessage: "Sign in" })}>
-        <p style={styles.text}>Authenticate</p>
-      </div>
+      <>
+        <div style={styles.account} 
+          onClick={() => authenticate({ signingMessage: "Sign in" })}
+          //onClick={() => setIsAuthModalVisible(true)}
+          >
+          <p style={styles.text}>Authenticate</p>
+        </div>
+        <Modal
+          visible={isAuthModalVisible}
+          footer={null}
+          onCancel={() => setIsAuthModalVisible(false)}
+          bodyStyle={{
+            padding: "15px",
+            fontSize: "17px",
+            fontWeight: "500",
+          }}
+          style={{ fontSize: "16px", fontWeight: "500" }}
+          width="340px"
+        >
+          <div style={{ padding: "10px", display: "flex", justifyContent: "center", fontWeight: "700", fontSize: "20px" }}>
+            Connect Wallet
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+            {connectors.map(({ title, icon, connectorId }, key) => (
+              <div
+                style={styles.connector}
+                key={key}
+                onClick={async () => {
+                  try {
+                    await authenticate({ provider: connectorId });
+                    window.localStorage.setItem("connectorId", connectorId);
+                    setIsAuthModalVisible(false);
+                  } catch (e) {
+                    console.error(e);
+                  }
+                }}
+              >
+                <img src={icon} alt={title} style={styles.icon} />
+                <Text style={{ fontSize: "14px" }}>{title}</Text>
+              </div>
+            ))}
+          </div>
+        </Modal>
+      </>
     );
   }
 
