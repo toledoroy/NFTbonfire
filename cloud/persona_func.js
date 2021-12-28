@@ -52,7 +52,7 @@ const resolveLink = (url) => (!url || !url.includes("ipfs://")) ? url : url.repl
 };//getABI()
   
 /**
- * Get the Owner of a Token
+ * Get the Token Owner
  * @param {*} chain 
  * @param {*} contract 
  * @param {*} tokenId 
@@ -82,7 +82,7 @@ const getTokenOwner = async (chain, contract, tokenId) => {
 };
 
 /**
- * Get the Owner of a Token
+ * Get the Token URI
  * @param {*} chain 
  * @param {*} contract 
  * @param {*} tokenId 
