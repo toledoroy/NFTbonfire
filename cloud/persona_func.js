@@ -6,6 +6,10 @@ const Persona = Moralis.Object.extend("Persona");
 const Contract = Moralis.Object.extend("Contract");
 
 //-- Helper Functions
+/**
+ * Resolve IPFS Links
+ */
+const resolveLink = (url) => (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/"); 
 
 /**
  * Check if User Owns NFT
@@ -185,11 +189,16 @@ const cachePersona = async (chain, contract, tokenId) => {
 
 //-- TESTING
 
+/**
+ * Fetch Metadata From URI
+ * @param string uri 
+ * @returns object
+ */
 const fetchMetadata = async (uri) => {
   //Validate URI
   if(!token_uri || !token_uri.includes('://'))throw new Error("Invalid URI:'"+uri+"'");
   //Fetch
-  let metadata = await fetch(uri).then(res => res.json());
+  let metadata = await fetch(resolveLink(uri)).then(res => res.json());
   //Validate
   if(!metadata) throw new Error("fetchMetadata() No Metadata found on URI:'"+uri+"'");
   //Return
@@ -201,7 +210,7 @@ const fetchMetadata = async (uri) => {
  * @param {*} personaId 
  * @returns object metadata
  */
-Moralis.Cloud.define("personaMetadataUpdate", async (request) => {
+Moralis.Cloud.define("personaMetadata", async (request) => {
   // const { contract, token_id, chain } = request.params;
   //Validate Parameters
   // if(!contract || !token_id || !chain) throw new Error("Missing Parameters (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"')");
@@ -226,16 +235,17 @@ Moralis.Cloud.define("personaMetadataUpdate", async (request) => {
       //Save
       await persona.save({token_uri, metadata}, {useMasterKey: true});
       //Log
-      logger.log("[i] personaMetadataUpdate() Updated Metadata for Persona:'"+personaId+"'" );
+      logger.log("[i] personaMetadata() Updated Metadata for Persona:'"+personaId+"'" );
       //Return
       return metadata;
     }
-    else logger.log("[i] personaMetadataUpdate() URI Up to date -- No Update Needed for Persona:'"+personaId+"'" );
+    else logger.log("[i] personaMetadata() URI Up to date -- No Update Needed for Persona:'"+personaId+"'" );
     //Return new Persona Object
     return persona.get('metadata');
   // };
   
-});
+});//personaMetadata() 
+
 /**
  * Un-Register Persona from Network
  */

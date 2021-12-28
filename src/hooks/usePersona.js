@@ -127,7 +127,9 @@ export const usePersona = () => {
             if(uri){
                 //Compare & Update Metadata if Needed
                 if(parseObj.get('token_uri') !== uri) {
-                // if(1 || parseObj.get('token_uri') !== uri || !parseObj.get('metadata')) {    //Always Load New Metadata
+                    let newMetadata = await Moralis.Cloud.run("personaMetadata", parseObj.id);
+                    
+                    /* MOVED ServerSide
                     //Log
                     console.log("[TEST] usePersona.updateToken() Updating Token URI", {before:parseObj.get('token_uri'), after:uri, parseObj})
                     //Update Token
@@ -140,6 +142,8 @@ export const usePersona = () => {
                     parseObj.save().catch(error => {
                         console.error("usePersona.updateToken() Failed to Save Token to DB:", {error, parseObj});
                     });
+                    */
+
                     //Return
                     return newMetadata;
                 }//Different URI

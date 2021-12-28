@@ -5,11 +5,7 @@
 //Export IPFS Helper
 export const IPFS = {
     
-    resolveLink(url){
-        if (!url || !url.includes("ipfs://")) return url;
-        return url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/");
-    },
-    
+    resolveLink(url){ return (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/"); },
 
     /** ...Needs Moralis...
      * Save JSON File to IPFS
