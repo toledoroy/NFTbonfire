@@ -145,7 +145,7 @@ const cachePersona = async (chain, contract, tokenId) => {
 /**
  * Register Persona to Network
  */
- Moralis.Cloud.define("personaRegister", async (request) => {  
+ Moralis.Cloud.define("personaRegister", async (request) => {
   const { handle, contract, token_id, chain } = request.params;
   //Validate Parameters
   if(!handle || !contract || !token_id || !chain) throw new Error("Missing Parameters (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"')");
@@ -185,6 +185,57 @@ const cachePersona = async (chain, contract, tokenId) => {
 
 //-- TESTING
 
+const fetchMetadata = async (uri) => {
+  //Validate URI
+  if(!token_uri || !token_uri.includes('://'))throw new Error("Invalid URI:'"+uri+"'");
+  //Fetch
+  let metadata = await fetch(uri).then(res => res.json());
+  //Validate
+  if(!metadata) throw new Error("fetchMetadata() No Metadata found on URI:'"+uri+"'");
+  //Return
+  return metadata;
+};//fetchMetadata
+
+/**
+ * Update Persona Metadata
+ * @param {*} personaId 
+ * @returns object metadata
+ */
+Moralis.Cloud.define("personaMetadataUpdate", async (request) => {
+  // const { contract, token_id, chain } = request.params;
+  //Validate Parameters
+  // if(!contract || !token_id || !chain) throw new Error("Missing Parameters (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"')");
+
+  const { personaId } = request.params;
+  //Validate Parameters
+  if(!personaId) throw new Error("Missing Parameters (personaId:'"+personaId+"')");
+  const query = new Moralis.Query(Persona);
+  let persona = await query.get(personaId,  {useMasterKey: true});
+  if(!persona) throw new Error("Failed to Load Persona:"+personaId);
+  const {chain, address:contract, token_id:tokenId} = persona.attributes; 
+  // const cachePersona = async (chain, contract, tokenId) => {
+    //Validate
+    if(!chain || !contract || !tokenId) throw new Error("Missing Data on Persona:"+personaId+" -- Address:"+contract+" Chain:"+chain+" token_id:"+tokenId);
+    //Fetch Token Owner
+    // let owner = await getTokenOwner(chain, contract, tokenId);
+    let token_uri = await getTokenURI(chain, contract, tokenId);
+    //Validate
+    if(persona.get('token_uri') != token_uri){
+      //Fetch Metadata
+      let metadata = fetchMetadata(token_uri);
+      //Save
+      await persona.save({token_uri, metadata}, {useMasterKey: true});
+      //Log
+      logger.log("[i] personaMetadataUpdate() Updated Metadata for Persona:'"+personaId+"'" );
+      //Return
+      return metadata;
+    }
+    else logger.log("[i] personaMetadataUpdate() URI Up to date -- No Update Needed for Persona:'"+personaId+"'" );
+    //Return new Persona Object
+    return persona.get('metadata');
+  // };
+  
+});
 /**
  * Un-Register Persona from Network
  */
