@@ -1,4 +1,4 @@
-import { Button, Card, Input, Typography, Form, notification } from "antd";
+import { Button, Card, Input, Typography, Form, notification, Select } from "antd";
 import { useMemo, useState } from "react";
 
 import Address from "components/Address/Address";
@@ -84,6 +84,17 @@ export default function Contract() {
 
   return (
     <div style={{ margin: "auto", display: "flex", gap: "20px", marginTop: "25", width: "70vw" }}>
+      <div>
+        
+      <Select mode="tags" label="Contract" name="contract"
+        onChange={(item) => { console.warn("Selected Item:", item); }}
+        >
+          {allContracts.map((item, index) => ( 
+            <Select.Option key={index}>Contract: {item?.get('name')}</Select.Option>
+          ))}
+      </Select>
+      </div>
+
       <Card
         title={
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
