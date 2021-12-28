@@ -238,16 +238,6 @@ function PagePersona(props) {
     }
     */
     
-    //[DEV] - Test Func.
-    // const updatUserData = () => {
-    function updatUserData(data){
-        // setUserData({metadata, persona});        //Try This (As a Metadata Object)
-        // setUserData(metadata);
-        // setUserData({persona:{metadata, chainId:4, address:'0x000000000000000000000000000000000000000', id:'1' }});        //Too Much...?
-        // getPersonas
-        setUserData({handle:'RandomNewHandle'});
-    }
-
     /**
      * Full Metadata Update Procedure
      * @param {*} metadata 
@@ -261,23 +251,13 @@ function PagePersona(props) {
  
     /**
      * Tab Close/Add (Add/Remove Account)
-     * @param {*} targetKey 
+     * @param string targetKey 
      * @param string action 
      */
     function handleTabEdit(targetKey, action){
         if(action === 'add'){
-
-            // AccountAddModal
-            // const [isAddAccModalVisible, setIsAddAccModalVisible] = useState(false);
+            //Show AccountAddModal
             setIsAddAccModalVisible(true);
-            /* MOVED TO MODAL
-            let newAccount = {
-                // "address": "0xxxx",
-                // "chain": "0x1",
-            };
-            if(metadata?.accounts) setMetadata({...metadata, accounts:[ ...metadata.accounts, newAccount ]});
-            else setMetadata({...metadata, accounts:[ newAccount ]});   //First Account
-            */
         }//Add
         else if(action === 'remove'){
             const data = targetKey.split(":");
@@ -299,54 +279,7 @@ function PagePersona(props) {
             setMetadata({...metadata, accounts});
         }//Remove
         else console.error("[ERROR] handleTabEdit() Invalid Action:'"+action+"'", {targetKey, action});
-    }
-
-    /** MOVED
-     * File Upload Validation
-     * /
-     function beforeUpload(file) {
-        //Validations
-        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/svg+xml';
-        if (!isJpgOrPng) message.error('Sorry, only JPG/PNG/GIF files are currently supported');
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isLt2M) message.error('Image must smaller than 2MB!');
-        // return isJpgOrPng && isLt2M;
-        //Set Loading
-        setImageLoading(true);
-        //Always False - Manual Upload Via handleChangeFile()
-        return false;   
-    }
-
-    /** MOVED
-     * File Upload
-     * /
-     const handleChangeFile = info => {
-        // console.log("[TEST] File Upload handleChangeFile() Status:"+info?.file?.status, info);
-        try{
-            if (info.file.status === undefined) {
-                // saveImageToIPFS(info.file).then(result => {
-                // IPFS.saveImageToIPFS(Moralis, info.file).then(result => {
-                IPFS.saveImageToIPFS(Moralis, info.file).then(url => {
-                    console.log("[TEST] File Upload handleChangeFile() IPFS Hash:", url);
-                    //Set New Image URL
-                    // setImageUrl(url);
-                    //Set to Metadata
-                    // setMetadata({...metadata, image:url});
-                    updateMetadata({...metadata, image:url});
-                    //Done Loading
-                    setImageLoading(false);
-                });
-            }//Manual Upload
-            else if (info.file.status === 'error') {
-                console.error("handleChangeFile() File Upload Error:", info.file.error, info);
-            }   
-            else console.error("handleChangeFile() File Upload Error -- Unhandled Status:"+info.file.status, info);
-        }catch(error) {
-            //log
-            console.error("[CAUGHT] handleChangeFile() File Upload Error:", error, info);
-        }
-    }//handleChangeFile()
-    */
+    }//handleTabEdit()
 
     //Profile Image
     let image = metadata?.image ? IPFS.resolveLink(metadata.image) : "https://joeschmoe.io/api/v1/random";
@@ -614,12 +547,6 @@ function PagePersona(props) {
             
             {userError && <p>{userError.message}</p>}
             
-            {/* <h2>{room.get('name')} <FireTwoTone /> (For NFT Collection: {collection?.name})</h2> */}
-            {/* {room.get('description') && <h3>{room.get('description')}</h3>} */}
-            {/* <p key="addr">Addr:{collection?.token_address}</p> */}
-            {/* <p key="type">Type: {collection?.contract_type}</p> */}
-            {/* <p key="symbol">Symbol: {collection?.symbol}</p> */}
-            {/* TODO: Add Field: Creator, Total No. of Items, */}
             {/* 
                 onClick={() => setUserData({
                     username: "Batman",
@@ -627,23 +554,24 @@ function PagePersona(props) {
                     numberOfCats: 1,
                     handle: 'toledoroy',
                 })}
-            <button onClick={updatUserData} disabled={isUserUpdating}>[DEV] Update User Details</button>
+            <button onClick={() => { setUserData({handle:'RandomNewHandle'}); }} disabled={isUserUpdating}>[DEV] Update User Details</button>
             */}
-            
-            <button onClick={()=>{
-                let data = {
-                    chainId: '0x4',
-                    address: contract,
-                    tokenId: 1,
-                    handle:'toledoroy',
-                };
-                // const Persona = Moralis.Object.extend("Persona", {}, {});
-                let thisPersona = new Persona( data );
-                Persona.register(data);
-                console.log("[TEST] ThisPersona:", {data, thisPersona});
-                // thisPersona.save();
-            }}>TEST BUTTON</button>
                 
+            <button onClick={ async () => {
+                let params = {
+                    chain:'0x4',
+                    contract:'0x9E91a8dDF365622771312bD859A2B0063097ad34',
+                    token_id: 2,
+                    handle:'toledoroy2',
+                };
+                try{
+                    const result = await Moralis.Cloud.run("personaRegister", params);
+                    console.log("[TEST] personaRegister Result:", result);
+                }catch(e){ console.error("[TEST] personaRegister Error:", e); }
+
+            }}>[TEST] personaRegister</button>
+
+            
         </div>
     );
 }//PagePersona()

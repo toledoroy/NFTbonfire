@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-/**
+
+/** [WIP]
  * Check if User is Allowed to Access a Collection 
  */
 export const useIsAllowed = () => {
