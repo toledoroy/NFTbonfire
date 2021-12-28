@@ -126,7 +126,7 @@ export const usePersona = () => {
             //Validate Response
             if(uri){
                 //Compare & Update Metadata if Needed
-                if(parseObj.get('token_uri') !== uri) {
+                if(uri && parseObj.get('token_uri') !== uri) {
                     let newMetadata = await Moralis.Cloud.run("personaMetadata", parseObj.id);
                     
                     /* MOVED ServerSide
