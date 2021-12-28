@@ -5,8 +5,7 @@ const SERVER_URL = process.env.REACT_APP_MORALIS_SERVER_URL;
 Moralis.initialize(APP_ID);
 Moralis.serverURL = SERVER_URL;
 
-
-// const { chainId } = useMoralis();
+const Contract = Moralis.Object.extend("Contract");
 
 //** GLOBAL FUNCTIONS **/
 /** DEPRECATE?
