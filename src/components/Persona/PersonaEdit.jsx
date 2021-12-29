@@ -332,13 +332,12 @@ const personaFields = require('schema/PersonaData.json');
                         return( 
                         <div className="links_wrapper">
                             <h2><i className="bi bi-link"></i> Links</h2>
-                            <div className="items">
+                            <div key="items" className="items">
                             <Row>
                                 {metadata?.links?.map((link, index) => {
                                     // E.G. {type: 'blog', title: 'BayonEI', url: 'http://bayonei.com'}
                                     // console.log("[DEV] link to:"+link.type+" Title:'"+link.title+"'", link.url);
                                     return (
-                                    <>
                                     <Col xs={24} lg={12} key={link.title+index}>
                                         <Input.Group compact className="item" style={{display: 'flex', width:'100%', paddingRight:'10px'}} >
                                             <Input name="URL" defaultValue={link.url} placeholder="URL" 
@@ -358,20 +357,19 @@ const personaFields = require('schema/PersonaData.json');
                                             }}/>
                                         </Input.Group>
                                     </Col>
-                                    </>
                                     );
                                 })//Each Link
                                 }
-                                <div className="clearfloat"></div>
+                                <div key="clear1" className="clearfloat"></div>
                                 {/* Add Item */ }
                                 <Button type="primary" shape="circle" icon={<PlusCircleOutlined />} onClick={() => {
-                                        let links = [...metadata.links];    //Clone
-                                        // links.splice(index, 1);
-                                        links.push({type:'', title:'', url:''});
-                                        setMetadata({...metadata, links});
-                                    }}/>
+                                    let links = [...metadata.links];    //Clone
+                                    // links.splice(index, 1);
+                                    links.push({type:'', title:'', url:''});
+                                    setMetadata({...metadata, links});
+                                }}/>
                                     
-                                </Row>
+                            </Row>
                             </div>
                         </div>
                         );

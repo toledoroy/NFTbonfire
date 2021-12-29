@@ -202,7 +202,7 @@ function PagePersona(props) {
                 //Init Metadata
                 metadata = { social:{}, accounts:[] };
                 //Default to Current User Addresses
-                for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
+                if(user?.get('accounts')) for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
                 console.warn("[TEST] PagePersona() Added Default Accounts:", {user, persona, metadata});
             }//No Metadata
 
