@@ -153,32 +153,25 @@ function Account() {
           </Button>
         </Menu.Item>
 
-        {/* <hr /> */}
-        {/* {!personas ? <div className="title">No Personas</div> : <div className="title">Personas</div>} */}
         <Menu.Item key="title2" className="title hr">{!personas ? <span>No Personas</span> : <span>Personas</span>}</Menu.Item>
-
-        {/* <Menu.SubMenu  key="sub1" title="Persona" className="section"> */}
-          {personas.map((persona, index) => (
-            <Menu.Item key={"pers"+index} className="persona_select" onClick={(evt) => { 
-              // console.warn("[TEST] Account() Switch to Persona:", {persona, curPersona});  //V
-              setPersona(persona);
-            }}>
-              <BusinessCard key={index} persona={persona} className="item"/> 
-            </Menu.Item>
-          ))}
-          
-          <Menu.Item key="persona_add">
-            <Link key="link" to={{ pathname:'/persona' }} className="inner flex">
-              <Button size="large" type="primary" onClick={()=>{logout()}}
-                style={{ width: "100%", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "400", }}>
-                Mint New Persona
-              </Button>
-            </Link>
+        {personas.map((persona, index) => (
+          <Menu.Item key={"pers"+index} className="persona_select" onClick={(evt) => { 
+            // console.warn("[TEST] Account() Switch to Persona:", {persona, curPersona});  //V
+            setPersona(persona);
+          }}>
+            <BusinessCard key={index} persona={persona} className="item"/> 
           </Menu.Item>
-        {/* </Menu.SubMenu > */}
-       
-        {/* <hr /> */}
+        ))}
         
+        <Menu.Item key="persona_add">
+          <Link key="link" to={{ pathname:'/persona' }} className="inner flex">
+            <Button size="large" type="primary" onClick={()=>{logout()}}
+              style={{ width: "100%", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "400", }}>
+              Mint New Persona
+            </Button>
+          </Link>
+        </Menu.Item>
+       
       </Menu>
       )} placement="bottomRight">
       <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
