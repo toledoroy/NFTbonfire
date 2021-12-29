@@ -54,11 +54,12 @@ import { IPFS } from "helpers/IPFS";
     //Class
     let className = "BusinessCard";
     if(props.className) className += ' '+props.className;
+    //style={{background:"url("+coverImage+")"}}
     //Render
     return (
         <div className={className}>
-            <div className="top"  >
-                <div className="image" style={{background:"url("+coverImage+")"}}>
+            <div className="top">
+                <div className="image">
                     <Avatar size={60} src={image} />
                 </div>
                 <div className="text">

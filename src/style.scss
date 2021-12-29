@@ -6,6 +6,11 @@
     .ant-menu { background: transparent; border: none; }
 }
 .corner_menu {
+    .title {
+        font-size: 1.2rem;
+        text-align: center;
+        // border-bottom: 1px solid #e8e8e8;
+    }
     .persona_select{
         display: flex;
         flex-direction: column;
@@ -13,14 +18,15 @@
         align-items: left;
         flex: 1 1;
         // background-color: #f5f5f5;
-        .title {
-            font-size: 1.2rem;
-            text-align: center;
-            // border-bottom: 1px solid #e8e8e8;
-        }
+        
         .item{
 
         }
+    }
+    hr { 
+        height: 1px;
+        background-color: var(--background-color);
+        border: none;
     }
 }
 
@@ -225,10 +231,11 @@
 /* Business Card */
 
 .BusinessCard {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    display: block;
+    overflow: hidden;
+    // flex-direction: column;
+    // justify-content: center;
+    // align-items: center;
     max-width: 220px;
     background-color: var(--monochrome);
     border-radius: 12px;

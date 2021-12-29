@@ -158,7 +158,7 @@ export const usePersona = () => {
         }
         catch(error){
             //Log
-            console.error("[TEST] usePersona.updateToken() Error", {parseObj, error});
+            console.error("[TEST] usePersona.updateToken() Error", {parseObj, error, id:parseObj?.id, objId:parseObj?.objectId, getId:parseObj?.get('id'), getObjId:parseObj?.get('objectId')});
         }
     }//updateToken()
 

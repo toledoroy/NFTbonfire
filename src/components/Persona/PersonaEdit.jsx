@@ -225,7 +225,8 @@ const personaFields = require('schema/PersonaData.json');
                 mintNFT(uri);
             }
         })
-        .catch(function(error) { 
+        .catch(function(error) {
+            message.error('Failed to save file to IPFS. '+error);
             console.error("[CAUGHT] PersonaEdit.onFinish() IPFS Call Failed:", {error, newMetadata, isAuthenticated, user, persona}); 
         });
 
