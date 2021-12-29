@@ -3,13 +3,14 @@ import { getEllipsisTxt } from "helpers/formatters";
 import Blockie from "../Blockie";
 import { Button, Card, Modal } from "antd";
 import { Menu, Dropdown } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Address from "../Address/Address";
 import { SelectOutlined } from "@ant-design/icons";
 import { getExplorer } from "helpers/networks";
 import BusinessCard from "components/Persona/BusinessCard";
 import { Persona } from "objects/Persona";
 import { Link } from "react-router-dom";
+import { PersonaContext } from "common/context";
 
 import Text from "antd/lib/typography/Text";
 import { connectors } from "./config";
@@ -55,6 +56,8 @@ function Account() {
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);
   const [lastAccount, setLastAccount] = useState(account);  //Remember Last Account
   const [personas, setPersonas] = useState([]);
+
+  const { persona:curPersona, setPersona} = useContext(PersonaContext);
 
   useEffect(() => { 
     /* Make sure to change User when account changes */
@@ -154,7 +157,10 @@ function Account() {
         {!personas ? <div className="title">No Personas</div> : <div className="title">Personas</div>}
 
         {personas.map((persona, index) => (
-          <Menu.Item key={"pers"+index}>
+          <Menu.Item key={"pers"+index} onClick={(evt) => { 
+            // console.warn("[TEST] Account() Switch to Persona:", {persona, curPersona});  //V
+            setPersona(persona);
+          }}>
             <BusinessCard key={index} persona={persona} className="item"/> 
           </Menu.Item>
         ))}
