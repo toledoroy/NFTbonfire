@@ -21,7 +21,7 @@ const { Option } = Select;
 
 //Persona Fields Mapping
 const personaFields = require('schema/PersonaData.json');
-console.warn("PersonaEdit() Persona Template:", personaFields);
+// console.warn("PersonaEdit() Persona Template:", personaFields);
 // console.warn("[TEST] Pesona:", Persona);
 // console.warn("[TEST] Pesona:", Persona.update());
 
@@ -78,94 +78,16 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         setImageUrl(props.metadata?.image);
     }, [props.metadata]);
 
-    /** MOVED
-     * File Upload Validation
-     * /
-    function beforeUpload(file) {
-        //Validations
-        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/svg+xml';
-        if (!isJpgOrPng) message.error('Sorry, only JPG/PNG/GIF files are currently supported');
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isLt2M) message.error('Image must smaller than 2MB!');
-        // return isJpgOrPng && isLt2M;
-        //Set Loading
-        setImageLoading(true);
-        //Always False - Manual Upload Via handleChangeFile()
-        return false;   
-    }
-
-    /** MOVED
-     * File Upload
-     * /
-    const handleChangeFile = info => {
-        // console.log("[TEST] File Upload handleChangeFile() Status:"+info?.file?.status, info);
-        try{
-            if (info.file.status === undefined) {
-                // saveImageToIPFS(info.file).then(result => {
-                // IPFS.saveImageToIPFS(Moralis, info.file).then(result => {
-                IPFS.saveImageToIPFS(Moralis, info.file).then(url => {
-                    console.log("[TEST] File Upload handleChangeFile() IPFS Hash:", url);
-                    //Set New Image URL
-                    setImageUrl(url);
-                    //Set to Metadata
-                    setMetadata({...metadata, image:url});
-                    //Done Loading
-                    setImageLoading(false);
-                });
-            }//Manual Upload
-            else if (info.file.status === 'error') {
-                console.error("handleChangeFile() File Upload Error:", info.file.error, info);
-            }   
-            else console.error("handleChangeFile() File Upload Error -- Unhandled Status:"+info.file.status, info);
-        }catch(error) {
-            //log
-            console.error("[CAUGHT] handleChangeFile() File Upload Error:", error, info);
-        }
-    }//handleChangeFile()
-
-    /** MOVED to PagePersona.jsx
-     * on Social Account Update
-     * /
-    const formSocialOnChange = (e) => {
-        let change = {[e.target.name]: e.target.value.trim()};
-        //Log
-        // console.log("[DEV] formSocialOnChange() ", {e, change});
-        //Set
-        setMetadata({...metadata, social:{ ...metadata.social, ...change }});
-        //Log
-        console.log("[DEV] formSocialOnChange() Modified Metadata ", {metadata, social:metadata.social, change});
-        return true;
-    }
-    */
-
-    /** Made Implicit
-     * Image Change
-     * /
-    function setImage(file){
-        //Image URL
-        // let url = file.ipfs();
-        let url = "ipfs://" + file.hash();   //General IPFS Conventional URL
-        setImageUrl(url);
-        //Set to Metadata
-        // setMetadata({...metadata, image:file.hash()});
-        setMetadata({...metadata, image:url});
-    }
-    */
-
     /**
      * Update NFT URI
      * @param string uri 
      */
     // async function updateNFT(uri, tokenId=1){
     async function updateNFT(uri){
-
-        // console.warn("[TEST] PersonaEdit.updateNFT() Will Save Persona", persona);
-        // persona.save({uri});
-
         const options = {
             // contractAddress: contractPersona.address,
             contractAddress: persona.get('address'),
-            abi: Persona.getABI(),   //contractPersona.abi,
+            abi: Persona.getABI(chainId),   //contractPersona.abi,
             functionName: 'update',
             params: { tokenId: persona.get('token_id'), uri },
         };
@@ -174,24 +96,30 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         // return contractProcessor.fetch({
             params: options,
             onSuccess: (data) => {
-                console.log("PersonaEdit.updateNFT() Success", {data, uri, persona, options});
-                //Save Persona to DB
-                // persona.save();       //Error: TypeError: (intermediate value).save is not a function
-
-
-                // TESTING
-                //Register Persona to DB
-                let compId = {
-                    contract: persona.get('address'),
-                    token_id: persona.get('token_id'),
-                    chain: chainId,
-                };
-                console.warn("[TEST] PersonaEdit.updateNFT() Register Persona to DB", compId);
-                Moralis.Cloud.run("personaRegister", compId);
-
-
-                //Return Transaction...
-                return data;
+                try{
+                    console.log("PersonaEdit.updateNFT() Success", {data, uri, persona, options});
+                    //Update Persona's Metadata (& URI)
+                    Moralis.Cloud.run("personaMetadata", persona.id);
+                    /* THIS SHOULD GO THROUGH THE SERVER
+                    //Save Persona to DB
+                    // persona.save();       //Error: TypeError: (intermediate value).save is not a function
+                    // TESTING
+                    //Register Persona to DB
+                    let compId = {
+                        contract: persona.get('address'),
+                        token_id: persona.get('token_id'),
+                        chain: chainId,     //Current Chain
+                    };
+                    console.warn("[TEST] PersonaEdit.updateNFT() Register Persona to DB", compId);
+                    //Update Persona
+                    // Moralis.Cloud.run("personaRegister", compId);
+                    //Return Transaction...
+                    return data;
+                    */
+                }
+                catch(error){
+                    console.error("PersonaEdit.updateNFT() Error Updating Persona:"+persona.id, {error, persona, options});
+                }
             },
             onError: (error) => {
                 if(error.code === 4001) console.warn("PersonaEdit.updateNFT() Failed -- User Rejection", {error, uri, options})
@@ -218,13 +146,16 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         await contractProcessor.fetch({
             params: options,
             onSuccess: (data) => {  //TX Data
-                //Log
-                console.log("[TEST] PersonaEdit.mintNFT() Success -- Should Register New TokenID", {data, uri, persona, options});
 
-                //TODO: Update token_id
-
-                //TODO: Then,   Save Persona to DB
-                // persona.save();
+                //Token Data
+                let tokenData = {
+                    // contract: persona.get('address'),
+                    // token_id: persona.get('token_id'),
+                    // chain: chainId,     //Current Chain
+                };
+                console.warn("[TODO] PersonaEdit.mintNFT() Success -- Should Register New Token", {tokenData, data, uri, persona, options});
+                //Update Persona
+                Moralis.Cloud.run("personaRegister", tokenData);
 
                 //Return Transaction...
                 return data;
@@ -273,7 +204,7 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         persona.set('metadata', newMetadata);
 
         //Log
-        // console.error("[TEST] Persona() Updated Values to Metadata", {values, metadata});
+        console.warn("[TEST] PersonaEdit.onFinish() Updated Values to Metadata", {persona, values, metadata});
 
         //TODO: Trimming any whitespace
         // .trim();
@@ -283,19 +214,19 @@ console.warn("PersonaEdit() Persona Template:", personaFields);
         // IPFS.saveJSONToIPFS(Moralis, metadata).then(async uri => {
         IPFS.saveJSONToIPFS(Moralis, newMetadata).then(async uri => {
             //Log
-            console.warn("PersonaEdit() Saving Persoa to Contract:", {newMetadata, uri});
+            console.warn("PersonaEdit.onFinish() Saving Persoa to Contract:", {newMetadata, uri});
             if(persona.get('token_id')){
                 //Update Contract
                 let res = await updateNFT(uri);   //Promise
                 //Log
-                console.warn("PersonaEdit() After Update:", {res, newMetadata, uri});
+                console.warn("PersonaEdit.onFinish() After Update:", {res, newMetadata, uri});
             }else{
                 //Mint New NFT
                 mintNFT(uri);
             }
         })
         .catch(function(error) { 
-            console.error("[CAUGHT] PersonaEdit() IPFS Call Failed:", {error, isAuthenticated, user, persona}); 
+            console.error("[CAUGHT] PersonaEdit.onFinish() IPFS Call Failed:", {error, newMetadata, isAuthenticated, user, persona}); 
         });
 
         //Redirect

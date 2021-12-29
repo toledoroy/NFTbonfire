@@ -29,7 +29,7 @@ export const Persona = Moralis.Object.extend("Persona",
         //Contract Data
         getContractData(chain){ return (chain) ? this.contractPersona[chain] : this.contractPersona; },
         //Get ABI
-        getABI(chain){ return (this.contractPersona[chain].abi) ? this.contractPersona[chain].abi : this.contractPersona.abi; },
+        getABI(chain){ return (this.contractPersona[chain]?.abi) ? this.contractPersona[chain].abi : this.contractPersona.abi; },
         //Get Contract Address
         getContractAddress(chain){ return (this.contractPersona[chain]?.address) ? this.contractPersona[chain].address : null; },
         //Default Metadata (Random)

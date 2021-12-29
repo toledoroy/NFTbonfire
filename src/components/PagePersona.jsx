@@ -506,7 +506,7 @@ function PagePersona(props) {
                                 
                                 <TabPane tab={(
                                     <span title={getChainName(account.chain)}>
-                                        {/* {console.warn("[TEST] PagePersona() View Account", account)} */}
+                                        {console.warn("[TEST] PagePersona() View Account", account)}
                                         {account.address 
                                         ? <Address icon={getChainLogo(account.chain)} copyable address={account.address} size={5} />
                                         : <span>[NO HASH]</span>
@@ -637,7 +637,7 @@ export default PagePersona;
                 
                 Chain:
                 <Dropdown overlay={
-                    <Menu onClick={setChain}>
+                    <Menu onClick={(chain) => setChain(chain.key)}>
                     {Object.values(ChainsData).map((item) => (
                         //if(item.live)
                         <Menu.Item key={item.key} icon={item.icon}>
@@ -649,9 +649,9 @@ export default PagePersona;
                     trigger={["click"]}>
 
                     {/* { console.warn("[TEST] AccountAddModal() CUrrently Selected Chain", {chain, selected:ChainsData[chain]}) } */}
-                    <Button key={ChainsData[chain?.key]?.key} icon={ChainsData[chain?.key]?.icon}>
-                        {console.warn("Selected Chain"+chain, {chain, ChainsData})}
-                        <span style={{ marginLeft: "5px" }}>{ChainsData[chain?.key]?.name}</span>
+                    <Button key={ChainsData[chain]?.key} icon={ChainsData[chain]?.icon}>
+                        {/* {console.warn("AccountAddModal() Selected Chain"+chain, {chain, ChainsData})} */}
+                        <span style={{ marginLeft: "5px" }}>{ChainsData[chain]?.name}</span>
                         <DownOutlined />
                     </Button>
                 </Dropdown>

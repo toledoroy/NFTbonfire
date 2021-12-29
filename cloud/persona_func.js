@@ -148,14 +148,18 @@ const cachePersona = async (chain, contract, tokenId) => {
 
 /**
  * Register Persona to Network
+ * @param {*} chain
+ * @param {*} contract
+ * @param {*} token_id
+ * @param {*} handle
  */
  Moralis.Cloud.define("personaRegister", async (request) => {
   const { handle, contract, token_id, chain } = request.params;
   //Validate Parameters
-  if(!handle || !contract || !token_id || !chain) throw new Error("Missing Parameters (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"')");
+  if(!contract || !token_id || !chain) throw new Error("Missing Parameters (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"')");
   //Validate Handle
   let isFree = await isHandleFree(handle);
-  if(!isFree) throw new Error("Handle:'"+handle+"' is already owned");
+  if(!isFree) throw new Error({msg:"Handle:'"+handle+"' is already owned", code:"owned"});
 
   //Log
   logger.warn("[TEST] personaRegister() Request Params: chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"'");
@@ -177,12 +181,12 @@ const cachePersona = async (chain, contract, tokenId) => {
   let persona = await personaGet(results);
   //Validate
   if(!persona) throw new Error("Failed to Fetch Persona -- chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"'")
-  //Add Handle to Persona
-  persona.save({handle: handle.trim().toLowerCase()}, {useMasterKey: true});
-  //Log  
-  logger.log("personaRegister() Saved Persona to Handle:'"+handle.trim().toLowerCase()+"'");
-  //Log
-  // logger.warn("personaRegister() Registered Handle:'"+handle+"' to token_id:'"+token_id+"' chain:'"+chain+"' contract:'"+contract+"'");
+  if(handle){
+    //Add Handle to Persona
+    persona.save({handle: handle.trim().toLowerCase()}, {useMasterKey: true});
+    //Log
+    logger.log("personaRegister() Saved Persona to Handle:'"+handle.trim().toLowerCase()+"'");
+  }
   return true;
 });
 
@@ -196,7 +200,7 @@ const cachePersona = async (chain, contract, tokenId) => {
  */
 const fetchMetadata = async (uri) => {
   //Validate URI
-  if(!token_uri || !token_uri.includes('://'))throw new Error("Invalid URI:'"+uri+"'");
+  if(!uri || !uri.includes('://'))throw new Error("Invalid URI:'"+uri+"'");
   //Fetch
   let metadata = await fetch(resolveLink(uri)).then(res => res.json());
   //Validate
