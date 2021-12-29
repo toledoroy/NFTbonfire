@@ -114,9 +114,7 @@ function Account() {
                     await authenticate({ provider: connectorId });
                     window.localStorage.setItem("connectorId", connectorId);
                     setIsAuthModalVisible(false);
-                  } catch (e) {
-                    console.error(e);
-                  }
+                  } catch (error) { console.error(error); }
                 }}
               >
                 <img src={icon} alt={title} style={styles.icon} />
@@ -133,12 +131,14 @@ function Account() {
     <>
     <Dropdown trigger={['click']} overlay={(
       <Menu className="corner_menu" style={{padding: "10px", borderRadius: "1rem",}}>
-        <div className="title">Account</div>
-        <Menu.Item style={{padding: '10px'}}>
+        
+        <Menu.Item key="title1" className="title">Account</Menu.Item>
+
+        <Menu.Item key="address" style={{padding: '10px'}}>
           <Address avatar="left" size={6} copyable style={{ fontSize: "20px" }} />
         </Menu.Item>
 
-        <Menu.Item>
+        <Menu.Item key="explorer"> 
           <div style={{ padding: " 10px 0" }}>
             <a href={`${getExplorer(chainId)}/address/${account}`} target="_blank" rel="noreferrer">
               <SelectOutlined style={{ marginRight: "5px" }} />
@@ -146,33 +146,37 @@ function Account() {
             </a>
           </div>
         </Menu.Item>
-        <Menu.Item style={{padding: '10px'}}>
+        <Menu.Item key="logout" style={{padding: '10px'}}>
           <Button size="large" type="primary" onClick={()=>{logout()}}
             style={{ width: "100%", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "500", }}>
             Disconnect
           </Button>
         </Menu.Item>
-        
-        <hr />
-        {!personas ? <div className="title">No Personas</div> : <div className="title">Personas</div>}
 
-        {personas.map((persona, index) => (
-          <Menu.Item key={"pers"+index} onClick={(evt) => { 
-            // console.warn("[TEST] Account() Switch to Persona:", {persona, curPersona});  //V
-            setPersona(persona);
-          }}>
-            <BusinessCard key={index} persona={persona} className="item"/> 
-          </Menu.Item>
-        ))}
-       
-        <Menu.Item key="persona_add">
+        {/* <hr /> */}
+        {/* {!personas ? <div className="title">No Personas</div> : <div className="title">Personas</div>} */}
+        <Menu.Item key="title2" className="title hr">{!personas ? <span>No Personas</span> : <span>Personas</span>}</Menu.Item>
+
+        {/* <Menu.SubMenu  key="sub1" title="Persona" className="section"> */}
+          {personas.map((persona, index) => (
+            <Menu.Item key={"pers"+index} className="persona_select" onClick={(evt) => { 
+              // console.warn("[TEST] Account() Switch to Persona:", {persona, curPersona});  //V
+              setPersona(persona);
+            }}>
+              <BusinessCard key={index} persona={persona} className="item"/> 
+            </Menu.Item>
+          ))}
+          
+          <Menu.Item key="persona_add">
             <Link key="link" to={{ pathname:'/persona' }} className="inner flex">
               <Button size="large" type="primary" onClick={()=>{logout()}}
                 style={{ width: "100%", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "400", }}>
                 Mint New Persona
               </Button>
             </Link>
-        </Menu.Item>
+          </Menu.Item>
+        {/* </Menu.SubMenu > */}
+       
         {/* <hr /> */}
         
       </Menu>

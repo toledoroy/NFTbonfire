@@ -48,7 +48,7 @@ footer { margin-top: 40px; }
 .flex {display: flex;}
 .clearfloat{  clear: both; width: 100%; display: block; }
 .framed{ padding: 15px; max-width: 1200px; margin:0 auto;} 
-
+.hr { border-top: 1px solid var(--background-color); }
 
 /* Components */
 .collections { transition: all 0.2s ease-in-out; }

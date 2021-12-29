@@ -6,27 +6,31 @@
     .ant-menu { background: transparent; border: none; }
 }
 .corner_menu {
+    display: flex;
+    flex-direction: column;
+    .title:hover { background: none; cursor: default;}
     .title {
         font-size: 1.2rem;
         text-align: center;
         // border-bottom: 1px solid #e8e8e8;
     }
+    li {
+        border-radius: 12px;
+    }
     .persona_select{
-        display: flex;
-        flex-direction: column;
-        justify-content: left;
-        align-items: left;
-        flex: 1 1;
+        padding: 0px; 
+        // display: flex;
+        // flex-direction: column;
+        // justify-content: left;
+        // align-items: left;
+        // flex: 1 1;
         // background-color: #f5f5f5;
-        
+        .BusinessCard { 
+            margin:7px;
+        }
         .item{
 
         }
-    }
-    hr { 
-        height: 1px;
-        background-color: var(--background-color);
-        border: none;
     }
 }
 

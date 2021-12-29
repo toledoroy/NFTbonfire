@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
-    
+import { PersonaContext } from "common/context";
+
 // import { useNFTCollections } from "hooks/useNFTCollections";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 import { Link } from "react-router-dom";
@@ -25,25 +26,11 @@ function RoomPage(props) {
     const [ posts, setPosts ] = useState([]);
     const { NFTCollections } = useNFTCollections();
     const [ collection, setCollection ] = useState(null);
-
-    /* Now IMPORTED
-    //Objects
-    // const Room = Moralis.Object.extend("Rooms", { 
-    const Room = Moralis.Object.extend("Post", {});    //Container of Main Posts
-    const Post = Moralis.Object.extend("Post", {        //Main Posts
-        getComments: function() { 
-            //Log
-            console.log("[TODO] Get Comments for "+this.id); 
-            return '[COMMENTS]';
-        },
-    });
-    const Comment = Moralis.Object.extend("Post");     //Sub-Posts
-    */
+    const { persona } = useContext(PersonaContext);
 
     const limit = 20;    //Posts per page
     // hash = '0xIUYASD&(&TEST'; //TEST Room Hash
     // id = 'r65dlvN0HDxTI3Sr41shucle';
-    // console.log("START Room Page W/id:"+id);
 
     /* Get Current Room - Cancelled ... I think... */
     useEffect(() => {
@@ -66,7 +53,6 @@ function RoomPage(props) {
                 if(NFTCollections[hash]) setCollection(NFTCollections[hash]);
                 else console.error("No Permissions for Collection:'"+hash+"'", NFTCollections);
                 
-
                 //Get Current Room's Convos
                 const PostQuery = new Moralis.Query(Post); //Query the Object
                 PostQuery.equalTo("parentId", id).limit(limit).find().then(function(curPosts) {
@@ -88,24 +74,22 @@ function RoomPage(props) {
                     setPosts(curPosts);
                     return curPosts;
                 });
-                
             })
             .catch(function(error) {    
                 console.error("[CAUGHT] Error on Room Load:", {id, error});
             });
-
         }//Web3 Enabled
     }, [id, isWeb3Enabled, NFTCollections]);
     
 
     //Log
-    console.log("Page:Room", room);
+    console.warn("RoomPage() START Room Page W/id:"+id+" Persona:", {room, persona});
 
     //Validate
     if(collection && collection.contract_type!=="ERC1155"){
-        return <div>Unsupported Collection Type:'{collection.contract_type}'</div>;
+        return (<div>Collection Type:'{collection.contract_type}' is Currently No Supported</div>);
     }
-    if(!room ) return <div>Waiting For Room Data...</div>;
+    if(!room) return <div>Waiting For Room Data...</div>;
     if(!collection) return <div>Waiting For Collection Data...</div>;
     return (
         <div className="room">
@@ -127,7 +111,7 @@ function RoomPage(props) {
                     ))
                 : <div>
                     <h3>First Contact</h3>
-                    <p>Congratulations! You're the first of your tribe to set foot in this space. Why don't you leave your mark?</p>
+                    <p>Congratulations! You're the first of your tribe to set foot in this space. Why don't you leave your mark and start a bonfire?</p>
                 </div> 
                 }
             </div>
@@ -141,12 +125,11 @@ export default RoomPage;
 
 
 /**
- * Link To Convo
+ * Component: Link To Convo
  */
 function ConvoEntrance({convo}) {
      //Set Avatar
     // let avatar = convo.get('image') || <Blockie address={convo.get('account')} scale="4" />;
-    
 //     <Image
 //     preview={false}
 //     src={convo.get('image') || "error"}
@@ -180,6 +163,9 @@ function ConvoEntrance({convo}) {
     );
 }//ConvoEntrance()
 
+/**
+ * Component
+ */
 function ShowMore() {
     return (
         <div className="showMore flex">

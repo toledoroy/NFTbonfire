@@ -91,7 +91,7 @@ export const useVerifyMetadata = () => {
     async function getMetadata(NFT){
         //Validate URI
         if(!NFT.token_uri || !NFT.token_uri.includes('://')){
-            console.log('getMetadata() Invalid URI', {URI: NFT.token_uri, NFT});
+            console.error('getMetadata() Invalid URI', {URI: NFT.token_uri, NFT});
             return;
         }
         //Get Metadata

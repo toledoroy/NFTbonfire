@@ -110,24 +110,16 @@ export const usePersona = () => {
      */
      async function updateToken(parseObj){
         //Token's Chain ID
-        let chain = parseObj.get("chain") || parseObj.get("chainId");
-        //ABI
-        // const abi = [{
-        //     "name": "tokenURI",
-        //     "stateMutability": "view",
-        //     "type": "function",
-        //     "inputs": [{"internalType": "uint256", "name": "tokenId", "type": "uint256"}],
-        //     "outputs": [{"internalType": "string", "name": "", "type": "string"}]
-        // }];
-
+        // let chain = parseObj.get("chain") || parseObj.get("chainId");
         try{
             //Fetch Token URI
-            let uri = await contractCall('tokenURI', { tokenId: parseObj.get('token_id') }, chain);       //TODO: Try to use this instead
+            // let uri = await contractCall('tokenURI', { tokenId: parseObj.get('token_id') }, chain);
+            let uri = await contractCall('tokenURI', { tokenId: parseObj.get('token_id') }, parseObj.get("chain"));
             //Validate Response
             if(uri){
                 //Compare & Update Metadata if Needed
                 if(uri && parseObj.get('token_uri') !== uri) {
-                    console.log("Running personaMetadata:"+parseObj.id);
+                    console.log("Running personaMetadata() w/id:"+parseObj.id);
                     let newMetadata = await Moralis.Cloud.run("personaMetadata", {personaId:parseObj.id});
                     
                     /* MOVED ServerSide
@@ -171,7 +163,7 @@ export const usePersona = () => {
      async function fetchMetadata(token_uri) {
         //Validate URI
         if(!token_uri || !token_uri.includes('://')){
-            console.log('usePersona.fetchMetadata() Invalid URI', {URI: token_uri});
+            console.error('usePersona.fetchMetadata() Invalid URI', {URI: token_uri});
             return;
         }
         //Get Metadata
