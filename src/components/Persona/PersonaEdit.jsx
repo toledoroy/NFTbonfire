@@ -379,7 +379,7 @@ const personaFields = require('schema/PersonaData.json');
                     }//object
                     else if(field.type === 'items'){
                         //Log
-                        console.log("[UNHANDLED] PersonaEdit() items field:", {field, fieldData:metadata?.[field.name]});
+                        if(field.name !== 'accounts') console.log("[UNHANDLED] PersonaEdit() items field:", {field, fieldData:metadata?.[field.name]});
                     }//Object Array
                     else if(field.type === 'array'){    //Tags
                         // const children = [];

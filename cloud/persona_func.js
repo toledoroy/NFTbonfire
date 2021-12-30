@@ -1,7 +1,5 @@
 //https://docs.moralis.io/moralis-server/cloud-code/cloud-functions
 
-// const logger = Moralis.Cloud.getLogger();
-
 const Persona = Moralis.Object.extend("Persona");
 const Contract = Moralis.Object.extend("Contract");
 
@@ -9,7 +7,9 @@ const Contract = Moralis.Object.extend("Contract");
 /**
  * Resolve IPFS Links
  */
-const resolveLink = (url) => (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/"); 
+// const resolveLink = (url) => (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/"); 
+// const resolveLink = (url) => (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://ipfs.moralis.io:2053/ipfs/"); 
+const resolveLink = (url) => (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/"); 
 
 /**
  * Check if User Owns NFT
@@ -100,13 +100,13 @@ const getTokenOwner = async (chain, contract, tokenId) => {
     chain,
   };
   //Log
-  // logger.warn("[TEST] getTokenURI() Run W3 Request:" + JSON.stringify(options) );  //V
+  // logger.warn("[DEBUG] getTokenURI() Run W3 Request:" + JSON.stringify(options) );  //V
   //Run W3 Request
   let res = await Moralis.Web3API.native.runContractFunction(options);
   //Validate
   if(!res) throw new Error("getTokenURI() Failed to Fetch Persona res("+res+") from Chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"'");
   //Log
-  // logger.warn("[TEST] getTokenURI() Request Params: chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"' Ret:" + JSON.stringify(res) );  //V
+  // logger.warn("[DEBUG] getTokenURI() Request Params: chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"' Ret:" + JSON.stringify(res) );  //V
   return res;
 };
 
@@ -188,7 +188,7 @@ const cachePersona = async (chain, contract, tokenId) => {
     logger.log("personaRegister() Saved Persona to Handle:'"+handle.trim().toLowerCase()+"'");
   }
   return true;
-});
+});//personaRegister()
 
 
 //-- TESTING
@@ -201,12 +201,25 @@ const cachePersona = async (chain, contract, tokenId) => {
 const fetchMetadata = async (uri) => {
   //Validate URI
   if(!uri || !uri.includes('://'))throw new Error("Invalid URI:'"+uri+"'");
-  //Fetch
-  let metadata = await fetch(resolveLink(uri)).then(res => res.json());
-  //Validate
-  if(!metadata) throw new Error("fetchMetadata() No Metadata found on URI:'"+uri+"'");
-  //Return
-  return metadata;
+  logger.warn("[DEBUG] fetchMetadata() Valid URI:'"+uri);
+
+  try{
+    //Fetch
+    // let metadata = await fetch(uri).then(res => res.json()); //No fetch on Cloud Server
+    let metadata = await Moralis.Cloud.httpRequest({url: uri})
+      .then(httpResponse => httpResponse.text)
+      .catch(err => { throw new Error("fetchMetadata() Failed to Fetch URI:'"+uri+"' Error:"+err+""); } );
+    //Validate
+    if(!metadata) throw new Error("fetchMetadata() No Metadata found on URI:'"+uri+"'");
+    metadata = JSON.parse(metadata);  //JSON As Object
+    // logger.warn("[DEBUG] fetchMetadata() Found metadata type:" + typeof metadata);
+    // logger.warn("[DEBUG] fetchMetadata() Found metadata: " + metadata);
+    logger.warn("[DEBUG] fetchMetadata() Found metadata Obj: " + JSON.stringify(metadata));
+    //Return
+    return metadata;
+  }catch(err){
+    throw new Error("[DEBUG] fetchMetadata()  Failed to Fetch URI:'"+uri+"' Error:"+err+"");
+  }
 };//fetchMetadata
 
 /**
@@ -215,39 +228,70 @@ const fetchMetadata = async (uri) => {
  * @returns object metadata
  */
 Moralis.Cloud.define("personaMetadata", async (request) => {
-  // const { contract, token_id, chain } = request.params;
-  //Validate Parameters
-  // if(!contract || !token_id || !chain) throw new Error("Missing Parameters (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"')");
-
+  //Extract Params
   const { personaId } = request.params;
+
+  // logger.warn("[TEST] personaMetadata() Start W/Persona ID:'"+personaId+"'" );
+
   //Validate Parameters
-  if(!personaId) throw new Error("Missing Parameters (personaId:'"+personaId+"')");
+  if(!personaId) throw new Error("Missing Parameters (personaId:'"+personaId+"')  Params: "+JSON.stringify(request.params));
   const query = new Moralis.Query(Persona);
-  let persona = await query.get(personaId,  {useMasterKey: true});
+  let persona = await query.get(personaId,  {useMasterKey: true})
+    .catch(err => {throw new Error("personaMetadata() Failed to Fetch Persona:'"+personaId+"' Error:'"+err+"'")});
   if(!persona) throw new Error("Failed to Load Persona:"+personaId);
-  const {chain, address:contract, token_id:tokenId} = persona.attributes; 
+  const { chain, address:contract, token_id:tokenId } = persona.attributes;
+
+  // logger.warn("[DEBUG] personaMetadata() Extracted Data Persona:"+personaId+" -- Address:"+contract+" Chain:"+chain+" token_id:"+tokenId);
+
+  // const { chain, address:contract, token_id:tokenId } = persona; 
   // const cachePersona = async (chain, contract, tokenId) => {
     //Validate
     if(!chain || !contract || !tokenId) throw new Error("Missing Data on Persona:"+personaId+" -- Address:"+contract+" Chain:"+chain+" token_id:"+tokenId);
+
     //Fetch Token Owner
     // let owner = await getTokenOwner(chain, contract, tokenId);
-    let token_uri = await getTokenURI(chain, contract, tokenId);
+
+    //Fetch Token URI
+    let token_uri = await getTokenURI(chain, contract, tokenId)
+      .catch(err => {throw new Error("personaMetadata() Failed to Fetch Token Owner:'"+personaId+"' Error:'"+err+"'")});
+    logger.warn("[DEBUG] personaMetadata() Got Token URI:'"+token_uri+"' current URI:"+persona.get('token_uri') ); 
+
+  try{
     //Validate
-    if(persona.get('token_uri') != token_uri){
+    if(token_uri !== persona.get('token_uri')){
+      // logger.warn("[DEBUG] personaMetadata() Run Metadata Fetch for Token URI:'"+token_uri);
+
       //Fetch Metadata
-      let metadata = fetchMetadata(token_uri);
-      //Save
-      await persona.save({token_uri, metadata}, {useMasterKey: true});
+      // let metadata = await fetchMetadata(token_uri);
+      let metadata = await fetchMetadata(resolveLink(token_uri))
+        .catch(err => {throw new Error("personaMetadata() Failed to Fetch Metadata for Persona:'"+personaId+"' URI:'"+resolveLink(token_uri)+"' Error:'"+err+"'")});
+      //Validate
+      if(!metadata || Object.keys(metadata).length === 0) throw new Error("Empty Metadata Pulled from Token URI:'"+resolveLink(token_uri)+"' metadata:'"+JSON.stringify(metadata)+"'");
       //Log
-      logger.log("[i] personaMetadata() Updated Metadata for Persona:'"+personaId+"'" );
+      logger.warn("[DEBUG] personaMetadata() Save URI:'"+token_uri+"' Metadata:"+JSON.stringify(metadata));
+
+      //Save
+      await persona.save({token_uri, metadata}, {useMasterKey: true})
+        .catch(err => {throw new Error("personaMetadata() Failed to Save Persona:'"+personaId+"' Error:'"+err+"'")});
+
+      // logger.log("[i] personaMetadata() Updated Metadata for Persona:'"+personaId+"'" );
+
       //Return
       return metadata;
     }
-    else logger.log("[i] personaMetadata() URI Up to date -- No Update Needed for Persona:'"+personaId+"'" );
-    //Return new Persona Object
-    return persona.get('metadata');
+    // else logger.log("[i] personaMetadata() URI Up to date -- No Update Needed for Persona:'"+personaId);   //Error: TypeError: args is not iterable
+  }catch(err){
+    throw new Error(" personaMetadata() Failed to Fetch Metadata -- From URI:'"+token_uri+"' for Persona:'"+personaId+"' (same:"+(token_uri == persona.get('token_uri'))+")Error:"+err);
+  }
   // };
-  
+
+  // logger.warn("[DEBUG] personaMetadata() DONE -- Same URI:'"+token_uri+"' Persona:"+JSON.stringify(persona));
+  // logger.warn("[DEBUG] personaMetadata() DONE -- Same URI:'"+token_uri+"' Return Metadata:"+JSON.stringify(persona.get('metadata')));
+
+  //Return new Persona Object
+  return persona.get('metadata');
+
+
 });//personaMetadata() 
 
 /**

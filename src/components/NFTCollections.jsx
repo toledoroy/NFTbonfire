@@ -54,17 +54,24 @@ function NFTCollections(props) {
   const [ isAllowed, setIsAllowed ] = useState(false);
 
   useEffect(() => { /* Check if Account Owns Any of These Assets */
-    if(collectionHash){
+    //Default to Current Account
+    if(!accountHash) console.error("NFTCollections() Set Default Account", {accountHash, account});
+    if(!accountHash) accountHash = account; 
+    
+
+
+    if(collectionHash && isWeb3Enabled) {
       let chain = props?.match?.params?.chain || chainId;
       //Fetch Balance
       NFTHelper.getBalance(Moralis, account, collectionHash, chain).then(balance => {
         //Log
-        console.warn("[NFTCollections] Account's Balance for this Contract:"+balance, {balance, account, collectionHash}); 
+        console.log("NFTCollections() Account's Balance for this Contract:"+balance, {balance, account, collectionHash}); 
         //Set Permissions
         setIsAllowed(balance > 0);
-      }, [collectionHash, account]);
+      // }, [collectionHash, account]);
+      });
       
-      /* ServerSide Validation 
+      /* ServerSide Validation  - use Hook
       let params = {userId:user.id, hash:collectionHash, chainId, account};
       Moralis.Cloud.run("isAllowed", params).then(res => {
           console.warn("isAllowed() is User Allowed:"+res, {user, params, account });
@@ -78,19 +85,20 @@ function NFTCollections(props) {
       setIsAllowed(true);
       return;
     }
-  }, [accountHash, collectionHash]);
+  }, [accountHash, collectionHash, isWeb3Enabled, chainId, account]);
 
   //Init Options
   let options = {
     // chain:"0x4", 
     // address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1'
   };
-  if (accountHash) options.address = accountHash;    //No Dice... :(
+  // if (accountHash) options.address = accountHash;    //No Dice... :(
+  options.address = accountHash ? accountHash : account;    //No Dice... :(
   if(props?.match?.params?.chain) options.chain = props.match.params.chain;
   const { NFTCollections, NFTpersonas } = useNFTCollections(options);
 
   //Log
-  console.warn("(i) Render NFTCollection() for Collections: ", {NFTCollections, collectionHash, options, params:props.match.params });
+  console.warn("(i) NFTCollections() for Collections: ", {NFTCollections, collectionHash, accountHash, options, params:props.match.params });
   
   async function testFunc() {
     try {
@@ -147,13 +155,15 @@ function NFTCollections(props) {
               <>
               <Breadcrumb separator=">">
                 {/* <Breadcrumb.Item key="1">Home</Breadcrumb.Item> */}
-                {accountHash && <Breadcrumb.Item key="2"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>NFT Collections 
-                  {/* for <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
-                </Link></Breadcrumb.Item>}
-                {collectionHash && <Breadcrumb.Item key="3"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash+'/'+collectionHash}}>Room</Link></Breadcrumb.Item>}
+                {accountHash && <Breadcrumb.Item key="2">
+                  <Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>
+                    {accountHash == account ? "My Collections" : "NFT Collections"}
+                    {/* for <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
+                  </Link>
+                </Breadcrumb.Item>}
+                {collectionHash && <Breadcrumb.Item key="3"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash+'/'+collectionHash}}>Space for {NFTCollections[collectionHash]?.name}</Link></Breadcrumb.Item>}
                 {/* <Breadcrumb.Item key="4"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>SELECT</Link></Breadcrumb.Item> */}
                 {/* <Breadcrumb.Item key="4">Post</Breadcrumb.Item> */}
-                
               </Breadcrumb>
               <h2>
 
@@ -163,10 +173,10 @@ function NFTCollections(props) {
                   {/* <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
                 </>
                 : 
-                <>{collectionHash ? 
-                  <>Private Space for {NFTCollections[collectionHash].name}</>
-                  :
-                  <>My NFTs</>
+                <>
+                {collectionHash 
+                ? <>Private Space for {NFTCollections[collectionHash].name}</>
+                : <>My NFTs</>
                 }
                 </>}
               </h2>
@@ -181,11 +191,12 @@ function NFTCollections(props) {
               let dest = {
                   // pathname: "/nftSingle/"+collection.hash,
                   // pathname: collectionHash ? `${accountHash ? "/nftCollections/"+accountHash : '/nftCollections/'}` : `${accountHash ? accountHash+"/"+collection.hash : '/nftSingle/'+collection.hash}`,
-                  pathname: collectionHash ? "/nftCollections/"+accountHash : '/nftCollections/'+accountHash+'/'+collection.hash,
+                  pathname: collectionHash ? "/nftCollections/"+options.address : '/nftCollections/'+options.address+'/'+collection.hash,
                   // search: "?sort=name",
                   // hash: "#the-hash",
                   // state: { fromDashboard: true }
                 };
+                
                 return (
                   <CollectionContext.Provider key={collection.hash+'Prov'} value={collection}>
                     {/* <p>{collection.owned ? 'Owned' : 'Not Owned'}</p> */}

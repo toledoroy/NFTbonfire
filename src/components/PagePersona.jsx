@@ -67,6 +67,33 @@ function PagePersona(props) {
       
     // const [form] = Form.useForm();
 
+    /* DEBUG
+    useEffect(() => {
+        async function fetchPersonaTEST() {
+            /* Register Persona
+            let params = {
+                chain:'0x4',
+                contract:'0x9E91a8dDF365622771312bD859A2B0063097ad34',
+                token_id: 2, handle:'toledoroy2',
+                // token_id: 1, handle:'toledoroy',
+            };
+            try{
+                const result = Moralis.Cloud.run("personaRegister", params);
+                console.log("[TEST] personaRegister Result:", result);
+            }catch(e){ console.error("[TEST] personaRegister Error:", {e, params}); }
+            * /
+            
+            let res = await Moralis.Cloud.run("personaMetadata", {personaId:"Zl5V5ezSBadHTnBRRvLOLm7G"})
+                .catch(e => console.error("[DEBUG] PagePersona() FAILED to Manually Ran personaMetadata", e))
+            console.warn("!!!![DEBUG] PagePersona() Manually Ran personaMetadata", res);
+        }
+        if(isWeb3Enabled){  //DEBUGGING
+            fetchPersonaTEST();
+        }
+    }, [isWeb3Enabled]);
+    */
+
+
     useEffect(() => {
         if(!isWeb3Enabled){ console.log("Waiting for W3"); }
         else if(params.chain && params.contract) {//By (Full) Token Address
@@ -506,7 +533,7 @@ function PagePersona(props) {
                                 
                                 <TabPane tab={(
                                     <span title={getChainName(account.chain)}>
-                                        {console.warn("[TEST] PagePersona() View Account", account)}
+                                        {console.log("[DEV] PagePersona() View Account", account)}
                                         {account.address 
                                         ? <Address icon={getChainLogo(account.chain)} copyable address={account.address} size={5} />
                                         : <span>[NO HASH]</span>

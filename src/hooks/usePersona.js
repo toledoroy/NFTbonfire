@@ -18,7 +18,7 @@ export const usePersona = () => {
         // if(parseObj.get('token_id') !== undefined) return await updateToken(parseObj);
         if(parseObj.get('token_id') !== undefined){
             let metadata = await updateToken(parseObj);
-            console.warn("[TEST] usePersona.loadMetadata() Return Extracted Metadata:", metadata)
+            // console.warn("[TEST] usePersona.loadMetadata() Return Extracted Metadata:", {metadata})    //V
             return metadata;
         }
         else{
@@ -109,34 +109,15 @@ export const usePersona = () => {
      * @returns object metadata
      */
      async function updateToken(parseObj){
-        //Token's Chain ID
-        // let chain = parseObj.get("chain") || parseObj.get("chainId");
         try{
             //Fetch Token URI
-            // let uri = await contractCall('tokenURI', { tokenId: parseObj.get('token_id') }, chain);
             let uri = await contractCall('tokenURI', { tokenId: parseObj.get('token_id') }, parseObj.get("chain"));
             //Validate Response
             if(uri){
                 //Compare & Update Metadata if Needed
                 if(uri && parseObj.get('token_uri') !== uri) {
-                    console.log("Running personaMetadata() w/id:"+parseObj.id);
+                    //Fetch Metadata (& Update Server if Needed)
                     let newMetadata = await Moralis.Cloud.run("personaMetadata", {personaId:parseObj.id});
-                    
-                    /* MOVED ServerSide
-                    //Log
-                    console.log("[TEST] usePersona.updateToken() Updating Token URI", {before:parseObj.get('token_uri'), after:uri, parseObj})
-                    //Update Token
-                    parseObj.set('token_uri', uri);
-                    //Update Metadata
-                    let newMetadata = await fetchMetadata(uri);
-                    //Update Token
-                    parseObj.set('metadata', newMetadata);
-                    //Save
-                    parseObj.save().catch(error => {
-                        console.error("usePersona.updateToken() Failed to Save Token to DB:", {error, parseObj});
-                    });
-                    */
-
                     //Return
                     return newMetadata;
                 }//Different URI
