@@ -248,13 +248,22 @@ Moralis.Cloud.define("personaMetadata", async (request) => {
     //Validate
     if(!chain || !contract || !tokenId) throw new Error("Missing Data on Persona:"+personaId+" -- Address:"+contract+" Chain:"+chain+" token_id:"+tokenId);
 
-    //Fetch Token Owner
-    // let owner = await getTokenOwner(chain, contract, tokenId);
+    if(!persona.get('owner')){
+      // logger.warn("[TEST] personaMetadata() Fetch Owner for Persona:"+persona.id );  //V
+      //Fetch Token Owner
+      getTokenOwner(chain, contract, tokenId).then(owner => {
+        //Update Owner
+        if(owner) persona.save({owner: owner}, {useMasterKey: true});
+        else logger.error("personaMetadata() Found no Owner for Persona:"+persona.id+" (Owner:'"+owner+"')"); 
+      })
+      .catch(err => { logger.error("personaMetadata() Failed to Fetch Owner for Persona:"+persona.id+" Error:"+err); });
+    }//No owner
+    // else logger.warn("[TEST] personaMetadata() Has Owner:'"+persona.get('owner')+"' on Persona:"+persona.id+"");  //V
 
     //Fetch Token URI
     let token_uri = await getTokenURI(chain, contract, tokenId)
       .catch(err => {throw new Error("personaMetadata() Failed to Fetch Token Owner:'"+personaId+"' Error:'"+err+"'")});
-    logger.warn("[DEBUG] personaMetadata() Got Token URI:'"+token_uri+"' current URI:"+persona.get('token_uri') ); 
+    // logger.warn("[DEBUG] personaMetadata() Got Token URI:'"+token_uri+"' current URI:"+persona.get('token_uri') ); 
 
   try{
     //Validate
