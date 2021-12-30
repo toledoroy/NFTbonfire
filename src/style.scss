@@ -3,7 +3,17 @@
     z-index: 100;
     width: 100%;
     background: rgb(255, 255, 255, 0.85);
-    .ant-menu { background: transparent; border: none; }
+    .ant-menu { 
+        background: transparent; 
+        border: none; 
+        font-size: 17px;
+        font-weight: 500;
+        flex: 1 1;
+        // display: "flex",
+        // width: "100%",
+        // justifyContent: "center",
+
+    }
 }
 .corner_menu {
     display: flex;

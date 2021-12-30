@@ -1,23 +1,16 @@
-import { useLocation } from "react-router";
+// import { useLocation } from "react-router";
 import { Menu } from "antd";
 import { NavLink } from "react-router-dom";
 
 function MenuItems() {
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
 
   return (
     <Menu
       theme="light"
       mode="horizontal"
-      style={{
-        display: "flex",
-        fontSize: "17px",
-        fontWeight: "500",
-        width: "100%",
-        justifyContent: "center",
-      }}
       // defaultSelectedKeys={["quickstart"]}
-    >
+      >
       <Menu.Item key="nftCollections"><NavLink to="/nftCollections">NFTs</NavLink></Menu.Item>
       <Menu.Item key="nftCollections2"><NavLink to="/nftCollections/0x9e87f6bd0964300d2bde778b0a6444217d09f3c1">NFTs 2</NavLink></Menu.Item>
       <Menu.Item key="nftSingle"><NavLink to="/nftSingle/0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656/">nftSingle</NavLink></Menu.Item>
