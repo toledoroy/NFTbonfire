@@ -99,7 +99,7 @@ function PagePersona(props) {
     */
    function setPersona(persona){
        setPersonaActual(persona);
-       setIsOwned(persona.get('owner') == account);
+       setIsOwned(String(persona.get('owner')).toLowerCase() == account.toLowerCase());
        persona.get('metadata') && updateMetadata( persona.get('metadata') );
        console.warn("[TEST] PagePersona() Persona Owner:"+persona.get('owner')+" User ID:"+account, {persona:persona, owned:isOwned, isOwned:(persona.get('owner') == account)});    //V
     }
