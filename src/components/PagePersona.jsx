@@ -47,7 +47,7 @@ function PagePersona(props) {
     const { handle, chain, contract, token_id } = params;
     const { Moralis, isWeb3Enabled, isAuthenticated, setUserData, userError, user, chainId, account } = useMoralis();     //isUserUpdating
     // const [ collection, setCollection ] = useState(null);
-    const [ isEditMode, setIsEditMore ] = useState(false);
+    const [ isEditMode, setIsEditMode ] = useState(false);
     // const [ metadata, setMetadata ] = useState(defaultMetadata);    //Start Empty
     // const [ metadata, setMetadata ] = useState(Persona.getDefaultMetadata());
     const [ metadata, setMetadata ] = useState(null);
@@ -528,8 +528,8 @@ function PagePersona(props) {
                             <>{isOwned &&
                             <div className="button">
                                 {isEditMode && <Button className="debug" onClick={()=>{ /*form.submit();*/ console.warn("[TODO] PagePersona() Save Changes"); }} >[Save]</Button>}
-                                {!isEditMode && <Button variant="contained" color="primary" onClick={()=>{setIsEditMore(isEditMode===false);}}>Edit</Button>}
-                                {isEditMode && <Button variant="contained" color="primary" onClick={()=>{ loadmetadata(); setIsEditMore(isEditMode===false);}}>Cancel</Button>}
+                                {!isEditMode && <Button variant="contained" color="primary" onClick={()=>{setIsEditMode(isEditMode===false);}}>Edit</Button>}
+                                {isEditMode && <Button variant="contained" color="primary" onClick={()=>{ loadmetadata(); setIsEditMode(isEditMode===false);}}>Cancel</Button>}
                             </div>}
                             </>
                             }          

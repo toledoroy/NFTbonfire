@@ -3,19 +3,15 @@ import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import { useMoralisQuery, useWeb3ExecuteFunction } from "react-moralis";
 // import { useNFTCollections } from "hooks/useNFTCollections";
 // import { Link } from "react-router-dom";
-import { Form, Input, Button, Select, InputNumber } from 'antd';
-import { Image, Avatar, Skeleton } from 'antd';
+import { Form, Input, Button, Select, Skeleton, InputNumber } from 'antd';
+// import { Image, Avatar } from 'antd';
 import { Row, Col } from 'antd';
 import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 // import { Space, Cascader } from 'antd';
 import { Upload, message } from 'antd';
 import { IPFS } from "helpers/IPFS";
 import { Persona } from "objects/Persona";
-
-import ImgCrop from 'antd-img-crop';
-import { Exception } from "sass";
-
-// import { useVerifyMetadata } from "hooks/useVerifyMetadata";
+// import ImgCrop from 'antd-img-crop';
 
 const { Option } = Select;
 
@@ -23,7 +19,6 @@ const { Option } = Select;
 const personaFields = require('schema/PersonaData.json');
 // console.warn("PersonaEdit() Persona Template:", personaFields);
 // console.warn("[TEST] Pesona:", Persona);
-// console.warn("[TEST] Pesona:", Persona.update());
 
 /**
  * Component: Persoan Edit Form
@@ -53,7 +48,6 @@ const personaFields = require('schema/PersonaData.json');
 
     const { Moralis, setUserData, userError, isUserUpdating, user, isAuthenticated, account, chainId } = useMoralis();
     const contractProcessor = useWeb3ExecuteFunction();
-    
     //Contract Data
     const contractPersona = Persona.getContractData();
     // const [form] = Form.useForm();
@@ -70,7 +64,7 @@ const personaFields = require('schema/PersonaData.json');
     */
 
     //Log
-    console.warn("PersonaEdit() MEtadata", {chainId, env:process.env, metadata, imageUrl, contract, persona, contractPersona});
+    console.warn("PersonaEdit() MEtadata", {chainId, env:process.env, metadata, imageUrl, contract, persona});
 
     useEffect(() => { 
         //Refresh Metadata on Every Load! (After Updating Chain, This Component's metadata doesn't match the updated parent)
@@ -210,6 +204,8 @@ const personaFields = require('schema/PersonaData.json');
             }
             //Done Saving
             setIsSaving(false);
+            // setIsEditMode(false);        //TODO! This is on Parent Component...
+
         })
         .catch(function(error) {
             message.error('Failed to save file to IPFS. '+error);
@@ -217,8 +213,6 @@ const personaFields = require('schema/PersonaData.json');
             //Done Saving
             setIsSaving(false);
         });
-
-
     }//saveMetadata()
 
     /**
@@ -227,17 +221,17 @@ const personaFields = require('schema/PersonaData.json');
      * @ret void
      */
      const onFinish = async (values) => {
-        //Additions
-        // values.parentId = hash;
         //Create
         // const newPost = await Moralis.Cloud.run("post", values);
         //Log
         // console.warn("[TEST] PersonaEdit.onFinish() Updated Values ", {values});
 
+        //Update Metadata
         let newMetadata = {...metadata, ...values};
+        //Save Persona (to Contract)
         savePersona(newMetadata);
+
         //Redirect
-        
         // history.push('/room/'+newPost.id);
     
         //Return
@@ -255,30 +249,6 @@ const personaFields = require('schema/PersonaData.json');
         <Col className="personaEdit">
         {/* <Col xs={24} lg={{ span: 20, offset: 2 }} className="personaEdit"> */}
         <Skeleton active loading={isLoading}>
-            {/* <input type="file" id="fileInput" onChange={handleChangeFileEvent}/> */}
-            {/*
-            <div style={{width:size, height:size, borderRadius:"50%", overflow:'hidden'}}>
-            <Upload
-                name="avatar"
-                // listType="picture-card"
-                className="avatar-uploader"
-                showUploadList={false}
-                // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"    //Disabled
-                multiple={false}
-                beforeUpload={beforeUpload}
-                onChange={handleChangeFile}
-                >
-                {imageLoading ? <LoadingOutlined /> 
-                    // : imageUrl ? <img src={IPFS.resolveLink(imageUrl)} alt="avatar" style={{ width: '100%' }} /> 
-                    : imageUrl ? <Avatar size={size} src={IPFS.resolveLink(imageUrl)} />
-                    // : imageUrl ? <Avatar size={220} src={imageUrl} />
-                        // : uploadButton
-                        : <div><PlusOutlined /><div style={{ marginTop: 8 }}>Upload</div></div>
-                }
-            </Upload>
-            </div>
-            */}
-
             <Form name="personaForm" 
                 id="personaEditForm"
                 onFinish={onFinish}
@@ -289,7 +259,7 @@ const personaFields = require('schema/PersonaData.json');
                 // initialValues={{ remember: true, }}
                 initialValues={metadata}
                 // initialValues={{name: "name",}}  //V
-                // autoComplete="off"
+                autoComplete="off"
                 >
 
                 {/* 
@@ -308,32 +278,6 @@ const personaFields = require('schema/PersonaData.json');
                 ))*/}
                 
                 {Object.values(personaFields).map((field) => { if(field.element) return field.element; else{
-                    /* MOVED to PagePersona
-                    if(field.name === 'social'){    //Social Accounts     
-                        return (
-                        <div className="social_wrapper">
-                            <h2><i className="bi bi-emoji-sunglasses"></i> Social Accounts</h2>
-                            <div className="items">
-                            {Object.values(field.network).map((network) => { 
-                                let label = network.label ? network.label : (<i className={"bi bi-"+network.name}></i>);    //Default Label (Icon)
-                                return ( 
-                                    <Input 
-                                        key={network.name} 
-                                        className="item" 
-                                        onChange={formSocialOnChange} 
-                                        size="large"
-                                        placeholder={network.name} 
-                                        addonBefore={label} 
-                                        // defaultValue={metadata?.social?.[network.name]}
-                                        value={metadata?.social?.[network.name]}
-                                        name={network.name} />
-                                );
-                            })}
-                            </div>
-                        </div>
-                        );
-                    }//Social
-                    else */
                     if(field.name === 'links'){
                         return( 
                         <div className="links_wrapper">
@@ -388,9 +332,6 @@ const personaFields = require('schema/PersonaData.json');
                         if(field.name !== 'accounts') console.log("[UNHANDLED] PersonaEdit() items field:", {field, fieldData:metadata?.[field.name]});
                     }//Object Array
                     else if(field.type === 'array'){    //Tags
-                        // const children = [];
-                        // for (let i = 10; i < 36; i++) { children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>); }
-                        // function handleChange(value) { console.log(`selected ${value}`); }
                         console.log("[TEST] PersonaEdit() array field:"+field.name, {type:field.type, field, metadata, fieldData:metadata[field.name]});
                         return (
                             <Select key={field.name} mode="tags" style={{ width: '100%' }} label={field.label} name={field.name} placeholder={field.placeholder}>
@@ -415,8 +356,6 @@ const personaFields = require('schema/PersonaData.json');
                 <Form.Item wrapperCol={{ offset: 6, span: 6 }}>
                     <Button type="primary" htmlType="submit">Save</Button>
                     <Button onClick={formReset} style={{marginLeft:'20px' }}> Reset</Button>
-                    
-                    
                 </Form.Item>
                 <div className="tooltip">
                     <li>Before saving keep in mind that all information is public and immutable. Everything you save on the blockchain will always be accessible in some way.</li>
