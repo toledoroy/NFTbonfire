@@ -35,6 +35,7 @@ const personaFields = require('schema/PersonaData.json');
     const { persona, contract } = props;
     // const tokenId = persona.get('token_id');
 
+    const [ isSaving, setIsSaving ] = useState(false);
     // const [ formSocial, setFormSocial ] = useState({});
     // const [ metadata, setMetadata ] = useState(props?.metadata);
     // const [ metadata, setMetadata ] = useState(persona.get('metadata'));
@@ -97,9 +98,9 @@ const personaFields = require('schema/PersonaData.json');
             params: options,
             onSuccess: (data) => {
                 try{
-                    console.log("PersonaEdit.updateNFT() Success", {data, uri, persona, options});
+                    console.log("PersonaEdit.updateNFT() Success Updating Persona:"+persona.id, {data, uri, persona, options});
                     //Update Persona's Metadata (& URI)
-                    Moralis.Cloud.run("personaMetadata", persona.id);
+                    Moralis.Cloud.run("personaMetadata", {personaId:persona.id});
                 }
                 catch(error){
                     console.error("PersonaEdit.updateNFT() Error Updating Persona:"+persona.id, {error, persona, options});
@@ -189,6 +190,7 @@ const personaFields = require('schema/PersonaData.json');
         //TODO: Trimming any whitespace
         // .trim();
 
+        setIsSaving(true);
         //Save Metadata to IPFS
         // saveJSONToIPFS(metadata).then(uri => {
         // IPFS.saveJSONToIPFS(Moralis, metadata).then(async uri => {
@@ -206,10 +208,14 @@ const personaFields = require('schema/PersonaData.json');
                 //Log
                 console.warn("[TEST] PersonaEdit.saveMetadata() After Mint:", {res, metadata, uri});
             }
+            //Done Saving
+            setIsSaving(false);
         })
         .catch(function(error) {
             message.error('Failed to save file to IPFS. '+error);
             console.error("[CAUGHT] PersonaEdit.saveMetadata() IPFS Call Failed:", {error, metadata, isAuthenticated, user, persona}); 
+            //Done Saving
+            setIsSaving(false);
         });
 
 
