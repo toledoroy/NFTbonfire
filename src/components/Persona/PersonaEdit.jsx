@@ -139,9 +139,9 @@ const personaFields = require('schema/PersonaData.json');
                     contract: persona.get('address'),
                     // token_id: persona.get('token_id'),
                     chain: chainId,     //Current Chain
-                    token_id: data.returnValues.tokenId,        //TESTING
+                    token_id: data?.Transfer?.returnValues?.tokenId,        //TESTING
                 };
-                console.warn("[TODO] PersonaEdit.mintNFT() Success -- Should Register New Token:"+data.returnValues.tokenId, {tokenData, data, uri, persona, options});
+                console.warn("[TODO] PersonaEdit.mintNFT() Success -- Should Register New Token:"+data?.Transfer?.returnValues?.tokenId, {tokenData, data, uri, persona, options});
                 //Update Persona
                 Moralis.Cloud.run("personaRegister", tokenData);
 
