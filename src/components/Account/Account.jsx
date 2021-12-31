@@ -71,12 +71,14 @@ function Account() {
       console.log("Account() Account Changed -- Account:"+account, Moralis.User.current());
       */
 
-
-      //Test Personas
-      // const personas = [];
-      const query = new Moralis.Query(Persona);
-      // query.equalTo("account", handle).find().then((results) => {
-      query.find().then((results) => {setPersonas(results); console.log("Personas:", results);  });
+      else{
+        //Fetch Account's Owned Personas
+        const query = new Moralis.Query(Persona);
+        query.equalTo("owner", account).find().then((results) => { 
+          setPersonas(results); 
+          console.log("Avilable Personas:", results); 
+        });
+      }
     }
   }, [account]);
 
@@ -153,7 +155,7 @@ function Account() {
           </Button>
         </Menu.Item>
 
-        <Menu.Item key="title2" className="title hr">{!personas ? <span>No Personas</span> : <span>Personas</span>}</Menu.Item>
+        <Menu.Item key="title2" className="title hr">{personas.length===0 ? <span>No Personas</span> : <span>My Personas</span>}</Menu.Item>
         {personas.map((persona, index) => (
           <Menu.Item key={"pers"+index} className="persona_select" onClick={(evt) => { 
             // console.warn("[TEST] Account() Switch to Persona:", {persona, curPersona});  //V

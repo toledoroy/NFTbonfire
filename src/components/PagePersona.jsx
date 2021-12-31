@@ -53,7 +53,7 @@ function PagePersona(props) {
     const [ metadata, setMetadata ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(true);
     const [ isOwned, setIsOwned ] = useState(false);
-    const [ persona, setPersona ] = useState( new Persona() );
+    const [ persona, setPersonaActual ] = useState( new Persona() );
     const [ isAddAccModalVisible, setIsAddAccModalVisible ] = useState(false);
     const { fetchMetadata, loadMetadata } = usePersona(); 
     //File Upload
@@ -94,6 +94,26 @@ function PagePersona(props) {
     }, [isWeb3Enabled]);
     */
 
+   /**
+    * Set Persona Wrapper Function
+    */
+   function setPersona(persona){
+       setPersonaActual(persona);
+       setIsOwned(persona.get('owner') == account);
+       persona.get('metadata') && updateMetadata( persona.get('metadata') );
+       console.warn("[TEST] PagePersona() Persona Owner:"+persona.get('owner')+" User ID:"+account, {persona:persona, owned:isOwned, isOwned:(persona.get('owner') == account)});    //V
+    }
+   
+    /**
+     * Full Metadata Update Procedure
+     * @param {*} metadata 
+     */
+    function updateMetadata(metadata){
+        setMetadata(metadata);
+        setImageUrl(metadata?.image);
+        //Done Loading
+        setIsLoading(false);
+    }//updateMetadata()
 
     useEffect(() => {
         if(!isWeb3Enabled){ console.log("Waiting for W3"); }
@@ -120,35 +140,34 @@ function PagePersona(props) {
             // query.get({handle}).then((results) => {
                 if(results.length > 0){
                     //Override by handle
-                    let result = results[0];
+                    let persona = results[0];
 
                     //Reload Metadata
-                    if(result.get('metadata')){
-                        updateMetadata( result.get('metadata') );
-                        setPersona(result);
-                        setIsOwned(result.get('owner') == account);
-                    
-                        console.warn("[TEST] PagePersona() Persona Owner:"+result.get('owner'), {persona:result, owned:isOwned});    //V
+                    if(persona.get('metadata')){
+                        setPersona(persona);
+                        // updateMetadata( persona.get('metadata') );
                     }
                     else{
-                        console.warn("[DEV] PagePersona() Reload Metadata for Handle:"+params.handle, {persona:result});    //V
+                        console.warn("[DEV] PagePersona() Reload Metadata for Handle:"+params.handle, {persona:persona});    //V
                         //Load Fresh Metadata
-                        loadMetadata(result).then((freshMetadata) => {
-                            console.warn("[TEST] PagePersona() Loaded Fresh Metadata For:'"+params.handle+"'", {freshMetadata, persona:result});    
+                        loadMetadata(persona).then((freshMetadata) => {
+                            console.warn("[TEST] PagePersona() Loaded Fresh Metadata For:'"+params.handle+"'", {freshMetadata, persona:persona});    
+                            setPersona(persona);
                             updateMetadata(freshMetadata);
-                            setPersona(result);
                         });
                     }//No Metadata
-                }
-                else{//404
+                }//Known Handle
+                else{//No Such Persona for Handle (404)
                     //Log
                     console.error("PagePersona() No Results for Handle:"+params.handle, {results, metadata} ); 
                     //Done Loading
                     setIsLoading(false);
-                }
+                }//Unknown Handle
             });
         }//Requsted: Handle
         else{//New Persona
+            //Log
+            // console.warn("PagePersona() New Persona:", {params}); 
             //Validate Authenticated User
             isAuthenticated && initNewPersona();
             //Ready
@@ -161,20 +180,35 @@ function PagePersona(props) {
     useEffect(()  =>  {
         //When Entering Edit More - Reload Persona from Contract
         if(isEditMode){
-            if(persona) loadmetadata();
+            if(persona){
+                if(persona.get('token_id') !== undefined) loadmetadata();
+                else{
+                    let metadata = {social:{}, accounts:[]};
+                    //Default Accounts (Current User Accounts)
+                    for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
+                    updateMetadata( metadata );
+                }
+            } 
             else console.error("PagePersona() No Persona", persona);
         } 
     },[isEditMode]);
-    const loadDefaultMetadata = async () => {
-        let defaultMetadata = Persona.getDefaultMetadata();
-        //Default Accounts
-        for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
-        console.warn("[TEST] PagePersona.loadDefaultMetadata() Added Default Accounts:", {user, persona, metadata});
 
+    const loadDefaultMetadata = () => {
+        console.warn("[TEST] PagePersona.loadDefaultMetadata() Add Default Accounts:", {user, persona, metadata});
+
+        let defaultMetadata = Persona.getDefaultMetadata();
+        if(!defaultMetadata.accounts) defaultMetadata.accounts = [];    //Init
+        if(defaultMetadata.accounts.length===0){
+            //Default Accounts (Current User Accounts)
+            for(let address of user.get('accounts')) defaultMetadata.accounts.push({address, chain:chainId});
+            console.warn("[TEST] PagePersona.loadDefaultMetadata() Added Default Accounts:", {user, persona, metadata});
+        }
         //Set
         updateMetadata(defaultMetadata);
         console.log("PagePersona.loadDefaultMetadata() Loaded Default Metadata",  {defaultMetadata, metadata, params});
+        return defaultMetadata;
     };
+
     /**
      * Init New Persona
      */
@@ -187,19 +221,20 @@ function PagePersona(props) {
             //[DEV] Default Persona Data  
             let personaData = { 
                 // chain:'0x4', 
-                chain:chainId, 
                 // address:Persona.getContractAddress('0x4'), 
-                address: contractAddr,
                 // token_id:'1',
                 // metadata: Persona.getDefaultMetadata(),
-                owner: user,
+                chain: chainId, 
+                address: contractAddr,
+                owner: account,
                 debug:"Default Persona Object",
             };
-            //Init Faux Persona
+            //Init Placehodler Persona
             const persona = new Persona(personaData);
             setPersona(persona);
+
             //Load Default Metadata
-            loadDefaultMetadata();
+            updateMetadata( loadDefaultMetadata() );
             
             console.log("PagePersona.initNewPersona() New Persona w/Default Metadata",  {persona, user, metadata, params});
         }
@@ -218,27 +253,14 @@ function PagePersona(props) {
         //Start Loading
         setIsLoading(true);
         try{
+            
             //Load Metadata from Chain
             let metadata = await loadMetadata(persona);
             //Log
             console.warn("PagePersona() Freshly Loaded Metadata:", {metadata, persona});
-            
-            //Validate
-            if(!metadata || typeof metadata !== 'object'){
-                /*
-                //Fallback to Default Metadata
-                metadata = Persona.getDefaultMetadata();
-                console.warn("[TEST] PagePersona() Faild to load Load Metadata -- Fallback to Default", {metadata, persona});
-                */
-                //Init Metadata
-                metadata = { social:{}, accounts:[] };
-                //Default to Current User Addresses
-                if(user?.get('accounts')) for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
-                console.warn("[TEST] PagePersona() Added Default Accounts:", {user, persona, metadata});
-            }//No Metadata
-
             //Set Metadata to State
             updateMetadata( metadata );
+
         }catch(error){
             console.error("[CAUGHT] PagePersona() Error Loading Metadata:", error);
         }
@@ -269,17 +291,6 @@ function PagePersona(props) {
     }
     */
     
-    /**
-     * Full Metadata Update Procedure
-     * @param {*} metadata 
-     */
-     function updateMetadata(metadata){
-        setMetadata(metadata);
-        setImageUrl(metadata?.image);
-         //Done Loading
-         setIsLoading(false);
-     }//updateMetadata()
- 
     /**
      * Tab Close/Add (Add/Remove Account)
      * @param string targetKey 
@@ -400,7 +411,10 @@ function PagePersona(props) {
                     <div className="edit" style={{display:isEditMode?'block':'none'}}>
                         <div className="social">    
                             <div className="social_wrapper">
-                                <h2><i className="bi bi-emoji-sunglasses"></i> Social Accounts</h2>
+                                <h2>
+                                    {/* <i className="bi bi-emoji-sunglasses"></i>  */}
+                                    Social Accounts
+                                </h2>
                                 <div className="items">
                                 <Skeleton loading={isLoading} active>
                                 {Object.values(personaFields.social.network).map((network) => { 
@@ -493,6 +507,7 @@ function PagePersona(props) {
                         </div>
                         
                         <div className="info">
+                            {!isEditMode && 
                             <Skeleton loading={isLoading} active >
                                 <h1 className="name">{metadata?.name || metadata?.firstname+' '+metadata?.lastname}</h1>
                                 {/* <div className="handle">@{metadata?.username}</div> */}
@@ -504,6 +519,7 @@ function PagePersona(props) {
                                     </div>
                                 </div>
                             </Skeleton>
+                            }
                         </div>
                     
                         <div className="actions">
@@ -522,6 +538,7 @@ function PagePersona(props) {
 
                     {isEditMode && 
                     <div className="edit">
+                        {/* TODO: Move Form Stuff over Here! */}
                         {/* <PersonaEdit metadata={metadata} contract={Persona.getContractData()} persona={persona} /> */}
                         <PersonaEdit persona={persona} metadata={metadata} isLoading={isLoading} />
                     </div>

@@ -8,13 +8,13 @@ import { Persona } from "objects/Persona";
  * Check if User is Allowed to Access a Collection 
  */
 export const usePersona = () => {
-     const { Moralis, chainId } = useMoralis();
+    const { Moralis, chainId } = useMoralis();
 
-     /**
+    /**
      * Load Metadata from Chain
      * @ret object / null       Metadata or Default Metadata (or null)
      */
-     async function loadMetadata(parseObj){
+    async function loadMetadata(parseObj){
         // if(parseObj.get('token_id') !== undefined) return await updateToken(parseObj);
         if(parseObj.get('token_id') !== undefined){
             let metadata = await updateToken(parseObj);
@@ -22,8 +22,11 @@ export const usePersona = () => {
             return metadata;
         }
         else{
-            console.error("[TEST] usePersona.loadMetadata() Missing Token ID:"+parseObj.get('token_id'), {parseObj});
-            return null;
+            // console.error("[TEST] usePersona.loadMetadata() Missing Token ID:"+parseObj.get('token_id'), {parseObj});
+            // return null;
+            //New Persona
+            console.warn("[TEST] usePersona.loadMetadata() No Token ID", {parseObj});
+            return parseObj.get('metadata');
         } 
     }//loadMetadata()
     

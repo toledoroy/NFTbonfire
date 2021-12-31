@@ -100,22 +100,6 @@ const personaFields = require('schema/PersonaData.json');
                     console.log("PersonaEdit.updateNFT() Success", {data, uri, persona, options});
                     //Update Persona's Metadata (& URI)
                     Moralis.Cloud.run("personaMetadata", persona.id);
-                    /* THIS SHOULD GO THROUGH THE SERVER
-                    //Save Persona to DB
-                    // persona.save();       //Error: TypeError: (intermediate value).save is not a function
-                    // TESTING
-                    //Register Persona to DB
-                    let compId = {
-                        contract: persona.get('address'),
-                        token_id: persona.get('token_id'),
-                        chain: chainId,     //Current Chain
-                    };
-                    console.warn("[TEST] PersonaEdit.updateNFT() Register Persona to DB", compId);
-                    //Update Persona
-                    // Moralis.Cloud.run("personaRegister", compId);
-                    //Return Transaction...
-                    return data;
-                    */
                 }
                 catch(error){
                     console.error("PersonaEdit.updateNFT() Error Updating Persona:"+persona.id, {error, persona, options});
@@ -127,7 +111,7 @@ const personaFields = require('schema/PersonaData.json');
             },
         });
     }//updateNFT()
-
+    
     /**
      * Mint New NFT
      * @param string uri 
@@ -142,6 +126,9 @@ const personaFields = require('schema/PersonaData.json');
             functionName: 'mint',
             params: { tokenURI:uri },
         };
+
+        console.warn("[TEST] PersonaEdit.mintNFT() Will Register New Token", {options, uri, persona});
+
         //Mint New NFT
         await contractProcessor.fetch({
             params: options,
@@ -149,11 +136,12 @@ const personaFields = require('schema/PersonaData.json');
 
                 //Token Data
                 let tokenData = {
-                    // contract: persona.get('address'),
+                    contract: persona.get('address'),
                     // token_id: persona.get('token_id'),
-                    // chain: chainId,     //Current Chain
+                    chain: chainId,     //Current Chain
+                    token_id: data.returnValues.tokenId,        //TESTING
                 };
-                console.warn("[TODO] PersonaEdit.mintNFT() Success -- Should Register New Token", {tokenData, data, uri, persona, options});
+                console.warn("[TODO] PersonaEdit.mintNFT() Success -- Should Register New Token:"+data.returnValues.tokenId, {tokenData, data, uri, persona, options});
                 //Update Persona
                 Moralis.Cloud.run("personaRegister", tokenData);
 
@@ -182,6 +170,50 @@ const personaFields = require('schema/PersonaData.json');
         }
         return metadata;
     }//metadataSanitize
+    /**
+     * 
+     */
+    function savePersona(metadata){
+        //Sanitize
+        metadata = metadataSanitize(metadata);
+        //Update Metadata
+        // setMetadata({...metadata, ...values});
+        setMetadata(metadata);
+
+        //Update Persona (local)
+        persona.set('metadata', metadata);
+
+        //Log
+        console.warn("[TEST] PersonaEdit.saveMetadata() Updated Values to Metadata", {persona, metadata});
+
+        //TODO: Trimming any whitespace
+        // .trim();
+
+        //Save Metadata to IPFS
+        // saveJSONToIPFS(metadata).then(uri => {
+        // IPFS.saveJSONToIPFS(Moralis, metadata).then(async uri => {
+        IPFS.saveJSONToIPFS(Moralis, metadata).then(async uri => {
+            //Log
+            console.warn("PersonaEdit.saveMetadata() Saving Persoa to Contract:", {metadata, uri});
+            if(persona.get('token_id')){
+                //Update Contract
+                let res = await updateNFT(uri);   //Promise
+                //Log
+                console.warn("[TEST] PersonaEdit.saveMetadata() After Update:", {res, metadata, uri});
+            }else{
+                //Mint New NFT
+                let res = await mintNFT(uri);
+                //Log
+                console.warn("[TEST] PersonaEdit.saveMetadata() After Mint:", {res, metadata, uri});
+            }
+        })
+        .catch(function(error) {
+            message.error('Failed to save file to IPFS. '+error);
+            console.error("[CAUGHT] PersonaEdit.saveMetadata() IPFS Call Failed:", {error, metadata, isAuthenticated, user, persona}); 
+        });
+
+
+    }//saveMetadata()
 
     /**
      * Save Procedure (Form Submit Function)
@@ -193,43 +225,11 @@ const personaFields = require('schema/PersonaData.json');
         // values.parentId = hash;
         //Create
         // const newPost = await Moralis.Cloud.run("post", values);
-
-        let newMetadata = {...metadata, ...values}
-        //Sanitize
-        newMetadata = metadataSanitize(newMetadata);
-        //Update Metadata
-        // setMetadata({...metadata, ...values});
-        setMetadata(newMetadata);
-        //Update Persona
-        persona.set('metadata', newMetadata);
-
         //Log
-        console.warn("[TEST] PersonaEdit.onFinish() Updated Values to Metadata", {persona, values, metadata});
+        // console.warn("[TEST] PersonaEdit.onFinish() Updated Values ", {values});
 
-        //TODO: Trimming any whitespace
-        // .trim();
-
-        //Save Metadata to IPFS
-        // saveJSONToIPFS(metadata).then(uri => {
-        // IPFS.saveJSONToIPFS(Moralis, metadata).then(async uri => {
-        IPFS.saveJSONToIPFS(Moralis, newMetadata).then(async uri => {
-            //Log
-            console.warn("PersonaEdit.onFinish() Saving Persoa to Contract:", {newMetadata, uri});
-            if(persona.get('token_id')){
-                //Update Contract
-                let res = await updateNFT(uri);   //Promise
-                //Log
-                console.warn("PersonaEdit.onFinish() After Update:", {res, newMetadata, uri});
-            }else{
-                //Mint New NFT
-                mintNFT(uri);
-            }
-        })
-        .catch(function(error) {
-            message.error('Failed to save file to IPFS. '+error);
-            console.error("[CAUGHT] PersonaEdit.onFinish() IPFS Call Failed:", {error, newMetadata, isAuthenticated, user, persona}); 
-        });
-
+        let newMetadata = {...metadata, ...values};
+        savePersona(newMetadata);
         //Redirect
         
         // history.push('/room/'+newPost.id);
@@ -409,7 +409,13 @@ const personaFields = require('schema/PersonaData.json');
                 <Form.Item wrapperCol={{ offset: 6, span: 6 }}>
                     <Button type="primary" htmlType="submit">Save</Button>
                     <Button onClick={formReset} style={{marginLeft:'20px' }}> Reset</Button>
+                    
+                    
                 </Form.Item>
+                <div className="tooltip">
+                    <li>Before saving keep in mind that all information is public and immutable. Everything you save on the blockchain will always be accessible in some way.</li>
+                    <li>For every change to the blockchain you will need to pay a miner fee (gas)</li>
+                </div>
             </Form>
         </Skeleton>
         </Col>

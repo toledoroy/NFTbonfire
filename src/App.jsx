@@ -128,6 +128,7 @@ const App = ({ isServerInfo }) => {
               <Route path="/personatoken/:chain/:contract/:token_id" component={PagePersona} />
               <Route path="/personatoken/" component={PagePersona} /> {/* New Persona */}
 
+              <Route path="/persona" component={PagePersona} />
 
               {/* {!isAuthenticated && <Route path="*" component={PageAuthenticate} />}  */}
               {/* pages below this point require authentication (CANCELLED) */}

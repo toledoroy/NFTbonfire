@@ -146,18 +146,18 @@ const personaDefaultMetadatas = [
             },
         ],
         "accounts": [
-            {
-                "address": "0x874a6E7F5e9537C4F934Fa0d6cea906e24fc287D",
-                "chain": "0x4",
-            },
-            {
-                "address": "0x874a6E7F5e9537C4F934Fa0d6cea906e24fc287D",
-                "chain": "0x1",
-            },
-            {
-                "address": "0x8b08BDA46eB904B18E8385F1423a135167647cA3",
-                "chain": "0x1",
-            },
+        //     {
+        //         "address": "0x874a6E7F5e9537C4F934Fa0d6cea906e24fc287D",
+        //         "chain": "0x4",
+        //     },
+        //     {
+        //         "address": "0x874a6E7F5e9537C4F934Fa0d6cea906e24fc287D",
+        //         "chain": "0x1",
+        //     },
+        //     {
+        //         "address": "0x8b08BDA46eB904B18E8385F1423a135167647cA3",
+        //         "chain": "0x1",
+        //     },
         ],
     }
 ];
