@@ -45,13 +45,14 @@ function PagePersona(props) {
     const { params } = props.match;
     // const { handle } = props.match.params;
     const { handle, chain, contract, token_id } = params;
-    const { Moralis, isWeb3Enabled, isAuthenticated, setUserData, userError, user, chainId } = useMoralis();     //isUserUpdating
+    const { Moralis, isWeb3Enabled, isAuthenticated, setUserData, userError, user, chainId, account } = useMoralis();     //isUserUpdating
     // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMore ] = useState(false);
     // const [ metadata, setMetadata ] = useState(defaultMetadata);    //Start Empty
     // const [ metadata, setMetadata ] = useState(Persona.getDefaultMetadata());
     const [ metadata, setMetadata ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(true);
+    const [ isOwned, setIsOwned ] = useState(false);
     const [ persona, setPersona ] = useState( new Persona() );
     const [ isAddAccModalVisible, setIsAddAccModalVisible ] = useState(false);
     const { fetchMetadata, loadMetadata } = usePersona(); 
@@ -110,27 +111,30 @@ function PagePersona(props) {
             }
         }//Requested: Specific Token
         else if(params.handle){ //By Registered Handle
-            console.warn("[TEST] PagePersona() Get persona By Handle:'"+handle+"'", { params, isWeb3Enabled } ); 
+            // console.warn("[TEST] PagePersona() Get persona By Handle:'"+handle+"'", { params, isWeb3Enabled } ); 
             //Start Loading
             setIsLoading(true);
             //Query
             const query = new Moralis.Query(Persona);
-            query.equalTo("handle", handle).find().then((results) => {
+            query.equalTo("handle", handle).limit(1).find().then((results) => {
             // query.get({handle}).then((results) => {
                 if(results.length > 0){
                     //Override by handle
                     let result = results[0];
-                    console.warn("[TEST] PagePersona() Results for Handle:"+params.handle, {results, result, isWeb3Enabled});    
 
                     //Reload Metadata
                     if(result.get('metadata')){
                         updateMetadata( result.get('metadata') );
                         setPersona(result);
+                        setIsOwned(result.get('owner') == account);
+                    
+                        console.warn("[TEST] PagePersona() Persona Owner:"+result.get('owner'), {persona:result, owned:isOwned});    //V
                     }
                     else{
+                        console.warn("[DEV] PagePersona() Reload Metadata for Handle:"+params.handle, {persona:result});    //V
                         //Load Fresh Metadata
                         loadMetadata(result).then((freshMetadata) => {
-                            console.warn("[TEST] PagePersona() Loaded Fresh Metadata For:'"+params.handle+"'", {freshMetadata, result});    
+                            console.warn("[TEST] PagePersona() Loaded Fresh Metadata For:'"+params.handle+"'", {freshMetadata, persona:result});    
                             updateMetadata(freshMetadata);
                             setPersona(result);
                         });
@@ -505,12 +509,14 @@ function PagePersona(props) {
                         <div className="actions">
                             {isLoading ? <Skeleton.Button active />
                             :
+                            <>{isOwned &&
                             <div className="button">
                                 {isEditMode && <Button className="debug" onClick={()=>{ /*form.submit();*/ console.warn("[TODO] PagePersona() Save Changes"); }} >[Save]</Button>}
                                 {!isEditMode && <Button variant="contained" color="primary" onClick={()=>{setIsEditMore(isEditMode===false);}}>Edit</Button>}
                                 {isEditMode && <Button variant="contained" color="primary" onClick={()=>{ loadmetadata(); setIsEditMore(isEditMode===false);}}>Cancel</Button>}
-                            </div>
-                            }                    
+                            </div>}
+                            </>
+                            }          
                         </div>
                     </div>
 
