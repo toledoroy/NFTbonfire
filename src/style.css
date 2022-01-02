@@ -77,20 +77,6 @@ footer { margin-top: 40px; }
 .item .flip-card-back dd{ max-width: 100%; white-space: nowrap; }
 .item .flip-card-back dl dl dd { margin-left:10px; }
 
-/* Persona Edit */
-.personaEdit .social_wrapper,
-.personaEdit .links_wrapper { margin-top: 20px; }
-.personaEdit .items{ margin-top: 10px;}
-.personaEdit .items .item { min-width: 200px; margin: 5px; }
-.personaEdit .accounts .crypto_addr { font-size: 0.9em;}
-.personaEdit .social_wrapper .items {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: start;
-}
-.personaEdit .social_wrapper .items .item { width: 18%; }
-/* .personaEdit .links_wrapper .items .item { width: 90%; } */
-
 
 
 /* Persona Business Card */

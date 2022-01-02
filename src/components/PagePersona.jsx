@@ -10,7 +10,7 @@ import { Collapse, Tabs, Input, Select } from 'antd';
 import { Card, Dropdown, Menu, Upload, message } from 'antd';
 import PersonaEdit from "components/Persona/PersonaEdit";
 import Address from "components/Address/Address";
-// import { PersonaHelper } from "helpers/PersonaHelper";
+import { PersonaHelper } from "helpers/PersonaHelper";
 import NFTCollections from "components/NFTCollections";
 import { getChainName, getChainLogo } from "helpers/networks";
 import { Persona } from "objects/Persona";
@@ -444,7 +444,7 @@ function PagePersona(props) {
                             </div>
                         </div>
 
-                        {false && 
+                        {true && 
                         <div className="links">
                             <div className="links_wrapper">
                                 <h2><i className="bi bi-link"></i> Links

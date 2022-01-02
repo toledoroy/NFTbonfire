@@ -25,7 +25,9 @@ export const PersonaHelper = {
         let handle = persona.get('handle');
         let pathname = handle ? "/"+handle : "/persona/"+persona.get('chain')+"/"+persona.get('token_address')+"/"+persona.get('token_id');
         return pathname;
-    }
+    },
+
+    isNew(persona){ return (!persona.get('token_id'))},
 
 };//personaHelper{}
 

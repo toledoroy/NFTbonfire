@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import { useMoralisQuery, useWeb3ExecuteFunction } from "react-moralis";
+import { PersonaHelper } from "helpers/PersonaHelper";
 // import { useNFTCollections } from "hooks/useNFTCollections";
 // import { Link } from "react-router-dom";
-import { Form, Input, Button, Select, Skeleton, InputNumber } from 'antd';
+import { Form, Input, Button, Select, Skeleton, Popconfirm, InputNumber } from 'antd';
 // import { Image, Avatar } from 'antd';
 import { Row, Col } from 'antd';
 import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -12,6 +13,7 @@ import { Upload, message } from 'antd';
 import { IPFS } from "helpers/IPFS";
 import { Persona } from "objects/Persona";
 // import ImgCrop from 'antd-img-crop';
+import { Spin } from 'antd';
 
 const { Option } = Select;
 
@@ -73,6 +75,9 @@ const personaFields = require('schema/PersonaData.json');
         setImageUrl(props.metadata?.image);
     }, [props.metadata]);
 
+
+
+
     /**
      * Update NFT URI
      * @param string uri 
@@ -95,6 +100,8 @@ const personaFields = require('schema/PersonaData.json');
                     console.log("PersonaEdit.updateNFT() Success Updating Persona:"+persona.id, {data, uri, persona, options});
                     //Update Persona's Metadata (& URI)
                     Moralis.Cloud.run("personaMetadata", {personaId:persona.id});
+                    //Return Transaction Data
+                    return data;
                 }
                 catch(error){
                     console.error("PersonaEdit.updateNFT() Error Updating Persona:"+persona.id, {error, persona, options});
@@ -140,7 +147,7 @@ const personaFields = require('schema/PersonaData.json');
                 //Update Persona
                 Moralis.Cloud.run("personaRegister", tokenData);
 
-                //Return Transaction...
+                //Return Transaction Data
                 return data;
             },
             onError: (error) => {
@@ -279,6 +286,7 @@ const personaFields = require('schema/PersonaData.json');
                 
                 {Object.values(personaFields).map((field) => { if(field.element) return field.element; else{
                     if(field.name === 'links'){
+                        return null;    //MOVED
                         return( 
                         <div className="links_wrapper">
                             <h2><i className="bi bi-link"></i> Links</h2>
@@ -346,21 +354,62 @@ const personaFields = require('schema/PersonaData.json');
                         return (
                             // <Form.Item {...field}><Input /></Form.Item>
                             <Form.Item key={field.name} name={field.name} label={field.label} rules={field.rules}>
-                                <Input placeholder={field.placeholder}/>
+                                <Input placeholder={field.placeholder} onChange={(e) => {
+                                // console.log("Changed", field.name, e.target.value, metadata); 
+                                setMetadata({...metadata, [field.name]:e.target.value });
+                            }}/>
                             </Form.Item>
                         );
                     }
                 }//Each Field
                 })}
                 
-                <Form.Item wrapperCol={{ offset: 6, span: 6 }}>
-                    <Button type="primary" htmlType="submit">Save</Button>
-                    <Button onClick={formReset} style={{marginLeft:'20px' }}> Reset</Button>
-                </Form.Item>
-                <div className="tooltip">
-                    <li>Before saving keep in mind that all information is public and immutable. Everything you save on the blockchain will always be accessible in some way.</li>
-                    <li>For every change to the blockchain you will need to pay a miner fee (gas)</li>
+                <div className="buttons">
+                    {isSaving && 
+                    <div className="saving">
+                        <span>Saving Metadata to IPFS</span>
+                        <Spin />
+                    </div>}
                 </div>
+                <Form.Item 
+                    // wrapperCol={{ offset: 6, span: 6 }}
+                    wrapperCol={{ offset: 1, span: 10 }}
+                    >
+                    
+
+                    {PersonaHelper.isNew(persona) 
+                    ? <Popconfirm
+                        title={
+                            <div className="tooltip">
+                                <ul>
+                                    <li>When saving data on the blockchain you will be charged a network fee (gas)</li>
+                                    <li>You own your data and you can take it with you to other websites, if you want</li>
+                                    <li>Keep in mind that everything you save on the blockchain will always be accessible in some way.</li>
+                                </ul>
+                            </div>
+                        }
+                        onConfirm={() => onFinish({}) }
+                        icon=""
+                        //   onVisibleChange={() => console.log('visible change')}
+                        >
+                            <Button type="primary">Mint New Persona</Button>
+                        </Popconfirm>
+                    : <Button type="primary" htmlType="submit">Save</Button>
+                    }
+
+                    {/* <Button onClick={formReset} style={{marginLeft:'20px' }}>Reset</Button> */}
+                </Form.Item>
+
+                {(false && PersonaHelper.isNew(persona)) && 
+                <div className="tooltip">
+                    <ul>
+                        <li>When saving data on the blockchain you will be charged a network fee (gas)</li>
+                        <li>You own your data and you can take it with you to other websites, if you want</li>
+                        <li>Keep in mind that everything you save on the blockchain will always be accessible in some way.</li>
+                    </ul>
+                </div>
+                }
+
             </Form>
         </Skeleton>
         </Col>
