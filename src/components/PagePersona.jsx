@@ -116,7 +116,11 @@ function PagePersona(props) {
     }//updateMetadata()
 
     useEffect(() => {
-        if(!isWeb3Enabled){ console.log("Waiting for W3"); }
+        if(!isAuthenticated){
+            //Request for Authentication
+            message.error('To create a new persona, please first authenticate');
+        }
+        else if(!isWeb3Enabled){ console.error("Waiting for W3"); }
         else if(params.chain && params.contract) {//By (Full) Token Address
             if(params.token_id) {
                 let personaData = {
@@ -167,14 +171,21 @@ function PagePersona(props) {
         }//Requsted: Handle
         else{//New Persona
             //Log
-            // console.warn("PagePersona() New Persona:", {params}); 
+            console.warn("PagePersona() New Persona:", {params}); 
             //Validate Authenticated User
-            isAuthenticated && initNewPersona();
+            if (isAuthenticated){
+                initNewPersona();
+                setIsEditMode(true);
+            }
+            else{
+                console.error("PagePersona() Can't Create New Persona -- User Not Authenticated");
+                message.error('To create a new persona, please first authenticate');
+            }
             //Ready
             setIsLoading(false);
         }//New Persona
 
-        persona && console.log("PagePersona() persona:",  {user, metadata, personaTokenId: persona?.get('token_id'), params});
+        persona && console.log("PagePersona() persona:",  {persona, isWeb3Enabled, user, metadata, personaTokenId: persona?.get('token_id'), params});
     },[params, isWeb3Enabled]);
 
     useEffect(()  =>  {
