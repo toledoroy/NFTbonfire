@@ -48,8 +48,6 @@ function PagePersona(props) {
     const { Moralis, isWeb3Enabled, isAuthenticated, setUserData, userError, user, chainId, account } = useMoralis();     //isUserUpdating
     // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMode ] = useState(false);
-    // const [ metadata, setMetadata ] = useState(defaultMetadata);    //Start Empty
-    // const [ metadata, setMetadata ] = useState(Persona.getDefaultMetadata());
     const [ metadata, setMetadata ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(true);
     const [ isOwned, setIsOwned ] = useState(false);
@@ -114,13 +112,9 @@ function PagePersona(props) {
         //Done Loading
         setIsLoading(false);
     }//updateMetadata()
-
+    
     useEffect(() => {
-        if(!isAuthenticated){
-            //Request for Authentication
-            message.error('To create a new persona, please first authenticate');
-        }
-        else if(!isWeb3Enabled){ console.error("Waiting for W3"); }
+        if(!isWeb3Enabled){ console.error("Waiting for W3"); }
         else if(params.chain && params.contract) {//By (Full) Token Address
             if(params.token_id) {
                 let personaData = {
@@ -173,13 +167,14 @@ function PagePersona(props) {
             //Log
             console.warn("PagePersona() New Persona:", {params}); 
             //Validate Authenticated User
-            if (isAuthenticated){
+            if(isAuthenticated){
                 initNewPersona();
                 setIsEditMode(true);
             }
             else{
                 console.error("PagePersona() Can't Create New Persona -- User Not Authenticated");
-                message.error('To create a new persona, please first authenticate');
+                //Request for Authentication
+                message.error('To mint yourself a new persona, please first authenticate using your Web3 wallet.');
             }
             //Ready
             setIsLoading(false);
@@ -188,7 +183,7 @@ function PagePersona(props) {
         persona && console.log("PagePersona() persona:",  {persona, isWeb3Enabled, user, metadata, personaTokenId: persona?.get('token_id'), params});
     },[params, isWeb3Enabled]);
 
-    useEffect(()  =>  {
+    useEffect(() => {
         //When Entering Edit More - Reload Persona from Contract
         if(isEditMode){
             if(persona){
@@ -201,7 +196,7 @@ function PagePersona(props) {
                 }
             } 
             else console.error("PagePersona() No Persona", persona);
-        } 
+        }
     },[isEditMode]);
 
     const loadDefaultMetadata = () => {

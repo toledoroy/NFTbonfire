@@ -25,8 +25,9 @@ import Ramper from "components/Ramper";
 import NFTCollections from "components/NFTCollections";
 // import RoomPage from "components/RoomPage";
 import PagePersona from "components/PagePersona";
-import PageAuthenticate from "components/PageAuthenticate";
-import Page404 from "components/Page404";
+import PersonaNew from "components/PersonaNew";
+// import PageAuthenticate from "components/PageAuthenticate";
+// import Page404 from "components/Page404";
 
 // lessc "./style.less"
 
@@ -126,13 +127,12 @@ const App = ({ isServerInfo }) => {
               <Route path="/nftCollections/:accountHash" component={NFTCollections} />
               <Route path="/nftSingle/:selected" component={NFTCollections} />
               <Route path="/personatoken/:chain/:contract/:token_id" component={PagePersona} />
-              <Route path="/personatoken/" component={PagePersona} /> {/* New Persona */}
-
-              <Route path="/persona" component={PagePersona} />
+              
+              {/* <Route path="/personatoken/" component={PagePersona} />  */} {/* New Persona */}
+              <Route path="/persona" component={PersonaNew} /> {/* New Persona */}
 
               {/* {!isAuthenticated && <Route path="*" component={PageAuthenticate} />}  */}
               {/* pages below this point require authentication (CANCELLED) */}
-
 
               <Route path="/nftCollections" component={NFTCollections} />
               <Route path="/nftBalance"><NFTBalance /></Route>

@@ -104,7 +104,7 @@ export const useVerifyMetadata = () => {
                     console.error("useVerifyMetadata.getMetadata() No Metadata found on URI:", {uri, NFT});
                 }
                 //Handle Setbacks
-                else if(metadata?.detail  && metadata.detail.includes("Request was throttled")){
+                else if(metadata?.detail && metadata.detail.includes("Request was throttled")){
                     //Log
                     console.warn("useVerifyMetadata.getMetadata() Bad Result for:"+NFT.token_uri+"  Will retry later", {results, metadata});
                     //Retry That Again after 1s
