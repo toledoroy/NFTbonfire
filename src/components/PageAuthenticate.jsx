@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
 // import { LoadingOutlined, CameraFilled, PlusOutlined, PlusCircleOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 
-/**
+/** UNUSED
  * Component - Page:Authentication Request 
  */
 function PageAuthenticate(props) {
     // const { params } = props?.match;
     // const { handle, chain, contract, token_id } = params;
     // const { Moralis, setUserData, userError, user, chainId } = useMoralis();     //isWeb3Enabled, isUserUpdating
-    const { isWeb3Enabled, enableWeb3, isInitialized, isAuthenticated, isWeb3EnableLoading } = useMoralis();
+    const { isAuthenticated } = useMoralis();
 
     if(isAuthenticated){
         console.error("PageAuthenticate() Should Not Be Here", {isAuthenticated});
