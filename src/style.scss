@@ -6,6 +6,7 @@
         list-style:circle;
     }    
 }
+.ant-message-notice-content { border-radius: var(--borderRadius); }
 
 .ant-layout-header { 
     position: fixed;
@@ -33,7 +34,7 @@
         // border-bottom: 1px solid #e8e8e8;
     }
     li {
-        border-radius: 12px;
+        border-radius: var(--borderRadius);
     }
     .persona_select{
         padding: 0px; 
@@ -192,7 +193,8 @@
     }
     
     .accounts { 
-        flex-grow: 1; border-radius: 12px;
+        flex-grow: 1; 
+        border-radius: var(--borderRadius);
         .ant-tabs-nav-add,
         .ant-tabs-tab {border-radius: 12px 12px 0 0 !important; border:0; }
         .ant-tabs-content-holder { background: var(--monochrome); border-radius: 0 12px 12px 12px; }
@@ -286,7 +288,7 @@
     // align-items: center;
     max-width: 220px;
     background-color: var(--monochrome);
-    border-radius: 12px;
+    border-radius: var(--borderRadius);
     /* box-shadow: 0 0 10px #9ecaed; */
     padding: 10px;
     margin: 10px;

@@ -34,6 +34,7 @@
   /* --color:rgb(4, 24, 54); */
   /* --invert: black; */
   --monochrome: #fff;
+  --borderRadius: 12px;
 }
 body{
   font-family: Roboto, sans-serif;
@@ -84,7 +85,7 @@ footer { margin-top: 40px; }
   border: 2px solid rgb(231, 234, 243);
   box-shadow: 0 0 10px #9ecaed;
   padding: 10px;
-  border-radius: 12px;
+  border-radius: var(--borderRadius);
   overflow: hidden;
   background-color: var(--background-color);
 }
@@ -134,7 +135,7 @@ footer { margin-top: 40px; }
 
 .comment_add {
   display: flex;
-  border-radius: 12px;
+  border-radius: var(--borderRadius);
   padding: 4px 15px;
   background-color: var(--comment-background);
 }
