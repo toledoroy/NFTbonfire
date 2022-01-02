@@ -183,7 +183,7 @@ function PagePersona(props) {
             if(persona){
                 if(persona.get('token_id') !== undefined) loadmetadata();
                 else{
-                    let metadata = {social:{}, accounts:[]};
+                    let metadata = {social:{}, accounts:[], links:[],};
                     //Default Accounts (Current User Accounts)
                     for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
                     updateMetadata( metadata );
@@ -447,46 +447,51 @@ function PagePersona(props) {
                         {true && 
                         <div className="links">
                             <div className="links_wrapper">
-                                <h2><i className="bi bi-link"></i> Links
-                                    {/* Add Item */ }
-                                    <Button type="primary" shape="circle" style={{float:'right'}} icon={<PlusCircleOutlined />} onClick={() => {
-                                        let links = [...metadata.links];    //Clone
-                                        // links.splice(index, 1);
-                                        links.push({type:'', title:'', url:''});
-                                        setMetadata({...metadata, links});
-                                    }}/>
+                                <h2>
+                                    {/* <i className="bi bi-link"></i>  */}
+                                    Custom Links
                                 </h2>
                                 <div className="items">
-                                <Skeleton loading={isLoading} active>
-                                    {metadata?.links?.map((link, index) => {
-                                        // E.G. {type: 'blog', title: 'BayonEI', url: 'http://bayonei.com'}
-                                        // console.log("[DEV] link to:"+link.type+" Title:'"+link.title+"'", link.url);
-                                        return (
-                                        // <Col xs={24} lg={12} key={link.title+index}>
-                                            <Input.Group compact className="item" style={{display: 'flex', }} >
-                                                <Input name="URL" defaultValue={link.url} placeholder="URL" 
-                                                    addonBefore={<Select defaultValue={link.type} style={{minWidth:'99px'}} className="select-before">
-                                                        <Select.Option value="website">Website</Select.Option>
-                                                        <Select.Option value="blog">Blog</Select.Option>
-                                                    </Select>}
-                                                />
-                                                <Input name="name" placeholder="Title" defaultValue={link.title} style={{flexShrink:'2'}}/>
-                                                {/* Remove Item */ }
-                                                <Button type="danger" shape="circle" icon={<DeleteOutlined />} onClick={() => {
-                                                    // let links = metadata.links;
-                                                    let links = [...metadata.links];    //Clone
-                                                    // console.warn("[TEST] Remove Link:"+index, {links:[...links], res:links.splice(index, 1)});
-                                                    //Remove Current
-                                                    links.splice(index, 1);
-                                                    //Update
-                                                    setMetadata({...metadata, links});
-                                                }}/>
-                                            </Input.Group>
-                                        // </Col>
-                                        );
-                                    })//Each Link
-                                    }
+                                    
+                                    <Skeleton loading={isLoading} active>
+                                        {metadata?.links?.map((link, index) => {
+                                            // E.G. {type: 'blog', title: 'BayonEI', url: 'http://bayonei.com'}
+                                            // console.log("[DEV] link to:"+link.type+" Title:'"+link.title+"'", link.url);
+                                            return (
+                                            // <Col xs={24} lg={12} key={link.title+index}>
+                                                <Input.Group compact className="item" style={{display: 'flex', }} >
+                                                    <Input name="URL" defaultValue={link.url} placeholder="URL" 
+                                                        addonBefore={<Select defaultValue={link.type} style={{minWidth:'99px'}} className="select-before">
+                                                            <Select.Option value="website">Website</Select.Option>
+                                                            <Select.Option value="blog">Blog</Select.Option>
+                                                        </Select>}
+                                                    />
+                                                    <Input name="name" placeholder="Title" defaultValue={link.title} style={{flexShrink:'2'}}/>
+                                                    {/* Remove Item */ }
+                                                    <Button type="danger" shape="circle" icon={<DeleteOutlined />} onClick={() => {
+                                                        // let links = metadata.links;
+                                                        let links = [...metadata.links];    //Clone
+                                                        // console.warn("[TEST] Remove Link:"+index, {links:[...links], res:links.splice(index, 1)});
+                                                        //Remove Current
+                                                        links.splice(index, 1);
+                                                        //Update
+                                                        setMetadata({...metadata, links});
+                                                    }}/>
+                                                </Input.Group>
+                                            // </Col>
+                                            );
+                                        })//Each Link
+                                        }
                                     </Skeleton>
+                                    {/* Add Item */ }
+                                    <Button type="primary" shape="circle" style={{float:'right'}} icon={<PlusCircleOutlined />} onClick={() => {
+                                        console.log("[TEST] Metadtaa Links", metadata, metadata.links); 
+                                        let links = metadata.links ? [...metadata.links] : [];    //Clone
+                                        // links.splice(index, 1);
+                                        links.push({type:'website', title:'', url:''});
+                                        setMetadata({...metadata, links});
+                                    }}/>
+
                                     <div className="clearfloat"></div>
                                 </div>
                             </div>

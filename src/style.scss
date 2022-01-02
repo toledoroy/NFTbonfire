@@ -148,6 +148,14 @@
             .ant-input:focus,
             .ant-input:focus-visible,
             .ant-input { border: none; }
+            .item{
+                border-radius: 14px;
+                overflow: hidden;
+                input {
+                    padding: 10px 10px;
+                }
+                button { height: 42px; width: 48px; }
+            }
         }
         .ant-collapse-header {
             flex-direction: row-reverse; justify-content: space-between; color: inherit; cursor: initial; 
