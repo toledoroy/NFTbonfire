@@ -86,7 +86,7 @@ function Account() {
     return (
       <>
         <div style={styles.account} 
-          onClick={() => authenticate({ signingMessage: "Sign in" })}
+          onClick={() => authenticate({ signingMessage: "Sign in [Free]" })}
           //onClick={() => setIsAuthModalVisible(true)}
           >
           <p style={styles.text}>Authenticate</p>
