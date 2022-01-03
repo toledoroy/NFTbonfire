@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useMoralis, useMoralisWeb3Api } from "react-moralis";
+import { useMoralis } from "react-moralis";
 import PagePersona from "components/PagePersona";
 // import PageAuthenticate from "components/PageAuthenticate";
 
@@ -9,7 +9,7 @@ import PagePersona from "components/PagePersona";
 function PersonaNew(props) {
     const { isAuthenticated } = useMoralis();
 
-    if(isAuthenticated) return PagePersona(props);
+    if(isAuthenticated) return <PagePersona {...props} />;
     else{
         return (
             <div className="framed"> 

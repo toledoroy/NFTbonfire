@@ -3,8 +3,8 @@ import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 // import { useNFTCollections } from "hooks/useNFTCollections";
 // import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 // import { Link } from "react-router-dom";
-import { Button, Avatar, Modal, Skeleton } from 'antd';
-import { Collapse, Tabs, Input, Select } from 'antd';
+import { Button, Avatar, Modal, Skeleton, Collapse, Tabs } from 'antd';
+import { Form, Input, Select } from 'antd';
 // import { Form, Space, Cascader } from 'antd';
 // import { Row, Col } from 'antd';
 import { Card, Dropdown, Menu, Upload, message } from 'antd';
@@ -352,6 +352,12 @@ function PagePersona(props) {
                 </div>
             </div>
             
+        {/* TODO: Edit Handle
+            <div className="handle">
+                Handle: {persona.get('handle')}
+                <Input addonBefore="@" placeholder="handle" label="Handle" name="handle" defaultValue={persona.get('handle')}/>
+            </div>
+    */}
             <div className="main framed">
             {/* <div className="persona-body"> */}
                 <div className="secondary framed">
@@ -465,7 +471,7 @@ function PagePersona(props) {
                                             // console.log("[DEV] link to:"+link.type+" Title:'"+link.title+"'", link.url);
                                             return (
                                             // <Col xs={24} lg={12} key={link.title+index}>
-                                                <Input.Group compact className="item" style={{display: 'flex', }} >
+                                                <Input.Group key={index+link.url} compact className="item" style={{display: 'flex', }} >
                                                     <Input name="URL" defaultValue={link.url} placeholder="URL" 
                                                         addonBefore={<Select defaultValue={link.type} style={{minWidth:'99px'}} className="select-before">
                                                             <Select.Option value="website">Website</Select.Option>
@@ -540,10 +546,10 @@ function PagePersona(props) {
                             <div className="button">
                                 {isEditMode && <Button className="debug" onClick={()=>{ /*form.submit();*/ console.warn("[TODO] PagePersona() Save Changes"); }} >[Save]</Button>}
                                 {!isEditMode && <Button variant="contained" color="primary" onClick={()=>{setIsEditMode(isEditMode===false);}}>Edit</Button>}
-                                {isEditMode && <Button variant="contained" color="primary" onClick={()=>{ loadmetadata(); setIsEditMode(isEditMode===false);}}>Cancel</Button>}
+                                {(isEditMode && !PersonaHelper.isNew(persona)) && <Button variant="contained" color="primary" onClick={()=>{ loadmetadata(); setIsEditMode(isEditMode===false);}}>Cancel</Button>}
                             </div>}
                             </>
-                            }          
+                            }
                         </div>
                     </div>
 

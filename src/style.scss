@@ -276,7 +276,10 @@
         justify-content: start;
         .item { width: 18%; }
     }
-    .saving { text-align:center; }
+    .saving { 
+        text-align:center; 
+        .ant-spin {display: block; }
+    }
 }
 /* Business Card */
 

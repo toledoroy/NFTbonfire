@@ -19,13 +19,13 @@ const resolveLink = (url) => (!url || !url.includes("ipfs://")) ? url : url.repl
  */
  const isHandleFree = async (handle) => {
   const reserved = ['persona','account', '...'];
-  if(reserved.includes(handle.toLowerCase())) return false;
+  if(reserved.includes(String(handle).toLowerCase())) return false;
 
   // const Persona = Moralis.Object.extend("Persona");
   
   //Check if Handle Already Exists in DB
   const query = new Moralis.Query(Persona);
-  query.equalTo("handle", handle.toLowerCase());
+  query.equalTo("handle", String(handle).toLowerCase());
   const results = await query.find();
 
   logger.warn("[TEST] isHandleFree() Found "+results.length+" Results for Handle:"+handle+"");
@@ -183,9 +183,9 @@ const cachePersona = async (chain, contract, tokenId) => {
   if(!persona) throw new Error("Failed to Fetch Persona -- chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"'")
   if(handle){
     //Add Handle to Persona
-    persona.save({handle: handle.trim().toLowerCase()}, {useMasterKey: true});
+    persona.save({handle: String(handle).trim().toLowerCase()}, {useMasterKey: true});
     //Log
-    logger.log("personaRegister() Saved Persona to Handle:'"+handle.trim().toLowerCase()+"'");
+    logger.log("personaRegister() Saved Persona to Handle:'"+String(handle).trim().toLowerCase()+"'");
   }
   return true;
 });//personaRegister()
@@ -310,7 +310,7 @@ Moralis.Cloud.define("personaUnregister", async (request) => {
     const handle = request?.params?.handle;
     if(!handle) throw new Error("Missing Handle");
     const query = new Moralis.Query(Persona);
-    query.equalTo("handle", handle.trim().toLowerCase());
+    query.equalTo("handle", String(handle).trim().toLowerCase());
     const results = await query.find();
     if(!results.length) throw new Error("Handle:'"+handle+"' not found");
     const persona = results[0];

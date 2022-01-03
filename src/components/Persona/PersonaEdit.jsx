@@ -12,6 +12,7 @@ import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined } fro
 import { Upload, message } from 'antd';
 import { IPFS } from "helpers/IPFS";
 import { Persona } from "objects/Persona";
+import { usePersona } from "hooks/usePersona";
 // import ImgCrop from 'antd-img-crop';
 import { Spin } from 'antd';
 
@@ -33,12 +34,14 @@ const personaFields = require('schema/PersonaData.json');
     // const tokenId = persona.get('token_id');
 
     const [ isSaving, setIsSaving ] = useState(false);
+    const [ stage, setStage ] = useState(null);
     // const [ formSocial, setFormSocial ] = useState({});
     // const [ metadata, setMetadata ] = useState(props?.metadata);
     // const [ metadata, setMetadata ] = useState(persona.get('metadata'));
     // const [ metadata, setMetadata ] = useState({});    //Start Empty     //Now Sharing Metadata with Container
     const [ metadata, setMetadata ] = useState(props.metadata);    //From Parent
-    
+    const { mint, update } = usePersona(); 
+
     //File Upload
     // const [ imageUrl, setImageUrl ] = useState(persona.getFallback('image'));
     const [ imageUrl, setImageUrl ] = useState(metadata?.image);
@@ -75,14 +78,14 @@ const personaFields = require('schema/PersonaData.json');
         setImageUrl(props.metadata?.image);
     }, [props.metadata]);
 
-
-
+    useEffect(() => { 
+        console.log("PersonaEdit() Stage:"+stage);
+    }, [stage]);
 
     /**
      * Update NFT URI
      * @param string uri 
      */
-    // async function updateNFT(uri, tokenId=1){
     async function updateNFT(uri){
         const options = {
             // contractAddress: contractPersona.address,
@@ -114,10 +117,10 @@ const personaFields = require('schema/PersonaData.json');
         });
     }//updateNFT()
     
-    /**
+    /** MOVED TO usePersona
      * Mint New NFT
      * @param string uri 
-     */
+     * /
     async function mintNFT(uri){
         //Validate
         if(persona.get('token_id')) throw new Error("Can't Mint New Persona -- Persona Already Has TokenId:'"+persona.get('token_id')+"'");
@@ -192,6 +195,7 @@ const personaFields = require('schema/PersonaData.json');
         // .trim();
 
         setIsSaving(true);
+        setStage('SavingToIPFS');
         //Save Metadata to IPFS
         // saveJSONToIPFS(metadata).then(uri => {
         // IPFS.saveJSONToIPFS(Moralis, metadata).then(async uri => {
@@ -199,18 +203,24 @@ const personaFields = require('schema/PersonaData.json');
             //Log
             console.warn("PersonaEdit.saveMetadata() Saving Persoa to Contract:", {metadata, uri});
             if(persona.get('token_id')){
+                setStage('UpdateToekn');
                 //Update Contract
-                let res = await updateNFT(uri);   //Promise
+                // let res = await updateNFT(uri);   //Promise
+                let res = await update(persona, uri);   //Promise
                 //Log
                 console.warn("[TEST] PersonaEdit.saveMetadata() After Update:", {res, metadata, uri});
             }else{
+                setStage('MintToken')
                 //Mint New NFT
-                let res = await mintNFT(uri);
+                // let res = await mintNFT(uri);
+                let res = await mint(persona, uri);
                 //Log
                 console.warn("[TEST] PersonaEdit.saveMetadata() After Mint:", {res, metadata, uri});
             }
             //Done Saving
             setIsSaving(false);
+            setStage("SUCCESS");
+            
             // setIsEditMode(false);        //TODO! This is on Parent Component...
 
         })
@@ -219,6 +229,7 @@ const personaFields = require('schema/PersonaData.json');
             console.error("[CAUGHT] PersonaEdit.saveMetadata() IPFS Call Failed:", {error, metadata, isAuthenticated, user, persona}); 
             //Done Saving
             setIsSaving(false);
+            setStage("FAILED");
         });
     }//saveMetadata()
 
@@ -365,51 +376,45 @@ const personaFields = require('schema/PersonaData.json');
                 })}
                 
                 <div className="buttons">
-                    {isSaving && 
-                    <div className="saving">
-                        <span>Saving Metadata to IPFS</span>
-                        <Spin />
+                    {(stage==='SavingToIPFS') && <div className="saving">
+                        <span>Please wait while saving Metadata to IPFS</span>
+                        <Spin style={{display:'block'}} />
                     </div>}
-                </div>
-                <Form.Item 
-                    // wrapperCol={{ offset: 6, span: 6 }}
-                    wrapperCol={{ offset: 1, span: 10 }}
-                    >
-                    
-
-                    {PersonaHelper.isNew(persona) 
-                    ? <Popconfirm
-                        title={
-                            <div className="tooltip">
-                                <ul>
-                                    <li>When saving data on the blockchain you will be charged a network fee (gas)</li>
-                                    <li>You own your data and you can take it with you to other websites, if you want</li>
-                                    <li>Keep in mind that everything you save on the blockchain will always be accessible in some way.</li>
-                                </ul>
-                            </div>
-                        }
-                        onConfirm={() => onFinish({}) }
-                        icon=""
-                        //   onVisibleChange={() => console.log('visible change')}
-                        >
-                            <Button type="primary">Mint New Persona</Button>
-                        </Popconfirm>
-                    : <Button type="primary" htmlType="submit">Save</Button>
+                    {(stage==='MintToken') && <div className="saving">
+                        <span>Please confirm minting request on your web3 wallet</span>
+                        <Spin style={{display:'block'}} />
+                    </div>}
+                    {(stage==='UpdateToken') && <div className="saving">
+                        <span>Please confirm update request on your web3 wallet</span>
+                        <Spin style={{display:'block'}} />
+                    </div>}
+                    {(stage===null) && <Form.Item 
+                            // wrapperCol={{ offset: 6, span: 6 }}
+                            wrapperCol={{ offset: 1, span: 10 }}
+                            >
+                            {PersonaHelper.isNew(persona) 
+                            ? <Popconfirm
+                                title={
+                                    <div className="tooltip">
+                                        <ul>
+                                            <li>When saving data on the blockchain you will be charged a network fee (gas).</li>
+                                            <li>You own your data and you can take it with you to other websites, if you want.</li>
+                                            <li>Keep in mind that everything you save on the blockchain will always be accessible in some way.</li>
+                                        </ul>
+                                    </div>
+                                }
+                                onConfirm={() => onFinish({}) }
+                                icon=""
+                                //   onVisibleChange={() => console.log('visible change')}
+                                >
+                                    <Button type="primary">Mint New Persona</Button>
+                                </Popconfirm>
+                            : <Button type="primary" htmlType="submit">Save</Button>
+                            }
+                            {/* <Button onClick={formReset} style={{marginLeft:'20px' }}>Reset</Button> */}
+                        </Form.Item>
                     }
-
-                    {/* <Button onClick={formReset} style={{marginLeft:'20px' }}>Reset</Button> */}
-                </Form.Item>
-
-                {(false && PersonaHelper.isNew(persona)) && 
-                <div className="tooltip">
-                    <ul>
-                        <li>When saving data on the blockchain you will be charged a network fee (gas)</li>
-                        <li>You own your data and you can take it with you to other websites, if you want</li>
-                        <li>Keep in mind that everything you save on the blockchain will always be accessible in some way.</li>
-                    </ul>
                 </div>
-                }
-
             </Form>
         </Skeleton>
         </Col>

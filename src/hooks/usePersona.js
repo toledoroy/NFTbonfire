@@ -1,5 +1,5 @@
 // import React, { useEffect, useState } from "react";
-import { useMoralis } from "react-moralis";
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import { IPFS } from "helpers/IPFS";
 import { Persona } from "objects/Persona";
 
@@ -9,7 +9,7 @@ import { Persona } from "objects/Persona";
  */
 export const usePersona = () => {
     const { Moralis, chainId } = useMoralis();
-
+    const contractProcessor = useWeb3ExecuteFunction();
     /**
      * Load Metadata from Chain
      * @ret object / null       Metadata or Default Metadata (or null)
@@ -179,7 +179,92 @@ export const usePersona = () => {
             console.error("[CAUGHT] usePersona.updateToken() Error", {error, token_uri});
         }
     }//fetchMetadata()
+    
+    /**
+     * Mint New NFT
+     * @param string uri 
+     */
+     async function mint(persona, uri){
+        //Validate
+        if(persona.get('token_id')) throw new Error("Can't Mint New Persona -- Persona Already Has TokenId:'"+persona.get('token_id')+"'");
 
-    return { loadMetadata, updateToken, fetchMetadata };
+        const options = {
+            // contractAddress: contractPersona.address,
+            contractAddress: persona.get('address'),
+            abi: Persona.getABI(),  //contractPersona.abi,
+            functionName: 'mint',
+            params: { tokenURI:uri },
+        };
+
+        console.warn("[TEST] userPersona.mint() Will Register New Token", {options, uri, persona});
+
+        //Mint New NFT
+        await contractProcessor.fetch({
+            params: options,
+            onSuccess: (data) => {  //TX Data
+                //Token Data
+                let tokenData = {
+                    contract: persona.get('address'),
+                    // token_id: persona.get('token_id'),
+                    chain: chainId,     //Current Chain
+                    token_id: data?.events?.Transfer?.returnValues?.tokenId,        //TESTING
+                };
+                //Log                
+                console.log("userPersona.mint() Success -- Should Register New Token:"+tokenData?.token_id, {tokenData, data, uri, persona, options});
+                //Validate & Trigger Server Update
+                if(tokenData.token_id) Moralis.Cloud.run("personaRegister", tokenData);
+                else console.error("userPersona.mint() Success, but Failed to Extract Token ID", {   
+                    data,
+                    events:     data?.events,
+                    transfer:   data?.events?.Transfer,
+                    retValues:  data?.events?.Transfer?.returnValues,
+                    tokenId:    data?.events?.Transfer?.returnValues?.tokenId,
+                });
+                //Return Transaction Data
+                return data;
+            },
+            onError: (error) => {
+                if(error.code === 4001) console.warn("userPersona.mint() Failed -- User Rejection", {error, uri, options})
+                else console.error("userPersona.mint() Failed", {error, uri, persona, options})
+            },
+        });
+    }//mint()
+
+    /**
+     * Update NFT URI
+     * @param string uri 
+     */
+    async function update(persona, uri){
+        const options = {
+            // contractAddress: contractPersona.address,
+            contractAddress: persona.get('address'),
+            abi: Persona.getABI(chainId),   //contractPersona.abi,
+            functionName: 'update',
+            params: { tokenId: persona.get('token_id'), uri },
+        };
+        //Update Contract
+        return await contractProcessor.fetch({
+            params: options,
+            onSuccess: (data) => {
+                try{
+                    console.log("usePersona.update() Success Updating Persona:"+persona.id, {data, uri, persona, options});
+                    //Update Persona's Metadata (& URI)
+                    Moralis.Cloud.run("personaMetadata", {personaId:persona.id});
+                    //Return Transaction Data
+                    return data;
+                }
+                catch(error){
+                    console.error("usePersona.update() Error Updating Persona:"+persona.id, {error, persona, options});
+                }
+            },
+            onError: (error) => {
+                if(error.code === 4001) console.warn("usePersona.update() Failed -- User Rejection", {error, uri, options})
+                else console.error("usePersona.update() Failed", {error, uri, persona, options})
+            },
+        });
+    }//update()
+    
+
+    return { loadMetadata, updateToken, fetchMetadata, mint, update };
  
 }//usePersona()
