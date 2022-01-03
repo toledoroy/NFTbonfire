@@ -102,10 +102,11 @@ const personaDefaultMetadatas = [
         // "image": "https://ipfs.moralis.io:2053/ipfs/QmWyKVFkUCfwUFQZyKjJ9ifqyWatUFStMi8B3MtT3CkhyP",      //Anon logo
         "cover": "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
         "description": "We are legion",
-        "location": {
-            "name":"World Wide", latitude: 0, longitude: 0,
+        "location": "World Wide",
+        // "location": {
+            // "name":"World Wide", latitude: 0, longitude: 0,
             // name:"Seattle, WA", latitude: 47.60275857601884, longitude: -122.33726455335282,
-        },
+        // },
         "social": {
             // "twitter": "toledoroy",
             // "facebook": "toledoroy",

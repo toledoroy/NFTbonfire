@@ -8,6 +8,7 @@
     "name":{
         "label": "Name",
         "name": "name",
+        "placeholder": "Your name",
         "rules": [{ "required": true, "message": "Seems you might have forgot to fiil in your name" }]
     },
     "description":{
@@ -28,7 +29,7 @@
     "social":{
         "label": "Social",
         "name": "social",
-        "type":"object",
+        "type": "object",
         "network":{
             "twitter": {"name":"twitter", "url":"https://twitter.com/"},
             "facebook": {"name":"facebook", "url":"https://facebook.com/"},

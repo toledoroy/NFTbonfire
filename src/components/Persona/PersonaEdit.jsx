@@ -391,8 +391,8 @@ const personaFields = require('schema/PersonaData.json');
                         <Spin style={{display:'block'}} />
                     </div>}
                     {(stage===null) && <Form.Item 
-                            // wrapperCol={{ offset: 6, span: 6 }}
-                            wrapperCol={{ offset: 1, span: 10 }}
+                            wrapperCol={{ offset: 6, span: 6 }}
+                            // wrapperCol={{ offset: 1, span: 10 }}
                             >
                             {PersonaHelper.isNew(persona) 
                             ? <Popconfirm
@@ -413,7 +413,8 @@ const personaFields = require('schema/PersonaData.json');
                                 </Popconfirm>
                             : <Button type="primary" htmlType="submit">Save</Button>
                             }
-                            {/* <Button onClick={formReset} style={{marginLeft:'20px' }}>Reset</Button> */}
+                            {/* <Button onClick={formReset} style={{marginLeft:'20px' }}>Reset</Button> REMOVED */}
+                            {/* <Button variant="contained" color="primary" onClick={()=>{ loadmetadata(); setIsEditMode(false)}}>Cancel</Button> */} {/*THIS BUTTON SHOULD BE HERE*/}
                         </Form.Item>
                     }
                 </div>

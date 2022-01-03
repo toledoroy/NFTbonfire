@@ -12,7 +12,7 @@ function PersonaNew(props) {
     if(isAuthenticated) return <PagePersona {...props} />;
     else{
         return (
-            <div className="framed"> 
+            <div className="framed auth_req"> 
                 <h2>To mint yourself a new persona, please first authenticate using your Web3 wallet.</h2>
                 {/* <PageAuthenticate /> */}
                 <h3>Please login using the "Authenticate" button on the top right corner to log in via your web3 wallet</h3>
