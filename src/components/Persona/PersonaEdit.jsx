@@ -296,6 +296,8 @@ const personaFields = require('schema/PersonaData.json');
                 ))*/}
                 
                 {Object.values(personaFields).map((field) => { if(field.element) return field.element; else{
+                    //Extract Placeholder
+                    let placeholder = Array.isArray(field.placeholder) ? field.placeholder[Math.floor(Math.random()*field.placeholder.length)] : field.placeholder;
                     if(field.name === 'links'){
                         return null;    //MOVED
                         return( 
@@ -353,7 +355,7 @@ const personaFields = require('schema/PersonaData.json');
                     else if(field.type === 'array'){    //Tags
                         console.log("[TEST] PersonaEdit() array field:"+field.name, {type:field.type, field, metadata, fieldData:metadata[field.name]});
                         return (
-                            <Select key={field.name} mode="tags" style={{ width: '100%' }} label={field.label} name={field.name} placeholder={field.placeholder}>
+                            <Select key={field.name} mode="tags" style={{ width: '100%' }} label={field.label} name={field.name} placeholder={placeholder}>
                                 {metadata[field.name] && metadata[field.name].map((item, index) => {
                                     return <Option key={index}>{item}</Option>
                                 })}
@@ -365,7 +367,7 @@ const personaFields = require('schema/PersonaData.json');
                         return (
                             // <Form.Item {...field}><Input /></Form.Item>
                             <Form.Item key={field.name} name={field.name} label={field.label} rules={field.rules}>
-                                <Input placeholder={field.placeholder} onChange={(e) => {
+                                <Input placeholder={placeholder} onChange={(e) => {
                                 // console.log("Changed", field.name, e.target.value, metadata); 
                                 setMetadata({...metadata, [field.name]:e.target.value });
                             }}/>

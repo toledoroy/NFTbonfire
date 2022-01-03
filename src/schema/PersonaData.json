@@ -1,4 +1,10 @@
 {
+    "role":{
+        "label": "Role",
+        "name": "role",
+        "placeholder": ["Hacker", "Debeloper", "Writer", "Designer", "Community Manager"],
+        "rules": [{ "required": true, "message": "What is your main use of this persona" }]
+    },
     "name":{
         "label": "Name",
         "name": "name",
