@@ -59,6 +59,18 @@ function Account() {
 
   const { persona:curPersona, setPersona} = useContext(PersonaContext);
 
+  /**
+   * Load Personas
+   */
+  const loadPersonas = () => {
+    //Fetch Account's Owned Personas
+    const query = new Moralis.Query(Persona);
+    query.equalTo("owner", account.toLowerCase()).find().then((results) => { 
+      console.warn("Account() Found "+results.length+" Avilable Personas for Account:'"+account.toLowerCase()+"'", results); 
+      setPersonas(results); 
+    });
+  }//loadPersonas()
+
   useEffect(() => { 
     /* Make sure to change User when account changes */
     if(account !== lastAccount){
@@ -70,15 +82,7 @@ function Account() {
       Moralis.link(account, { signingMessage: "Sign this to link your accounts"} );
       console.log("Account() Account Changed -- Account:"+account, Moralis.User.current());
       */
-
-      else{
-        //Fetch Account's Owned Personas
-        const query = new Moralis.Query(Persona);
-        query.equalTo("owner", account).find().then((results) => { 
-          setPersonas(results); 
-          console.log("Avilable Personas:", results); 
-        });
-      }
+      else if(account) loadPersonas(); 
     }
   }, [account]);
 

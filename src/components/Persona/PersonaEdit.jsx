@@ -82,10 +82,12 @@ const personaFields = require('schema/PersonaData.json');
         console.log("PersonaEdit() Stage:"+stage);
     }, [stage]);
 
+
+
     /**
      * Update NFT URI
      * @param string uri 
-     */
+     * /
     async function updateNFT(uri){
         const options = {
             // contractAddress: contractPersona.address,
@@ -160,6 +162,8 @@ const personaFields = require('schema/PersonaData.json');
         });
     }//mintNFT()
 
+
+    
     /**
      * Sanitize Metadata Before Save
      */

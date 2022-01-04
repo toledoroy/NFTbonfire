@@ -98,7 +98,7 @@ function NFTCollections(props) {
   const { NFTCollections, NFTpersonas } = useNFTCollections(options);
 
   //Log
-  console.warn("(i) NFTCollections() for Collections: ", {NFTCollections, collectionHash, accountHash, options, params:props.match.params });
+  console.log("(i) NFTCollections() for Collections: ", {NFTCollections, collectionHash, accountHash, options, params:props.match.params });
   
   async function testFunc() {
     try {

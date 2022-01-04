@@ -31,7 +31,6 @@ export const useNFTCollections = (options) => {
       if(isPersona(NFT)){
         try{
           //Force Full Metadata Update (Moralis sometimes gives outdated token_uri)
-          // if(NFT.symbol === "PERSONA") 
           NFT = updateToken(NFT);
           //Append Persona
           personas.push(NFT);

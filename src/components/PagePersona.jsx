@@ -833,7 +833,7 @@ export default PagePersona;
      * Check For Handle Vacancy
      * @param {*} handle 
      * @returns 
-     */
+     * /
     const isHandleFree = async (handle) => {
         // return Moralis.Cloud.run("isHandleFree", {handle});
         
@@ -846,38 +846,40 @@ export default PagePersona;
             console.error("[CAUGHT] isHandleFree()", error);
             return false;
         }
-        
     }//addAccount()
-    const validator = async (rule, value) => { 
-        if(value === persona.get("handle")) return true;
-        let ret = await isHandleFree(value);
+    */
+    const validator = async (rule, handle) => { 
+        if(handle===undefined || handle===null || handle==='' || handle === persona.get("handle")) return true;
+        // let ret = await isHandleFree(value);
+        let ret = await Moralis.Cloud.run("isHandleFree", {handle});
         if(!ret) throw new Error("Handle Already Taken");
     }//validator()
 
+    /**
+     * Save Handle
+     * @param {*} handle 
+     */
     const saveHandle = (handle) => {
         if(handle === persona.get('handle')){
-            console.warn("Handle() Nothing to Change (From:'"+persona.get('handle')+"' To:'"+handle+"')");
+            console.log("Handle() Nothing to Change (From:'"+persona.get('handle')+"' To:'"+handle+"')");
             setIsEditMode(false);
         }else{
-            console.warn("Handle() Change Handle From:'"+persona.get('handle')+"' To:'"+handle+"'");
+            console.log("Handle() Change Handle From:'"+persona.get('handle')+"' To:'"+handle+"'");
             setIsSaving(true);
 
             //Handle Register Handle
             let params = {personaId: persona.id, handle};
             Moralis.Cloud.run("personaRegisterById", params).then(result => {
-                console.log("[TEST] Handle() personaRegister Result:", result);
-                setIsSaving(false);
-            }).catch(error => {
-                console.error("[TEST] Handle() personaRegister Error:", {error, params}); 
-                setIsSaving(false);
-            });
-
-            // setTimeout(() => { setIsSaving(false);}, 2000);
-
+                    console.log("[TEST] Handle() personaRegister Result:", result);
+                    // setIsSaving(false);
+                }).catch(error => {
+                    console.error("Handle() personaRegister Error:", {error, params}); 
+                    // setIsSaving(false);
+                })
+                .then(() => { setIsSaving(false); });
         }
     }//saveHandle()
 
-    // const { Search } = Input;
     return (
         <div className="handle">
             {!isEditMode && <>
@@ -910,13 +912,15 @@ export default PagePersona;
 
             </Form>
                 
+            {isNew() &&
             <div className="instrtuctions">
                 <ul>
                     <li>Register your persona to the network by specifing a handle</li>
                     <li>This handle will also be a part of your own personal link</li>
                 </ul>
-                {isNew() && <div className="debug">NEW</div>}
+                
             </div>
+            }
             
             </>}
         </div>
