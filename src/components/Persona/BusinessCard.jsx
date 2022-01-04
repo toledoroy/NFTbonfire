@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
+import { PersonaContext } from "common/context";
 
 // import { Link } from "react-router-dom";
 // import { Form, Input, Button, Select, InputNumber } from 'antd';
@@ -18,6 +19,7 @@ import { IPFS } from "helpers/IPFS";
  function BusinessCard(props) {
     // const { contract, tokenId } = props;
     const { persona, metadata:receivedMeta } = props;
+    const { setPersona } = useContext(PersonaContext);
     // const [ metadata, setMetadata ] = useState(props?.metadata);
     // const { Moralis, setUserData, userError, isUserUpdating, user } = useMoralis();
     const metadata = receivedMeta ? receivedMeta : persona.get('metadata');
@@ -70,7 +72,7 @@ import { IPFS } from "helpers/IPFS";
             <div className="bottom">
                 {(props.actions!==false) && <div className="actions flex">
                     <Link key="link" to={{ pathname:link }} className="inner flex">View</Link>
-                    <button className="button">Select</button>
+                    <button className="button" onClick={() => setPersona(persona)}>Select</button>
                 </div>}
             </div>
         </div>
