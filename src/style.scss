@@ -69,12 +69,17 @@
         .image{ 
             position: relative;
             // top: -6rem;
-            margin-top:-6rem; 
+            margin: -6rem auto auto auto;
             // background: var(--background-color);
             background: white;
             border-radius: 50%;
             padding: 7px;
         }
+    }
+    .handle{
+        // .ant-form-item-children-icon { margin-right: 82px; margin-top: -8px; }
+        .ant-row { margin-bottom: 5px; }
+        button {margin-left: 4px;}
     }
     .info{ 
         margin-left: 15px;

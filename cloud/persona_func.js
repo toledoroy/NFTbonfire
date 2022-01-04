@@ -18,21 +18,23 @@ const resolveLink = (url) => (!url || !url.includes("ipfs://")) ? url : url.repl
  * @returns 
  */
  const isHandleFree = async (handle) => {
+   if(handle===null || handle===undefined) return true;
+  //Validate Type
+  if(typeof handle !== 'string') throw new Error("Handle expected to be a String. Received: "+JSON.stringify(handle));
+
   const reserved = ['persona','account', '...'];
   if(reserved.includes(String(handle).toLowerCase())) return false;
-
-  // const Persona = Moralis.Object.extend("Persona");
   
   //Check if Handle Already Exists in DB
   const query = new Moralis.Query(Persona);
   query.equalTo("handle", String(handle).toLowerCase());
   const results = await query.find();
 
-  logger.warn("[TEST] isHandleFree() Found "+results.length+" Results for Handle:"+handle+"");
+  // logger.warn("[TEST] isHandleFree() Found "+results.length+" Results for Handle:"+handle+"");
   // logger.warn("[TEST] isHandleFree() Found "+results.length+" Results for Handle:"+handle+" Results: " + JSON.stringify(results));
 
   //True if Empty
-  return (results.length == 0);
+  return (results.length === 0);
 };//isHandleFree()
   
 /**
@@ -147,6 +149,48 @@ const cachePersona = async (chain, contract, tokenId) => {
 //-- PRODUCTION
 
 /**
+ * Check if Handle is Free
+ */
+Moralis.Cloud.define("isHandleFree", async (request) => {
+  //Validate
+  if(request?.params?.handle===undefined) throw new Error("isHandleFree() Missing Handle Params:"+JSON.stringify(request?.params));
+  // logger.warn("[i] isHandleFree() Request Params:" + JSON.stringify(request?.params));  //V
+  //Check if Handle Already Exists in DB
+  return isHandleFree(request.params.handle); 
+});
+
+/**
+ * Register Persona by Persona ID
+ */
+Moralis.Cloud.define("personaRegisterById", async (request) => {
+  let { handle, personaId } = request.params;
+  //Validate Parameters
+  if(!personaId) throw new Error("personaRegisterById() Missing Parameters for handle:'"+handle+"' (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' personaId:'"+personaId+"')");
+  //Normalize Handle
+  if(handle!==undefined && handle!==null) handle = String(handle).trim().toLowerCase();
+  if(handle==='') handle = null;
+  //Get / Add Persona
+  const query = new Moralis.Query(Persona);
+  // const persona = await query.get(personaId, {useMasterKey: true});
+  const persona = await query.get(personaId);
+  //Validate
+  if(!persona) throw new Error("personaRegisterById() Failed to Fetch Persona ID:'"+personaId+"'")
+  //Validate
+  // if(handle != curHandle){
+  if(handle != persona.get('handle')){
+    //Validate Handle
+    let isFree = await isHandleFree(handle);
+    if(!isFree) throw new Error("Handle:'"+handle+"' is already owned");
+    //Set Persona's Handle
+    persona.save({handle}, {useMasterKey: true});
+    //Log
+    logger.info("personaRegisterById() Saved Persona to Handle:'"+handle+"'");
+  }
+  else logger.info("personaRegisterById() Persona:'"+persona.id+"' Already Owns Handle:'"+handle+"'");
+  return true;
+});//personaRegisterById()
+
+/**
  * Register Persona to Network
  * @param {*} chain
  * @param {*} contract
@@ -154,13 +198,14 @@ const cachePersona = async (chain, contract, tokenId) => {
  * @param {*} handle
  */
  Moralis.Cloud.define("personaRegister", async (request) => {
-  const { handle, contract, token_id, chain } = request.params;
+  const { contract, token_id, chain } = request.params;
+  let { handle } = request.params;
+  //Normalize Handle
+  if(handle!==undefined && handle!==null) handle = String(handle).trim().toLowerCase();
+  if(handle==='') handle = null;
   //Validate Parameters
   if(!contract || !token_id || !chain) throw new Error("Missing Parameters (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"')");
-  //Validate Handle
-  let isFree = await isHandleFree(handle);
-  if(!isFree) throw new Error({msg:"Handle:'"+handle+"' is already owned", code:"owned"});
-
+  
   //Log
   logger.warn("[TEST] personaRegister() Request Params: chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"'");
     
@@ -181,12 +226,21 @@ const cachePersona = async (chain, contract, tokenId) => {
   let persona = await personaGet(results);
   //Validate
   if(!persona) throw new Error("Failed to Fetch Persona -- chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"'")
-  if(handle){
-    //Add Handle to Persona
-    persona.save({handle: String(handle).trim().toLowerCase()}, {useMasterKey: true});
+
+  //Validate
+  // if(handle == persona.get('handle')){
+  //   logger.warn("personaRegister() Persona:'"+persona.id+"' Already Registered to Handle:'"+handle+"'");
+  // }
+  if(handle !== persona.get('handle')){
+    //Validate Handle
+    let isFree = await isHandleFree(handle);
+    if(!isFree) throw new Error("Handle:'"+handle+"' is already owned");
+    //Set Persona's Handle
+    persona.save({handle}, {useMasterKey: true});
     //Log
-    logger.log("personaRegister() Saved Persona to Handle:'"+String(handle).trim().toLowerCase()+"'");
+    logger.info("personaRegister() Saved Persona to Handle:'"+handle+"'");
   }
+  else logger.info("personaRegister() Persona:'"+persona.id+"' Already Owns Handle:'"+handle+"'");
   return true;
 });//personaRegister()
 
@@ -283,12 +337,12 @@ Moralis.Cloud.define("personaMetadata", async (request) => {
       await persona.save({token_uri, metadata}, {useMasterKey: true})
         .catch(err => {throw new Error("personaMetadata() Failed to Save Persona:'"+personaId+"' Error:'"+err+"'")});
 
-      // logger.log("[i] personaMetadata() Updated Metadata for Persona:'"+personaId+"'" );
+      // logger.info("[i] personaMetadata() Updated Metadata for Persona:'"+personaId+"'" );
 
       //Return
       return metadata;
     }
-    // else logger.log("[i] personaMetadata() URI Up to date -- No Update Needed for Persona:'"+personaId);   //Error: TypeError: args is not iterable
+    // else logger.info("[i] personaMetadata() URI Up to date -- No Update Needed for Persona:'"+personaId);   //Error: TypeError: args is not iterable
   }catch(err){
     throw new Error(" personaMetadata() Failed to Fetch Metadata -- From URI:'"+token_uri+"' for Persona:'"+personaId+"' (same:"+(token_uri == persona.get('token_uri'))+")Error:"+err);
   }
@@ -339,7 +393,7 @@ Moralis.Cloud.define("getPersonas", async (request) => {
     
     
     logger.warn(nfts);
-    logger.log(request.user);
+    logger.info(request.user);
     
     //Return NFTs
     return nfts;

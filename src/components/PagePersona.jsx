@@ -352,13 +352,7 @@ function PagePersona(props) {
                 </div>
             </div>
             
-        {/* TODO: Edit Handle
-            <div className="handle">
-                Handle: {persona.get('handle')}
-                <Input addonBefore="@" placeholder="handle" label="Handle" name="handle" defaultValue={persona.get('handle')}/>
-            </div>
-    */}
-            <div className="main framed">
+            <div className="main">
             {/* <div className="persona-body"> */}
                 <div className="secondary framed">
                     <div className="view" style={{display:!isEditMode?'block':'none'}}>
@@ -514,7 +508,7 @@ function PagePersona(props) {
                 </div>
                 <div className="primary framed">
                     
-                    <div className="details framed">
+                    <div className="details">
                         <div className="image">
                             {isLoading ? <Skeleton.Avatar active size={size} shape='circle' />
                             : isEditMode 
@@ -527,6 +521,7 @@ function PagePersona(props) {
                             {!isEditMode && 
                             <Skeleton loading={isLoading} active >
                                 <h1 className="name">{metadata?.name || metadata?.firstname+' '+metadata?.lastname}</h1>
+                                {!PersonaHelper.isNew(persona) && <Handle persona={persona} isEditMode={isEditMode} />}
                                 {/* <div className="handle">@{metadata?.username}</div> */}
                                 <q className="description">{metadata?.description}</q>
                                 <div className="flex" style={{marginTop:5}}>
@@ -819,3 +814,112 @@ export default PagePersona;
         </div>
     );
 }//AvatarChangable()
+
+
+
+/**
+ * Component: Handle 
+ */
+ function Handle(props){
+    // const { visible:isModalVisible, setVisible:setIsModalVisible } = props;
+    // const { persona, isEditMode } = props;
+    const { Moralis } = useMoralis();     //isUserUpdating
+    const { persona } = props;
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const [newHandle, setNewHandle] = useState(persona.get('handle'));
+    const isNew = () => (!persona.get("handle"));
+    /**
+     * Check For Handle Vacancy
+     * @param {*} handle 
+     * @returns 
+     */
+    const isHandleFree = async (handle) => {
+        // return Moralis.Cloud.run("isHandleFree", {handle});
+        
+        try{
+            let ret = await Moralis.Cloud.run("isHandleFree", {handle});
+            console.warn("isHandleFree()", {handle, ret});
+            // if(ret) return true;
+            return ret;
+        }catch(error) {
+            console.error("[CAUGHT] isHandleFree()", error);
+            return false;
+        }
+        
+    }//addAccount()
+    const validator = async (rule, value) => { 
+        if(value === persona.get("handle")) return true;
+        let ret = await isHandleFree(value);
+        if(!ret) throw new Error("Handle Already Taken");
+    }//validator()
+
+    const saveHandle = (handle) => {
+        if(handle === persona.get('handle')){
+            console.warn("Handle() Nothing to Change (From:'"+persona.get('handle')+"' To:'"+handle+"')");
+            setIsEditMode(false);
+        }else{
+            console.warn("Handle() Change Handle From:'"+persona.get('handle')+"' To:'"+handle+"'");
+            setIsSaving(true);
+
+            //Handle Register Handle
+            let params = {personaId: persona.id, handle};
+            Moralis.Cloud.run("personaRegisterById", params).then(result => {
+                console.log("[TEST] Handle() personaRegister Result:", result);
+                setIsSaving(false);
+            }).catch(error => {
+                console.error("[TEST] Handle() personaRegister Error:", {error, params}); 
+                setIsSaving(false);
+            });
+
+            // setTimeout(() => { setIsSaving(false);}, 2000);
+
+        }
+    }//saveHandle()
+
+    // const { Search } = Input;
+    return (
+        <div className="handle">
+            {!isEditMode && <>
+                @ {persona.get('handle')}
+                <Button variant="contained" size="small" color="primary" onClick={()=>{setIsEditMode(true)}}>{isNew() ? 'Set' : 'Change'}</Button>
+            </>}
+
+            {isEditMode && <>
+            <Form name="handleChange" className="flex">
+                <Form.Item
+                    hasFeedback
+                    name="handle"
+                    // label="Handle"
+                    rules={[
+                        { validator, message: 'Sorry, handle is already Taken',},
+                        // {required: true, message: "Oops, You forgot to enter a handle",},
+                    ]}
+                    >
+                    <Input prefix="@" enterButton="Save" loading={isSaving} placeholder="handle" label="Handle" name="handle" defaultValue={persona.get('handle')}
+                        onChange={(event)=>{setNewHandle(event.target.value);}}
+                        // onSearch={(handle) => {saveHandle(handle)}}
+                    />
+                </Form.Item>
+                <Button type="primary" color="primary" onClick={()=>{saveHandle(newHandle)}}>Save</Button>
+
+                {/* Cancel */}
+                <Button onClick={()=>{setIsEditMode(false);}}>Cancel</Button>
+
+                {/* Remove (Just Leave Empty) */}
+
+            </Form>
+                
+            <div className="instrtuctions">
+                <ul>
+                    <li>Register your persona to the network by specifing a handle</li>
+                    <li>This handle will also be a part of your own personal link</li>
+                </ul>
+                {isNew() && <div className="debug">NEW</div>}
+            </div>
+            
+            </>}
+        </div>
+    );
+}//Handle()
+
