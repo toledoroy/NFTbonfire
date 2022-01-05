@@ -104,7 +104,7 @@ const personaFields = require('schema/PersonaData.json');
                 try{
                     console.log("PersonaEdit.updateNFT() Success Updating Persona:"+persona.id, {data, uri, persona, options});
                     //Update Persona's Metadata (& URI)
-                    Moralis.Cloud.run("personaMetadata", {personaId:persona.id});
+                    Moralis.Cloud.run("personaUpdate", {personaId:persona.id});
                     //Return Transaction Data
                     return data;
                 }

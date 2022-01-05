@@ -82,9 +82,9 @@ function PagePersona(props) {
             }catch(e){ console.error("[TEST] personaRegister Error:", {e, params}); }
             * /
             
-            let res = await Moralis.Cloud.run("personaMetadata", {personaId:"Zl5V5ezSBadHTnBRRvLOLm7G"})
-                .catch(e => console.error("[DEBUG] PagePersona() FAILED to Manually Ran personaMetadata", e))
-            console.warn("!!!![DEBUG] PagePersona() Manually Ran personaMetadata", res);
+            let res = await Moralis.Cloud.run("personaUpdate", {personaId:"Zl5V5ezSBadHTnBRRvLOLm7G"})
+                .catch(e => console.error("[DEBUG] PagePersona() FAILED to Manually Ran personaUpdate", e))
+            console.warn("!!!![DEBUG] PagePersona() Manually Ran personaUpdate", res);
         }
         if(isWeb3Enabled){  //DEBUGGING
             fetchPersonaTEST();
@@ -114,7 +114,7 @@ function PagePersona(props) {
     }//updateMetadata()
     
     useEffect(() => {
-        if(!isWeb3Enabled){ console.error("Waiting for W3"); }
+        if(!isWeb3Enabled){ /*console.error("Waiting for W3");*/ }
         else if(params.chain && params.contract) {//By (Full) Token Address
             if(params.token_id) {
                 let personaData = {

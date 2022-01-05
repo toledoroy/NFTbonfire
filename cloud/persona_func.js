@@ -113,7 +113,35 @@ const getTokenOwner = async (chain, contract, tokenId) => {
 };
 
 /**
+ * Fetch Metadata From URI
+ * @param string uri 
+ * @returns object
+ */
+ const fetchMetadata = async (uri) => {
+  //Validate URI
+  if(!uri || !uri.includes('://'))throw new Error("Invalid URI:'"+uri+"'");
+  try{
+    //Fetch
+    // let metadata = await fetch(uri).then(res => res.json()); //No fetch on Cloud Server
+    let metadata = await Moralis.Cloud.httpRequest({url: uri})
+      .then(httpResponse => httpResponse.text)
+      .catch(err => { throw new Error("fetchMetadata() Failed to Fetch URI:'"+uri+"' Error:"+err+""); } );
+    //Validate
+    if(!metadata) throw new Error("fetchMetadata() No Metadata found on URI:'"+uri+"'");
+    metadata = JSON.parse(metadata);  //JSON As Object
+    // logger.warn("[DEBUG] fetchMetadata() Found metadata type:" + typeof metadata);
+    // logger.warn("[DEBUG] fetchMetadata() Found metadata: " + metadata);
+    logger.warn("[DEBUG] fetchMetadata() Found metadata Obj: " + JSON.stringify(metadata));
+    //Return
+    return metadata;
+  }catch(err){
+    throw new Error("[DEBUG] fetchMetadata()  Failed to Fetch URI:'"+uri+"' Error:"+err+"");
+  }
+};//fetchMetadata
+
+/**
  * Fetch Persona from Chain & Save to DB (Lasy Sync)
+ *  Sould only be called when persona is not yet in DB
  * @param {*} chain 
  * @param {*} contract 
  * @param {*} tokenId 
@@ -124,21 +152,23 @@ const cachePersona = async (chain, contract, tokenId) => {
   if(!chain || !contract || !tokenId) throw new Error("Missing Parameters -- Contract:"+contract+" Chain:"+chain+" TokenId:"+tokenId);
   //Register & return ParseObject
   let persona = new Persona();
-  await persona.save({
+  let params = {
     chain,
     address: contract,
     token_id: tokenId.toString(),
     // token_uri, 
     // owner: owner.toLowerCase(), 
     // metadata,
-  }, {useMasterKey: true}).then(async (res) => {
+  };
+  await persona.save(params, {useMasterKey: true}).then(async (res) => {
+
     //Fetch Token Owner
-    // let owner = await 
     getTokenOwner(chain, contract, tokenId).then((owner) => {
       persona.save({owner: owner.toLowerCase()}, {useMasterKey: true});
     }).catch((err) => {
       logger.error("cachePersona() Failed to Fetch Persona Owner from Chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"'");
     });
+
     //Fetch Token URI
     getTokenURI(chain, contract, tokenId).then((token_uri) => {
       persona.save({token_uri}, {useMasterKey: true});
@@ -154,11 +184,11 @@ const cachePersona = async (chain, contract, tokenId) => {
   }).catch(async (err) => {
     logger.error("[ERROR] cachePersona() Error: "+err+"  Failed to Save Persona: "+JSON.stringify(persona));
   });
-
-  // logger.warn("[i] cachePersona() Cached New Persona: chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"' owner:'"+owner+"' Persona:" + JSON.stringify(persona) ); //V
+  logger.info("cachePersona() Cached New Persona: chain:'"+chain+"' tokenId:'"+tokenId+"'");
   //Return new Persona Object
   return persona;
 };
+
 
 //-- PRODUCTION
 
@@ -174,7 +204,7 @@ Moralis.Cloud.define("isHandleFree", async (request) => {
 });
 
 /**
- * Register Persona by Persona ID
+ * Register Handle to Persona by Persona ID
  */
 Moralis.Cloud.define("personaRegisterById", async (request) => {
   let { handle, personaId } = request.params;
@@ -219,9 +249,8 @@ Moralis.Cloud.define("personaRegisterById", async (request) => {
   if(handle==='') handle = null;
   //Validate Parameters
   if(!contract || !token_id || !chain) throw new Error("Missing Parameters (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"')");
-  
   //Log
-  logger.warn("[TEST] personaRegister() Request Params: chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"'");
+  // logger.warn("[TEST] personaRegister() Request Params: chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"'");
     
   //Get / Add Persona
   const query = new Moralis.Query(Persona);
@@ -260,115 +289,61 @@ Moralis.Cloud.define("personaRegisterById", async (request) => {
 //-- TESTING
 
 /**
- * Fetch Metadata From URI
- * @param string uri 
- * @returns object
- */
-const fetchMetadata = async (uri) => {
-  //Validate URI
-  if(!uri || !uri.includes('://'))throw new Error("Invalid URI:'"+uri+"'");
-  logger.warn("[DEBUG] fetchMetadata() Valid URI:'"+uri);
-
-  try{
-    //Fetch
-    // let metadata = await fetch(uri).then(res => res.json()); //No fetch on Cloud Server
-    let metadata = await Moralis.Cloud.httpRequest({url: uri})
-      .then(httpResponse => httpResponse.text)
-      .catch(err => { throw new Error("fetchMetadata() Failed to Fetch URI:'"+uri+"' Error:"+err+""); } );
-    //Validate
-    if(!metadata) throw new Error("fetchMetadata() No Metadata found on URI:'"+uri+"'");
-    metadata = JSON.parse(metadata);  //JSON As Object
-    // logger.warn("[DEBUG] fetchMetadata() Found metadata type:" + typeof metadata);
-    // logger.warn("[DEBUG] fetchMetadata() Found metadata: " + metadata);
-    logger.warn("[DEBUG] fetchMetadata() Found metadata Obj: " + JSON.stringify(metadata));
-    //Return
-    return metadata;
-  }catch(err){
-    throw new Error("[DEBUG] fetchMetadata()  Failed to Fetch URI:'"+uri+"' Error:"+err+"");
-  }
-};//fetchMetadata
-
-/**
- * Update Persona Metadata
+ * Sync Logic -- Update Persona on DB from Chain
  * @param {*} personaId 
  * @returns object metadata
  */
-Moralis.Cloud.define("personaMetadata", async (request) => {
+Moralis.Cloud.define("personaUpdate", async (request) => {
   //Extract Params
   const { personaId } = request.params;
-
-  // logger.warn("[TEST] personaMetadata() Start W/Persona ID:'"+personaId+"'" );
+  // logger.warn("[TEST] personaUpdate() Start W/Persona ID:'"+personaId+"'" );
 
   //Validate Parameters
   if(!personaId) throw new Error("Missing Parameters (personaId:'"+personaId+"')  Params: "+JSON.stringify(request.params));
   const query = new Moralis.Query(Persona);
   let persona = await query.get(personaId,  {useMasterKey: true})
-    .catch(err => {throw new Error("personaMetadata() Failed to Fetch Persona:'"+personaId+"' Error:'"+err+"'")});
+    .catch(err => {throw new Error("personaUpdate() Failed to Fetch Persona:'"+personaId+"' Error:'"+err+"'")});
   if(!persona) throw new Error("Failed to Load Persona:"+personaId);
   const { chain, address:contract, token_id:tokenId } = persona.attributes;
-
-  // logger.warn("[DEBUG] personaMetadata() Extracted Data Persona:"+personaId+" -- Address:"+contract+" Chain:"+chain+" token_id:"+tokenId);
-
-  // const cachePersona = async (chain, contract, tokenId) => {
-
   //Validate
   if(!chain || !contract || !tokenId) throw new Error("Missing Data on Persona:"+personaId+" -- Address:"+contract+" Chain:"+chain+" token_id:"+tokenId);
-
   if(!persona.get('owner')){
-    // logger.warn("[TEST] personaMetadata() Fetch Owner for Persona:"+persona.id );  //V
+    // logger.warn("[TEST] personaUpdate() Fetch Owner for Persona:"+persona.id );  //V
     //Fetch Token Owner
     getTokenOwner(chain, contract, tokenId).then(owner => {
       //Update Owner
       if(owner) persona.save({owner: owner}, {useMasterKey: true});
-      else logger.error("personaMetadata() Found no Owner for Persona:"+persona.id+" (Owner:'"+owner+"')"); 
+      else logger.error("personaUpdate() Found no Owner for Persona:"+persona.id+" (Owner:'"+owner+"')"); 
     })
     .catch(err => { 
-      logger.error("personaMetadata() Failed to Fetch Owner for Persona:"+persona.id+" Error:"+err); 
+      logger.error("personaUpdate() Failed to Fetch Owner for Persona:"+persona.id+" Error:"+err); 
     });
   }//No owner
-  // else logger.warn("[TEST] personaMetadata() Has Owner:'"+persona.get('owner')+"' on Persona:"+persona.id+"");  //V
+  // else logger.warn("[TEST] personaUpdate() Has Owner:'"+persona.get('owner')+"' on Persona:"+persona.id+"");  //V
 
   //Fetch Token URI
   let token_uri = await getTokenURI(chain, contract, tokenId)
-    .catch(err => {
-      throw new Error("personaMetadata() Failed to Fetch Token Owner:'"+personaId+"' Error:'"+err+"'");
-    });
-  // logger.warn("[DEBUG] personaMetadata() Got Token URI:'"+token_uri+"' current URI:"+persona.get('token_uri') ); 
-
-  try{
+    .catch(err => { throw new Error("personaUpdate() Failed to Fetch Token Owner:'"+personaId+"' Error:'"+err+"'"); });
+  //Validate
+  if(token_uri !== persona.get('token_uri')){
+    //Fetch Metadata
+    let metadata = await fetchMetadata(resolveLink(token_uri))
+      .catch(err => {throw new Error("personaUpdate() Failed to Fetch Metadata for Persona:'"+personaId+"' URI:'"+resolveLink(token_uri)+"' Error:'"+err+"'")});
     //Validate
-    if(token_uri !== persona.get('token_uri')){
-      // logger.warn("[DEBUG] personaMetadata() Run Metadata Fetch for Token URI:'"+token_uri);
-
-      //Fetch Metadata
-      let metadata = await fetchMetadata(resolveLink(token_uri))
-        .catch(err => {throw new Error("personaMetadata() Failed to Fetch Metadata for Persona:'"+personaId+"' URI:'"+resolveLink(token_uri)+"' Error:'"+err+"'")});
-      //Validate
-      if(!metadata || Object.keys(metadata).length === 0) throw new Error("Empty Metadata Pulled from Token URI:'"+resolveLink(token_uri)+"' metadata:'"+JSON.stringify(metadata)+"'");
-      //Log
-      logger.warn("[DEBUG] personaMetadata() Save URI:'"+token_uri+"' Metadata:"+JSON.stringify(metadata));
-
-      //Save
-      await persona.save({token_uri, metadata}, {useMasterKey: true})
-        .catch(err => {throw new Error("personaMetadata() Failed to Save Persona:'"+personaId+"' Error:'"+err+"'")});
-
-      // logger.info("[i] personaMetadata() Updated Metadata for Persona:'"+personaId+"'" );
-
-      //Return
-      return metadata;
-    }
-    // else logger.info("[i] personaMetadata() URI Up to date -- No Update Needed for Persona:'"+personaId);   //Error: TypeError: args is not iterable
-  }catch(err){
-    throw new Error(" personaMetadata() Failed to Fetch Metadata -- From URI:'"+token_uri+"' for Persona:'"+personaId+"' (same:"+(token_uri == persona.get('token_uri'))+")Error:"+err);
+    if(!metadata || Object.keys(metadata).length === 0) throw new Error("Empty Metadata Pulled from Token URI:'"+resolveLink(token_uri)+"' metadata:'"+JSON.stringify(metadata)+"'");
+    //Log
+    // logger.warn("[DEBUG] personaUpdate() Save URI:'"+token_uri+"' Metadata:"+JSON.stringify(metadata));
+    //Save
+    await persona.save({token_uri, metadata}, {useMasterKey: true})
+      .catch(err => {throw new Error("personaUpdate() Failed to Save Persona:'"+personaId+"' Error:'"+err+"'")});
+    //Return
+    return metadata;
   }
-  // };
-
-  // logger.warn("[DEBUG] personaMetadata() DONE -- Same URI:'"+token_uri+"' Persona:"+JSON.stringify(persona));
-  // logger.warn("[DEBUG] personaMetadata() DONE -- Same URI:'"+token_uri+"' Return Metadata:"+JSON.stringify(persona.get('metadata')));
-
+  // else logger.info("[i] personaUpdate() URI Up to date -- No Update Needed for Persona:'"+personaId);   //Error: TypeError: args is not iterable
+  
   //Return new Persona Object
   return persona.get('metadata');
-});//personaMetadata() 
+});//personaUpdate() 
 
 /**
  * Un-Register Persona from Network

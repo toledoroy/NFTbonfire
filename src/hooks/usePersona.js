@@ -120,7 +120,7 @@ export const usePersona = () => {
                 //Compare & Update Metadata if Needed
                 if(uri && parseObj.get('token_uri') !== uri) {
                     //Fetch Metadata (& Update Server if Needed)
-                    let newMetadata = await Moralis.Cloud.run("personaMetadata", {personaId:parseObj.id});
+                    let newMetadata = await Moralis.Cloud.run("personaUpdate", {personaId:parseObj.id});
                     //Return
                     return newMetadata;
                 }//Different URI
@@ -204,13 +204,12 @@ export const usePersona = () => {
             onSuccess: (data) => {  //TX Data
                 //Token Data
                 let tokenData = {
-                    contract: persona.get('address'),
-                    // token_id: persona.get('token_id'),
                     chain: chainId,     //Current Chain
-                    token_id: data?.events?.Transfer?.returnValues?.tokenId,        //TESTING
+                    contract: persona.get('address'),
+                    token_id: data?.events?.Transfer?.returnValues?.tokenId,
                 };
                 //Log                
-                console.log("userPersona.mint() Success -- Should Register New Token:"+tokenData?.token_id, {tokenData, data, uri, persona, options});
+                console.log("userPersona.mint() Success -- Trigger New Token Register for:"+tokenData.token_id, {tokenData, data, uri, persona, options});
                 //Validate & Trigger Server Update
                 if(tokenData.token_id) Moralis.Cloud.run("personaRegister", tokenData);
                 else console.error("userPersona.mint() Success, but Failed to Extract Token ID", {   
@@ -249,7 +248,7 @@ export const usePersona = () => {
                 try{
                     console.log("usePersona.update() Success Updating Persona:"+persona.id, {data, uri, persona, options});
                     //Update Persona's Metadata (& URI)
-                    Moralis.Cloud.run("personaMetadata", {personaId:persona.id});
+                    Moralis.Cloud.run("personaUpdate", {personaId:persona.id});
                     //Return Transaction Data
                     return data;
                 }
@@ -263,7 +262,6 @@ export const usePersona = () => {
             },
         });
     }//update()
-    
 
     return { loadMetadata, updateToken, fetchMetadata, mint, update };
  
