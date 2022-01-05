@@ -60,54 +60,68 @@ function Account() {
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);
   const [lastAccount, setLastAccount] = useState(account);  //Remember Last Account
   // const [personas, setPersonas] = useState([]);
-
   const { persona:curPersona, setPersona} = useContext(PersonaContext);
   const { NFTpersonas, NFTCollections } = useNFTCollections();
 
-  //Live Query
-  const { data : personas } = useMoralisQuery('Persona', query => query.equalTo("owner", String(account).toLowerCase()), [account], { live: true});
+  //Fetch Personas -- Live Query (This isn't actually live the way you'd expect. DB changes aren't being detected)
+  const { data : personas } = useMoralisQuery('Persona', query => query.equalTo("owner", String(account).toLowerCase()), [account], { 
+    live: true,
+    /* For Some Mysterious Reason This Query is only Reflect DB Changes if these arguments are (and are wrong, playerName does not exist...)  */
+    onCreate: data => console.warn(`${data.attributes.playerName} was just Created`),
+    onDelete: data => console.warn(`${data.attributes.playerName} was just Deleted`),
+    onUpdate: data => console.warn(`${data.attributes.playerName} was just Updated`),
+  });
 
   /**
-   * Load Personas
+   * Update Persona
+   *  Match Persona DB to Chain
    */
-  const loadPersonas = () => {
-    /* Changed to Live Query 
-    //Fetch Account's Owned Personas
-    const query = new Moralis.Query(Persona); 
-    query.equalTo("owner", account.toLowerCase()).find().then((results) => { 
-      console.warn("Account() Found "+results.length+" Avilable Personas for Account:'"+account.toLowerCase()+"'", results); 
-      setPersonas(results); 
-    });
-    */
-  }//loadPersonas()
-
   const updatePersonas = async () => {
     //-- Validate
     // console.warn("[TEST] Account() Match NFT Personas", {NFTpersonas, NFTCollections, personas});
 
     //Match Personas
     for(let persona of NFTpersonas){
-      console.warn("[TEST] Account() Found NFT Persona:", {NFTpersonas, persona, personas});
-      //TODO: Force to Register
-      let params = { 
-        chain: persona.chain,
-        contract: persona.token_address,
-        token_id: persona.token_id,
-      };
-      try{
-          const result = await Moralis.Cloud.run("personaRegister", params);
-          console.log("[TEST] Account() personaRegister Result:", {result, params});
-      }catch(error){ 
-        console.error("[TEST] Account() personaRegister Error:", {params, error}); 
-      }
+      let exist = false;
+      for(let DBpersona of personas){
+        //Match Perona (chain, token_address, token_id)
+        if(DBpersona.get('chain') === persona.chain && DBpersona.get('address') === persona.token_address && DBpersona.get('token_id') === persona.token_id){
+          //Same Persona
+          console.warn("[TEST] Account() Found Same Persona:", {DBpersona, persona});
 
-
-      }
-
+          //Check if Up-To-Date (token_uri, owner)    //(Moralis is usually not up to date...)
+          if(DBpersona.get('owner') !== persona.owner_of || DBpersona.get('token_uri') !== persona.token_uri){
+            //Mismatch - Might need an update
+            // console.warn("[TEST] Account() DB Persona Needs an Update:"+DBpersona.id, {DBpersona, persona,
+            //   DBOwner:DBpersona.get('owner'), owner: persona.owner_of , DBURI: DBpersona.get('token_uri') , tokenURI: persona.token_uri
+            // });
+            let params = {personaId:DBpersona.id};
+            const result = await Moralis.Cloud.run("personaUpdate", params)  //Update
+              .catch(error => { console.error("[TEST] Account() personaRegister Error:", {error, params}); });
+            // console.log("[TEST] Account() personaUpdate Update Result:", {result, params});
+          }//Needs Update
+          exist = true;
+          break;
+        }//Matched Persona
+      }//Loop DB Personas
+      if(!exist){
+        //Set Params
+        let params = {
+          chain: persona.chain,
+          contract: persona.token_address,
+          token_id: persona.token_id,
+        };
+        //Register New Persona
+        const result = await Moralis.Cloud.run("personaRegister", params)  //Add
+          .catch(error => { console.error("[TEST] Account() personaRegister Error:", {params, error}); });
+        console.log("[TEST] Account() personaRegister Result:", {result, params});
+      }//Register New Persona
+    }//Each Persona
   };//updatePersonas()
+
   useEffect(() => {
     if(NFTpersonas.length > 0) updatePersonas();
-    else console.warn("[TEST] Account() Skip Match Personas", {NFTpersonas, personas});
+    else console.warn("[TEST] Account() Skip Match Personas (No NFTs)", {NFTpersonas, personas});
   }, [NFTpersonas, personas]);
 
   useEffect(() => { 
@@ -121,7 +135,6 @@ function Account() {
       Moralis.link(account, { signingMessage: "Sign this to link your accounts"} );
       console.log("Account() Account Changed -- Account:"+account, Moralis.User.current());
       */
-      else if(account) loadPersonas(); 
     }
   }, [account]);
 
@@ -142,7 +155,7 @@ function Account() {
           }}
           style={{ fontSize: "16px", fontWeight: "500" }}
           width="340px7"
-        >
+          >
           <div className="connect" style={{ padding: "10px", display: "flex", justifyContent: "center", fontWeight: "700", fontSize: "20px" }}>
             Connect Wallet
           </div>
