@@ -66,10 +66,13 @@ function Account() {
   //Fetch Personas -- Live Query (This isn't actually live the way you'd expect. DB changes aren't being detected)
   const { data : personas } = useMoralisQuery('Persona', query => query.equalTo("owner", String(account).toLowerCase()), [account], { 
     live: true,
-    /* For Some Mysterious Reason This Query is only Reflect DB Changes if these arguments are (and are wrong, playerName does not exist...)  */
+    /* For Some Mysterious Reason This Query is only Reflect DB Changes if these arguments are (and are wrong, playerName does not exist...)  */    //Maybe onLiveCreate
     onCreate: data => console.warn(`${data.attributes.playerName} was just Created`),
     onDelete: data => console.warn(`${data.attributes.playerName} was just Deleted`),
     onUpdate: data => console.warn(`${data.attributes.playerName} was just Updated`),
+    // onLiveCreate: data => console.warn(`${data.attributes.token_id} was just Created`),  //Nope
+    // onLiveDelete: data => console.warn(`${data.attributes.token_id} was just Deleted`),  //Nope
+    // onLiveUpdate: data => console.warn(`${data.attributes.token_id} was just Updated`),  //Nope
   });
 
   /**
@@ -85,10 +88,7 @@ function Account() {
       let exist = false;
       for(let DBpersona of personas){
         //Match Perona (chain, token_address, token_id)
-        if(DBpersona.get('chain') === persona.chain && DBpersona.get('address') === persona.token_address && DBpersona.get('token_id') === persona.token_id){
-          //Same Persona
-          console.warn("[TEST] Account() Found Same Persona:", {DBpersona, persona});
-
+        if(DBpersona.get('chain') === persona.chain && DBpersona.get('address') === persona.token_address && DBpersona.get('token_id') === persona.token_id){//Same Persona
           //Check if Up-To-Date (token_uri, owner)    //(Moralis is usually not up to date...)
           if(DBpersona.get('owner') !== persona.owner_of || DBpersona.get('token_uri') !== persona.token_uri){
             //Mismatch - Might need an update

@@ -66,40 +66,14 @@ function PagePersona(props) {
       
     // const [form] = Form.useForm();
 
-    /* DEBUG
-    useEffect(() => {
-        async function fetchPersonaTEST() {
-            /* Register Persona
-            let params = {
-                chain:'0x4',
-                contract:'0x9E91a8dDF365622771312bD859A2B0063097ad34',
-                token_id: 2, handle:'toledoroy2',
-                // token_id: 1, handle:'toledoroy',
-            };
-            try{
-                const result = Moralis.Cloud.run("personaRegister", params);
-                console.log("[TEST] personaRegister Result:", result);
-            }catch(e){ console.error("[TEST] personaRegister Error:", {e, params}); }
-            * /
-            
-            let res = await Moralis.Cloud.run("personaUpdate", {personaId:"Zl5V5ezSBadHTnBRRvLOLm7G"})
-                .catch(e => console.error("[DEBUG] PagePersona() FAILED to Manually Ran personaUpdate", e))
-            console.warn("!!!![DEBUG] PagePersona() Manually Ran personaUpdate", res);
-        }
-        if(isWeb3Enabled){  //DEBUGGING
-            fetchPersonaTEST();
-        }
-    }, [isWeb3Enabled]);
-    */
-
    /**
     * Set Persona Wrapper Function
     */
    function setPersona(persona){
        setPersonaActual(persona);
-       setIsOwned(String(persona.get('owner')).toLowerCase() == account.toLowerCase());
+       setIsOwned(String(persona.get('owner')).toLowerCase() === account.toLowerCase());
        persona.get('metadata') && updateMetadata( persona.get('metadata') );
-       console.warn("[TEST] PagePersona() Persona Owner:"+persona.get('owner')+" User ID:"+account, {persona:persona, owned:isOwned, isOwned:(persona.get('owner') == account)});    //V
+       console.warn("[TEST] PagePersona() Persona Owner:"+persona.get('owner')+" User ID:"+account, {persona:persona, att:persona.attributes, owned:isOwned, isOwned:(persona.get('owner') == account)});    //V
     }
    
     /**
@@ -113,20 +87,20 @@ function PagePersona(props) {
         setIsLoading(false);
     }//updateMetadata()
     
-    useEffect(() => {
+    useEffect(() => async () => {
         if(!isWeb3Enabled){ /*console.error("Waiting for W3");*/ }
-        else if(params.chain && params.contract) {//By (Full) Token Address
-            if(params.token_id) {
-                let personaData = {
-                    chainId: chain,
-                    address: contract,
-                    tokenId: token_id,
-                };
-                console.warn("[TEST] PagePersona() Manually Set personaData From URL:", {personaData, props, params});
-            }
-            else{
-                console.warn("[TODO] PagePersona() This is a Request for New Persona Token", {props, params});
-            }
+        else if(params.chain && params.contract && params.token_id) {//By Token Address
+            let personaData = {
+                chainId: chain,
+                address: contract,
+                tokenId: token_id,
+            };
+            //Fetch Token (from DB or Chain)
+            let result = await Moralis.Cloud.run("getPersona", params);
+            console.warn("[TEST] PagePersona() Manually Fetch Persona:", {personaData, props, params, perosna:result});
+            //Set
+            setPersona(result);
+            setIsLoading(false);
         }//Requested: Specific Token
         else if(params.handle){ //By Registered Handle
             // console.warn("[TEST] PagePersona() Get persona By Handle:'"+handle+"'", { params, isWeb3Enabled } ); 
@@ -139,7 +113,6 @@ function PagePersona(props) {
                 if(results.length > 0){
                     //Override by handle
                     let persona = results[0];
-
                     //Reload Metadata
                     if(persona.get('metadata')){
                         setPersona(persona);
@@ -151,6 +124,7 @@ function PagePersona(props) {
                         loadMetadata(persona).then((freshMetadata) => {
                             console.warn("[TEST] PagePersona() Loaded Fresh Metadata For:'"+params.handle+"'", {freshMetadata, persona:persona});    
                             setPersona(persona);
+                            //Override metadata
                             updateMetadata(freshMetadata);
                         });
                     }//No Metadata
@@ -164,10 +138,10 @@ function PagePersona(props) {
             });
         }//Requsted: Handle
         else{//New Persona
-            //Log
-            console.warn("PagePersona() New Persona:", {params}); 
             //Validate Authenticated User
             if(isAuthenticated){
+                //Log
+                console.warn("PagePersona() New Persona -- Init in Edit Mode", {params}); 
                 initNewPersona();
                 setIsEditMode(true);
             }
