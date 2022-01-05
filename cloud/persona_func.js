@@ -212,7 +212,7 @@ Moralis.Cloud.define("personaRegisterById", async (request) => {
   if(!personaId) throw new Error("personaRegisterById() Missing Parameters for handle:'"+handle+"' (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' personaId:'"+personaId+"')");
   //Normalize Handle
   if(handle!==undefined && handle!==null) handle = String(handle).trim().toLowerCase();
-  if(handle==='') handle = null;
+  // if(handle==='') handle = null;
   //Get / Add Persona
   const query = new Moralis.Query(Persona);
   // const persona = await query.get(personaId, {useMasterKey: true});
@@ -246,7 +246,7 @@ Moralis.Cloud.define("personaRegisterById", async (request) => {
   let { handle } = request.params;
   //Normalize Handle
   if(handle!==undefined && handle!==null) handle = String(handle).trim().toLowerCase();
-  if(handle==='') handle = null;
+  // if(handle==='') handle = null;
   //Validate Parameters
   if(!contract || !token_id || !chain) throw new Error("Missing Parameters (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"')");
   //Log
@@ -356,8 +356,13 @@ Moralis.Cloud.define("personaUnregister", async (request) => {
     const results = await query.find();
     if(!results.length) throw new Error("Handle:'"+handle+"' not found");
     const persona = results[0];
-    //Remove Handle
-    persona.save({handle:null}, {useMasterKey: true});
+
+    //Remove Handle   (TESTING)
+    // persona.save({handle:null}, {useMasterKey: true});
+    // persona.save({handle:undefined}, {useMasterKey: true});
+    persona.unset('handle').save(null, {useMasterKey: true});
+    // persona.save({handle:''}, {useMasterKey: true});
+    
     //Return
     return true;
 });

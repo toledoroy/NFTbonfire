@@ -122,10 +122,10 @@ function PagePersona(props) {
                     address: contract,
                     tokenId: token_id,
                 };
-                console.warn("[TEST] PagePersona() Manually Set personaData From URL:", {personaData});
+                console.warn("[TEST] PagePersona() Manually Set personaData From URL:", {personaData, props, params});
             }
             else{
-                console.warn("[TODO] PagePersona() This is a Request for New Persona Token", {params});
+                console.warn("[TODO] PagePersona() This is a Request for New Persona Token", {props, params});
             }
         }//Requested: Specific Token
         else if(params.handle){ //By Registered Handle
@@ -242,7 +242,7 @@ function PagePersona(props) {
             //Load Default Metadata
             updateMetadata( loadDefaultMetadata() );
             
-            console.log("PagePersona.initNewPersona() New Persona w/Default Metadata",  {persona, user, metadata, params});
+            console.log("PagePersona.initNewPersona() New Persona w/Default Metadata",  {persona, user, metadata, params, props});
         }
         catch(error){
             console.error("PagePersona.initNewPersona() Failed Initiating w/New Persona ", {error, params});

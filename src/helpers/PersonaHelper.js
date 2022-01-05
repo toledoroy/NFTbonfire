@@ -22,7 +22,8 @@ export const PersonaHelper = {
      */
     getLink(persona){
         let handle = persona.get('handle');
-        let pathname = handle ? "/"+handle : "/persona/"+persona.get('chain')+"/"+persona.get('token_address')+"/"+persona.get('token_id');
+        let pathname = handle ? "/"+handle : "/personatoken/"+persona.get('chain')+"/"+persona.get('address')+"/"+persona.get('token_id');
+        console.warn("PersonaHelper.getLink() Pathname: ", {handle, persona, pathname});
         return pathname;
     },
 

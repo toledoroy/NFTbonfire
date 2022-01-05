@@ -8,7 +8,6 @@ import { Image, Avatar } from 'antd';
 // import { Row, Col } from 'antd';
 // import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 // import { Space, Cascader } from 'antd';
-// import { IPFS } from "helpers/IPFS";
 import { PersonaHelper } from "helpers/PersonaHelper";
 import { Link } from "react-router-dom";
 import { IPFS } from "helpers/IPFS";
@@ -23,12 +22,6 @@ import { IPFS } from "helpers/IPFS";
     // const [ metadata, setMetadata ] = useState(props?.metadata);
     // const { Moralis, setUserData, userError, isUserUpdating, user } = useMoralis();
     const metadata = receivedMeta ? receivedMeta : persona.get('metadata');
-    // const image = PersonaHelper.getImage(metadata);
-    // const coverImage = PersonaHelper.getCover(metadata);
-    // const image = metadata?.image;
-    // const coverImage = metadata?.cover;
-    // const image = persona.getFallback('image');
-    // const coverImage = persona.getFallback('cover');
     let image = metadata?.image ? IPFS.resolveLink(metadata.image) : "https://joeschmoe.io/api/v1/random";
     let coverImage = metadata?.cover ? IPFS.resolveLink(metadata.cover) : "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
     let link = PersonaHelper.getLink(persona);
@@ -42,7 +35,7 @@ import { IPFS } from "helpers/IPFS";
         else console.error('BusinessCard() No metadata provided');
     }, [props]);
     */
-    console.warn("BusinessCard() MEtadata", {metadata});
+    // console.warn("BusinessCard() MEtadata", {metadata});
 
     /**
      * Render
