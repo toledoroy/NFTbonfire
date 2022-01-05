@@ -1,8 +1,7 @@
-import { IPFS } from "helpers/IPFS";
+// import { IPFS } from "helpers/IPFS";
 // import Blockie from "components/Blockie";
-import { Persona } from "objects/Persona";
+// import { Persona } from "objects/Persona";
 
-// export const userImage = (hash) => ();   //?
 export const PersonaHelper = {
     /** 
      * 

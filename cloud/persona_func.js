@@ -46,7 +46,7 @@ const resolveLink = (url) => (!url || !url.includes("ipfs://")) ? url : url.repl
  const getABI = async (chain, address) => {
   const query = new Moralis.Query(Contract);
   query.equalTo("chain", chain);
-  query.equalTo("address", address);
+  query.equalTo("address", String(address).toLowerCase(), 'i'); //Supposed to be Case Insensitive
   const results = await query.limit(1).find();
   // logger.warn("[TEST] getABI() Found "+results.length+" Results for Contract:"+address+" Chain:"+chain+"");  //V
   if(results.length === 0) return null;
@@ -122,25 +122,41 @@ const getTokenOwner = async (chain, contract, tokenId) => {
 const cachePersona = async (chain, contract, tokenId) => {
   //Validate
   if(!chain || !contract || !tokenId) throw new Error("Missing Parameters -- Contract:"+contract+" Chain:"+chain+" TokenId:"+tokenId);
-  //Fetch Token Owner
-  let owner = await getTokenOwner(chain, contract, tokenId);
-  // let token_uri = await getTokenURI(chain, contract, tokenId);
-  
   //Register & return ParseObject
-  let persona = new Persona(
-    // {
-    //   chain,
-    //   address: contract,
-    //   token_uri: tokenId,
-    // }
-  );
+  let persona = new Persona();
   await persona.save({
     chain,
     address: contract,
     token_id: tokenId.toString(),
     // token_uri, 
-    owner: owner.trim().toLowerCase(), 
-  }, {useMasterKey: true});
+    // owner: owner.toLowerCase(), 
+    // metadata,
+  }, {useMasterKey: true}).then(async (res) => {
+    //Fetch Token Owner
+    // let owner = await 
+    getTokenOwner(chain, contract, tokenId).then((owner) => {
+      persona.save({owner: owner.toLowerCase()}, {useMasterKey: true});
+    }).catch((err) => {
+      logger.error("cachePersona() Failed to Fetch Persona Owner from Chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"'");
+    });
+    //Fetch Token URI
+    // let token_uri = await 
+    getTokenURI(chain, contract, tokenId).then((token_uri) => {
+      persona.save({token_uri}, {useMasterKey: true});
+      //Fetch Metadata
+      // let metadata = (!token_uri) ? null : await 
+      if(token_uri) fetchMetadata(resolveLink(token_uri)).then((metadata) => {
+        persona.save({metadata}, {useMasterKey: true});
+      }).catch((err) => {
+        logger.error("cachePersona() Failed to Fetch Persona metadata from Chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"'");
+      });
+    }).catch((err) => {
+      logger.error("cachePersona() Failed to Fetch Persona token_uri from Chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"'");
+    });
+  }).catch(async (err) => {
+    logger.error("[ERROR] cachePersona() Error: "+err+"  Failed to Save Persona: "+JSON.stringify(persona));
+  });
+
   // logger.warn("[i] cachePersona() Cached New Persona: chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"' owner:'"+owner+"' Persona:" + JSON.stringify(persona) ); //V
   //Return new Persona Object
   return persona;
@@ -212,7 +228,7 @@ Moralis.Cloud.define("personaRegisterById", async (request) => {
   //Get / Add Persona
   const query = new Moralis.Query(Persona);
   query.equalTo("chain", chain);
-  query.equalTo("address", contract);
+  query.equalTo("address", contract, 'i');
   query.equalTo("token_id", token_id);
   const results = await query.limit(1).find();
   //Extract Persona From Result or Make New
@@ -226,16 +242,19 @@ Moralis.Cloud.define("personaRegisterById", async (request) => {
   let persona = await personaGet(results);
   //Validate
   if(!persona) throw new Error("Failed to Fetch Persona -- chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"'")
-  if(handle !== persona.get('handle')){
-    //Validate Handle
-    let isFree = await isHandleFree(handle);
-    if(!isFree) throw new Error("Handle:'"+handle+"' is already owned");
-    //Set Persona's Handle
-    persona.save({handle}, {useMasterKey: true});
-    //Log
-    logger.info("personaRegister() Saved Persona to Handle:'"+handle+"'");
-  }
-  else logger.info("personaRegister() Persona:'"+persona.id+"' Already Owns Handle:'"+handle+"'");
+  if(handle){
+    //Register Handle to Persona
+    if(handle !== persona.get('handle')){
+      //Validate Handle
+      let isFree = await isHandleFree(handle);
+      if(!isFree) throw new Error("Handle:'"+handle+"' is already owned");
+      //Set Persona's Handle
+      persona.save({handle}, {useMasterKey: true});
+      //Log
+      logger.info("personaRegister() Saved Persona to Handle:'"+handle+"'");
+    }//Different Handle
+    else logger.info("personaRegister() Persona:'"+persona.id+"' Already Owns Handle:'"+handle+"'");
+  }//Has Handle
   return true;
 });//personaRegister()
 
@@ -324,7 +343,6 @@ Moralis.Cloud.define("personaMetadata", async (request) => {
       // logger.warn("[DEBUG] personaMetadata() Run Metadata Fetch for Token URI:'"+token_uri);
 
       //Fetch Metadata
-      // let metadata = await fetchMetadata(token_uri);
       let metadata = await fetchMetadata(resolveLink(token_uri))
         .catch(err => {throw new Error("personaMetadata() Failed to Fetch Metadata for Persona:'"+personaId+"' URI:'"+resolveLink(token_uri)+"' Error:'"+err+"'")});
       //Validate

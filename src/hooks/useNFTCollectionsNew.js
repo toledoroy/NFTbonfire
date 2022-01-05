@@ -10,7 +10,7 @@ import { useVerifyMetadata } from "hooks/useVerifyMetadata";
 export const useNFTCollections = (options) => {
   const { account, chainId } = useMoralis();
   const [ NFTCollections, setNFTCollections ] = useState({});
-  const [ NFTpersonas, setPersonas ] = useState({});
+  const [ NFTpersonas, setPersonas ] = useState([]);
   const { verifyMetadata, updateToken } = useVerifyMetadata();
 
   /**
@@ -72,7 +72,7 @@ export const useNFTCollections = (options) => {
       // let collections = collect(NFTs);
       let { collections, personas } = collect(NFTs);
       //Log
-      console.log("(i) useNFTCollections() collections:", {options, NFTs, collections});
+      console.log("(i) useNFTCollections() collections:", {options, NFTs, collections, personas});
       //Set
       setNFTCollections( collections );
       setPersonas( personas );
