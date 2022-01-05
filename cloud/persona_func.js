@@ -190,6 +190,19 @@ const cachePersona = async (chain, contract, tokenId) => {
   return persona;
 };
 
+/**
+ * Check if User is The Owner of a Persona
+ * @param {*} persona 
+ * @param {*} user 
+ * @returns 
+ */
+ const doesUserOwnPersona = (persona, user) => {
+  //Validate
+  if(!persona || !user) throw new Error("Missing Parameters (persona or user)");
+  //Check
+  return (user.get('accounts').includes(persona.get('owner').toLowerCase()));
+};
+
 
 //-- PRODUCTION
 
@@ -222,7 +235,9 @@ Moralis.Cloud.define("personaRegisterById", async (request) => {
   if(!persona) throw new Error("personaRegisterById() Failed to Fetch Persona ID:'"+personaId+"'")
   //Validate
   // if(handle != curHandle){
-  if(handle != persona.get('handle')){
+  if(handle !== persona.get('handle')){
+    //Validate Permissions
+    if(!doesUserOwnPersona(persona, request.user)) throw new Error("personaRegisterById() User does not own Persona ID:'"+personaId+"'");
     //Validate Handle
     let isFree = await isHandleFree(handle);
     if(!isFree) throw new Error("Handle:'"+handle+"' is already owned");
@@ -252,30 +267,13 @@ Moralis.Cloud.define("personaRegisterById", async (request) => {
   if(!contract || !token_id || !chain) throw new Error("Missing Parameters (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"')");
   //Log
   // logger.warn("[TEST] personaRegister() Request Params: chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"'");
-    
-
-  /* MOVED to personaGetOrMake()
-  //Get / Add Persona
-  const query = new Moralis.Query(Persona);
-  query.equalTo("chain", chain);
-  query.equalTo("address", contract, 'i');
-  query.equalTo("token_id", token_id);
-  const results = await query.limit(1).find();
-  //Extract Persona From Result or Make New
-  const personaGet = async (results) => {
-    if(results.length) return results[0];
-    // logger.info("personaRegister() Register Token to DB chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"'");
-    return await cachePersona(chain, contract, token_id);
-  }
-  //Fetch Persona (Get or Make New)
-  let persona = await personaGet(results);
-  */
-  let persona = personaGetOrMake(chain, contract, token_id);
-
-  
+  //Fetch (Get or Make) Persona
+  let persona = await personaGetOrMake(chain, contract, token_id);
   //Validate
   if(!persona) throw new Error("Failed to Fetch Persona -- chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"'")
   if(handle){
+    //Validate Permissions
+    if(!doesUserOwnPersona(persona, request.user)) throw new Error("personaRegister() User does not own Persona chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"'");
     //Register Handle to Persona
     if(handle !== persona.get('handle')){
       //Validate Handle
@@ -422,29 +420,3 @@ Moralis.Cloud.define("personaUnregister", async (request) => {
     //Return
     return true;
 });
-
-/**
- * Get Personas for Account
- */
-Moralis.Cloud.define("getPersonas", async (request) => {  
-    let options = {
-      chainId: "0x4", //Default to Rinkbey
-    };
-  
-    // options.account = request.params?.account ? request.params.account : "CURRENT_ACCOUNT";
-    if(request.params?.account) options.account = request.params.account;
-  
-    //Log
-    logger.warn("[TEST] getPersonas() for Current User:"+request.user?.id, {options});
-  
-    //Fetch 
-    let nfts = Moralis.getNFTBalance(options);
-    
-    
-    logger.warn(nfts);
-    logger.info(request.user);
-    
-    //Return NFTs
-    return nfts;
-});
-  

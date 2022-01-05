@@ -73,7 +73,7 @@ function PagePersona(props) {
        setPersonaActual(persona);
        setIsOwned(String(persona.get('owner')).toLowerCase() === account.toLowerCase());
        persona.get('metadata') && updateMetadata( persona.get('metadata') );
-       console.warn("[TEST] PagePersona() Persona Owner:"+persona.get('owner')+" User ID:"+account, {persona:persona, att:persona.attributes, owned:isOwned, isOwned:(persona.get('owner') == account)});    //V
+    //    console.warn("[TEST] PagePersona() Persona Owner:"+persona.get('owner')+" User ID:"+account, {persona:persona, att:persona.attributes, owned:isOwned, isOwned:(persona.get('owner') == account)});    //V
     }
    
     /**
@@ -494,16 +494,18 @@ function PagePersona(props) {
                         <div className="info">
                             {!isEditMode && 
                             <Skeleton loading={isLoading} active >
-                                <h1 className="name">{metadata?.name || metadata?.firstname+' '+metadata?.lastname}</h1>
+                                {metadata?.name && <h1 className="name">{metadata.name}</h1>}
                                 {!PersonaHelper.isNew(persona) && <Handle persona={persona} isEditMode={isEditMode} />}
                                 {/* <div className="handle">@{metadata?.username}</div> */}
-                                <q className="description">{metadata?.description}</q>
+                                {metadata?.description && <q className="description">{metadata.description}</q>}
+                                {metadata?.location?.name &&
                                 <div className="flex" style={{marginTop:5}}>
                                     <div className="location">
                                         <i className="bi bi-geo-alt"></i>
-                                        {metadata?.location?.name}
+                                        {metadata.location.name}
                                     </div>
                                 </div>
+                                }
                             </Skeleton>
                             }
                         </div>
@@ -797,10 +799,10 @@ export default PagePersona;
  function Handle(props){
     // const { visible:isModalVisible, setVisible:setIsModalVisible } = props;
     // const { persona, isEditMode } = props;
-    const { Moralis } = useMoralis();     //isUserUpdating
+    const { Moralis, user } = useMoralis();     //isUserUpdating
     const { persona } = props;
     const [isEditMode, setIsEditMode] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
+    const [status, setStatus] = useState(null);
     const [newHandle, setNewHandle] = useState(persona.get('handle'));
     const isNew = () => (!persona.get("handle"));
     /**
@@ -839,30 +841,39 @@ export default PagePersona;
             setIsEditMode(false);
         }else{
             console.log("Handle() Change Handle From:'"+persona.get('handle')+"' To:'"+handle+"'");
-            setIsSaving(true);
+            setStatus('saving');
 
             //Handle Register Handle
             let params = {personaId: persona.id, handle};
             Moralis.Cloud.run("personaRegisterById", params).then(result => {
                     console.log("[TEST] Handle() personaRegister Result:", result);
-                    // setIsSaving(false);
+                    setStatus('success');
+                    //Pre-Apply Change
+                    persona.set('handle', handle);
+                    //User Message
+                    message.success("Handle Saved Successfully");
+                    //Done with Edit Mode
+                    setIsEditMode(false);
+                    //TODO: Redirect to New URL ?
                 }).catch(error => {
-                    console.error("Handle() personaRegister Error:", {error, params}); 
-                    // setIsSaving(false);
+                    console.error("Handle() personaRegister Error:", {error, params, user}); 
+                    setStatus('failure');
+                    //User Message
+                    message.error("Failed to Save Handle");
                 })
-                .then(() => { setIsSaving(false); });
+                // .then(() => { setIsSaving(false); });
         }
     }//saveHandle()
-
+    //is Current User Owner of Persona
+    const isOwned = (user.get('accounts').includes(persona.get('owner').toLowerCase()));
     return (
         <div className="handle">
-            {!isEditMode && <>
-                @ {persona.get('handle')}
-                <Button variant="contained" size="small" color="primary" onClick={()=>{setIsEditMode(true)}}>{isNew() ? 'Set' : 'Change'}</Button>
+            {(!isEditMode) && <>
+                {persona.get('handle') && <span> @ {persona.get('handle')}</span>}
+                {isOwned && <Button variant="contained" size="small" color="primary" onClick={()=>{setIsEditMode(true)}}>{isNew() ? 'Set Handle' : 'Change'}</Button>}
             </>}
-
-            {isEditMode && <>
-            <Form name="handleChange" className="flex">
+            {(isOwned && isEditMode) && <>
+            <Form name="handleChange" className="flex" onFinish={(values) => saveHandle(values.handle)} size="small">
                 <Form.Item
                     hasFeedback
                     name="handle"
@@ -872,8 +883,8 @@ export default PagePersona;
                         // {required: true, message: "Oops, You forgot to enter a handle",},
                     ]}
                     >
-                    <Input prefix="@" enterButton="Save" loading={isSaving} placeholder="handle" label="Handle" name="handle" defaultValue={persona.get('handle')}
-                        onChange={(event)=>{setNewHandle(event.target.value);}}
+                    <Input prefix="@" placeholder="handle" name="handle" defaultValue={persona.get('handle')}
+                        onChange={(event)=>{setNewHandle(event.target.value)}}
                         // onSearch={(handle) => {saveHandle(handle)}}
                     />
                 </Form.Item>

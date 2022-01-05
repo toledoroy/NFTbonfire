@@ -52,7 +52,7 @@ import { IPFS } from "helpers/IPFS";
     //style={{background:"url("+coverImage+")"}}
     //Render
     return (
-        <Link key="link" to={{ pathname:link }} className="inner flex">
+        <a key="link" href={link} className="inner flex">
         <div className={className}>
             <div className="top">
                 <div className="image">
@@ -70,7 +70,7 @@ import { IPFS } from "helpers/IPFS";
                 </div>}
             </div>
         </div>
-        </Link>
+        </a>
     );
 }//BusinessCard()
 
