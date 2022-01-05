@@ -113,7 +113,7 @@ const getTokenOwner = async (chain, contract, tokenId) => {
 };
 
 /**
- * Fetch Persona from Chain & Save to DB
+ * Fetch Persona from Chain & Save to DB (Lasy Sync)
  * @param {*} chain 
  * @param {*} contract 
  * @param {*} tokenId 
@@ -140,11 +140,9 @@ const cachePersona = async (chain, contract, tokenId) => {
       logger.error("cachePersona() Failed to Fetch Persona Owner from Chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"'");
     });
     //Fetch Token URI
-    // let token_uri = await 
     getTokenURI(chain, contract, tokenId).then((token_uri) => {
       persona.save({token_uri}, {useMasterKey: true});
       //Fetch Metadata
-      // let metadata = (!token_uri) ? null : await 
       if(token_uri) fetchMetadata(resolveLink(token_uri)).then((metadata) => {
         persona.save({metadata}, {useMasterKey: true});
       }).catch((err) => {
