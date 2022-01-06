@@ -62,7 +62,7 @@ export const useVerifyMetadata = () => {
         })
         .catch((err) => {
             //Log
-            console.error("[TEST] useVerifyMetadata.updateToken() Error", {NFT, options, err});
+            console.error("useVerifyMetadata.updateToken() "+err, {NFT, options});
         });
         //Return Hooked NFT Object
         return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT ;

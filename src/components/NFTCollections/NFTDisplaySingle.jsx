@@ -29,7 +29,7 @@ const { Meta } = Card;
         setVisibility(true);
     };
     const handleChange = (e) => { setAmount(e.target.value); };
-    const selectItem = () => {  };
+    // const selectItem = () => {  };
 
     /**
      * Transfer NFT
@@ -85,9 +85,9 @@ const { Meta } = Card;
                 </div>
             }
             actions={[
-                <Tooltip title="View On Blockexplorer"><FileSearchOutlined onClick={() => window.open(`${getExplorer(chainId)}address/${nft.token_address}`, "_blank") } /></Tooltip>,
-                <Tooltip title="Transfer NFT"><SendOutlined onClick={() => handleTransferClick(nft)} /></Tooltip>,
-                <Tooltip title="Sell On OpenSea"><ShoppingCartOutlined onClick={() => alert("OPENSEA INTEGRATION COMING!")} /></Tooltip>,
+                <Tooltip title="View On Blockexplorer"><FileSearchOutlined onClick={(event) => {event.preventDefault();  window.open(`${getExplorer(chainId)}address/${nft.token_address}`, "_blank");}} /></Tooltip>,
+                <Tooltip title="Transfer NFT"><SendOutlined onClick={(event) => { event.preventDefault(); handleTransferClick(nft); }} /></Tooltip>,
+                <Tooltip title="Sell On OpenSea"><ShoppingCartOutlined onClick={(event) => { event.preventDefault(); alert("OPENSEA INTEGRATION COMING!");}} /></Tooltip>,
             ]}
             >
         </Card>

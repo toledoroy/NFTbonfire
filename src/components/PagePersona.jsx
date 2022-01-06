@@ -326,7 +326,7 @@ function PagePersona(props) {
                 </div>
             </div>
             
-            <div className="main">
+            <div className="main framed" style={{marginTop:0}}>
             {/* <div className="persona-body"> */}
                 <div className="secondary framed">
                     <div className="view" style={{display:!isEditMode?'block':'none'}}>
