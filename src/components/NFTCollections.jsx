@@ -53,13 +53,14 @@ function NFTCollections(props) {
   const { Moralis, isWeb3Enabled , chainId, user, account  } = useMoralis();
   const [ isAllowed, setIsAllowed ] = useState(false);
 
-  useEffect(() => { /* Check if Account Owns Any of These Assets */
+  useEffect(() => {
     //Default to Current Account
     if(!accountHash) console.error("NFTCollections() Set Default Account", {accountHash, account});
     if(!accountHash) accountHash = account; 
     
 
-
+    //THIS IS A COPY OF useIsAllowed(). Should probably use the hook...
+    //Check if Account Owns Any of These Assets
     if(collectionHash && isWeb3Enabled) {
       let chain = props?.match?.params?.chain || chainId;
       //Fetch Balance
@@ -86,6 +87,7 @@ function NFTCollections(props) {
       return;
     }
   }, [accountHash, collectionHash, isWeb3Enabled, chainId, account]);
+
 
   //Init Options
   let options = {

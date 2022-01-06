@@ -17,7 +17,8 @@ function PageNFTs({hash, collection, NFTpersonas}) {
 //   const { Moralis, isWeb3Enabled } = useMoralis();
 //   const [ rooms, setRooms ] = useState([]);
   const [ limit, setLimit ] = useState(6);
-
+  const [ isAllowed, setIsAllowed ] = useState(false);
+  
   /**
    * Fetch Rooms for Current PageNFTs
    */

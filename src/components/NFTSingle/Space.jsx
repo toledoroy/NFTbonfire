@@ -9,6 +9,7 @@ import { useMoralisQuery } from "react-moralis";
 import VotePane from "components/Room/VotePane";
 import PersonaChanger from "components/Persona/PersonaChanger";
 import PersonaHelper from "helpers/PersonaHelper";
+import { useIsAllowed } from "hooks/useIsAllowed";
 import { CollectionContext } from "common/context";
 import __ from "helpers/__";
 import moment from 'moment';
@@ -23,11 +24,11 @@ import { Space, Room, Comment as CommentObj } from "objects/objects";
  * Component: SpaceView (W/Chat Room)
  */
 function SpaceView({hash, collection, NFTpersonas}) {
-  const { Moralis, isWeb3Enabled, isAuthenticated,  } = useMoralis();
+  const { Moralis, isWeb3Enabled, isAuthenticated, chainId } = useMoralis();
   const [ space, setSpace ] = useState({});
   const [ rooms, setRooms ] = useState([]);
   const [ limit, setLimit ] = useState(8);
-
+  const { isAllowed } = useIsAllowed({hash, chain:chainId});
   /**
    * [DEV] Insert Rooms
    */

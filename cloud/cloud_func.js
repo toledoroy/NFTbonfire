@@ -32,16 +32,20 @@ const getBalance = async (account, contractAddress, chainId) => {
  * Check if User is Owns any assets in a Contract (Has Positive balance)
  * @var string account      Requesting Account
  * @var string hash         Contract
- * @var string chainId      Chain ID
+ * @var string chain        Chain ID
  * @ret bool
  */
 Moralis.Cloud.define("isAllowed", async (request) => { 
   //Validate
-  if(!request?.params?.account || !request?.params?.hash || !request?.params?.chainId) throw new Error("Missing Request Parameters (account, hash, chainId)");
+  // if(!request?.params?.account || !request?.params?.hash || !request?.params?.chain) throw new Error("Missing Request Parameters (account, hash, chain)");
+  if(!request?.params?.hash || !request?.params?.chain) throw new Error("Missing Request Parameters (hash, chain)");
+  // const account = request?.params?.account || request.user?.get('ethAddress'); //Check other Accounts
+  const account = request.user?.get('ethAddress');  //Only Check Current Account
+  // const accounts = request.user?.get('accounts');  //Any of Current Addresses [?]
   //Get Balance
-  const balance = await getBalance(request?.params?.account, request?.params?.hash, request?.params?.chainId);
+  const balance = await getBalance(account, request.params.hash, request.params.chain);
   //Log
-  logger.warn("[TEST] isAllowed() Chain:"+request?.params?.chainId+" Account:"+request?.params?.account+" Balance:"+balance);
+  logger.warn("[TEST] isAllowed() Chain:"+request?.params?.chain+" Account:"+request?.params?.account+" Balance:"+balance);
   //True if has any balance
   return (balance > 0);
 });

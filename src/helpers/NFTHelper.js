@@ -17,10 +17,9 @@ export const NFTHelper = {
     async getBalance (Moralis, account, contractAddress, chain) {
         //Parameters
         let options = { 
-            // chain: '0x4', 
             chain, 
-            address: account, 
-            token_address: contractAddress,
+            address: account,   //Owner
+            token_address: contractAddress, //Contract
         };
         return Moralis.Web3API.account.getNFTsForContract(options).then(res => res.total);
         /* DEBUG
