@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { Skeleton, Image,  Form, Input, Button, Comment, Avatar, List } from 'antd';
+import React, { useContext, useEffect } from "react";
+import { Skeleton, Image,  Form, Input, Button, Comment, Avatar } from 'antd';
 import { FireTwoTone } from '@ant-design/icons';
 import { useMoralis } from "react-moralis";
 import { useHistory } from 'react-router-dom';
-import { Room } from "objects/objects";
-    
+// import { Room } from "objects/objects";
+import { Post } from "objects/objects";
+import { PersonaHelper } from "helpers/PersonaHelper";
+import { PersonaContext } from "common/context";
 
 
 /**
  * Component: Add New Post
  */
  function RoomAddForm({parent, parentId, title}) {
-    const { Moralis, account, chainId } = useMoralis();
+    const { Moralis, account, chainId, user } = useMoralis();
+    const { persona } = useContext(PersonaContext);
     //Objects
     // const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
     // const { isSaving, error, save:savePost } = useNewMoralisObject('post');
@@ -19,6 +22,11 @@ import { Room } from "objects/objects";
     
     //Validate
     if(!parentId) throw new Error("RoomAddForm() Missing Parent");
+
+    // useEffect(() => {
+    //   console.error("[TEST]!! RoomAddForm() Using Persona:", {persona});
+    // }, [persona]);
+  
 
     /**
      * Form Submit Function
@@ -28,26 +36,24 @@ import { Room } from "objects/objects";
       values.parentId = parentId;
       values.account = account;
       values.chain = chainId;
-
-      console.log("[TODO] RoomAddForm() Which Persona Are You Using?", {values});
-      // values.persona = ??
+      values.userId = user?.id;
+      values.persona = PersonaHelper.getGUID(persona);
       try{
 
         //Create New Post
         // const newPost = await Moralis.Cloud.run("post", values);
         
-        const Post = Moralis.Object.extend("Post");
+        // const Post = Moralis.Object.extend("Post");
         // const post = new Post();
         // post.set("userId", request.user?.id);
-        values.userId = Moralis.User.current()?.id;
+      
 
         const post = new Post(values);
 
-        post.set('parent', parent);   //TESTING
+        // post.set('parent', parent);   //TESTING   
+        // console.warn("[TEST] post() User: ", Moralis.User.current());
 
-        console.warn("[TEST] post() User: ", Moralis.User.current());
-
-        //ACL - Own + Public Read
+        //ACL - Own + Public Read     //!! This should probably all be on the server... + Validate Access to Parent
         const acl = new Moralis.ACL(Moralis.User.current());
         acl.setPublicReadAccess(true);
         acl.setRoleWriteAccess("admins", true);
@@ -61,10 +67,7 @@ import { Room } from "objects/objects";
         //Save
         return post.save();
 
-
-
-      
-      /*
+        /*
         //Log
         console.log("RoomAddForm() Created new Post:", {values, newPost});
     
@@ -86,7 +89,8 @@ import { Room } from "objects/objects";
         <h3>{title ? title : 'Start a new bonfire'}</h3>
         {/* <p>Add a new Room to this Space!</p> */}
         <Comment
-          avatar={<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
+          // avatar={<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
+          avatar={<Avatar src={PersonaHelper.getImage(persona)} alt={persona?.get('metadata').name} />}
           content={
             <Form name="postAdd" 
               onFinish={onFinish}

@@ -60,19 +60,6 @@ export const Room = Moralis.Object.extend("Post", {
             console.log("Hi! I'm Room "+this.id); 
             return '[COMMENTS]';
         },
-        /* This Doesn't Work as Intended... Functions Seem to get lost when in state */
-        getComments: function() { 
-            const query = new Moralis.Query(this);
-            query.equalTo("parentId", this.id);
-            let res = query.find();
-
-            return res;
-            //Log
-            // console.log("[TODO] Get Comments for "+this.id); 
-            console.log("Hi! I'm Room "+this.id);  
-            // return '[COMMENTS]';
-        },
-        
     }, 
     // {
         // create: createPost,

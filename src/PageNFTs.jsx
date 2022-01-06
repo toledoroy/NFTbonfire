@@ -8,7 +8,7 @@ import { CollectionContext } from "common/context";
 import __ from "helpers/__";
 
 
-//TODO! Run Search & Paginate Results
+//TODO Run Search & Paginate Results
 
 /**
  * Component: Space (W/Chat Room)
@@ -18,7 +18,7 @@ function PageNFTs({hash, collection, NFTpersonas}) {
 //   const [ rooms, setRooms ] = useState([]);
   const [ limit, setLimit ] = useState(6);
   const [ isAllowed, setIsAllowed ] = useState(false);
-  
+
   /**
    * Fetch Rooms for Current PageNFTs
    */

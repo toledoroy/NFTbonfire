@@ -1,20 +1,23 @@
+import { useEffect, useState, useContext } from "react";
 import { useMoralis, useMoralisQuery } from "react-moralis";
 import { getEllipsisTxt } from "helpers/formatters";
 import Blockie from "../Blockie";
 import { Button, Card, Modal } from "antd";
 import { Menu, Dropdown } from "antd";
-import { useEffect, useState, useContext } from "react";
 import Address from "../Address/Address";
 import { SelectOutlined } from "@ant-design/icons";
 import { getExplorer } from "helpers/networks";
 import BusinessCard from "components/Persona/BusinessCard";
-import { Persona } from "objects/Persona";
+// import { Persona } from "objects/Persona";
+import { PersonaHelper } from "helpers/PersonaHelper";
+import { IPFS } from "helpers/IPFS";
 import { Link } from "react-router-dom";
 import { PersonaContext } from "common/context";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 
 import Text from "antd/lib/typography/Text";
 import { connectors } from "./config";
+import Avatar from "antd/lib/avatar/avatar";
 
 const styles = {
   account: {
@@ -230,7 +233,10 @@ function Account() {
       <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
         <div style={styles.account}>
           <p style={{ marginRight: "5px", ...styles.text }}>{getEllipsisTxt(account, 6)}</p>
-          <Blockie currentWallet scale={3} />
+          {/* <Blockie currentWallet scale={3} /> */}
+          <Avatar src={
+            PersonaHelper.getImage(curPersona, <Blockie currentWallet scale={3} />)
+          } size="small" />
         </div>
       </a>
     </Dropdown>

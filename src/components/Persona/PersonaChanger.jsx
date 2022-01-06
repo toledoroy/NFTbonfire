@@ -1,8 +1,12 @@
+import { useEffect, useState, useContext } from "react";
 import { Skeleton, Button, Dropdown, Avatar } from "antd";
 // import { Link } from "react-router-dom";
 import { DownOutlined } from '@ant-design/icons'; //UserOutlined
 import { Persona } from "objects/Persona";
 import BusinessCard from "components/Persona/BusinessCard";
+import { PersonaHelper } from "helpers/PersonaHelper";
+import { PersonaContext } from "common/context";
+
 
 /**
  * Component
@@ -11,10 +15,14 @@ import BusinessCard from "components/Persona/BusinessCard";
  */
  function PersonaChanger(props) {
     const { persona, personas } = props;
+    const { persona:curPersona, setPersona} = useContext(PersonaContext);
+
     //Use Persona Model
     const personaObj = new Persona(persona);
     const image = personaObj.getFallback('image');
-  
+    return (
+      <Avatar size={60} src={PersonaHelper.getImage(curPersona)} />
+    );
     return (
       <Dropdown trigger={['click']} className="popPanel" style={{}} overlay={
         <div className="business_card_container">

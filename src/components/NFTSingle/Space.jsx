@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
@@ -9,6 +9,7 @@ import { useMoralisQuery } from "react-moralis";
 import VotePane from "components/Room/VotePane";
 import PersonaChanger from "components/Persona/PersonaChanger";
 import PersonaHelper from "helpers/PersonaHelper";
+import { PersonaContext } from "common/context";
 import { useIsAllowed } from "hooks/useIsAllowed";
 import { CollectionContext } from "common/context";
 import __ from "helpers/__";
@@ -29,6 +30,8 @@ function SpaceView({hash, collection, NFTpersonas}) {
   const [ rooms, setRooms ] = useState([]);
   const [ limit, setLimit ] = useState(8);
   const { isAllowed } = useIsAllowed({hash, chain:chainId});
+  const { persona, setPersona} = useContext(PersonaContext);
+  
   /**
    * [DEV] Insert Rooms
    */
@@ -99,7 +102,6 @@ function SpaceView({hash, collection, NFTpersonas}) {
         //Log
         // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, result); //V
         // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, result[0].sayHi());
-        // for(let room of result) console.error("[TEST] Comments:", room, room.getComments());    //FAILS
         //Set Rooms
         setRooms(result);
       }//Found Rooms

@@ -52,7 +52,8 @@ import { IPFS } from "helpers/IPFS";
     //style={{background:"url("+coverImage+")"}}
     //Render
     return (
-        <a key="link" href={link} className="inner flex">
+        <>
+        {/* <a key="link" href={link} className="inner flex"> */}
         <div className={className}>
             <div className="top">
                 <div className="image">
@@ -65,12 +66,13 @@ import { IPFS } from "helpers/IPFS";
             </div>
             <div className="bottom">
                 {(props.actions!==false) && <div className="actions flex">
-                    {/* <Link key="link" to={{ pathname:link }} className="inner flex">View</Link> */}
-                    <button className="button" onClick={() => setPersona(persona)}>Select</button>
+                    <Link key="link" to={{ pathname:link }} className="inner flex">View</Link>
+                    <button className="button" onClick={(event) => { event.preventDefault(); setPersona(persona);}}>Use</button>
                 </div>}
             </div>
         </div>
-        </a>
+        {/* </a> */}
+        </>
     );
 }//BusinessCard()
 
