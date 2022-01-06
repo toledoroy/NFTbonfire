@@ -42,15 +42,10 @@ import { PersonaContext } from "common/context";
 
         //Create New Post
         // const newPost = await Moralis.Cloud.run("post", values);
-        
-        // const Post = Moralis.Object.extend("Post");
-        // const post = new Post();
-        // post.set("userId", request.user?.id);
-      
-
+            
         const post = new Post(values);
-
         // post.set('parent', parent);   //TESTING   
+        // post.set("userId", request.user?.id);
         // console.warn("[TEST] post() User: ", Moralis.User.current());
 
         //ACL - Own + Public Read     //!! This should probably all be on the server... + Validate Access to Parent
