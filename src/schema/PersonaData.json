@@ -44,9 +44,9 @@
             "discord": {"name":"discord"},
             "pinterest": {"name":"pinterest", "url":"https://pinterest.com/"},
             "vimeo": {"name":"vimeo", "url":"https://vimeo.com/"},
+            "dribbble": {"name":"dribbble", "url":"https://dribbble.com/"},
             "quora": {"name":"quora", "url":"https://www.quora.com/profile/"},
             "spotify": {"name":"spotify", "url":"https://open.spotify.com/user/"}
-            
         }
     },
     "links":{
