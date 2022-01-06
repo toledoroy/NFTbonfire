@@ -62,15 +62,21 @@
 
 /* Page:Persona */
 .persona {
-    .header .cover{ width:100%; height: 230px; overflow: hidden; }
+    padding-top: 5px;
+    .header{
+        border-radius: 20px 20px 0 0;
+        overflow: hidden;
+        .cover{ width:100%; height: 230px; overflow: hidden; }
+    }
     .details{ 
         display: flex; 
         margin-top: 10px;
+        margin-bottom: 40px;
         .actions {margin-left:auto;}
         .image{ 
             position: relative;
             // top: -6rem;
-            margin: -6rem auto auto auto;
+            margin: -7rem auto auto 17px;
             // background: var(--background-color);
             background: white;
             border-radius: 50%;
@@ -91,13 +97,17 @@
         flex-direction: row-reverse;
         justify-content: space-between;
     }
-    .primary { flex-grow: 1; }  
+    .primary { 
+        padding-left: 0;
+        flex-grow: 1; 
+    }  
     .social { 
         .item {
             // border-radius: 17px;
         }
     }
     .secondary{
+        padding-right: 0;
         .item {
             border:1px solid #d9d9d9; 
             
@@ -209,7 +219,7 @@
         border-radius: var(--borderRadius);
         .ant-tabs-nav-add,
         .ant-tabs-tab {border-radius: 12px 12px 0 0 !important; border:0; }
-        .ant-tabs-content-holder { background: var(--monochrome); border-radius: 0 12px 12px 12px; }
+        .ant-tabs-content-holder { background: var(--monochrome); border-radius: 0 20px 20px 20px; }
         .ant-tabs-nav {margin:0; }
     }    
     
