@@ -16,6 +16,7 @@ function NFTDisplayMetadata({nft}) {
   return (
     <> 
       <div className={nft.amount>1 ? 'metadata many' : 'metadata single'}>
+        <div className="inner">
           {/* <h3>{nft.name}: {nft?.metadata?.name}</h3> */}
           {/* <p>Type: {nft.contract_type}</p> */}
           {/* <p>Amount: {nft.amount}</p> */}
@@ -24,11 +25,26 @@ function NFTDisplayMetadata({nft}) {
           {nft?.metadata && <dl>
             <dt>Metadata:</dt>
             {Object.keys(nft?.metadata).map((key, index) => {
+              // if(Array.isArray(value)){
+              if(key === 'attributes'){
+                //Display Attributes
+                return (
+                  <div className={key}>
+                    {nft.metadata[key].map((field) => (
+                      <li>
+                        ATTR: 
+                        <DisplayMetadataField key={field.trait_type} label={field.trait_type} value={field.value} />
+                      </li>
+                    ))}
+                  </div>
+                );
+              } 
               return (nft.metadata[key] && shouldShow(key)) ? <DisplayMetadataField key={key} label={key} value={nft.metadata[key]} /> : null;
             })}
           </dl>}
           {/* <p>Token ID:{nft.token_id}</p> */}
           {/* <p>Token Addr:{nft.token_address}</p> */}
+        </div>
       </div>
   </>
   );
@@ -101,3 +117,10 @@ export default NFTDisplayMetadata;
   } 
   return null;
 }//DisplayMetadataField()
+
+/**
+ * Component
+ */
+function DisplayAttributeField({label, value}){
+
+}//DisplayAttributeField

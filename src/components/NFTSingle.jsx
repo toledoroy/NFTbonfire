@@ -22,14 +22,14 @@ function NFTSingle(props) {
   console.log('NFTSingle() ID: '+props.match.params.hash, {props, hash, valid:isValid(hash)});
   // console.log("NFTSingle() props.NFT:", props.nft); 
   
-  //TODO: Single: Load NFT TXs: getNFTTransfers
   const options = { token_address: hash };
   // const options = { chain: 'matic', address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1', /*token_address: '0x...'*/ };
   // const options = { address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1', token_address: hash, };    //[DEV]
   // options.address = '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1';    //[DEV]
   // const options = { address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1',};
 
-
+  //Single: Load NFT TXs: getNFTTransfers
+  
 
   //TESTING
   // const polygonNFTs = await Moralis.Web3API.account.getNFTsForContract(options);

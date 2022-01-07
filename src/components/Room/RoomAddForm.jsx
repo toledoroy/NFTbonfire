@@ -47,7 +47,9 @@ import { PersonaContext } from "common/context";
         const post = new Post(values);
         // const post = new Post();
         // post.set("userId", request.user?.id);
+
         // post.set('parent', parent);   //TESTING   
+        // post.set("userId", request.user?.id);
         // console.warn("[TEST] post() User: ", Moralis.User.current());
 
         //ACL - Own + Public Read     //!! This should probably all be on the server... + Validate Access to Parent
