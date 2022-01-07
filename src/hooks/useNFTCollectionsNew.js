@@ -8,7 +8,7 @@ import { useVerifyMetadata } from "hooks/useVerifyMetadata";
  * @returns 
  */
 export const useNFTCollections = (options) => {
-  const { account, chainId } = useMoralis();
+  const { account, chainId, isWeb3Enabled } = useMoralis();
   const [ NFTCollections, setNFTCollections ] = useState({});
   const [ NFTpersonas, setPersonas ] = useState([]);
   const { verifyMetadata, updateToken } = useVerifyMetadata();
@@ -60,7 +60,7 @@ export const useNFTCollections = (options) => {
   const { data: NFTBalances, isLoading, error } = useNFTBalances(options);   
   useEffect(() => {
     // console.log("[TEST] NEW NFTBalances", NFTBalances, );
-    if (NFTBalances?.result) {
+    if (isWeb3Enabled && NFTBalances?.result) {
       const NFTs = NFTBalances.result;
       for (let NFT of NFTs) {
         //Add Chain ID
@@ -78,7 +78,7 @@ export const useNFTCollections = (options) => {
       setPersonas( personas );
     }//Has Results
     // eslint-disable-next-line
-  }, [NFTBalances]);
+  }, [NFTBalances, isWeb3Enabled]);
 
   return { NFTCollections, NFTpersonas, error, isLoading };
 };//useNFTCollections

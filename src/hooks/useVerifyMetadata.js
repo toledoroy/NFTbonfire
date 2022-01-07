@@ -11,7 +11,7 @@ import { Exception } from "sass";
 export const useVerifyMetadata = () => {
     const { resolveLink } = useIPFS();
     const [results, setResults] = useState({});
-    const { Moralis, chainId } = useMoralis();
+    const { Moralis, chainId, isWeb3Enabled } = useMoralis();
 
     /**
      * Moralis sometimes gives the wrong token_uri
@@ -62,7 +62,7 @@ export const useVerifyMetadata = () => {
         })
         .catch((err) => {
             //Log
-            console.error("useVerifyMetadata.updateToken() "+err, {NFT, options});
+            console.error("useVerifyMetadata.updateToken() "+err, {NFT, isWeb3Enabled, options});
         });
         //Return Hooked NFT Object
         return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT ;
