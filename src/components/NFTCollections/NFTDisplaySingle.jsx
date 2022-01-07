@@ -76,7 +76,8 @@ const { Meta } = Card;
                                 alt=""
                                 // style={{ height: "var(--cardHeight)", width: "var(--cardWidth)" }}
                             />
-                            <Meta title={nft?.metadata?.name} description={__.sanitize(nft.name)} />
+                            {/* <Meta title={nft?.metadata?.name} description={__.sanitize(nft.name)} /> */}
+                            <Meta title={nft?.metadata?.name} />
                         </div>
                         <div className="flip-card-back">
                             <NFTDisplayMetadata nft={nft} />

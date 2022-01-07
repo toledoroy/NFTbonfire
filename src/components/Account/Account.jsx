@@ -157,8 +157,8 @@ function Account() {
   if (!isAuthenticated) {
     return (
       <>
-        <div style={styles.account} onClick={() => authenticate({ signingMessage: "Sign in [Free]" })}>
-          <p style={styles.text}>Authenticate</p>
+        <div className="account out" onClick={() => authenticate({ signingMessage: "Sign in [Free]" })}>
+          <p className="text">Authenticate</p>
         </div>
         <Modal
           visible={isAuthModalVisible}
@@ -244,12 +244,12 @@ function Account() {
       </Menu>
       )} placement="bottomRight">
       <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-        <div style={styles.account}>
-          <p style={{ marginRight: "5px", ...styles.text }}>{getEllipsisTxt(account, 6)}</p>
+        <div className="account in">
+          <p className="hash">{getEllipsisTxt(account, 4)}</p>
           {/* <Blockie currentWallet scale={3} /> */}
-          <Avatar src={
-            PersonaHelper.getImage(curPersona, <Blockie currentWallet scale={3} />)
-          } size="small" />
+          <Avatar className='image' src={
+            PersonaHelper.getImage(curPersona, <Blockie currentWallet scale={3} size={32} />)
+          }  />
         </div>
       </a>
     </Dropdown>

@@ -19,9 +19,9 @@
         font-size: 17px;
         font-weight: 500;
         flex: 1 1;
-        // display: "flex",
-        // width: "100%",
-        // justifyContent: "center",
+        // display: flex,
+        // width: 100%,
+        // justifyContent: center,
         overflow: hidden;
     }
 }
@@ -362,6 +362,7 @@
                 overflow-y: auto;
                 overflow-x: hidden;
                 .inner{
+                    min-height: 100%;
                     padding: 6px; 
                     /*https://heropatterns.com/*/
                     background-color: var(--monochrome);
@@ -457,4 +458,29 @@
     flex: 1 1;
     overflow: hidden;
     .ant-collapse-content { background: none;}
+}
+
+/* Account */
+.account {
+    height: 48px;
+    padding: 0 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    border-radius: 12px;
+    background-color: rgb(244, 244, 244);
+    cursor: pointer;
+    .image { 
+        height: 32px; 
+        width: 32px;
+    }
+    p.text {
+        font-size:1.1em;
+        color: #21BF96,
+    }
+    p.hash {
+        margin-right: 5px;
+        color: rgb(33, 191, 150);
+    }
 }
