@@ -1,7 +1,6 @@
 import React from "react";
 import { useMoralis, useNFTBalances } from "react-moralis";
 import __ from "helpers/__";
-// import { DoubleRightOutlined } from '@ant-design/icons';
 
 /**
  * Component: Display NFT's Metadata
@@ -79,10 +78,9 @@ export default NFTDisplayMetadata;
             <dl>
               {/* <dt>{__.sanitize(label)}</dt> */}
               <dt>
-              {/* <DoubleRightOutlined /> */}
-              <i class="bi bi-bookmarks"></i>
-              Properties</dt>
-              {items}
+                <i className="bi bi-bookmarks"></i>
+                Properties</dt>
+                {items}
             </dl>
           </dd>
         );

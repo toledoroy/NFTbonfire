@@ -72,20 +72,25 @@ const App = ({ isServerInfo }) => {
   }, [isAuthenticated, isWeb3Enabled]);
 
   /**
-   * Set Persona Wrapper
+   * Set Persona Wrapper (Full Procedure)
    * @param ParseObject persona 
    */
    const setPersona = (persona) => { 
     //Remember
     if(user){
-      user.set('curPersona', persona.id);
+      let record = user.get('last_persona');
+      if(!record) record = {};  //Initiate
+      record.global = persona.id;
+      // user.set('curPersona', persona.id);
+      user.set('last_persona', record);
       user.save();
+      // console.warn("[TEST] App() Remeber Persona", user);
     }
     else console.error("App() Change Persona -- No User");
     setPersonaActual(persona); 
-  }
+  }//setPersona
 
-//quickstart
+  //quickstart
   return (
     <PersonaContext.Provider value={{persona, setPersona}}>
     <Layout style={{ height: "100vh", overflow: "auto" }}>

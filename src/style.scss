@@ -397,13 +397,23 @@
                             padding: 10px 2px;
                             margin: 0 0 3% 0;
                             overflow: hidden;
+
+                            font-weight: 500;
                             label {
                                 display:block;
                                 text-transform: uppercase;
                                 color:turquoise;
-                                letter-spacing: 0.1em;
+                                letter-spacing: 2px;
+                                font-size: 0.9em;
+                                text-decoration: none;
+                                text-overflow: ellipsis;
                             }
                             label:after { content: ''; }
+                            .value {
+                                font-size: 1.2em;
+                                text-transform: capitalize;
+                                text-overflow: ellipsis;
+                            }
                         }
                     }
                 }

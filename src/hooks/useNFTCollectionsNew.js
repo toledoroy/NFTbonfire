@@ -39,7 +39,7 @@ export const useNFTCollections = (options) => {
           console.error("[CAUGHT] collect() Exception while updating token", {NFT, error});
         }
       }//Persona
-      else{//Regular Collection
+      // else{//Regular Collection
         //Verify Metadata (Moralis sometimes gives outdated metadata)
         NFT = verifyMetadata(NFT);
         //Init Collection Slot
@@ -50,7 +50,7 @@ export const useNFTCollections = (options) => {
         if(NFT.owner_of === account) collections[NFT.token_address].owned = true;
         // else console.warn("No Match", NFT.owner_of, account);  //V
         // if(collections[NFT.token_address]?.est === undefined || collections[NFT.token_address].est > NFT.est) collections[NFT.token_address].est = NFT.est;   //Should be: Time sicne last TX
-      }//Default
+      // }//Default
     }//Each NFT
     // return collections;
     return { collections, personas };

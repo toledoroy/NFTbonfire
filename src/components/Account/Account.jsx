@@ -123,21 +123,22 @@ function Account() {
   };//updatePersonas()
 
   useEffect(() => {
-    if(NFTpersonas.length > 0){
-      updatePersonas();
-      if(!curPersona){
-        let curPersonaId = user.get('curPersona');
-        //Recuperate Last Persona
-        for(let personaObj of personas){
-          if(personaObj.id == curPersonaId){
-            setPersona(personaObj);
-            // console.warn("[TEST] Account() Setting Default Persona:"+curPersonaId);  //V
-            break;
-          } 
-        }
+    //Sync Personas
+    if(NFTpersonas.length > 0) updatePersonas();
+    //Recoup Selected Persona
+    if(!curPersona && personas.length > 0){
+      // let curPersonaId = user.get('curPersona');
+      let curPersonaId = user.get('last_persona')?.global;
+      //Recuperate Last Persona
+      if(curPersonaId) for(let personaObj of personas){
+        if(personaObj.id == curPersonaId){
+          setPersona(personaObj);
+          console.warn("[TEST] Account() Setting Last Selected Persona:"+curPersonaId);  //V
+          break;
+        } 
       }
     } 
-    else console.warn("[TEST] Account() Skip Match Personas (No NFTs)", {NFTpersonas, personas});
+    else console.warn("[TEST] Account() Skip Persona Recoup (No NFTs)", {NFTpersonas, personas});
   }, [NFTpersonas, personas]);
 
   useEffect(() => { 
