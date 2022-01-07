@@ -1,6 +1,7 @@
 import React from "react";
 import { useMoralis, useNFTBalances } from "react-moralis";
 import __ from "helpers/__";
+// import { DoubleRightOutlined } from '@ant-design/icons';
 
 /**
  * Component: Display NFT's Metadata
@@ -25,20 +26,6 @@ function NFTDisplayMetadata({nft}) {
           {nft?.metadata && <dl>
             <dt>Metadata:</dt>
             {Object.keys(nft?.metadata).map((key, index) => {
-              // if(Array.isArray(value)){
-              if(key === 'attributes'){
-                //Display Attributes
-                return (
-                  <div key={key} className={key}>
-                    {nft.metadata[key].map((field) => (
-                      <li key={field.trait_type}>
-                        ATTR: 
-                        <DisplayMetadataField key={field.trait_type} label={field.trait_type} value={field.value} />
-                      </li>
-                    ))}
-                  </div>
-                );
-              } 
               return (nft.metadata[key] && shouldShow(key)) ? <DisplayMetadataField key={key} label={key} value={nft.metadata[key]} /> : null;
             })}
           </dl>}
@@ -59,8 +46,6 @@ export default NFTDisplayMetadata;
  function DisplayMetadataField({label, value}){
   // console.log("DisplayMetadataField() Start W/", {label, value})
   // const { Moralis } = useMoralis();
-  // const logger = Moralis.Cloud.getLogger(); //Moralis.Cloud.getLogger is not a function
-
 
   if(typeof value == 'string' || typeof value == 'number'){
     if(label === 'date'){
@@ -86,13 +71,17 @@ export default NFTDisplayMetadata;
       let items = [];
       // for(let field of value) if(field.trait_type && field.value){ //Validate
       for(let field of value) if(field.trait_type && field.value && !field.trait_type.startsWith('bg_')){ //Validate
-        items.push(<DisplayMetadataField key={field.trait_type} label={field.trait_type} value={field.value} />);
+        items.push(<DisplayMetadataField key={field.trait_type} label={field.trait_type} value={field.value} className="item"/>);
       }
       if(items.length>0){
         return (
-          <dd>
+          <dd className={label}>
             <dl>
-              <dt>{__.sanitize(label)}:</dt>
+              {/* <dt>{__.sanitize(label)}</dt> */}
+              <dt>
+              {/* <DoubleRightOutlined /> */}
+              <i class="bi bi-bookmarks"></i>
+              Properties</dt>
               {items}
             </dl>
           </dd>
