@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
 import { BrowserRouter as Router, Switch, Route, NavLink, Redirect } from "react-router-dom";
 import Account from "components/Account/Account";
@@ -28,6 +28,7 @@ import PagePersona from "components/PagePersona";
 import PersonaNew from "components/PersonaNew";
 // import PageAuthenticate from "components/PageAuthenticate";
 // import Page404 from "components/Page404";
+import { PersonaContext } from "common/context";
 
 // lessc "./style.less"
 
@@ -56,7 +57,8 @@ const styles = {
   },
 };
 const App = ({ isServerInfo }) => {
-  const { isWeb3Enabled, enableWeb3, isInitialized, isAuthenticated, isWeb3EnableLoading } = useMoralis();
+  const { isWeb3Enabled, enableWeb3, isInitialized, isAuthenticated, isWeb3EnableLoading, user } = useMoralis();
+  const [ persona, setPersonaActual ] = useState();
 
   useEffect(() => {
     // if(isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading){
@@ -67,11 +69,25 @@ const App = ({ isServerInfo }) => {
     else console.log("(i) App() Not Running enableWeb3()", {isInitialized, isWeb3Enabled, isWeb3EnableLoading, isAuthenticated})
     // if (!isWeb3Enabled && !isWeb3EnableLoading) enableWeb3();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-
   }, [isAuthenticated, isWeb3Enabled]);
-  
+
+  /**
+   * Set Persona Wrapper
+   * @param ParseObject persona 
+   */
+   const setPersona = (persona) => { 
+    //Remember
+    if(user){
+      user.set('curPersona', persona.id);
+      user.save();
+    }
+    else console.error("App() Change Persona -- No User");
+    setPersonaActual(persona); 
+  }
+
 //quickstart
   return (
+    <PersonaContext.Provider value={{persona, setPersona}}>
     <Layout style={{ height: "100vh", overflow: "auto" }}>
       {/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /> */}
       {/* <script src="https://kit.fontawesome.com/62e94cb93f.js" crossorigin="anonymous"></script> */}
@@ -164,6 +180,7 @@ const App = ({ isServerInfo }) => {
       </Footer>
 
     </Layout>
+    </PersonaContext.Provider>
   );
 };
 

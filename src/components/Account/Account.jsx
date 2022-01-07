@@ -58,7 +58,7 @@ const styles = {
  * Component: Account & Account Management
  */
 function Account() {
-  const { Moralis, authenticate, isAuthenticated, account, chainId, logout } = useMoralis();
+  const { Moralis, authenticate, isAuthenticated, account, user, chainId, logout } = useMoralis();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);
   const [lastAccount, setLastAccount] = useState(account);  //Remember Last Account
@@ -123,7 +123,20 @@ function Account() {
   };//updatePersonas()
 
   useEffect(() => {
-    if(NFTpersonas.length > 0) updatePersonas();
+    if(NFTpersonas.length > 0){
+      updatePersonas();
+      if(!curPersona){
+        let curPersonaId = user.get('curPersona');
+        //Recuperate Last Persona
+        for(let personaObj of personas){
+          if(personaObj.id == curPersonaId){
+            setPersona(personaObj);
+            // console.warn("[TEST] Account() Setting Default Persona:"+curPersonaId);  //V
+            break;
+          } 
+        }
+      }
+    } 
     else console.warn("[TEST] Account() Skip Match Personas (No NFTs)", {NFTpersonas, personas});
   }, [NFTpersonas, personas]);
 
