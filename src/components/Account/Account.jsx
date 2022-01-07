@@ -133,12 +133,11 @@ function Account() {
       if(curPersonaId) for(let personaObj of personas){
         if(personaObj.id == curPersonaId){
           setPersona(personaObj);
-          console.warn("[TEST] Account() Setting Last Selected Persona:"+curPersonaId);  //V
+          // console.log("Account() Setting Last Selected Persona:"+curPersonaId);  //V
           break;
         } 
       }
     } 
-    else console.warn("[TEST] Account() Skip Persona Recoup (No NFTs)", {NFTpersonas, personas});
   }, [NFTpersonas, personas]);
 
   useEffect(() => { 
