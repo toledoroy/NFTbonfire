@@ -35,14 +35,16 @@ Moralis.Cloud.define("postVote", async (request) => {
   let score = await calcEntityScore(postId);
   logger.warn("[TEST] postVote() Total Score:'"+score+"' for PostId:'"+postId+"'");
   //Save Score to Post
-  // relation.save({score});
+  let post = await new Moralis.Query(Post).get(postId, {useMasterKey: true});
+  await post.save({score}, {useMasterKey: true});
+  logger.warn("[TEST] postVote() Saved Total Score:'"+score+"' for PostId:'"+postId+"'  "+JSON.stringify(post));
 
 
   /**
    * TODO: Algorithm   
    * - Opinon Add
-   *  T Register Post Vote (user->post)
-   *  T Re-Calculate Post Score
+   *  V Register Post Vote (user->post)
+   *  V Re-Calculate Post Score
    *  - Fire Event -> Update User Score + Track Causality  (Listener?)
    * 
    * - Opinion Change
@@ -109,11 +111,3 @@ const calcEntityScore = async (entity) => {
   return res[0]?.score;
 };
 
-
-//-- DEV
-
-Moralis.Cloud.afterSave(Relation, (request) => {
-    console.log("Relation.afterSave() Request:"+JSON.stringify(request));
-    console.log("Relation.afterSave() Object:"+JSON.stringify(request?.object));
-	//Run Something...
-})
