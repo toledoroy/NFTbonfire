@@ -113,7 +113,7 @@ export default NFTDisplayMetadata;
     else{
       console.warn("[UNHANDLED] DisplayMetadataField() "+label+" is an Array", {label, value});
       return (
-        <dd key={label}>
+        <dd key={label} className="debug">
           <label>{label}: (IS ARRAY) </label> 
           <span className="value">
             {value.toString(value)}
