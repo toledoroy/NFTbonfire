@@ -72,27 +72,57 @@ export default NFTDisplayMetadata;
       for(let field of value) if(field.trait_type && field.value && !field.trait_type.startsWith('bg_')){ //Validate
         items.push(<DisplayMetadataField key={field.trait_type} label={field.trait_type} value={field.value} className="item"/>);
       }
-      if(items.length>0){
+      if(items.length > 0){
         return (
           <dd className={label}>
             <dl>
               {/* <dt>{__.sanitize(label)}</dt> */}
               <dt>
                 <i className="bi bi-bookmarks"></i>
-                Properties</dt>
-                {items}
+                Properties
+              </dt>
+              {items}
             </dl>
           </dd>
         );
-      }
-    }
+      }//Has Data
+    }//Attribures
+    else if(label === 'accounts'){
+      if(value.length > 0){
+        return (<DisplayMetadataField key={label} label={label} value={value.length+" account(s)"} className="item"/>)
+        return (
+          <dd key={label}>
+            <label>{label}</label> 
+            <span className="value">
+              {(value.length > 0) && <dl>
+                {value.map((field) => {
+                    return ['address','chain'].map((key) => <DisplayMetadataField key={key} label={key} value={field[key]} className="item"/>);
+                })}
+              </dl>}
+              {/* {value.map((field) => (<DisplayMetadataField key={field.label} label={field.label} value={field.value} className="item"/>))} */}
+            </span>
+          </dd>
+        );
+      }//Has Data
+    }//Accounts
+    else if(label === 'links'){
+      if(value.length> 0){
+        console.warn("[UNHANDLED] DisplayMetadataField() "+label+" is an Array", {label, value});
+      }//Has Data
+    }//Links
     else{
-      console.warn("[UNHANDLED] DisplayMetadataField() DisplayMetadataField() Attribute is an Array", {label, value});
-      // logger.warn("[UNHANDLED] DisplayMetadataField() DisplayMetadataField() Attribute is an Array", {label, value}); 
+      console.warn("[UNHANDLED] DisplayMetadataField() "+label+" is an Array", {label, value});
       return (
         <dd key={label}>
           <label>{label}: (IS ARRAY) </label> 
-          <span className="value">{value.toString()}</span>
+          <span className="value">
+            {value.toString(value)}
+            {value.map((field) => {
+              // if(typeof field === 'object') console.warn("[TEST] DisplayMetadata() '"+label+"' FIeld is an Object", field);
+              // else console.error("[TEST] DisplayMetadata() '"+label+"' FIeld is NOT an Object", field);
+              // if(typeof field === 'object') return (<DisplayMetadataField key={field.label} label={field.label} value={field.value} className="item"/>)
+            })}
+          </span>
         </dd>
       );
     }
