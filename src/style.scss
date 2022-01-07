@@ -165,7 +165,7 @@
             .item:hover i:before { transform: rotate(-180deg); }      
         }
         .edit {
-             max-width: 420px; 
+            max-width: 420px; 
             .ant-input-group-addon,
             .ant-input:hover,
             .ant-input:focus,
@@ -280,11 +280,10 @@
     }
 
 // }
-/* Persona Edit */
 
 /* Persona Edit */
 .personaEdit{
-
+    .buttons { margin: 30px 0; }
     .social_wrapper,
     .links_wrapper { margin-top: 20px; }
     .items{ 

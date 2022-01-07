@@ -88,6 +88,10 @@ function PagePersona(props) {
     }//updateMetadata()
     
     useEffect(() => async () => {
+        console.log("PagePersona() useEffect() Generic Lodain");
+    });
+
+    useEffect(() => async () => {
         if(!isWeb3Enabled){ /*console.error("Waiting for W3");*/ }
         else if(params.chain && params.contract && params.token_id) {//By Token Address
             let personaData = {
@@ -103,7 +107,7 @@ function PagePersona(props) {
             setIsLoading(false);
         }//Requested: Specific Token
         else if(params.handle){ //By Registered Handle
-            // console.warn("[TEST] PagePersona() Get persona By Handle:'"+handle+"'", { params, isWeb3Enabled } ); 
+            console.warn("[DEBUG] PagePersona() Get persona By Handle:'"+handle+"'", { params, isWeb3Enabled } ); 
             //Start Loading
             setIsLoading(true);
             //Query

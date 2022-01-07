@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Skeleton, Image,  Form, Input, Button, Comment, Avatar } from 'antd';
+import { Skeleton, Image,  Form, Input, Button, Comment, Avatar, message } from 'antd';
 import { FireTwoTone } from '@ant-design/icons';
 import { useMoralis } from "react-moralis";
 import { useHistory } from 'react-router-dom';
@@ -32,19 +32,30 @@ import { PersonaContext } from "common/context";
      * Form Submit Function
      */
     const onFinish = async (values) => {
+
+      //Validate
+      if(!persona) message.error("Please select the Persona you'd like to use");
+      if(!persona) throw new Error("RoomAddForm() No Persona Selected");
+
+
       //Additions
       values.parentId = parentId;
+      // values.parent = parentId;   //TEST [X]
       values.account = account;
       values.chain = chainId;
       values.userId = user?.id;
       // values.user = user;
-      values.persona = PersonaHelper.getGUID(persona);
+
+      values.personaId = PersonaHelper.getGUID(persona);
+      values.persona = persona;
+      
+      
       try{
 
         //Create New Post
         // const Post = await Moralis.Cloud.run("post", values);
         const Post = Moralis.Object.extend("Post");
-        const post = new Post(values);
+        const post = new Post(values); 
         // const post = new Post();
         // post.set("userId", request.user?.id);
 
@@ -53,14 +64,15 @@ import { PersonaContext } from "common/context";
         // console.warn("[TEST] post() User: ", Moralis.User.current());
 
         //ACL - Own + Public Read     //!! This should probably all be on the server... + Validate Access to Parent
-        const acl = new Moralis.ACL(user).setPublicReadAccess(true);
+        const acl = new Moralis.ACL(user);
+        acl.setPublicReadAccess(true);
+        post.setACL(acl);
         // acl.setPublicReadAccess(true);
         //Log
-        console.warn("[TEST] post() ACL: "+JSON.stringify(acl), {isWeb3Enabled, acl, post});
-        post.setACL(acl);
+        console.warn("[TEST] RoomAddForm() ACL: "+JSON.stringify(acl), {isWeb3Enabled, acl, post});
         //Save
-        return post.save();
-        // return post.save(values);
+        // return post.save();
+        return post.save(values);
 
         /*
         //Log

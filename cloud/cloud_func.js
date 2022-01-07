@@ -94,6 +94,28 @@ const hashByPostId = async (parentId) => {
 
 //-- DEV
 
+Moralis.Cloud.define('dbSchema', request => {
+    
+  //TODO: Test This
+
+  //[DEV] Schema Stuff        https://parseplatform.org/Parse-SDK-JS/api/2.9.0/Parse.Schema.html
+  const schema = new Moralis.Schema('Persona');
+  console.warn("[DEV] Moralis Persona Schema:"+JSON.stringify(schema));
+  // const options = { required: true, defaultValue: 'hello world' };
+  // schema.addString('TestField', options);
+  schema.addIndex('i_handle', { 'handle': 1 });
+  // schema.save();
+  schema.save(null, {useMasterKey: true});
+
+  /* TODO: Edit Schema
+  const schema = new Moralis.Schema('Post');
+  console.warn("[DEV] Moralis Schema:", schema);
+  const options = { required: true, defaultValue: 'hello world' };
+  schema.addString('TestField', options);
+  schema.addIndex('index_name', { 'TestField': 1 });
+  schema.save();
+  */
+});
 
 
 const validationRules = request => {

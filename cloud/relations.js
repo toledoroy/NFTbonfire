@@ -84,7 +84,9 @@ const relationGetOrMake = async (user, entity) => {
     //Create
     const relation = new Relation({user, entity});
     //ACL - Own + Public Read
-    relation.setACL( new Moralis.ACL( Moralis.User.current() ).setPublicReadAccess(true) );
+    let acl = new Moralis.ACL(Moralis.User.current());
+    acl.setPublicReadAccess(true);
+    relation.setACL(acl);
     return relation;
   // }
   //Fetch relation (Get or Make New)

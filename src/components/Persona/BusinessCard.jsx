@@ -66,7 +66,8 @@ import { IPFS } from "helpers/IPFS";
             </div>
             <div className="bottom">
                 {(props.actions!==false) && <div className="actions flex">
-                    <Link key="link" to={{ pathname:link }} className="inner flex">View</Link>
+                    {/* <Link key="link" to={{ pathname:link }} className="inner flex">View</Link> */}
+                    <a key="a" href={link} className="inner flex">View</a>
                     <button className="button" onClick={(event) => { event.preventDefault(); setPersona(persona);}}>Use</button>
                 </div>}
             </div>

@@ -35,32 +35,10 @@
 
 //-- DEV
 
-Moralis.Cloud.beforeSave('dbSchema', request => {
-    
-    //TODO: Test This
-
-    //[DEV] Schema Stuff        https://parseplatform.org/Parse-SDK-JS/api/2.9.0/Parse.Schema.html
-    const schema = new Moralis.Schema('Persona');
-    console.warn("[DEV] Moralis Persona Schema:", schema);
-    // const options = { required: true, defaultValue: 'hello world' };
-    // schema.addString('TestField', options);
-    schema.addIndex('i_handle', { 'handle': 1 });
-    // schema.save();
-    schema.save(null, {useMasterKey: true});
-
-    /* TODO: Edit Schema
-    const schema = new Moralis.Schema('Post');
-    console.warn("[DEV] Moralis Schema:", schema);
-    const options = { required: true, defaultValue: 'hello world' };
-    schema.addString('TestField', options);
-    schema.addIndex('index_name', { 'TestField': 1 });
-    schema.save();
-    */
-});
 
 
 
-Moralis.Cloud.afterSave(Relation, (request) => {
+Moralis.Cloud.afterSave("Relation", (request) => {
     console.log("Relation.afterSave() Request:"+JSON.stringify(request));
     console.log("Relation.afterSave() Object:"+JSON.stringify(request?.object));
 	//Run Something...

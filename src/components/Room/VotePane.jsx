@@ -16,7 +16,7 @@ const VotePane = (props) => {
     // const { data } = useMoralisQuery("Contents", (query) => query.equalTo("contentId", contentId));
     const [voteStatus, setVoteStatus] = useState();
     // const { data:votes } = useMoralisQuery("Relations", (query) => query.equalTo("postId", postId), [], { live: true });
-    // console.log("[DEV] Post() Votes:", votes);
+    // console.log("[DEV] Post() score:", score);
     // const { walletAddress, contractABI, contractAddress} = useMoralisDapp();
     const { walletAddress} = useMoralisDapp();
     // const contractABIJson = JSON.parse(contractABI);
