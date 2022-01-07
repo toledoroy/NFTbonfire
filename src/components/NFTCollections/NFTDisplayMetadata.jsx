@@ -29,9 +29,9 @@ function NFTDisplayMetadata({nft}) {
               if(key === 'attributes'){
                 //Display Attributes
                 return (
-                  <div className={key}>
+                  <div key={key} className={key}>
                     {nft.metadata[key].map((field) => (
-                      <li>
+                      <li key={field.trait_type}>
                         ATTR: 
                         <DisplayMetadataField key={field.trait_type} label={field.trait_type} value={field.value} />
                       </li>
