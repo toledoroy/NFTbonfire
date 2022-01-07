@@ -371,6 +371,10 @@
                     max-width: 100%; 
                     label {
                         text-transform: capitalize;
+                        text-decoration: underline;
+                    }
+                    span {
+                        white-space: nowrap;
                     }
                 }
                 .attributes {
