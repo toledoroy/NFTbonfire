@@ -372,7 +372,9 @@
                     label {
                         text-transform: capitalize;
                         text-decoration: underline;
+                        
                     }
+                    label:after { content: ': '; }
                     span {
                         white-space: nowrap;
                     }
@@ -399,7 +401,9 @@
                                 display:block;
                                 text-transform: uppercase;
                                 color:turquoise;
+                                letter-spacing: 0.1em;
                             }
+                            label:after { content: ''; }
                         }
                     }
                 }

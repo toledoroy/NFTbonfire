@@ -54,7 +54,7 @@ export default NFTDisplayMetadata;
     }
     return (
       <dd key={label}>
-        <label>{__.sanitize(label)}: </label> 
+        <label>{__.sanitize(label)}</label> 
         <span className="value">{__.sanitize(value)}</span>
       </dd>
     );

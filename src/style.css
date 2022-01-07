@@ -62,10 +62,7 @@ footer { margin-top: 40px; }
 .NFTitems .item .flip-card-back .metadata,
 .NFTitems .item .flip-card-front,
 .NFTitems .item .flip-card-back { border-radius: 15px ;}
-
-.item .flip-card-back dd{ max-width: 100%; white-space: nowrap; }
 .item .flip-card-back dl dl dd { margin-left:10px; }
-
 
 
 /* Persona Business Card */
@@ -77,8 +74,6 @@ footer { margin-top: 40px; }
   overflow: hidden;
   background-color: var(--background-color);
 }
-
-
 
 .ant-card-body:empty {display: none;} /* AntD Card */
 
