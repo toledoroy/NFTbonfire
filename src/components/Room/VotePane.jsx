@@ -16,7 +16,7 @@ const VotePane = (props) => {
     // const { data } = useMoralisQuery("Contents", (query) => query.equalTo("contentId", contentId));
     const [voteStatus, setVoteStatus] = useState();
     // const { data:votes } = useMoralisQuery("Relations", (query) => query.equalTo("postId", postId), [], { live: true });
-    // console.log("[DEV] Post() Votes:", votes);
+    // console.log("[DEV] Post() score:", score);
     // const { walletAddress, contractABI, contractAddress} = useMoralisDapp();
     const { walletAddress} = useMoralisDapp();
     // const contractABIJson = JSON.parse(contractABI);
@@ -40,13 +40,10 @@ const VotePane = (props) => {
      * @var num vote    [0/1/-1]
      */
     async function vote(vote){
-        
-
-        let persona = Moralis.Cloud.run("getPersonas", {});
-        
+        //Vote        
         Moralis.Cloud.run("postVote", {postId:post.id, vote});
         
-        console.log("[DEV] VotePane() Running Moralis Cloud Func 'postVote':", {postId:post.id, vote, persona});
+        console.log("[DEV] VotePane() Running Moralis Cloud Func 'postVote':", {postId:post.id, vote});
 
         // if (walletAddress.toLowerCase() === post.get('account').toLowerCase()) return message.error("C'mon, this is your post");
         // if (voteStatus) return message.error("You already voted");
@@ -72,7 +69,7 @@ const VotePane = (props) => {
     return (
         <div className="side_pane">
             <Tooltip key="comment-basic-like" title="Vote Up">
-                <span onClick={() => vote(1)}>
+                <span onClick={(evt) => vote(1)}>
                     {createElement(voteStatus === "liked" ? LikeFilled : LikeOutlined)}
                 </span>
             </Tooltip>
@@ -81,7 +78,7 @@ const VotePane = (props) => {
                 {/* {post.get('votes') || '0'}  */}
             </div>
             <Tooltip key="comment-basic-dislike" title="Dislike">
-                <span onClick={() => vote(-1)}>
+                <span onClick={(evt) => vote(-1)}>
                     {createElement(voteStatus === "disliked" ? DislikeFilled : DislikeOutlined)}
                 </span>
             </Tooltip>

@@ -88,6 +88,10 @@ function PagePersona(props) {
     }//updateMetadata()
     
     useEffect(() => async () => {
+        console.log("PagePersona() useEffect() Generic Lodain");
+    });
+
+    useEffect(() => async () => {
         if(!isWeb3Enabled){ /*console.error("Waiting for W3");*/ }
         else if(params.chain && params.contract && params.token_id) {//By Token Address
             let personaData = {
@@ -103,7 +107,7 @@ function PagePersona(props) {
             setIsLoading(false);
         }//Requested: Specific Token
         else if(params.handle){ //By Registered Handle
-            // console.warn("[TEST] PagePersona() Get persona By Handle:'"+handle+"'", { params, isWeb3Enabled } ); 
+            console.warn("[DEBUG] PagePersona() Get persona By Handle:'"+handle+"'", { params, isWeb3Enabled } ); 
             //Start Loading
             setIsLoading(true);
             //Query
@@ -318,7 +322,7 @@ function PagePersona(props) {
     }
     // console.warn("Persona ID:"+persona.id, {persona, isLoading, metadata});
     return (
-        <div className="persona">
+        <div className="persona framed">
             {/* <Skeleton loading={!isWeb3Enabled}></Skeleton> */}
             <div className="header">
                 <div className="cover" style={{background:"url("+coverImage+")"}}>
@@ -326,7 +330,7 @@ function PagePersona(props) {
                 </div>
             </div>
             
-            <div className="main framed" style={{marginTop:0}}>
+            <div className="main" style={{marginTop:0}}>
             {/* <div className="persona-body"> */}
                 <div className="secondary framed">
                     <div className="view" style={{display:!isEditMode?'block':'none'}}>
@@ -526,13 +530,16 @@ function PagePersona(props) {
 
                     {isEditMode && 
                     <div className="edit">
+                        
+                        
                         {/* TODO: Move Form Stuff over Here! */}
-                        {/* <PersonaEdit metadata={metadata} contract={Persona.getContractData()} persona={persona} /> */}
+
+
                         <PersonaEdit persona={persona} metadata={metadata} isLoading={isLoading} />
                     </div>
                     }
 
-                    <div className="accounts framed">
+                    <div className="accounts">
                         <Tabs      //https://ant.design/components/tabs/
                             type="editable-card"
                             // onChange={this.onChange}
@@ -544,7 +551,6 @@ function PagePersona(props) {
                                 
                                 <TabPane tab={(
                                     <span title={getChainName(account.chain)}>
-                                        {console.log("[DEV] PagePersona() View Account", account)}
                                         {account.address 
                                         ? <Address icon={getChainLogo(account.chain)} copyable address={account.address} size={5} />
                                         : <span>[NO HASH]</span>
@@ -594,7 +600,7 @@ function PagePersona(props) {
                 })}
             <button onClick={() => { setUserData({handle:'RandomNewHandle'}); }} disabled={isUserUpdating}>[DEV] Update User Details</button>
             */}
-                
+            {/*
             <button onClick={ async () => {
                 let params = {
                     chain:'0x4',
@@ -606,9 +612,8 @@ function PagePersona(props) {
                     const result = await Moralis.Cloud.run("personaRegister", params);
                     console.log("[TEST] personaRegister Result:", result);
                 }catch(e){ console.error("[TEST] personaRegister Error:", e); }
-
             }}>[TEST] personaRegister</button>
-
+            */} 
             
         </div>
     );

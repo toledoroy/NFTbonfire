@@ -224,8 +224,8 @@ function RoomEntrance({hash, collection, room}) {
         {/* <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn">Go!</Link> */}
         <div className="clearfloat"></div>
       </div> 
-      <div className="vote framed">
-        <VotePane post={room} />        
+      <div className="vote framed" onClick={(evt) => {evt.stopPropagation()}}>
+        <VotePane post={room}/>
       </div>
     </div>
   );
@@ -274,8 +274,9 @@ function ShowComments({room}) {
                 <div className="comment">
                   <Comment
                     actions={[<span key="comment-nested-reply-to">Reply</span>]}
-                    author={<a>Han Solo</a>}
-                    avatar={<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
+                    // author={<a>Han Solo</a>}
+                    author={comment.get('persona')?.get('metadata')?.name}
+                    avatar={<Avatar src={PersonaHelper.getImage(comment.get('persona'))} alt={comment.get('persona')?.get('metadata').name} />}
                     content={
                       <>
                         <h3>{comment.get('name')}</h3>
