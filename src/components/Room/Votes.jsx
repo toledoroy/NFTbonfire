@@ -29,7 +29,8 @@ const Votes = ({postId}) => {
 
     //Live Query
     // const { data : votes } = useMoralisQuery("Relations", (query) => query.equalTo("postId", postId), [], { live: true });
-    const { data : post } = useMoralisQuery("Post", query => query.select('votes').equalTo("objectId", postId).limit(1), [], { live: true,
+    const { data : post } = useMoralisQuery("Post", 
+        query => query.select('votes').equalTo("objectId", postId).limit(1), [],  { live: true,
         // onLiveUpdate: (entity, all) => all.map(e => (e.id === entity.id ? entity : e))
     });
     // const { data : votes } = useMoralisQuery("Post", query => query.get(postId), [], { live: true,});       //Breaks the Moralis Subscription

@@ -4,7 +4,7 @@ import { FireTwoTone } from '@ant-design/icons';
 import { useMoralis } from "react-moralis";
 import { useHistory } from 'react-router-dom';
 // import { Room } from "objects/objects";
-import { Post } from "objects/objects";
+// import { Post } from "objects/objects";  //This is in the wrong Context...
 import { PersonaHelper } from "helpers/PersonaHelper";
 import { PersonaContext } from "common/context";
 
@@ -13,7 +13,7 @@ import { PersonaContext } from "common/context";
  * Component: Add New Post
  */
  function RoomAddForm({parent, parentId, title}) {
-    const { Moralis, account, chainId, user } = useMoralis();
+    const { Moralis, account, chainId, user, isWeb3Enabled } = useMoralis();
     const { persona } = useContext(PersonaContext);
     //Objects
     // const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
@@ -37,35 +37,28 @@ import { PersonaContext } from "common/context";
       values.account = account;
       values.chain = chainId;
       values.userId = user?.id;
+      // values.user = user;
       values.persona = PersonaHelper.getGUID(persona);
       try{
 
         //Create New Post
-        // const newPost = await Moralis.Cloud.run("post", values);
-        
-        // const Post = Moralis.Object.extend("Post");
+        // const Post = await Moralis.Cloud.run("post", values);
+        const Post = Moralis.Object.extend("Post");
+        const post = new Post(values);
         // const post = new Post();
         // post.set("userId", request.user?.id);
-      
-
-        const post = new Post(values);
-
         // post.set('parent', parent);   //TESTING   
         // console.warn("[TEST] post() User: ", Moralis.User.current());
 
         //ACL - Own + Public Read     //!! This should probably all be on the server... + Validate Access to Parent
-        const acl = new Moralis.ACL(Moralis.User.current());
-        acl.setPublicReadAccess(true);
-        acl.setRoleWriteAccess("admins", true);
-        if(parentId.substr(0,2) === '0x') acl.setRoleWriteAccess(parentId, true);
-        else console.error("RoomAddForm() Parent is not a Hash", {parentId});
-        // acl.setRoleReadAccess("opensea", true);   //TEST
-        // acl.setWriteAccess(request.user?.id, true);
-        post.setACL(acl);
+        const acl = new Moralis.ACL(user).setPublicReadAccess(true);
+        // acl.setPublicReadAccess(true);
         //Log
-        console.warn("[TEST] post() ACL: "+JSON.stringify(acl), post);
+        console.warn("[TEST] post() ACL: "+JSON.stringify(acl), {isWeb3Enabled, acl, post});
+        post.setACL(acl);
         //Save
         return post.save();
+        // return post.save(values);
 
         /*
         //Log

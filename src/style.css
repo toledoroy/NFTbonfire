@@ -57,7 +57,6 @@ footer { margin-top: 40px; }
 .collection { margin-bottom: 20px; }
 .collection .title { font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; }
 .collection .title .ant-ribbon { top:0; }
-.SpaceEmpty p { margin:10px 0; }
 
 /* NFT Item Display */
 .NFTitems .item .flip-card-back .metadata,
@@ -93,10 +92,8 @@ footer { margin-top: 40px; }
 
 
 .ant-card-body:empty {display: none;} /* AntD Card */
-.pageSpace .middle { display:flex; }
+
 .collections .middle { display:flex; justify-content: space-between;}
-.space {transition-delay: 0.6s;}
-.space .ant-collapse-content { background: none;}
 
 /* Space - Room List */
 .room_list { clear: both; }
@@ -205,20 +202,6 @@ button:active {
   object-fit: contain;
 }
 
-.space_container {
-  transform: translateX(110%);
-  animation: slideIn 0.6s ease-in-out forwards;
-  animation-delay: 0.15s;
-  overflow-y: auto;
-  /* height: calc(100vh - 320px); */
-  display: flex;
-  flex-grow: 1;
-}
-.space_container:nth-child(odd) { animation-duration: 0.6s; /* So they look staggered */ }
-
-.space {
-  overflow: hidden;
-}
 
 /* Animations */
 @keyframes slideIn {
@@ -243,6 +226,3 @@ button:active {
   from { opacity:0; }
   to { opacity:1; }
 }
-
-
-

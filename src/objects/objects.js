@@ -5,7 +5,7 @@ const SERVER_URL = process.env.REACT_APP_MORALIS_SERVER_URL;
 Moralis.initialize(APP_ID);
 Moralis.serverURL = SERVER_URL;
 
-const Contract = Moralis.Object.extend("Contract");
+
 
 //** GLOBAL FUNCTIONS **/
 /** DEPRECATE?
@@ -44,9 +44,15 @@ const createPost = async (values) => {
 
 
 //** Objects **/
+
+//-- Contract
+export const Contract = Moralis.Object.extend("Contract");
+
+//-- Relationships
+export const Relation = Moralis.Object.extend("Relation");
+
 //-- Space
 export const Space = Moralis.Object.extend("Space");
-
 
 //-- Posts
 export const Post = Moralis.Object.extend("Post", {

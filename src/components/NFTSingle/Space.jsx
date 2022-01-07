@@ -224,8 +224,8 @@ function RoomEntrance({hash, collection, room}) {
         {/* <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn">Go!</Link> */}
         <div className="clearfloat"></div>
       </div> 
-      <div className="vote framed">
-        <VotePane post={room} />        
+      <div className="vote framed" onClick={(evt) => {evt.stopPropagation()}}>
+        <VotePane post={room}/>
       </div>
     </div>
   );
