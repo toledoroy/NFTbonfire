@@ -124,7 +124,10 @@ footer { margin-top: 40px; }
 .comment_add .comment_text:empty:before { content: attr(data-placeholder); }
 
 /* Simple Click Effect  https://stackoverflow.com/questions/13630229/can-i-have-an-onclick-effect-in-css?rq=1 */
-button { transition: filter 0.3s ease 0.3s; }
+button { 
+  transition: filter 0.3s ease 0.3s; 
+  border-radius: 20px; 
+}
 button:active {
   filter: drop-shadow(0 0 0 steelblue);
   transition: filter 0s;

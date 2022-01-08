@@ -520,7 +520,9 @@ function PagePersona(props) {
                             <>{isOwned &&
                             <div className="button">
                                 {/* {isEditMode && <Button className="debug" onClick={()=>{ console.warn("[TODO] PagePersona() Save Changes"); }} >[Save]</Button>} */}
-                                {!isEditMode && <Button variant="contained" color="primary" onClick={()=>{setIsEditMode(isEditMode===false);}}>Edit</Button>}
+                                {!isEditMode && <Button variant="contained" color="primary" onClick={()=>{setIsEditMode(isEditMode===false);}}>
+                                    <i className="bi bi-pencil-fill"></i> Edit
+                                </Button>}
                                 {(isEditMode && !PersonaHelper.isNew(persona)) && <Button variant="contained" color="primary" onClick={()=>{ loadmetadata(); setIsEditMode(isEditMode===false);}}
                                  style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
                                  >
