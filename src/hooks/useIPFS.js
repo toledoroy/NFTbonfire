@@ -12,7 +12,7 @@ export const useIPFS = () => {
    * @param {*} url 
    * @returns string
    */
-  const resolveLink = (url) => IPFS.resolveLink; 
+  const resolveLink = (url) => IPFS.resolveLink(url); 
   // {
   //   if (!url || !url.includes("ipfs://")) return url;
   //   return url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/");
