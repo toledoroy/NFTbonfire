@@ -1,11 +1,8 @@
-// const Moralis = require("moralis/node");
-// Moralis.enableWeb3();
-
-
 //Export IPFS Helper
 export const IPFS = {
     
-    resolveLink(url){ return (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/"); },
+    // resolveLink(url){ return (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/"); },
+    resolveLink(url){ return (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/"); },
 
     /** ...Needs Moralis...
      * Save JSON File to IPFS

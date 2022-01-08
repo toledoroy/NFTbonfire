@@ -1,4 +1,5 @@
 import { useMoralis } from "react-moralis";
+import { IPFS } from "helpers/IPFS";
 
 /**
  * Hook
@@ -11,10 +12,11 @@ export const useIPFS = () => {
    * @param {*} url 
    * @returns string
    */
-  const resolveLink = (url) => {
-    if (!url || !url.includes("ipfs://")) return url;
-    return url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/");
-  };
+  const resolveLink = (url) => IPFS.resolveLink; 
+  // {
+  //   if (!url || !url.includes("ipfs://")) return url;
+  //   return url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/");
+  // };
 
   /**
    * Save JSON File to IPFS

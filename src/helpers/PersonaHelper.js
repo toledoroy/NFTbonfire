@@ -2,6 +2,8 @@ import { IPFS } from "helpers/IPFS";
 // import Blockie from "components/Blockie";
 // import { Persona } from "objects/Persona";
 
+
+
 export const PersonaHelper = {
     /** 
      * 
@@ -56,9 +58,13 @@ export const PersonaHelper = {
     getImage(persona, defaultValue){
         if(!defaultValue) defaultValue = 
             // "https://joeschmoe.io/api/v1/random";
-            "https://images.unsplash.com/photo-1636716642701-01754aef1066?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80";  //Random Dark Lady
+            // "https://images.unsplash.com/photo-1636716642701-01754aef1066?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80";  //Random Dark Lady
             // "https://ipfs.moralis.io:2053/ipfs/QmZ2oHHLUUARUTz3Jx2wSWYTtALUtEhQtT1hpxb7Fbvr5y";   //Anon in hood
             // "https://ipfs.moralis.io:2053/ipfs/QmWyKVFkUCfwUFQZyKjJ9ifqyWatUFStMi8B3MtT3CkhyP";      //Anon logo
+
+            "https://ipfs.moralis.io:2053/ipfs/Qmb815LdiYx28rQkXnNKoNyscxejuUsJ1RYkHesftpM5g5";      //Anon Badge
+            // "https://cloudflare-ipfs.com/ipfs/Qmb815LdiYx28rQkXnNKoNyscxejuUsJ1RYkHesftpM5g5";      //Anon Badge
+            // <Blockie scale={8} avatar currentWallet style />
         return IPFS.resolveLink(persona?.get('metadata')?.image) || defaultValue;
     },
 

@@ -782,7 +782,7 @@ export default PagePersona;
                 {imageLoading ? <div style={{textAlign:'center'}}>
                         <LoadingOutlined /> 
                         <br/>
-                        <div className="details">Uploading to IPFS</div>
+                        <div className="explanation">Uploading to IPFS</div>
                     </div>
                     : imageUrl ? <Avatar size={size} src={IPFS.resolveLink(imageUrl)} />: '' }
                 <div className="upload_icons">
