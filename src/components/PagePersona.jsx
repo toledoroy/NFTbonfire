@@ -308,7 +308,7 @@ function PagePersona(props) {
     }//handleTabEdit()
 
     //Profile Image
-    let image = metadata?.image ? IPFS.resolveLink(metadata.image) : "https://joeschmoe.io/api/v1/random";
+    let image = PersonaHelper.getImage(persona);
     let coverImage = metadata?.cover ? IPFS.resolveLink(metadata.cover) : "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
     // let image = persona.getFallback('image');        //Don't work when Loading ParseObjeect from DB
     // let coverImage = persona.getFallback('cover');

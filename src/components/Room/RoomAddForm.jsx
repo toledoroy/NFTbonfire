@@ -96,7 +96,6 @@ import { PersonaContext } from "common/context";
         <h3>{title ? title : 'Start a new bonfire'}</h3>
         {/* <p>Add a new Room to this Space!</p> */}
         <Comment
-          // avatar={<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
           avatar={<Avatar src={PersonaHelper.getImage(persona)} alt={persona?.get('metadata').name} />}
           content={
             <Form name="postAdd" 
