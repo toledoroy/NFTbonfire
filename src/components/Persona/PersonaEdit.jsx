@@ -331,7 +331,7 @@ const personaFields = require('schema/PersonaData.json');
                             : <Button type="primary" htmlType="submit">Save</Button>
                             }
                             {/* <Button onClick={formReset} style={{marginLeft:'20px' }}>Reset</Button> REMOVED */}
-                            {/* <Button variant="contained" color="primary" onClick={()=>{ loadmetadata(); setIsEditMode(false)}}>Cancel</Button> */} {/*THIS BUTTON SHOULD BE HERE*/}
+                            {/* <Button variant="contained" color="primary" onClick={()=>{ loadmetadata(); setIsEditMode(false)}}>Cancel</Button> */} {/*TODO: THIS BUTTON SHOULD BE HERE (But on PagePersona)*/}
                         </Form.Item>
                     }
                 </div>
