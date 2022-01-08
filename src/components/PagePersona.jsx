@@ -88,8 +88,25 @@ function PagePersona(props) {
     }//updateMetadata()
     
     useEffect(() => async () => {
-        console.log("PagePersona() useEffect() Generic Lodain");
-    });
+        //Disable EditMode on Logout
+        if(isEditMode && !account) setIsEditMode(false);
+    }, [account]);
+
+    useEffect(() => {
+        //When Entering Edit More - Reload Persona from Contract
+        if(isEditMode){
+            if(persona){
+                if(persona.get('token_id') !== undefined) loadmetadata();
+                else{
+                    let metadata = {social:{}, accounts:[], links:[],};
+                    //Default Accounts (Current User Accounts)
+                    for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
+                    updateMetadata( metadata );
+                }
+            } 
+            else console.error("PagePersona() No Persona", persona);
+        }
+    },[isEditMode]);
 
     useEffect(() => async () => {
         if(!isWeb3Enabled){ /*console.error("Waiting for W3");*/ }
@@ -161,38 +178,6 @@ function PagePersona(props) {
         persona && console.log("PagePersona() persona:",  {persona, isWeb3Enabled, user, metadata, personaTokenId: persona?.get('token_id'), params});
     },[params, isWeb3Enabled]);
 
-    useEffect(() => {
-        //When Entering Edit More - Reload Persona from Contract
-        if(isEditMode){
-            if(persona){
-                if(persona.get('token_id') !== undefined) loadmetadata();
-                else{
-                    let metadata = {social:{}, accounts:[], links:[],};
-                    //Default Accounts (Current User Accounts)
-                    for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
-                    updateMetadata( metadata );
-                }
-            } 
-            else console.error("PagePersona() No Persona", persona);
-        }
-    },[isEditMode]);
-
-    const loadDefaultMetadata = () => {
-        console.warn("[TEST] PagePersona.loadDefaultMetadata() Add Default Accounts:", {user, persona, metadata});
-
-        let defaultMetadata = Persona.getDefaultMetadata();
-        if(!defaultMetadata.accounts) defaultMetadata.accounts = [];    //Init
-        if(defaultMetadata.accounts.length===0){
-            //Default Accounts (Current User Accounts)
-            for(let address of user.get('accounts')) defaultMetadata.accounts.push({address, chain:chainId});
-            console.warn("[TEST] PagePersona.loadDefaultMetadata() Added Default Accounts:", {user, persona, metadata});
-        }
-        //Set
-        updateMetadata(defaultMetadata);
-        console.log("PagePersona.loadDefaultMetadata() Loaded Default Metadata",  {defaultMetadata, metadata, params});
-        return defaultMetadata;
-    };
-
     /**
      * Init New Persona
      */
@@ -226,18 +211,33 @@ function PagePersona(props) {
             console.error("PagePersona.initNewPersona() Failed Initiating w/New Persona ", {error, params});
         }
     };//initNewPersona
+    
+    /** DEPRECATE ? 
+     * 
+     * @returns Load Default Metadata
+     */
+     const loadDefaultMetadata = () => {
+        console.warn("[TEST] PagePersona.loadDefaultMetadata() Add Default Accounts:", {user, persona, metadata});
+        let defaultMetadata = Persona.getDefaultMetadata();
+        if(!defaultMetadata.accounts) defaultMetadata.accounts = [];    //Init
+        if(defaultMetadata.accounts.length===0){
+            //Default Accounts (Current User Accounts)
+            for(let address of user.get('accounts')) defaultMetadata.accounts.push({address, chain:chainId});
+            console.warn("[TEST] PagePersona.loadDefaultMetadata() Added Default Accounts:", {user, persona, metadata});
+        }
+        //Set
+        updateMetadata(defaultMetadata);
+        console.log("PagePersona.loadDefaultMetadata() Loaded Default Metadata",  {defaultMetadata, metadata, params});
+        return defaultMetadata;
+    };
+
     /**
      * Reload Persona Metadata from Chain
      */
     const loadmetadata = async () => {
-        
-        //Validate
-        // if(!persona.get('token_id')) throw {msg:"[DEV] persna Missing Token ID", persona};
-
         //Start Loading
         setIsLoading(true);
         try{
-            
             //Load Metadata from Chain
             let metadata = await loadMetadata(persona);
             //Log
@@ -248,19 +248,9 @@ function PagePersona(props) {
         }catch(error){
             console.error("[CAUGHT] PagePersona() Error Loading Metadata:", error);
         }
-        
     }//loadmetadata()
    
-
-    useEffect(() => {
-        //Get & Set Metadata
-
-    },[]);
-
-    // const currentuser = Moralis.User.current();
-    // console.log("[DEV] PagePersona() ", {handle, user, currentuser});
-
-    /** MADE EXPLICIT
+    /** REMOVED - MADE EXPLICIT
      * on Social Account Update
      
      const formSocialOnChange = (e) => {
@@ -475,7 +465,6 @@ function PagePersona(props) {
                                         links.push({type:'website', title:'', url:''});
                                         setMetadata({...metadata, links});
                                     }}/>
-
                                     <div className="clearfloat"></div>
                                 </div>
                             </div>
@@ -520,15 +509,17 @@ function PagePersona(props) {
                             <>{isOwned &&
                             <div className="button">
                                 {/* {isEditMode && <Button className="debug" onClick={()=>{ console.warn("[TODO] PagePersona() Save Changes"); }} >[Save]</Button>} */}
-                                {!isEditMode && <Button variant="contained" color="primary" onClick={()=>{setIsEditMode(isEditMode===false);}}>
-                                    <i className="bi bi-pencil-fill"></i> Edit
-                                </Button>}
+                                {!isEditMode && 
+                                    <Button variant="contained" color="primary" onClick={()=>{setIsEditMode(isEditMode===false);}}
+                                        icon={<i className="bi bi-pencil-fill"></i>}>Edit
+                                    </Button>}
+                                    
                                 {(isEditMode && !PersonaHelper.isNew(persona)) && <Button variant="contained" color="primary" onClick={()=>{ loadmetadata(); setIsEditMode(isEditMode===false);}}
-                                 style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
-                                 >
+                                    style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
+                                    icon={<i className="bi bi-arrow-left"></i>}
+                                    // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
+                                    >
                                     {/* Cancel */}
-                                    {/* <i className="bi bi-arrow-left-circle-fill"></i> */}
-                                    <i className="bi bi-arrow-left"></i>
                                 </Button>}
                             </div>}
                             </>
@@ -878,7 +869,7 @@ export default PagePersona;
         }
     }//saveHandle()
     //is Current User Owner of Persona
-    const isOwned = (user.get('accounts').includes(persona.get('owner').toLowerCase()));
+    const isOwned = (user && user.get('accounts').includes(persona.get('owner').toLowerCase()));
     return (
         <div className="handle">
             {(!isEditMode) && <>

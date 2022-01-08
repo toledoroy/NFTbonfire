@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
-import { BrowserRouter as Router, Switch, Route, NavLink, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import Account from "components/Account/Account";
 import Chains from "components/Chains";
 import MenuItems from "components/MenuItems";
+import { Layout } from "antd";
+import "antd/dist/antd.css";
+import "./style.css";
+import "./style.scss";
+// import QuickStart from "components/QuickStart";
+import Text from "antd/lib/typography/Text";
+
+//Pages
 // import TokenPrice from "components/TokenPrice";
 import ERC20Balance from "components/ERC20Balance";
 // import ERC20Transfers from "components/ERC20Transfers";
 // import InchDex from "components/InchDex";
 import NFTBalance from "components/NFTBalance";
 import Wallet from "components/Wallet";
-// import { Menu, Layout, Button, Skeleton } from "antd";
-import { Menu, Layout, Skeleton } from "antd";
-import "antd/dist/antd.css";
-import "./style.css";
-import "./style.scss";
 import NativeBalance from "components/NativeBalance";
-// import QuickStart from "components/QuickStart";
 import Contract from "components/Contract/Contract";
-import Text from "antd/lib/typography/Text";
 import Ramper from "components/Ramper";
-//Pages
 // import NFTSingle from "components/NFTSingle";
 import NFTCollections from "components/NFTCollections";
 // import RoomPage from "components/RoomPage";
@@ -28,6 +28,7 @@ import PagePersona from "components/PagePersona";
 import PersonaNew from "components/PersonaNew";
 // import PageAuthenticate from "components/PageAuthenticate";
 // import Page404 from "components/Page404";
+// import { Menu, Layout, Button, Skeleton } from "antd";
 import { PersonaContext } from "common/context";
 
 // lessc "./style.less"

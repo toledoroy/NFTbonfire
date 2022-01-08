@@ -1,8 +1,10 @@
 // eslint-disable-next-line
 // import { useState, useEffect } from "react";
-import { useMoralis, useMoralisQuery } from "react-moralis";
-
-
+// import { useMoralis, useMoralisQuery } from "react-moralis";
+import { useMoralisQuery } from "react-moralis";
+/** DEPRECATED
+ * Component: Display Vote Count
+ */
 const Votes = ({postId}) => {
     /*
     const {Moralis} = useMoralis();
@@ -30,7 +32,8 @@ const Votes = ({postId}) => {
     //Live Query
     // const { data : votes } = useMoralisQuery("Relations", (query) => query.equalTo("postId", postId), [], { live: true });
     const { data : post } = useMoralisQuery("Post", 
-        query => query.select('votes').equalTo("objectId", postId).limit(1), [],  { live: true,
+        // query => query.select('votes').equalTo("objectId", postId).limit(1), [],  { live: true,
+        query => query.select('score').equalTo("objectId", postId).limit(1), [],  { live: true,
         // onLiveUpdate: (entity, all) => all.map(e => (e.id === entity.id ? entity : e))
     });
     // const { data : votes } = useMoralisQuery("Post", query => query.get(postId), [], { live: true,});       //Breaks the Moralis Subscription

@@ -49,7 +49,7 @@ footer { margin-top: 40px; }
 .flex {display: flex;}
 .clearfloat{  clear: both; width: 100%; display: block; }
 .framed{ padding: 15px; max-width: 1200px; margin:0 auto;} 
-.hr { border-top: 1px solid var(--background-color); }
+.hr { border-top: 1px solid var(--background-color); border-radius: 0 !important;}
 
 /* Components */
 .collections { transition: all 0.2s ease-in-out; }
@@ -80,27 +80,12 @@ footer { margin-top: 40px; }
 .collections .middle { display:flex; justify-content: space-between;}
 
 /* Space - Room List */
-.room_list { clear: both; }
 .room_list .ant-collapse { border:none; background:none; }
-.room_list .room_entrance {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  /* margin: 10px 0; */
-  /* border: 1px solid #9ecaed; */
-  /* border-radius: 20px; */
-  /* border-top: 1px solid #9ecaed; */
-}
 .room_list .room_entrance:last-child {
   /* border-bottom: 1px solid #9ecaed; */
   /* margin-bottom:10px; */
 }
-.room_list .ant-collapse-header { display:block !important; }
-.room_entrance .image { width: 99px; flex: 0 0;}
-/* .room_entrance .img { width:100%; } */
-.room_entrance .content { padding:0 10px; flex: 1 1; }
-.room_entrance .anticon{ margin-right: 5px; }
-.room_entrance .vote { margin: auto 0 auto auto ; }
+
 .post { 
   border-top: 1px solid lightgray;
   border-bottom: 1px solid lightgray;
@@ -124,9 +109,10 @@ footer { margin-top: 40px; }
 .comment_add .comment_text:empty:before { content: attr(data-placeholder); }
 
 /* Simple Click Effect  https://stackoverflow.com/questions/13630229/can-i-have-an-onclick-effect-in-css?rq=1 */
+.ant-btn,
 button { 
   transition: filter 0.3s ease 0.3s; 
-  border-radius: 20px; 
+  border-radius: 1rem; 
 }
 button:active {
   filter: drop-shadow(0 0 0 steelblue);

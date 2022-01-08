@@ -11,7 +11,6 @@ const Relation = Moralis.Object.extend("Relation");
 Moralis.Cloud.define("postVote", async (request) => {  
   //Validate
   if(!request?.user?.id) throw "Unauthorized User - Must Log In";
-  else 
   //Log
   logger.warn("[TEST] postVote() for Current User:"+request.user?.id+" PostId:"+request.params?.postId+" Vote:"+request.params?.vote);
 
@@ -22,23 +21,32 @@ Moralis.Cloud.define("postVote", async (request) => {
   //Validate Vote Value
   if(isNaN(vote) || vote > 1 || vote < -1) throw new Error("postVote() Invalid Vote Value: "+vote);
 
-  //Fetch Relation
+  //1. Fetch Post
+  let post = await new Moralis.Query('Post').get(postId, {useMasterKey: true});
+  //Validate
+  if(!post) throw new Error("postVote() Post Not Found: "+postId);
+  //Validate Voter
+  if(request.user.get('accounts').includes(String(post.get('account')).toLowerCase())) return logger.error("C'mon, this is your post");
+
+  //2. Fetch Relation
   const relation = await relationGetOrMake(request.user, postId);
   logger.warn("[TEST] postVote() Relation:"+JSON.stringify(relation));
 
-  //Update Relation
-  relation.set('opinion', vote);
-  //Register Vote (user->post)
-  await relation.save();
+  //3. Update Relation
+  // relation.set('opinion', vote); 
+  logger.warn("[TEST] postVote() Relation:"+relation.id+" Vote:"+vote+" Set");
+    //Register Vote (user->post)
+  await relation.save({opinion:vote}, {useMasterKey: true}).catch(function(error) {
+    logger.error("postVote() Exception Caught While Saving Vote:"+vote+" to Relation:"+relation.id+"  "+error);
+  });
+  logger.warn("[TEST] postVote() Relation:"+relation.id+" Saved");
 
-  //Re-Calculate Post Score
+  //4. Re-Calculate Post Score
   let score = await calcEntityScore(postId);
   logger.warn("[TEST] postVote() Total Score:'"+score+"' for PostId:'"+postId+"'");
   //Save Score to Post
-  let post = await new Moralis.Query(Post).get(postId, {useMasterKey: true});
   await post.save({score}, {useMasterKey: true});
-  logger.warn("[TEST] postVote() Saved Total Score:'"+score+"' for PostId:'"+postId+"'  "+JSON.stringify(post));
-
+  // logger.warn("[TEST] postVote() Saved Total Score:'"+score+"' for PostId:'"+postId+"'  "+JSON.stringify(post));
 
   /**
    * TODO: Algorithm   
@@ -108,7 +116,7 @@ const calcEntityScore = async (entity) => {
     logger.error("calcEntityScore() Exception Caught: "+error+"  pipeline:"+JSON.stringify(pipeline));
   });
   
-  // logger.warn("[TEST] calcEntityScore() entity:'"+entity+"' Result:"+JSON.stringify(res[0])+"' "+res[0]?.score);
+  logger.warn("[TEST] calcEntityScore() entity:'"+entity+"' Result:"+JSON.stringify(res[0])+"' "+res[0]?.score);
 
   return res[0]?.score;
 };

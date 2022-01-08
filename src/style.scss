@@ -484,10 +484,36 @@
         margin-right: 5px;
         color: rgb(33, 191, 150);
     }
+    /*
+    .main_button{
+        width: 100%; 
+        border-radius: 0.5rem; 
+        font-size: 16px; 
+        font-weight: 400;
+    }*/
 }
 
 
 .room_list.single{
     .ant-collapse-item {display: none;}
     .ant-collapse-item-active { display: block; }
+}
+
+/* Room List */
+.room_list {
+    clear: both;
+    .ant-collapse-header { display:block !important; }
+    .room_entrance{
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        /* margin: 10px 0; */
+        /* border: 1px solid #9ecaed; */
+        /* border-radius: 20px; */
+        /* border-top: 1px solid #9ecaed; */
+        .image { flex: 0 0;}
+        .content { padding:0 10px; flex: 1 1; }
+        .anticon{ margin-right: 5px; }
+        .vote { margin: auto 0 auto auto ; }
+    }
 }

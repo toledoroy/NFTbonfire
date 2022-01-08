@@ -60,8 +60,11 @@ import { IPFS } from "helpers/IPFS";
                     <Avatar size={60} src={image} />
                 </div>
                 <div className="text">
-                    <p key="name" className="name">Mr. {metadata?.name}</p>
-                    <q key="desc" className="description">{metadata?.description}</q>
+                    <p key="name" className="name">
+                        {metadata?.name && metadata.name}
+                        {metadata?.role && <span className="role"> the {metadata.role}</span>}
+                    </p>
+                    {metadata?.description && <q key="desc" className="description">{metadata.description}</q>}
                 </div>
             </div>
             <div className="bottom">

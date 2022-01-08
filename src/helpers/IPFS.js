@@ -22,7 +22,7 @@ export const IPFS = {
             return "ipfs://" + result.hash();   //General IPFS Conventional URL
         });
         // .catch(function(error) { console.error("[CAUGHT] IPFS.saveJSONToIPFS() IPFS Call Failed:", {error, user:Moralis.User.current() }); });
-    },
+    },//saveJSONToIPFS()
         
     /**
      * Save Image file to IPFS

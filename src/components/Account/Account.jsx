@@ -2,16 +2,16 @@ import { useEffect, useState, useContext } from "react";
 import { useMoralis, useMoralisQuery } from "react-moralis";
 import { getEllipsisTxt } from "helpers/formatters";
 import Blockie from "../Blockie";
-import { Button, Card, Modal } from "antd";
-import { Menu, Dropdown } from "antd";
+import { Button, Modal, Menu, Dropdown } from "antd";
+// import { Card } from "antd";
 import Address from "../Address/Address";
 import { SelectOutlined } from "@ant-design/icons";
 import { getExplorer } from "helpers/networks";
 import BusinessCard from "components/Persona/BusinessCard";
 // import { Persona } from "objects/Persona";
 import { PersonaHelper } from "helpers/PersonaHelper";
-import { IPFS } from "helpers/IPFS";
-import { Link } from "react-router-dom";
+// import { IPFS } from "helpers/IPFS";
+// import { Link } from "react-router-dom";
 import { PersonaContext } from "common/context";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 
@@ -128,7 +128,7 @@ function Account() {
     //Recoup Selected Persona
     if(!curPersona && personas.length > 0){
       // let curPersonaId = user.get('curPersona');
-      let curPersonaId = user.get('last_persona')?.global;
+      let curPersonaId = user?.get('last_persona')?.global;
       //Recuperate Last Persona
       if(curPersonaId) for(let personaObj of personas){
         if(personaObj.id == curPersonaId){
@@ -218,7 +218,8 @@ function Account() {
           </div>
         </Menu.Item>
         <Menu.Item key="logout" style={{padding: '10px'}}>
-          <Button size="large" type="primary" onClick={()=>{logout()}}
+          <Button type="primary" size="large" className="main_button"
+            onClick={()=>{logout()}}
             style={{ width: "100%", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "500", }}>
             Disconnect
           </Button>
@@ -233,12 +234,12 @@ function Account() {
         ))}
         
         <Menu.Item key="persona_add">
-          <Link key="link" to={{ pathname:'/persona' }} className="inner flex">
-            <Button size="large" type="primary" onClick={()=>{logout()}}
+          <a href="/persona">
+            <Button type="primary" size="large" className="main_button"
               style={{ width: "100%", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "400", }}>
               Mint New Persona
             </Button>
-          </Link>
+          </a>
         </Menu.Item>
        
       </Menu>
