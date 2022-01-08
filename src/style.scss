@@ -473,8 +473,8 @@
     background-color: rgb(244, 244, 244);
     cursor: pointer;
     .image { 
-        height: 32px; 
-        width: 32px;
+        height: 38px; 
+        width: 38px;
     }
     p.text {
         font-size:1.1em;
@@ -484,4 +484,10 @@
         margin-right: 5px;
         color: rgb(33, 191, 150);
     }
+}
+
+
+.room_list.single{
+    .ant-collapse-item {display: none;}
+    .ant-collapse-item-active { display: block; }
 }
