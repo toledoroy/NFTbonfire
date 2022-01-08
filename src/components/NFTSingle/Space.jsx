@@ -28,6 +28,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
   const { Moralis, isWeb3Enabled, isAuthenticated, chainId } = useMoralis();
   const [ space, setSpace ] = useState({});
   const [ rooms, setRooms ] = useState([]);
+  const [ curRoom, setCurRoom ] = useState();
   const [ limit, setLimit ] = useState(8);
   const { isAllowed } = useIsAllowed({hash, chain:chainId});
   const { persona, setPersona} = useContext(PersonaContext);
@@ -122,6 +123,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
  
   //Log
   console.log("SpaceView() For collection:", {collection, rooms});
+  console.warn("[DEV] Room list Collapse", curRoom)
 
   //Validate  
   // if(collection.contract_type!=="ERC1155") return <div>Unsupported Collection Type:'{collection.contract_type}'</div>;   //It's a mess out there, ERC721 0xcc14dd8e6673fee203366115d3f9240b079a4930 Contains Multiple NFTs (All Have amount=1)
@@ -149,9 +151,9 @@ function SpaceView({hash, collection, NFTpersonas}) {
           {/* <span key="typs">Type: {collection.contract_type}</span> */}
           {/* <span key="symbol">Symbol: {collection.symbol}</span> */}
           {/* TODO: Add Field: Creator, Total No. of Items, */}
-          <div className="room_list">
+          <div className={(curRoom) ? 'room_list single' : 'room_list'}>
           {(rooms && rooms.length>0) ?
-              <Collapse accordion>
+              <Collapse accordion onChange={(selected) => setCurRoom(selected)}>
                 {/* collapsible="disabled" */}
                 {rooms.map((room, index) => (
                   <Collapse.Panel header={<RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />} key={room.id} showArrow={false} className="item">

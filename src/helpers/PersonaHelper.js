@@ -9,7 +9,7 @@ export const PersonaHelper = {
      * @returns 
      */
     userImage: (hash) => {
-        console.log("PersonaHelper.userImage() Get User Image for UserId: " + hash);
+        console.warn("[DEPRECATED] PersonaHelper.userImage() Get User Image for UserId: " + hash);
         if (hash) {
             return `https://www.gravatar.com/avatar/${hash}?s=200&d=identicon`;
         } else {
