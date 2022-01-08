@@ -22,7 +22,9 @@ const resolveLink = (url) => (!url || !url.includes("ipfs://")) ? url : url.repl
   //Validate Type
   if(typeof handle !== 'string') throw new Error("Handle expected to be a String. Received: "+JSON.stringify(handle));
 
-  const reserved = ['persona','account', '...'];
+  const reserved = ['persona','account', 'wait', 'get', 'home', 'nft', 'airdrop', 'airdrops', 'mint', 'burn', 'account', 'wallet', 'balance', 'chat', 'forum', 'enter', 'register', 'loging', 'logout', 'signin', 'signup',
+    'info', 'contact', 'contactus', 'transfer', 'transfers', 'send', 'view', 'edit', 'delete', 'api', 'api2', 'soap', 'rss', 'atom', 'exit', 'subscribe', 'unsubscribe', '...'];
+  //TODO!! No Special Characters
   if(reserved.includes(String(handle).toLowerCase())) return false;
   
   //Check if Handle Already Exists in DB
