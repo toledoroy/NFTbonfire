@@ -174,6 +174,9 @@ const personaFields = require('schema/PersonaData.json');
         // return newPost;
     };//onFinish()
     
+    /**
+     * Reset Metadata (Form)
+     */
     function formReset(){
         setMetadata(props?.metadata); 
         //Log
@@ -188,12 +191,11 @@ const personaFields = require('schema/PersonaData.json');
             <Form name="personaForm" 
                 id="personaEditForm"
                 onFinish={onFinish}
-                // onFinish={console.log}
                 onFinishFailed={console.error}
                 labelCol={{ span: 6, }}
                 wrapperCol={{ span: 18, }}
-                // initialValues={{ remember: true, }}
                 initialValues={metadata}
+                // initialValues={{ remember: true, }}
                 // initialValues={{name: "name",}}  //V
                 autoComplete="off"
                 >
@@ -264,15 +266,28 @@ const personaFields = require('schema/PersonaData.json');
                             </Select>
                         );
                     }//Array (Tags)
+                    else if(field.type === 'textarea'){    
+                        //Long Text
+                        return (
+                            <Form.Item key={field.name} name={field.name} label={field.label} rules={field.rules}>
+                                <Input.TextArea  
+                                    autoSize={{ minRows: 3, maxRows: 5 }}
+                                    placeholder={placeholder} 
+                                    onChange={(evt) => {
+                                    // console.log("Changed", field.name, evt.target.value, metadata); 
+                                    setMetadata({...metadata, [field.name]: evt.target.value });
+                                }}/>
+                            </Form.Item>
+                        );
+                    }//Textarea (Long Text)
                     else{
                         //Default (Single String Input)
                         return (
-                            // <Form.Item {...field}><Input /></Form.Item>
                             <Form.Item key={field.name} name={field.name} label={field.label} rules={field.rules}>
                                 <Input placeholder={placeholder} onChange={(evt) => {
-                                // console.log("Changed", field.name, evt.target.value, metadata); 
-                                setMetadata({...metadata, [field.name]: evt.target.value });
-                            }}/>
+                                    // console.log("Changed", field.name, evt.target.value, metadata); 
+                                    setMetadata({...metadata, [field.name]: evt.target.value });
+                                }}/>
                             </Form.Item>
                         );
                     }

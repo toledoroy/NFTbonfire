@@ -2,24 +2,32 @@
     "role":{
         "label": "Role",
         "name": "role",
-        "placeholder": ["Hacker", "Debeloper", "Writer", "Designer", "Community Manager"],
+        "placeholder": "Developer, hacker, designer, writer, or maybe a community manager?",
         "rules": [{ "required": true, "message": "What is your main use of this persona" }]
     },
     "name":{
         "label": "Name",
         "name": "name",
-        "placeholder": "Your name",
-        "rules": [{ "required": true, "message": "Seems you might have forgot to fil in your name" }]
-    },
-    "description":{
-        "label": "Description",
-        "name": "description",
-        "placeholder": "description",
-        "rules": [{ "required": true, "message": "and about a desctiption?" }]
+        "placeholder": "What should we call you?",
+        "rules": [{ "required": true, "message": "Seems you forgot to fil in your name" }]
     },
     "location":{
         "label": "Location",
-        "name": "location"
+        "name": "location",
+        "placeholder": "Where are you, usually."
+    },
+    "description":{
+        "type": "textarea",
+        "label": "Backstory",
+        "name": "description",
+        "placeholder": "A little bit about yourself.",
+        "rules": [{ "required": true, "message": "Tell us something about yourself. Please." }]
+    },
+    "purpose":{
+        "type": "textarea",
+        "label": "Purpose",
+        "name": "purpose",
+        "placeholder": "What do you live for?"
     },
     "accounts":{
         "label": "Crypto Accounts",

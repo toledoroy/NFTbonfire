@@ -77,10 +77,7 @@ export default NFTDisplayMetadata;
           <dd className={label}>
             <dl>
               {/* <dt>{__.sanitize(label)}</dt> */}
-              <dt>
-                <i className="bi bi-bookmarks"></i>
-                Properties
-              </dt>
+              <dt><i className="bi bi-bookmarks"></i> Properties</dt>
               {items}
             </dl>
           </dd>
@@ -89,7 +86,7 @@ export default NFTDisplayMetadata;
     }//Attribures
     else if(label === 'accounts'){
       if(value.length > 0){
-        return (<DisplayMetadataField key={label} label={label} value={value.length+" account(s)"} className="item"/>)
+        return (<DisplayMetadataField key={label} label={"Crypto "+label} value={value.length} className="item"/>)
         return (
           <dd key={label}>
             <label>{label}</label> 
@@ -127,8 +124,31 @@ export default NFTDisplayMetadata;
       );
     }
   }//Array
+  else if(typeof value === 'object'){
+    let items = [];
+    for(let key in value){
+      let val = value[key];
+      if(val) items.push(<DisplayMetadataField key={key} label={key} value={val} className="item"/>);
+      // if(val) return (
+      //   <>
+      //   {value.toString(value)}
+      //   </>
+      // );
+    }
+    if(items.length > 0){
+      return (
+        <dd className={label}>
+          <dl>
+            {/* <dt>{__.sanitize(label)}</dt> */}
+            <dt><i className="bi bi-people-fill"></i> Social Accounts</dt>
+            {items}
+          </dl>
+        </dd>
+      );
+    }
+  }
   else{
-    console.error("DisplayMetadataField() Datatype " + typeof value+" is Not Supported", {label, value});
+    console.error("[UNHANDLED] DisplayMetadataField() Datatype " + typeof value+" is Not Supported", {label, value});
     // logger.error("DisplayMetadataField() Datatype Not Supported", {label, value}, typeof value);
     //TODO: Try to Recurse on Objects...
   } 
