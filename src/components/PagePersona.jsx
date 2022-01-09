@@ -399,6 +399,10 @@ function PagePersona(props) {
                                             className="item" 
                                             onChange={(e) => {
                                                 let change = {[e.target.name]: e.target.value.trim()};
+                                                //Validate
+                                                if(change.includes("://")){
+                                                    console.error("[TODO] Extract Handle from Link", {value:change, name:e.target.name});
+                                                }
                                                 //Set
                                                 setMetadata({...metadata, social:{ ...metadata.social, ...change }});
                                                 //Log
