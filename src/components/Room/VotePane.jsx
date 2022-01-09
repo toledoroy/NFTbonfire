@@ -12,11 +12,7 @@ import Votes from "./Votes"
 const VotePane = (props) => {
     const { post } = props;
     const { Moralis, user } = useMoralis();
-    // const [postContent, setPosContent] = useState({ title: "default", content: "default" });
-    // const { data } = useMoralisQuery("Contents", (query) => query.equalTo("contentId", contentId));
     const [voteStatus, setVoteStatus] = useState();
-    // const { data:votes } = useMoralisQuery("Relations", (query) => query.equalTo("postId", postId), [], { live: true });
-    // console.log("[DEV] Post() score:", score);
 
     //Live Query - Current Relation
     const { data : relations } = useMoralisQuery("Relation", 
@@ -36,8 +32,9 @@ const VotePane = (props) => {
         //Validate
         if(user.get('accounts').includes(String(post.get('account')).toLowerCase())) return message.error("C'mon, this is your post");
         //Log
-        console.log("[DEV] VotePane() Running Moralis Cloud Func 'postVote':", {postId:post.id, vote});
-        //Vote        
+        console.log("[DEV] VotePane() Running Moralis Cloud Func 'postVote':", {postId:post.id, vote, voteStatus});
+        if(vote === voteStatus) vote = 0;   //Undo Current Vote (Neutral)
+        //Vote
         Moralis.Cloud.run("postVote", {postId:post.id, vote}).catch(error => {
             console.error("Post() Error while Saving Vote", {error, postId:post.id, vote});
             message.error("Sorry, Something went wrong and your vote did not save");
@@ -53,7 +50,7 @@ const VotePane = (props) => {
             </Tooltip>
             <div className="vote_count">
                 <VoteCount postId={post.id}/> 
-                {post.get('votes') || '0'} 
+                {/* {post.get('votes') || '0'}  */}
             </div>
             <Tooltip key="comment-basic-dislike" title="I Don't Like This" placement="right">
                 <span onClick={(evt) => vote(-1)}>
