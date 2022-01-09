@@ -17,6 +17,7 @@ const VotePane = (props) => {
     //Live Query - Current Relation
     const { data : relations } = useMoralisQuery("Relation", 
         query => query.select('opinion').equalTo("user", user).equalTo("entity", post.id).limit(1), [],  {live: true,});
+    //Extract Current Opinion (of Current User)
     useEffect(() => {
         //Current Opinon of Entity
         let opinion = relations?.[0]?.get('opinion')

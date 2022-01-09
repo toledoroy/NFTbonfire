@@ -1,6 +1,61 @@
 //Objects
 const Relation = Moralis.Object.extend("Relation");
 
+
+/**
+ * Fetch Relation from DB, Create if Missing
+ * @param {*} user 
+ * @param {*} entity 
+ * @returns ParseObject Persona
+ */
+ const relationGetOrMake = async (user, entity) => {
+  //Validate
+  if(!user || !entity) throw new Error("Missing Request Parameters (user, entity)");
+  //Get / Add relation
+  const query = new Moralis.Query(Relation);
+  query.equalTo("user", user);
+  query.equalTo("entity", entity);
+  const results = await query.limit(1).find();
+
+  // logger.warn("[TEST] relationGetOrMake() "+results.length+" Results -- "+JSON.stringify(results)+"'");  //V
+  
+  //Extract relation From Result or Make New
+  // const relationGet = async (results) => {
+    if(results.length) return results[0];
+    logger.warn("[TEST] relationGetOrMake() Create New Relation to DB entity:'"+entity+"' user:'"+user?.id+"'");
+    //Create
+    const relation = new Relation({user, entity});
+    //ACL - Own + Public Read
+    let acl = new Moralis.ACL(Moralis.User.current());
+    acl.setPublicReadAccess(true);
+    relation.setACL(acl);
+    return relation;
+  // }
+  //Fetch relation (Get or Make New)
+  // return await relationGet(results); //Promise
+};
+
+/**
+ * Calculate Entity's Score (Based on Relationship Votes)
+ * @param {*} entity 
+ */
+const calcEntityScore = async (entity) => {
+  const pipeline = [ 
+    { match: { entity: entity } },  //This Entity
+    { group: { objectId: null, score: { $sum: '$opinion' } } }  //Sum of all Relations' Opinions
+  ];
+  
+  const query = new Moralis.Query(Relation);
+  let res =  await query.aggregate(pipeline).catch(function(error) {
+    logger.error("calcEntityScore() Exception Caught: "+error+"  pipeline:"+JSON.stringify(pipeline));
+  });
+  
+  // logger.warn("[TEST] calcEntityScore() entity:'"+entity+"' Result:"+JSON.stringify(res[0])+"' "+res[0]?.score); //V
+
+  return res[0]?.score;
+};//calcEntityScore()
+
+
 /* VOTES */
 
 /**
@@ -10,10 +65,9 @@ const Relation = Moralis.Object.extend("Relation");
  */
 Moralis.Cloud.define("postVote", async (request) => {  
   //Validate
-  if(!request?.user?.id) throw "Unauthorized User - Must Log In";
+  if(!request?.user?.id) throw "postVote() Unauthorized User - Must Log In";
   //Log
   logger.warn("[TEST] postVote() for Current User:"+request.user?.id+" PostId:"+request.params?.postId+" Vote:"+request.params?.vote);
-
   //Extract Parameters
   const { postId, vote } = request.params;
   //Validate
@@ -66,58 +120,39 @@ Moralis.Cloud.define("postVote", async (request) => {
    *  --> Need a vote event & need to connect that event to all Effects
    */
 
-});
+});//postVote()
 
 /**
- * Fetch Relation from DB, Create if Missing
- * @param {*} user 
- * @param {*} entity 
- * @returns ParseObject Persona
+ * Star a Post
  */
-const relationGetOrMake = async (user, entity) => {
+Moralis.Cloud.define("postStar", async (request) => {  
   //Validate
-  if(!user || !entity) throw new Error("Missing Request Parameters (user, entity)");
-  //Get / Add relation
-  const query = new Moralis.Query(Relation);
-  query.equalTo("user", user);
-  query.equalTo("entity", entity);
-  const results = await query.limit(1).find();
+  if(!request?.user?.id) throw "postStar() Unauthorized User - Must Log In";
+  //Log
+  logger.warn("[TEST] postStar() for Current User:"+request.user?.id+" PostId:"+request.params?.postId+" Vote:"+request.params?.vote);
+  //Extract Parameters
+  const { postId, star } = request.params;
+  //Validate
+  if(!postId || star===undefined) throw new Error("Missing Request Parameters (postId, star)");
+  //Validate star Value
+  if(typeof star !== 'boolean') throw new Error("poststar() Invalid star Value: "+star);
 
-  // logger.warn("[TEST] relationGetOrMake() "+results.length+" Results -- "+JSON.stringify(results)+"'");  //V
-  
-  //Extract relation From Result or Make New
-  // const relationGet = async (results) => {
-    if(results.length) return results[0];
-    logger.warn("[TEST] relationGetOrMake() Create New Relation to DB entity:'"+entity+"' user:'"+user?.id+"'");
-    //Create
-    const relation = new Relation({user, entity});
-    //ACL - Own + Public Read
-    let acl = new Moralis.ACL(Moralis.User.current());
-    acl.setPublicReadAccess(true);
-    relation.setACL(acl);
-    return relation;
-  // }
-  //Fetch relation (Get or Make New)
-  // return await relationGet(results); //Promise
-};
+  //1. Fetch Post
+  let post = await new Moralis.Query('Post').get(postId, {useMasterKey: true});
+  //Validate
+  if(!post) throw new Error("postStar() Post Not Found: "+postId);
 
-/**
- * Calculate Entity's Score (Based on Relationship Votes)
- * @param {*} entity 
- */
-const calcEntityScore = async (entity) => {
-  const pipeline = [ 
-    { match: { entity: entity } },  //This Entity
-    { group: { objectId: null, score: { $sum: '$opinion' } } }  //Sum of all Relations' Opinions
-  ];
-  
-  const query = new Moralis.Query(Relation);
-  let res =  await query.aggregate(pipeline).catch(function(error) {
-    logger.error("calcEntityScore() Exception Caught: "+error+"  pipeline:"+JSON.stringify(pipeline));
+  //2. Fetch Relation
+  const relation = await relationGetOrMake(request.user, postId);
+  // logger.warn("[TEST] postStar() Relation:"+JSON.stringify(relation));
+
+  //3. Update Relation
+  // relation.set('opinion', star); 
+  logger.warn("[TEST] postStar() Relation:"+relation.id+" star:"+star+" Set");
+    //Register star (user->post)
+  await relation.save({star}, {useMasterKey: true}).catch(function(error) {
+    logger.error("postStar() Exception Caught While Saving star:"+star+" to Relation:"+relation.id+"  "+error);
   });
-  
-  logger.warn("[TEST] calcEntityScore() entity:'"+entity+"' Result:"+JSON.stringify(res[0])+"' "+res[0]?.score);
+  logger.warn("[TEST] postStar() Relation:"+relation.id+" Saved star:"+star);
 
-  return res[0]?.score;
-};
-
+});
