@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
-import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 import { PersonaContext } from "common/context";
 
 // import { useNFTCollections } from "hooks/useNFTCollections";

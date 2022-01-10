@@ -26,7 +26,7 @@ const personaFields = require('schema/PersonaData.json');
 /**
  * Component: Persoan Edit Form
  * 
- *  TODO! Move PersonaEdit to PersonaPage
+ *  TODOD TO PersonaEdit to PersonaPage
  * 
  */
  function PersonaEdit(props) {
@@ -96,6 +96,7 @@ const personaFields = require('schema/PersonaData.json');
         }
         return metadata;
     }//metadataSanitize
+    
     /**
      * 
      */
