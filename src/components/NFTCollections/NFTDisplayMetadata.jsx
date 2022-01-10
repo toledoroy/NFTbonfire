@@ -1,6 +1,7 @@
 import React from "react";
 import { useMoralis, useNFTBalances } from "react-moralis";
 import __ from "helpers/__";
+import { PropertySafetyFilled } from "@ant-design/icons";
 
 /**
  * Component: Display NFT's Metadata
@@ -42,7 +43,8 @@ export default NFTDisplayMetadata;
 /**
  * Component: Single Metadata ITem
  */
- function DisplayMetadataField({label, value}){
+ function DisplayMetadataField(props){
+   let {label, value} = props;
   // console.log("DisplayMetadataField() Start W/", {label, value})
   // const { Moralis } = useMoralis();
 
@@ -54,7 +56,7 @@ export default NFTDisplayMetadata;
     return (
       <dd key={label}>
         <label>{__.sanitize(label)}</label> 
-        <span className="value">{__.sanitize(value)}</span>
+        <span className="value" title={value}>{__.sanitize(value)}</span>
       </dd>
     );
   }//string/number
@@ -90,7 +92,7 @@ export default NFTDisplayMetadata;
         return (
           <dd key={label}>
             <label>{label}</label> 
-            <span className="value">
+            <span className="value" title={value}>
               {(value.length > 0) && <dl>
                 {value.map((field) => {
                     return ['address','chain'].map((key) => <DisplayMetadataField key={key} label={key} value={field[key]} className="item"/>);
@@ -112,7 +114,7 @@ export default NFTDisplayMetadata;
       return (
         <dd key={label} className="debug">
           <label>{label}: (IS ARRAY) </label> 
-          <span className="value">
+          <span className="value" title={value}>
             {value.toString(value)}
             {value.map((field) => {
               // if(typeof field === 'object') console.warn("[TEST] DisplayMetadata() '"+label+"' FIeld is an Object", field);

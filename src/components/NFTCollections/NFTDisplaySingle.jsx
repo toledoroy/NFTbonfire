@@ -10,7 +10,7 @@ import __ from "helpers/__";
 const { Meta } = Card;
 
 /**
- * Display a Single NFT
+ * Component: Display a Single NFT
  */
  function NFTDisplaySingle({nft, index}) {
     const { Moralis, chainId } = useMoralis();
@@ -71,8 +71,8 @@ const { Meta } = Card;
                                 alt=""
                                 // style={{ height: "var(--cardHeight)", width: "var(--cardWidth)" }}
                             />
-                            {/* <Meta title={nft?.metadata?.name} description={__.sanitize(nft.name)} /> */}
-                            <Meta title={nft?.metadata?.name} />
+                            <Meta title={nft?.metadata?.name} description={__.sanitize(nft.name)} />
+                            {/* <Meta title={nft?.metadata?.name} /> */}
                         </div>
                         <div className="flip-card-back">
                             <NFTDisplayMetadata nft={nft} />
@@ -98,7 +98,7 @@ const { Meta } = Card;
             >
             <AddressInput autoFocus placeholder="Receiver" onChange={setReceiver} />
             {nftToSend && nftToSend.contract_type === "erc1155" && (
-                <Input placeholder="amount to send" onChange={(e) => handleChange(e)} />
+                <Input placeholder="amount to send" onChange={(evt) => handleChange(evt)} />
             )}
         </Modal>
      </>
