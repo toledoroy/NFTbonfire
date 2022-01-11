@@ -44,6 +44,15 @@ export const PersonaHelper = {
         return IPFS.resolveLink(persona?.get('metadata')?.image) || defaultValue;
     },
 
+    /**
+     * Persona's Cover Image
+     * @var ParseObject persona 
+     * @var any defaultValue
+     */
+     getCover(persona, defaultValue){
+        return IPFS.resolveLink(persona?.get('metadata')?.cover) || defaultValue;
+    },
+
     isNew(persona){ return (!persona.get('token_id'))},
 
 };//personaHelper{}

@@ -304,11 +304,8 @@ function PagePersona(props) {
 
     //Profile Image
     let image = PersonaHelper.getImage(persona);
-    let coverImage = metadata?.cover ? IPFS.resolveLink(metadata.cover) : "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
-    // let image = persona.getFallback('image');        //Don't work when Loading ParseObjeect from DB
-    // let coverImage = persona.getFallback('cover');
+    let coverImage = PersonaHelper.getCover(persona);
     let size = 200; //Avater Circumference
-    // if(0 && !isLoading && !persona.chain){
     if(!isLoading && metadata===null){
         //Log
         console.warn("Persona Handle Not Found :"+persona.id, {handle, persona, isLoading, metadata});
@@ -320,11 +317,11 @@ function PagePersona(props) {
         <div className="persona framed">
             {/* <Skeleton loading={!isWeb3Enabled}></Skeleton> */}
             <div className="header">
-                <div className="cover" style={{background:"url("+coverImage+")"}}>
-                    {/* <img src={IPFS.resolveLink(coverImage)}/> */}
-                </div>
+                {coverImage 
+                ? <div className="cover" style={{background:"url("+coverImage+")"}}></div>
+                : <div className="cover"></div>
+                }
             </div>
-            
             <div className="main" style={{marginTop:0}}>
             {/* <div className="persona-body"> */}
                 <div className="secondary framed">
