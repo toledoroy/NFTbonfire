@@ -26,7 +26,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
   const [ curRoom, setCurRoom ] = useState();
   const [ limit, setLimit ] = useState(8);
   const { isAllowed } = useIsAllowed({hash, chain:chainId});
-  const { persona, setPersona} = useContext(PersonaContext);
+  // const { persona, setPersona} = useContext(PersonaContext);
   
   /**
    * [DEV] Insert Rooms

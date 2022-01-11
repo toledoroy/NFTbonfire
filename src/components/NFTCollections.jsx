@@ -48,7 +48,7 @@ import __ from "helpers/__";
 function NFTCollections(props) {
   //Extract Props
   let { accountHash, collectionHash } = props.match.params;
-  const { Moralis, isWeb3Enabled , chainId, user, account  } = useMoralis();
+  const { Moralis, isWeb3Enabled , chainId, account  } = useMoralis();
   const { isAllowed } = useIsAllowed({hash:collectionHash, chain:props?.match?.params?.chain || chainId});
   // console.warn("[TEST] NFTCollections() Ran useIsAllowed:"+isAllowed, {hash:collectionHash, chain:props?.match?.params?.chain || chainId, props});
 

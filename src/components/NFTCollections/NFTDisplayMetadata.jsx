@@ -1,7 +1,7 @@
 import React from "react";
-import { useMoralis, useNFTBalances } from "react-moralis";
+// import { useMoralis, useNFTBalances } from "react-moralis";
 import __ from "helpers/__";
-import { PropertySafetyFilled } from "@ant-design/icons";
+// import { PropertySafetyFilled } from "@ant-design/icons";
 
 /**
  * Component: Display NFT's Metadata

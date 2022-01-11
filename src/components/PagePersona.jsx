@@ -48,7 +48,7 @@ function PagePersona(props) {
     const { params } = props.match;
     // const { handle } = props.match.params;
     const { handle, chain, contract, token_id } = params;
-    const { Moralis, isWeb3Enabled, isAuthenticated, setUserData, userError, user, chainId, account } = useMoralis();     //isUserUpdating
+    const { Moralis, isWeb3Enabled, isAuthenticated, userError, user, chainId, account } = useMoralis();     //isUserUpdating
     // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMode ] = useState(false);
     const [ metadata, setMetadata ] = useState(null);
@@ -56,10 +56,10 @@ function PagePersona(props) {
     const [ isOwned, setIsOwned ] = useState(false);
     const [ persona, setPersonaActual ] = useState( new Persona() );
     const [ isAddAccModalVisible, setIsAddAccModalVisible ] = useState(false);
-    const { fetchMetadata, loadMetadata } = usePersona();   
+    const { loadMetadata } = usePersona();   
     //File Upload
     const [ imageUrl, setImageUrl ] = useState(metadata?.image);
-    const [ imageLoading, setImageLoading ] = useState(false);
+    // const [ imageLoading, setImageLoading ] = useState(false);
 
     //https://github.com/MoralisWeb3/react-moralis#usemoralisweb3api
     
@@ -960,11 +960,11 @@ export default PagePersona;
     //File Upload
     // const [ imageUrl, setImageUrl ] = useState(persona.getFallback('image'));
     const [ imageUrl, setImageUrl ] = useState(metadata?.image);
-    const [ imageLoading, setImageLoading ] = useState(false);
+    // const [ imageLoading, setImageLoading ] = useState(false);
     const { isLoading } = props;
     // const { verifyMetadata, updateToken } = useVerifyMetadata();
-
-    const { Moralis, setUserData, userError, isUserUpdating, user, isAuthenticated, account, chainId } = useMoralis();
+    // const { Moralis, setUserData, user, isAuthenticated } = useMoralis();
+    const { Moralis, user, isAuthenticated } = useMoralis();
     const contractProcessor = useWeb3ExecuteFunction();
     //Contract Data
     const contractPersona = Persona.getContractData();
@@ -980,9 +980,8 @@ export default PagePersona;
         console.warn("PersonaEdit() Persona Owners", ids);
     });
     */
-
     //Log
-    console.warn("PersonaEdit() MEtadata", {chainId, env:process.env, metadata, imageUrl, contract, persona});
+    // console.warn("PersonaEdit() MEtadata", {chainId, env:process.env, metadata, imageUrl, contract, persona});
 
     useEffect(() => { 
         //Refresh Metadata on Every Load! (After Updating Chain, This Component's metadata doesn't match the updated parent)
