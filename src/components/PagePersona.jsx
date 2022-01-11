@@ -90,26 +90,18 @@ function PagePersona(props) {
         setIsLoading(false);
     }//updateMetadata()
     
+    useEffect(() => {
+        //When Entering Edit More - Reload Persona from Contract
+        if(isEditMode){
+            if(persona && persona.get('token_id') !== undefined) reloadmetadata();
+            else updateMetadata( freshMetadata() );
+        }
+    },[isEditMode]);
+
     useEffect(() => async () => {
         //Disable EditMode on Logout
         if(isEditMode && !account) setIsEditMode(false);
     }, [account]);
-
-    useEffect(() => {
-        //When Entering Edit More - Reload Persona from Contract
-        if(isEditMode){
-            if(persona){
-                if(persona.get('token_id') !== undefined) loadmetadata();
-                else{
-                    let metadata = {social:{}, accounts:[], links:[],};
-                    //Default Accounts (Current User Accounts)
-                    for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
-                    updateMetadata( metadata );
-                }
-            } 
-            else console.error("PagePersona() No Persona", persona);
-        }
-    },[isEditMode]);
 
     useEffect(() => async () => {
         if(!isWeb3Enabled){ /*console.error("Waiting for W3");*/ }
@@ -206,7 +198,8 @@ function PagePersona(props) {
             setPersona(persona);
 
             //Load Default Metadata
-            updateMetadata( loadDefaultMetadata() );
+            // updateMetadata( loadDefaultMetadata() ); //Default Metadata
+            updateMetadata( freshMetadata() );          //Empty Metadata
             
             console.log("PagePersona.initNewPersona() New Persona w/Default Metadata",  {persona, user, metadata, params, props});
         }
@@ -235,9 +228,19 @@ function PagePersona(props) {
     };
 
     /**
+     * Create a Fresh (Empty) Metadata Object
+     */
+    const freshMetadata = () => {
+        let metadata = {social:{}, accounts:[], links:[],};
+        //Default Accounts (Current User Accounts)
+        for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
+        return metadata;
+    }//freshMetadata()
+
+    /**
      * Reload Persona Metadata from Chain
      */
-    const loadmetadata = async () => {
+    const reloadmetadata = async () => {
         //Start Loading
         setIsLoading(true);
         try{
@@ -246,12 +249,11 @@ function PagePersona(props) {
             //Log
             console.warn("PagePersona() Freshly Loaded Metadata:", {metadata, persona});
             //Set Metadata to State
-            updateMetadata( metadata );
-
+            updateMetadata(metadata);
         }catch(error){
             console.error("[CAUGHT] PagePersona() Error Loading Metadata:", error);
         }
-    }//loadmetadata()
+    }//reloadmetadata()
    
     /** REMOVED - MADE EXPLICIT
      * on Social Account Update
@@ -521,7 +523,7 @@ function PagePersona(props) {
                                         icon={<i className="bi bi-pencil-fill"></i>}>Edit
                                     </Button>}
                                     
-                                {(isEditMode && !PersonaHelper.isNew(persona)) && <Button variant="contained" color="primary" onClick={()=>{ loadmetadata(); setIsEditMode(isEditMode===false);}}
+                                {(isEditMode && !PersonaHelper.isNew(persona)) && <Button variant="contained" color="primary" onClick={()=>{ reloadmetadata(); setIsEditMode(isEditMode===false);}}
                                     style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
                                     icon={<i className="bi bi-arrow-left"></i>}
                                     // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
@@ -990,7 +992,7 @@ export default PagePersona;
         setMetadata(props.metadata); 
         setImageUrl(props.metadata?.image);
     }, [props.metadata]);
-
+    
     useEffect(() => { 
         console.log("PersonaEdit() Stage:"+stage);
     }, [stage]);
@@ -1246,7 +1248,7 @@ export default PagePersona;
                             : <Button type="primary" htmlType="submit">Save</Button>
                             }
                             {/* <Button onClick={formReset} style={{marginLeft:'20px' }}>Reset</Button> REMOVED */}
-                            {/* <Button variant="contained" color="primary" onClick={()=>{ loadmetadata(); setIsEditMode(false)}}>Cancel</Button> */} {/*TODO: THIS BUTTON SHOULD BE HERE (But on PagePersona)*/}
+                            {/* <Button variant="contained" color="primary" onClick={()=>{ reloadmetadata(); setIsEditMode(false)}}>Cancel</Button> */} {/*TODO: THIS BUTTON SHOULD BE HERE (But on PagePersona)*/}
                         </Form.Item>
                     }
                 </div>
