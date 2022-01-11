@@ -652,6 +652,10 @@ export default PagePersona;
     const [chain, setChain] = useState(chainId);
     const [address, setAddress] = useState(null);
 
+    useEffect(() => {
+        if(chainId && chainId!==chain) setChain(chainId);
+    }, [chainId]);
+
     //Handle Account Add
     const addAccount = () => {
         //Validate
@@ -690,8 +694,8 @@ export default PagePersona;
             Add Account
             <Card style={{marginTop: "10px", borderRadius: "1rem",}} bodyStyle={{ padding: "15px" }} >
                 Address:
-                <AddressInput autoFocus placeholder="Receiver" onChange={setAddress} />
-                
+                <AddressInput autoFocus placeholder="Address" onChange={setAddress} />
+                {console.warn("[TEST] AccountAddModal() Chain:", {chain, chainId})}
                 Chain:
                 <Dropdown overlay={
                     <Menu onClick={(chain) => setChain(chain.key)}>
