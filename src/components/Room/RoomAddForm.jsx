@@ -1,5 +1,6 @@
-import React, { useContext, useEffect } from "react";
-import { Skeleton, Image,  Form, Input, Button, Comment, Avatar, message } from 'antd';
+import React, { useContext } from "react";
+// import { Skeleton, Image} from 'antd';
+import { Form, Input, Button, Comment, Avatar, message } from 'antd';
 import { FireTwoTone } from '@ant-design/icons';
 import { useMoralis } from "react-moralis";
 import { useHistory } from 'react-router-dom';
@@ -23,7 +24,7 @@ import { PersonaContext } from "common/context";
     //Validate
     if(!parentId) throw new Error("RoomAddForm() Missing Parent");
 
-    // useEffect(() => {
+    // React.useEffect(() => {
     //   console.error("[TEST] RoomAddForm() Using Persona:", {persona});
     // }, [persona]);
   
