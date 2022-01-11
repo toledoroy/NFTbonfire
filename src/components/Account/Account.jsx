@@ -252,7 +252,7 @@ function Account() {
       </Menu>
       )} placement="bottomRight">
       <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-        <div className="account in">
+        <div className="account in lightUp">
           <p className="hash">{getEllipsisTxt(account, 4)}</p>
           {/* <Blockie currentWallet scale={3} /> */}
           <Avatar className='image' src={

@@ -529,13 +529,15 @@
 }
 
 /* Account */
-.account {
+.account {     
+    color: #21bf96;
     height: 48px;
     padding: 0 15px;
     display: flex;
     justify-content: center;
     align-items: center;
     width: fit-content;
+    border: 2px solid rgb(231, 234, 243);
     border-radius: 12px;
     background-color: rgb(244, 244, 244);
     cursor: pointer;
@@ -545,7 +547,6 @@
     }
     p.text {
         font-size:1.1em;
-        color: #21BF96,
     }
     p.hash {
         margin-right: 5px;
@@ -559,7 +560,14 @@
         font-weight: 400;
     }*/
 }
-
+.lightUp{
+    transition: all 0.2s ease-in-out;
+}
+.lightUp:hover{
+    color: #40a9ff;
+    border-color: #40a9ff;
+    box-shadow: 0 0 7px #9ecaed;
+}
 
 .room_list.single{
     .ant-collapse-item {display: none;}

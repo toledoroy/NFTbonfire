@@ -15,10 +15,10 @@ const styles = {
     fontSize: "14px",
     padding: "0 10px",
   },
-  button: {
-    border: "2px solid rgb(231, 234, 243)",
-    borderRadius: "12px",
-  },
+  // button: {
+  //   border: "2px solid rgb(231, 234, 243)",
+  //   borderRadius: "12px",
+  // },
 };
 
 const menuItems = [
@@ -115,7 +115,8 @@ function Chains() {
   return (
     <div>
       <Dropdown overlay={menu} trigger={["click"]}>
-        <Button key={selected?.key} icon={selected?.icon} style={{ ...styles.button, ...styles.item }}>
+        {/* <Button className="chainSelect" key={selected?.key} icon={selected?.icon} style={{ ...styles.button, ...styles.item }}> */}
+        <Button className="chainSelect lightUp" key={selected?.key} icon={selected?.icon}>
           <span style={{ marginLeft: "5px" }}>{selected?.value}</span>
           <DownOutlined />
         </Button>

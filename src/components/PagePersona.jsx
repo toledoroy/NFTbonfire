@@ -646,10 +646,11 @@ export default PagePersona;
  * Component: Account Add Modal
  */
  function AccountAddModal(props){
+    const { chainId } = useMoralis();
     const { visible:isModalVisible, setVisible:setIsModalVisible } = props;
     const { metadata, setMetadata } = props;
     // const [isModalVisible, setIsModalVisible] = useState(props.visible===true);
-    const [chain, setChain] = useState(null);
+    const [chain, setChain] = useState(chainId);
     const [address, setAddress] = useState(null);
 
     // useEffect(() => { 
@@ -674,10 +675,13 @@ export default PagePersona;
             //Close Modal
             setIsModalVisible(false);
 
-            //TODO: Reset Modal
+            //TODO: Reset Modal (Maybe?)
 
         }
-        else console.error("AccountAddModal() Missing Parameters", {chain, address});
+        else{
+            message.error('Please make sure to fill in both chain and address.');
+            console.error("AccountAddModal() Missing Parameters", {chain, address});
+        } 
     }//addAccount()
 
     return (
@@ -711,9 +715,8 @@ export default PagePersona;
                     </Menu>
                     } 
                     trigger={["click"]}>
-
                     {/* { console.warn("[TEST] AccountAddModal() CUrrently Selected Chain", {chain, selected:ChainsData[chain]}) } */}
-                    <Button key={ChainsData[chain]?.key} icon={ChainsData[chain]?.icon}>
+                    <Button className="chainSelect" key={ChainsData[chain]?.key} icon={ChainsData[chain]?.icon}>
                         {/* {console.warn("AccountAddModal() Selected Chain"+chain, {chain, ChainsData})} */}
                         <span style={{ marginLeft: "5px" }}>{ChainsData[chain]?.name}</span>
                         <DownOutlined />
