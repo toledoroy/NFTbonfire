@@ -27,31 +27,28 @@ import { PersonaContext } from "common/context";
     //   console.error("[TEST] RoomAddForm() Using Persona:", {persona});
     // }, [persona]);
   
-
     /**
      * Form Submit Function
      */
     const onFinish = async (values) => {
-
-      //Validate
-      if(!persona) message.error("Please select the Persona you'd like to use");
-      if(!persona) throw new Error("RoomAddForm() No Persona Selected");
-
-
-      //Additions
-      values.parentId = parentId;
-      // values.parent = parentId;   //TEST [X]
-      values.account = account;
-      values.chain = chainId;
-      values.userId = user?.id;
-      // values.user = user;
-
-      values.personaId = PersonaHelper.getGUID(persona);
-      values.persona = persona;
-      
-      
       try{
+        //Validate
+        if(!persona){
+          message.error("To post, you must first mint yourself a persona");
+          throw new Error("RoomAddForm() No Persona Selected");
+        } 
 
+        //Additions
+        values.parentId = parentId;
+        // values.parent = parentId;   //TEST [X]
+        values.account = account;
+        values.chain = chainId;
+        values.userId = user?.id;
+        // values.user = user;
+
+        values.personaId = PersonaHelper.getGUID(persona);
+        values.persona = persona;
+        
         //Create New Post
         // const Post = await Moralis.Cloud.run("post", values);
         const Post = Moralis.Object.extend("Post");
@@ -95,6 +92,7 @@ import { PersonaContext } from "common/context";
       <div className="room_add">  
         <h3>{title ? title : 'Start a new bonfire'}</h3>
         {/* <p>Add a new Room to this Space!</p> */}
+        
         <Comment
           avatar={<Avatar src={PersonaHelper.getImage(persona)} alt={persona?.get('metadata').name} />}
           content={
@@ -112,9 +110,20 @@ import { PersonaContext } from "common/context";
               <Form.Item label="Description" name="text" rules={[{ required: true, message: "You'd need to enter some text as well..."}]}>
                 <Input.TextArea />
               </Form.Item>
-              <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+              {persona && <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
                 <Button type="primary" htmlType="submit"><FireTwoTone twoToneColor="red" />Light Up</Button>
               </Form.Item>
+              }
+              {!persona && <p style={{textAlign:'center'}}>
+                To post content, you'd first need to mint yourself a persona.
+                <a href="/persona">
+                  <Button type="primary" size="large" className="main_button"
+                    style={{ width: "100%", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "400", }}>
+                    Mint New Persona
+                  </Button>
+                </a>
+              </p>}
+
             </Form>
           }
         />
