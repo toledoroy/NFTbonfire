@@ -153,6 +153,10 @@ function SpaceView({hash, collection, NFTpersonas}) {
           {/* TODO: Add Field: Creator, Total No. of Items, */}
           <div className={(curRoom) ? 'room_list single' : 'room_list'}>
           {(rooms && rooms.length>0) ?
+            <>
+            
+              <RoomAddForm parentId={collection.hash} collection={collection} />
+
               <Collapse accordion onChange={(selected) => setCurRoom(selected)}>
                 {/* collapsible="disabled" */}
                 {rooms.map((room, index) => (
@@ -162,8 +166,9 @@ function SpaceView({hash, collection, NFTpersonas}) {
                   </Collapse.Panel>
                 ))}
               </Collapse>
-              :
-              <SpaceEmpty collection={collection} />
+            </>
+            :
+            <SpaceEmpty collection={collection} />
             } 
             {/* Chat Rooms */}
             {/* <RoomPage hash collection /> */}
