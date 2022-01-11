@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-//import { Card, Image, Tooltip, Modal, Input } from "antd";
-import { Breadcrumb, Skeleton, Button, Dropdown, Avatar } from "antd";
-import { useMoralis, useNFTBalances } from "react-moralis";
+//import { Card, Image, Tooltip, Modal, Input, Button, Dropdown, Avatar } from "antd";
+import { Breadcrumb, Skeleton } from "antd";
+import { useMoralis } from "react-moralis";
 // import { useNFTBalance } from "hooks/useNFTBalance";
 import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
-import PersonaChanger from "components/Persona/PersonaChanger";
-import Address from "components/Address/Address";
+// import PersonaChanger from "components/Persona/PersonaChanger";
+// import Address from "components/Address/Address";
 // import { useNFTCollections } from "hooks/useNFTCollections";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 import { useIsAllowed } from "hooks/useIsAllowed";
-import { Post, Room } from "objects/objects";
+import { Post } from "objects/objects";
 import Space from "components/NFTSingle/Space";
 import { CollectionContext } from "common/context";
-import { NFTHelper } from "helpers/NFTHelper";
+// import { NFTHelper } from "helpers/NFTHelper";
 import __ from "helpers/__";
 // import { getChainName, getChainLogo } from "helpers/networks";
     
