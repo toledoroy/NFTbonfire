@@ -225,9 +225,7 @@ function Account() {
           </div>
         </Menu.Item>
         <Menu.Item key="logout" style={{padding: '10px'}}>
-          <Button type="primary" size="large" className="main_button"
-            onClick={()=>{logout()}}
-            style={{ width: "100%", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "500", }}>
+          <Button type="primary" size="large" className="main_button button_full" onClick={()=>{logout()}}>
             Disconnect
           </Button>
         </Menu.Item>
@@ -242,8 +240,7 @@ function Account() {
         
         <Menu.Item key="persona_add">
           <a href="/persona">
-            <Button type="primary" size="large" className="main_button"
-              style={{ width: "100%", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "400", }}>
+            <Button type="primary" size="large" className="main_button button_full">
               Mint New Persona
             </Button>
           </a>

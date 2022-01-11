@@ -713,8 +713,7 @@ export default PagePersona;
                 </Dropdown>
             </Card>
 
-            <Button size="large" type="primary" onClick={() => { addAccount(); }}
-                style={{ width: "100%", marginTop: "10px", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "500", }}>
+            <Button size="large" type="primary" onClick={() => { addAccount(); }} className="button_full" style={{marginTop: "10px"}}>
                 Add
             </Button>
             </>
