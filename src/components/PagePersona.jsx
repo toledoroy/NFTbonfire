@@ -649,19 +649,8 @@ export default PagePersona;
     const { chainId } = useMoralis();
     const { visible:isModalVisible, setVisible:setIsModalVisible } = props;
     const { metadata, setMetadata } = props;
-    // const [isModalVisible, setIsModalVisible] = useState(props.visible===true);
     const [chain, setChain] = useState(chainId);
     const [address, setAddress] = useState(null);
-
-    // useEffect(() => { 
-    //     setIsModalVisible(props.visible===true);
-    //     console.log("Change Modal Visibility:"+props.visible)
-    // }, [props]);
-    /* CANCELLED
-    useEffect(() => { 
-        if(isModalVisible) console.warn("AccountAddModal() Modal Became Visible:"+isModalVisible+" Should Reset");
-    }, [isModalVisible]);
-    */
 
     //Handle Account Add
     const addAccount = () => {
