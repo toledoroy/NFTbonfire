@@ -56,7 +56,7 @@ function PagePersona(props) {
     const [ isOwned, setIsOwned ] = useState(false);
     const [ persona, setPersonaActual ] = useState( new Persona() );
     const [ isAddAccModalVisible, setIsAddAccModalVisible ] = useState(false);
-    const { fetchMetadata, loadMetadata } = usePersona(); 
+    const { fetchMetadata, loadMetadata } = usePersona();   
     //File Upload
     const [ imageUrl, setImageUrl ] = useState(metadata?.image);
     const [ imageLoading, setImageLoading ] = useState(false);
@@ -85,11 +85,15 @@ function PagePersona(props) {
      */
     function updateMetadata(metadata){
         setMetadata(metadata);
-        setImageUrl(metadata?.image);
+        setImageUrl(metadata?.image); 
         //Done Loading
         setIsLoading(false);
     }//updateMetadata()
     
+    useEffect(() => async () => {
+        console.warn("[TEST] PagePersona() Reloading");
+    });
+
     useEffect(() => {
         //When Entering Edit More - Reload Persona from Contract
         if(isEditMode){
@@ -104,6 +108,8 @@ function PagePersona(props) {
     }, [account]);
 
     useEffect(() => async () => {
+        //Start Loading
+        setIsLoading(true);
         if(!isWeb3Enabled){ /*console.error("Waiting for W3");*/ }
         else if(params.chain && params.contract && params.token_id) {//By Token Address
             let personaData = {
@@ -160,6 +166,7 @@ function PagePersona(props) {
                 console.warn("PagePersona() New Persona -- Init in Edit Mode", {params}); 
                 initNewPersona();
                 setIsEditMode(true);
+                setIsLoading(false);    //Seems Necessary...
             }
             else{
                 console.error("PagePersona() Can't Create New Persona -- User Not Authenticated");
@@ -199,9 +206,9 @@ function PagePersona(props) {
 
             //Load Default Metadata
             // updateMetadata( loadDefaultMetadata() ); //Default Metadata
+            // console.log("PagePersona.initNewPersona() New Persona w/Default Metadata",  {persona, user, metadata, params, props});
             updateMetadata( freshMetadata() );          //Empty Metadata
-            
-            console.log("PagePersona.initNewPersona() New Persona w/Default Metadata",  {persona, user, metadata, params, props});
+            console.log("PagePersona.initNewPersona() New Persona w/Empty Metadata",  {persona, user, metadata, params, props});
         }
         catch(error){
             console.error("PagePersona.initNewPersona() Failed Initiating w/New Persona ", {error, params});
