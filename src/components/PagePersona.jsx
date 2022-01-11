@@ -69,10 +69,10 @@ function PagePersona(props) {
       
     // const [form] = Form.useForm();
 
-   /**
-    * Set Persona Wrapper Function
-    */
-   function setPersona(persona){
+    /**
+     * Set Persona Wrapper Function
+     */
+    function setPersona(persona){
        setPersonaActual(persona);
        setIsOwned(String(persona.get('owner')).toLowerCase() === account.toLowerCase());
        persona.get('metadata') && updateMetadata( persona.get('metadata') );

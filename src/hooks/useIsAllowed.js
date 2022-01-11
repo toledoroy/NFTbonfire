@@ -16,7 +16,8 @@ export const useIsAllowed = (props) => {
     //  return { isAllowed };
  
     
-  useEffect(() => { /* Check if Account Owns Any of These Assets */
+  useEffect(() => { 
+    /* Check if Account Owns Any Assets on Specified Contract */
     if(hash && isWeb3Enabled && user && account){
       //Fetch Balance
       NFTHelper.getBalance(Moralis, account, hash, chain).then(balance => {
@@ -30,11 +31,11 @@ export const useIsAllowed = (props) => {
       /* ServerSide Validation  - use Hook */
     //   let params = {userId:user.id, hash:hash, chainId, account};
       let params = { hash, chain };
-      Moralis.Cloud.run("isAllowed", params).then(res => {
-          console.warn("isAllowed() is User Allowed:"+res, {user, params, account });
+      Moralis.Cloud.run("useIsAllowed", params).then(res => {
+          console.warn("useIsAllowed() is User Allowed:"+res, {user, params, account });
       })
       .catch(err => {
-          console.error("isAllowed() is User Allowed Failed:", {user, err, params, account });
+          console.error("useIsAllowed() is User Allowed Failed:", {user, err, params, account });
       });
       
     }
@@ -42,7 +43,9 @@ export const useIsAllowed = (props) => {
       //Nothing Selected -- Allow to all
       // setIsAllowed(true);
       // return;
-      setIsAllowed(false);
+      // console.warn("useIsAllowed() Can't Run:", {hash, isWeb3Enabled, chain, account, user});
+      // setIsAllowed(false);
+      setIsAllowed(!hash);  //True if no hash Selected
     }
   }, [hash, isWeb3Enabled, chain, account, user]);
 

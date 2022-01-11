@@ -50,6 +50,7 @@ function NFTCollections(props) {
   let { accountHash, collectionHash } = props.match.params;
   const { Moralis, isWeb3Enabled , chainId, user, account  } = useMoralis();
   const { isAllowed } = useIsAllowed({hash:collectionHash, chain:props?.match?.params?.chain || chainId});
+  // console.warn("[TEST] NFTCollections() Ran useIsAllowed:"+isAllowed, {hash:collectionHash, chain:props?.match?.params?.chain || chainId, props});
 
   /* MOVED TO useIsAllwed Hook
   // const [ isAllowed, setIsAllowed ] = useState(false);
