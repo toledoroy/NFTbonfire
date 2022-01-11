@@ -130,12 +130,19 @@ function Account() {
       // let curPersonaId = user.get('curPersona');
       let curPersonaId = user?.get('last_persona')?.global;
       //Recuperate Last Persona
-      if(curPersonaId) for(let personaObj of personas){
-        if(personaObj.id == curPersonaId){
-          setPersona(personaObj);
-          // console.log("Account() Setting Last Selected Persona:"+curPersonaId);  //V
-          break;
-        } 
+      if(curPersonaId){
+
+        for(let personaObj of personas){
+          if(personaObj.id == curPersonaId){
+            setPersona(personaObj);
+            // console.log("Account() Setting Last Selected Persona:"+curPersonaId);  //V
+            break;
+          } 
+        }
+      }
+      else{
+        //Default to First Persona
+        setPersona(personas[0]);
       }
     } 
   }, [NFTpersonas, personas]);
