@@ -59,7 +59,7 @@ const styles = {
  */
 function Account() {
   const { Moralis, authenticate, isAuthenticated, account, user, chainId, logout } = useMoralis();
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);
   const [lastAccount, setLastAccount] = useState(account);  //Remember Last Account
   // const [personas, setPersonas] = useState([]);

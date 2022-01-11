@@ -695,7 +695,6 @@ export default PagePersona;
             <Card style={{marginTop: "10px", borderRadius: "1rem",}} bodyStyle={{ padding: "15px" }} >
                 Address:
                 <AddressInput autoFocus placeholder="Address" onChange={setAddress} />
-                {console.warn("[TEST] AccountAddModal() Chain:", {chain, chainId})}
                 Chain:
                 <Dropdown overlay={
                     <Menu onClick={(chain) => setChain(chain.key)}>
