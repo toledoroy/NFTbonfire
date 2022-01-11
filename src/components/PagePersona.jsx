@@ -529,6 +529,15 @@ function PagePersona(props) {
                                     {/* Cancel */}
                                 </Button>}
                             </div>}
+                            {!isOwned &&
+                            <Button variant="contained" color="primary" onClick={()=>{ console.warn("SEND BUTTON PRESSED");}}
+                                style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
+                                icon={<i className="bi bi-send"></i>}
+                                // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
+                                >
+                                Send
+                            </Button>
+                            }
                             </>
                             }
                         </div>
