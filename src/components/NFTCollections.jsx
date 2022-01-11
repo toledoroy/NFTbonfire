@@ -9,6 +9,7 @@ import PersonaChanger from "components/Persona/PersonaChanger";
 import Address from "components/Address/Address";
 // import { useNFTCollections } from "hooks/useNFTCollections";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
+import { useIsAllowed } from "hooks/useIsAllowed";
 import { Post, Room } from "objects/objects";
 import Space from "components/NFTSingle/Space";
 import { CollectionContext } from "common/context";
@@ -45,21 +46,18 @@ import __ from "helpers/__";
  * @param {*} props 
  */
 function NFTCollections(props) {
- 
   //Extract Props
-  // const { accountHash } = props.match.params;
   let { accountHash, collectionHash } = props.match.params;
-
   const { Moralis, isWeb3Enabled , chainId, user, account  } = useMoralis();
-  const [ isAllowed, setIsAllowed ] = useState(false);
+  const { isAllowed } = useIsAllowed({hash:collectionHash, chain:props?.match?.params?.chain || chainId});
 
+  /* MOVED TO useIsAllwed Hook
+  // const [ isAllowed, setIsAllowed ] = useState(false);
   useEffect(() => {
     //Default to Current Account
     if(!accountHash) console.error("NFTCollections() Set Default Account", {accountHash, account});
     if(!accountHash) accountHash = account; 
     
-
-    //THIS IS A COPY OF useIsAllowed(). Should probably use the hook...
     //Check if Account Owns Any of These Assets
     if(collectionHash && isWeb3Enabled) {
       let chain = props?.match?.params?.chain || chainId;
@@ -71,31 +69,20 @@ function NFTCollections(props) {
         setIsAllowed(balance > 0);
       // }, [collectionHash, account]);
       });
-      
-      /* ServerSide Validation  - use Hook
-      let params = {userId:user.id, hash:collectionHash, chainId, account};
-      Moralis.Cloud.run("isAllowed", params).then(res => {
-          console.warn("isAllowed() is User Allowed:"+res, {user, params, account });
-      })
-      .catch(err => {
-          console.error("isAllowed() is User Allowed -- matchUserNFT Failed:", {user, err, params, account });
-      });
-      */
     }else{
       //Nothing Selected -- Allow to all
       setIsAllowed(true);
       return;
     }
   }, [accountHash, collectionHash, isWeb3Enabled, chainId, account]);
-
+  */
 
   //Init Options
   let options = {
     // chain:"0x4", 
     // address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1'
   };
-  // if (accountHash) options.address = accountHash;    //No Dice... :(
-  options.address = accountHash ? accountHash : account;    //No Dice... :(
+  options.address = accountHash ? accountHash : account;
   if(props?.match?.params?.chain) options.chain = props.match.params.chain;
   const { NFTCollections, NFTpersonas } = useNFTCollections(options);
 
@@ -142,8 +129,8 @@ function NFTCollections(props) {
   }//testFunc()
   // testFunc();
 
- 
   
+  // (process.env.NODE_ENV==='development')
 
   //style={styles.NFTs}
   return (
@@ -159,7 +146,8 @@ function NFTCollections(props) {
                 {/* <Breadcrumb.Item key="1">Home</Breadcrumb.Item> */}
                 {accountHash && <Breadcrumb.Item key="2">
                   <Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>
-                    {accountHash == account ? "My Collections" : "NFT Collections"}
+                    {accountHash === account ? "My Collections" : "NFT Collections"}
+                    {/* {console.warn("[TEST] Account Hash", {account, accountHash, user})} */}
                     {/* for <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
                   </Link>
                 </Breadcrumb.Item>}
@@ -167,21 +155,21 @@ function NFTCollections(props) {
                 {/* <Breadcrumb.Item key="4"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>SELECT</Link></Breadcrumb.Item> */}
                 {/* <Breadcrumb.Item key="4">Post</Breadcrumb.Item> */}
               </Breadcrumb>
+              {!collectionHash && 
               <h2>
-
-              {accountHash ? 
-                <>
+                {accountHash 
+                ? <>
                   {accountHash}'s NFTs
                   {/* <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
                 </>
-                : 
-                <>
-                {collectionHash 
-                ? <>Private Space for {NFTCollections[collectionHash].name}</>
-                : <>My NFTs</>
-                }
+                : <>
+                  {collectionHash 
+                    ? <>Private Space for {NFTCollections[collectionHash].name}</>
+                    : <>My NFTs</>
+                  }
                 </>}
               </h2>
+              }
               </>
             }
             {!collectionHash && <h4 className="subheading">{Object.keys(NFTCollections).length} Collections</h4>}
@@ -204,9 +192,9 @@ function NFTCollections(props) {
                     {/* <p>{collection.owned ? 'Owned' : 'Not Owned'}</p> */}
                     <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
                       <h2 className="title">
-                        <span className="debug">{collection.contract_type}</span> 
                         <Link key={collection.hash+'Link'} to={dest}>
                            Collection: {__.sanitize(collection.name)} ({collection.symbol})
+                           <span className="debug">[{collection.contract_type}]</span> 
                         </Link> 
                       </h2>
                       <div className="middle">

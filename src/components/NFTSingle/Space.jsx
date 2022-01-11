@@ -2,30 +2,25 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
-import { FireTwoTone } from '@ant-design/icons';
+import { FireTwoTone, StopOutlined } from '@ant-design/icons';
 // import { Skeleton, Image, Form, Input, Button, Checkbox } from "antd";
 import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip } from 'antd';
 import { useMoralisQuery } from "react-moralis";
 import VotePane from "components/Room/VotePane";
-import PersonaChanger from "components/Persona/PersonaChanger";
+// import PersonaChanger from "components/Persona/PersonaChanger";
 import PersonaHelper from "helpers/PersonaHelper";
 import { PersonaContext } from "common/context";
 import { useIsAllowed } from "hooks/useIsAllowed";
 import { CollectionContext } from "common/context";
 import __ from "helpers/__";
 import moment from 'moment';
-
-
 import { Space, Room, Comment as CommentObj } from "objects/objects";
-
-
-//TODO!! Check if Authorized to View Space
 
 /**
  * Component: SpaceView (W/Chat Room)
  */
 function SpaceView({hash, collection, NFTpersonas}) {
-  const { Moralis, isWeb3Enabled, isAuthenticated, chainId } = useMoralis();
+  const { Moralis, isWeb3Enabled, isAuthenticated, chainId, user } = useMoralis();
   const [ space, setSpace ] = useState({});
   const [ rooms, setRooms ] = useState([]);
   const [ curRoom, setCurRoom ] = useState();
@@ -91,41 +86,44 @@ function SpaceView({hash, collection, NFTpersonas}) {
    * Fetch Rooms for Current Space
    */
   useEffect(() => {
-    //Log
-    // console.log("[TEST] SpaceView() RUNNUING W/Hash:"+hash);
-    //Get Rooms for Space (by Space's hash)
-    const RoomQuery = new Moralis.Query(Room);
-    RoomQuery.equalTo("parentId", hash);  //By Hash
-    RoomQuery.limit(limit).find().then(result => {
+    if(isAuthenticated){ 
       //Log
-      console.log("Got "+result.length+" Rooms for Space:"+hash);
-      if(result && result.length > 0) {
+      // console.log("[TEST] SpaceView() RUNNUING W/Hash:"+hash);
+      //Get Rooms for Space (by Space's hash)
+      const RoomQuery = new Moralis.Query(Room);
+      RoomQuery.equalTo("parentId", hash);  //By Hash
+      RoomQuery.limit(limit).find().then(result => {
         //Log
-        // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, result); //V
-        // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, result[0].sayHi());
-        //Set Rooms
-        setRooms(result);
-      }//Found Rooms
-      /* Cancelled - Allow for No Rooms
-      else {
-        //Init Rooms
-        let roomsInit = initRooms(hash); 
-        //Set Rooms
-        // setRooms(roomsInit); //Try Without... Also Use Live Query
-        //Log
-        // console.log("[TEST] SpaceView() No Rooms Found for Space:"+hash+" --> Init Rooms", roomsInit);
-      }//No Rooms
-      */
-    });
-    //Log
-    // console.log("Moralis Query Object for Current Room: ", {hash, curRoom});
+        console.log("Got "+result.length+" Rooms for Space:"+hash);
+        if(result && result.length > 0) {
+          //Log
+          // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, result); //V
+          // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, result[0].sayHi());
+          //Set Rooms
+          setRooms(result);
+        }//Found Rooms
+        /* Cancelled - Allow for No Rooms
+        else {
+          //Init Rooms
+          let roomsInit = initRooms(hash); 
+          //Set Rooms
+          // setRooms(roomsInit); //Try Without... Also Use Live Query
+          //Log
+          // console.log("[TEST] SpaceView() No Rooms Found for Space:"+hash+" --> Init Rooms", roomsInit);
+        }//No Rooms
+        */
+      });
+      //Log
+      // console.log("Moralis Query Object for Current Room: ", {hash, curRoom});
+    }//Authenticated
+    else setRooms([]);
   }, [hash]);
  
   //Log
-  console.log("SpaceView() For collection:", {collection, rooms});
-  console.warn("[DEV] Room list Collapse", curRoom)
+  // console.log("SpaceView() For collection:", {collection, rooms});
+  // console.warn("[DEV] Room list Collapse", curRoom);
 
-  //Validate  
+  //Validate
   // if(collection.contract_type!=="ERC1155") return <div>Unsupported Collection Type:'{collection.contract_type}'</div>;   //It's a mess out there, ERC721 0xcc14dd8e6673fee203366115d3f9240b079a4930 Contains Multiple NFTs (All Have amount=1)
   // if(!space) return <div className="loading">...LOADING SPACE...</div>;    //Enable
   
@@ -140,47 +138,65 @@ function SpaceView({hash, collection, NFTpersonas}) {
     {collection => (
     <Skeleton active loading={!space}>
       <div className="space">
+
+          {/* 
           {NFTpersonas && 
           <div className="personas">
-            {/* {console.warn("[TEST] NFTCollection() This NFTpersona", NFTpersonas, "First:", NFTpersonas[0])} */}
             <PersonaChanger persona={NFTpersonas[0]} personas={NFTpersonas}/>
           </div>
-          }
-          <h2> Private Space for {collection.name}</h2>
+          } 
+          */}
+
+          <h1> Private Space for {collection.name}</h1>
           {/* <h4>[Addr:{collection.hash}]</h4> */}
           {/* <span key="typs">Type: {collection.contract_type}</span> */}
           {/* <span key="symbol">Symbol: {collection.symbol}</span> */}
           {/* TODO: Add Field: Creator, Total No. of Items, */}
-          <div className={(curRoom) ? 'room_list single' : 'room_list'}>
-          {(rooms && rooms.length>0) ?
-            <>
-            
-              <RoomAddForm parentId={collection.hash} collection={collection} />
 
-              <Collapse accordion onChange={(selected) => setCurRoom(selected)}>
-                {/* collapsible="disabled" */}
-                {rooms.map((room, index) => (
-                  <Collapse.Panel header={<RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />} key={room.id} showArrow={false} className="item">
-                      <ShowComments room={room} />
-                      <RoomAddForm parent={room} parentId={room.id} collection={collection} title="Add Comment"/>
-                  </Collapse.Panel>
-                ))}
-              </Collapse>
-            </>
-            :
-            <SpaceEmpty collection={collection} />
-            } 
-            {/* Chat Rooms */}
-            {/* <RoomPage hash collection /> */}
-            {/* <RoomEntrance hash collection /> */}
-            {/* {roomsTest && roomsTest.map((room, index) => (<RoomEntrance hash collection room key={collection.hash} />))} */}
-            {/* {(rooms && rooms.length>0) ? rooms.map((room, index) => (<RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />)) : <SpaceEmpty collection={collection} />} */}
-          </div>
-          <ShowMore />
+          {(isAllowed || process.env.NODE_ENV==='developmentX') ? <>
+            <div className={(curRoom) ? 'room_list single' : 'room_list'}>
+              {(!isAllowed && process.env.NODE_ENV==='development') && <span className="debug" style={{float:'right'}}>[NOT ALLOWED]</span>}
+            {(rooms && rooms.length>0) ?
+              <div className="allowed">
+              
+                <RoomAddForm parentId={collection.hash} collection={collection} />
+
+                <Collapse accordion onChange={(selected) => setCurRoom(selected)}>
+                  {/* collapsible="disabled" */}
+                  {rooms.map((room, index) => (
+                    <Collapse.Panel header={<RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />} key={room.id} showArrow={false} className="item">
+                        <ShowComments room={room} />
+                        <RoomAddForm parent={room} parentId={room.id} collection={collection} title="Add Comment"/>
+                    </Collapse.Panel>
+                  ))}
+                </Collapse>
+                <ShowMore />
+              </div>
+              :
+              <SpaceEmpty collection={collection} />
+              } 
+              {/* Chat Rooms */}
+              {/* <RoomPage hash collection /> */}
+              {/* <RoomEntrance hash collection /> */}
+              {/* {roomsTest && roomsTest.map((room, index) => (<RoomEntrance hash collection room key={collection.hash} />))} */}
+              {/* {(rooms && rooms.length>0) ? rooms.map((room, index) => (<RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />)) : <SpaceEmpty collection={collection} />} */}
+            </div>
+          </>
+          : <div className="disallowed">
+              {/* <h2>Private Space</h2> */}
+              <h3>This space is only open for {__.sanitize(collection.name)} NFT holders.</h3>
+              
+              {user 
+              ? <p>To Enter this space you need to own an NFT from this collection</p>
+              : <p>To Enter this space please sign-in with an account that owns an NFT from this collection</p>
+              }
+              {/* <div style={{textAlign:'center'}}><StopOutlined style={{fontSize:'9em'}} /></div> */}
+            </div>
+          }
           <div className="clearfloat"></div>
       </div>
     </Skeleton>
-    )} 
+    )}
     </CollectionContext.Consumer> 
   );
 }//SpaceView()
@@ -194,7 +210,7 @@ export default SpaceView;
   return(
     <div className="SpaceEmpty">
       {/* <div>Loading Rooms...</div> */}
-      <p key="R1">Congradulations! You're the first person in this Space</p>
+      <p key="R1">Congratulations! You're the first person in this Space</p>
       <p key="R2">Why don't you go ahead and light up a new bonfire for your {__.sanitize(collection.name)} NFT buddies</p>
       <RoomAddForm parentId={collection.hash} collection={collection} />
     </div>
@@ -243,7 +259,6 @@ function RoomEntrance({hash, collection, room}) {
     </div>
   );
 }//RoomEntrance()
-
 
 /**
  * Component - Show More Button

@@ -8,6 +8,10 @@ import { MoralisDappProvider } from "./providers/MoralisDappProvider/MoralisDapp
 import { PersonaContext } from "common/context";
 import { useMoralis } from "react-moralis";
 
+// import { Provider } from 'react-redux'
+// import store from './store'
+
+
 /** Get your free Moralis Account https://moralis.io/ */
 
 const APP_ID = process.env.REACT_APP_MORALIS_APPLICATION_ID;
@@ -24,7 +28,9 @@ const Application = () => {
       <MoralisProvider appId={APP_ID} serverUrl={SERVER_URL}>
         {/* <PersonaContext.Provider value={{persona, setPersona}}> */}
           <MoralisDappProvider>
-            <App isServerInfo />
+            {/* <Provider store={store}> */}
+              <App isServerInfo />
+            {/* </Provider> */}
           </MoralisDappProvider>
         {/* </PersonaContext.Provider> */}
       </MoralisProvider>

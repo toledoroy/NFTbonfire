@@ -514,6 +514,10 @@
     /* height: calc(100vh - 320px); */
     display: flex;
     flex-grow: 1;
+    .disallowed{
+        margin-top:10px;
+        line-height: 1.8em;
+    }
 }
 .space_container:nth-child(odd) { animation-duration: 0.6s; /* So they look staggered */ }
 .SpaceEmpty p { margin:10px 0; }

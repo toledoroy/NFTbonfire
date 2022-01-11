@@ -17,7 +17,7 @@ export const useIsAllowed = (props) => {
  
     
   useEffect(() => { /* Check if Account Owns Any of These Assets */
-    if(hash && isWeb3Enabled) {
+    if(hash && isWeb3Enabled && user && account){
       //Fetch Balance
       NFTHelper.getBalance(Moralis, account, hash, chain).then(balance => {
         //Log
@@ -34,15 +34,17 @@ export const useIsAllowed = (props) => {
           console.warn("isAllowed() is User Allowed:"+res, {user, params, account });
       })
       .catch(err => {
-          console.error("isAllowed() is User Allowed -- matchUserNFT Failed:", {user, err, params, account });
+          console.error("isAllowed() is User Allowed Failed:", {user, err, params, account });
       });
       
-    }else{
-      //Nothing Selected -- Allow to all
-      setIsAllowed(true);
-      return;
     }
-  }, [hash, isWeb3Enabled, chain, account]);
+    else{
+      //Nothing Selected -- Allow to all
+      // setIsAllowed(true);
+      // return;
+      setIsAllowed(false);
+    }
+  }, [hash, isWeb3Enabled, chain, account, user]);
 
   return { isAllowed };
 }//useIsAllowed()
