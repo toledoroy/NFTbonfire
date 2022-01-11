@@ -891,7 +891,9 @@ export default PagePersona;
                     // label="Handle"
                     rules={[
                         { validator, message: 'Sorry, handle is already Taken',},
-                        // {required: true, message: "Oops, You forgot to enter a handle",},
+                        // {required: true, message: "Oops, You forgot to enter a handle",},    //[X] Allow Empty
+                        { validator: (rule, value) => (value.match(/^[0-9a-zA-Z]+$/) !== null), message: 'Only english letters and numbers are supported',},
+                        { validator: (rule, value) => (value.length >= 5), message: 'Handles must be at least 5 characters long',},
                     ]}
                     >
                     <Input prefix="@" placeholder="handle" name="handle" defaultValue={persona.get('handle')}
