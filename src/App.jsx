@@ -3,6 +3,7 @@ import { useMoralis } from "react-moralis";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import Account from "components/Account/Account";
 import Chains from "components/Chains";
+import Homepage from "components/content/Homepage";
 import MenuItems from "components/MenuItems";
 import { Layout } from "antd";
 import "antd/dist/antd.css";
@@ -112,6 +113,7 @@ const App = ({ isServerInfo }) => {
           {/*<Redirect to="/quickstart" />*/}
           {/* <Skeleton loading={!isWeb3Enabled}> */}
             <Switch>
+              {/*               
               <Route
                 exact
                 path="/"
@@ -119,7 +121,7 @@ const App = ({ isServerInfo }) => {
                     return (<Redirect to="/nftCollections" />)
                 }}
               />
-              
+               */}
               {/* <Route path="/quickstart"><QuickStart isServerInfo={isServerInfo} /></Route> */}
               {/*
               <Route path="/1inch">
@@ -136,6 +138,7 @@ const App = ({ isServerInfo }) => {
                 </Tabs>
               </Route>
               */}
+              <Route exact path="/"><Homepage /></Route>
               <Route path="/wallet"><Wallet /></Route>
               <Route path="/erc20balance"><ERC20Balance /></Route>
               <Route path="/onramp"><Ramper /></Route>
