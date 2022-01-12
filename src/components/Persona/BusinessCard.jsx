@@ -3,8 +3,8 @@ import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import { PersonaContext } from "common/context";
 
 // import { Link } from "react-router-dom";
-// import { Form, Input, Button, Select, InputNumber } from 'antd';
-import { Image, Avatar } from 'antd';
+// import { Image, Form, Input, Select, InputNumber } from 'antd';
+import { Avatar, Button } from 'antd';
 // import { Row, Col } from 'antd';
 // import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 // import { Space, Cascader } from 'antd';
@@ -23,7 +23,7 @@ import { IPFS } from "helpers/IPFS";
     // const { Moralis, setUserData, userError, isUserUpdating, user } = useMoralis();
     const metadata = receivedMeta ? receivedMeta : persona.get('metadata');
     let image = PersonaHelper.getImage(persona);
-    let coverImage = metadata?.cover ? IPFS.resolveLink(metadata.cover) : "https://images.unsplash.com/photo-1625425423233-51f40e90da78?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
+    // let coverImage = PersonaHelper.getCover(persona);
     let link = PersonaHelper.getLink(persona);
     /*
     //Initial Metadata State
@@ -70,8 +70,11 @@ import { IPFS } from "helpers/IPFS";
             <div className="bottom">
                 {(props.actions!==false) && <div className="actions flex">
                     {/* <Link key="link" to={{ pathname:link }} className="inner flex">View</Link> */}
-                    <a key="a" href={link} className="inner flex">View</a>
-                    <button className="button" onClick={(event) => { event.preventDefault(); setPersona(persona);}}>Use</button>
+                    <a key="aView" href={link} className="inner flex">
+                        <Button className="button">view</Button>
+                    </a>
+                    <Button className="button" onClick={(event) => { event.preventDefault(); setPersona(persona);}}>use</Button>
+                    {/* <a key="aUse" onClick={(event) => { event.preventDefault(); setPersona(persona); return false;}} className="inner flex">use</a> */}
                 </div>}
             </div>
         </div>
