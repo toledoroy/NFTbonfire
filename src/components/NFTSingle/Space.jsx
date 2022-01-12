@@ -159,7 +159,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
             {(rooms && rooms.length>0) ?
               <div className="allowed">
               
-                <RoomAddForm parentId={collection.hash} collection={collection} />
+                {!curRoom && <RoomAddForm parentId={collection.hash} collection={collection} />}
 
                 <Collapse accordion onChange={(selected) => setCurRoom(selected)}>
                   {/* collapsible="disabled" */}

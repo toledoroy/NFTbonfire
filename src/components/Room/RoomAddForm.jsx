@@ -13,13 +13,14 @@ import { PersonaContext } from "common/context";
 /**
  * Component: Add New Post
  */
- function RoomAddForm({parent, parentId, title}) {
+ function RoomAddForm(props) {
+   const { parent, parentId, title } = props;
     const { Moralis, account, chainId, user, isWeb3Enabled } = useMoralis();
     const { persona } = useContext(PersonaContext);
     //Objects
     // const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
     // const { isSaving, error, save:savePost } = useNewMoralisObject('post');
-    const history = useHistory();
+    // const history = useHistory();
     
     //Validate
     if(!parentId) throw new Error("RoomAddForm() Missing Parent");
@@ -90,10 +91,9 @@ import { PersonaContext } from "common/context";
     };//onFinish()
   
     return(
-      <div className="room_add">  
+      <div className={"room_add "+props.className}>  
         <h3>{title ? title : 'Start a new bonfire'}</h3>
         {/* <p>Add a new Room to this Space!</p> */}
-        
         <Comment
           avatar={<Avatar src={PersonaHelper.getImage(persona)} alt={persona?.get('metadata').name} />}
           content={
