@@ -29,7 +29,7 @@ export default function AssetSelector(props) {
   }
 
   return (
-    <Select onChange={handleChange} size="large" style={style} className={props.className}>
+    <Select onChange={handleChange} size="large" style={style}>
       {fullBalance &&
         fullBalance.map((item, key) => (
           <Select.Option value={item["token_address"]} key={item["token_address"]}>

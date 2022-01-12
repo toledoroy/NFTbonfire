@@ -138,7 +138,7 @@ function TokenSend(props) {
           <div style={styles.textWrapper}>
             <Text strong>Asset:</Text>
           </div>
-          <AssetSelector setAsset={setAsset} style={{ width: "100%" }} className="inputEl" />
+          <AssetSelector setAsset={setAsset} style={{ width: "100%", borderRadius:'12px' }} className="inputEl" />
         </div>
         <div style={styles.select}>
           <div style={styles.textWrapper}>
