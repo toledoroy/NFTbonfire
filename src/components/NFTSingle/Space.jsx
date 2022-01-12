@@ -164,9 +164,11 @@ function SpaceView({hash, collection, NFTpersonas}) {
                 <Collapse accordion onChange={(selected) => setCurRoom(selected)}>
                   {/* collapsible="disabled" */}
                   {rooms.map((room, index) => (
-                    <Collapse.Panel header={<RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />} key={room.id} showArrow={false} className="item">
-                        <ShowComments room={room} />
-                        <RoomAddForm parent={room} parentId={room.id} collection={collection} title="Add Comment"/>
+                    <Collapse.Panel header={
+                        <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} selected={(curRoom===room.id)} />
+                      } key={room.id} showArrow={false} className="item">
+                      <ShowComments room={room} />
+                      <RoomAddForm parent={room} parentId={room.id} collection={collection} title="Add Comment"/>
                     </Collapse.Panel>
                   ))}
                 </Collapse>
@@ -220,12 +222,14 @@ export default SpaceView;
 /**
  * Component: Link To Room
  */
-function RoomEntrance({hash, collection, room}) {
+function RoomEntrance(props) {
+  const { hash, collection, room, selected:isSelected } = props;
   let image = PersonaHelper.getImage(room.get('persona'));
-  console.warn("[TEST] RoomEntrance() Room (Persona) Image:"+image, {hash, collection, room});
-
+  console.warn("[TEST] RoomEntrance() Room (Persona) Image:"+image, props);
+  let className = "room_entrance";
+  if(isSelected) className += " selected";
   return (
-    <div className="room_entrance">
+    <div className={className}>
       <Badge.Ribbon placement="start" text="0x...AAA">
         <div className="image">
           <Avatar src={image} style={{ height:'var(--avatarMD)', width:'var(--avatarMD)'}}>
@@ -241,11 +245,11 @@ function RoomEntrance({hash, collection, room}) {
         </div>
       </Badge.Ribbon>
       <div className="content">
-        <h3>
+        <h2>
           <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</Link>
-        </h3>
+        </h2>
         {/* <span key="id">ID: {room.id}</span> */}
-        <p key="desc">{room.get('text')}</p>
+        {isSelected && <p key="desc">{room.get('text')}</p>}
         {/* <p key="created">Created: {room?.createdAt}</p> */}
         {/* <p key="updated">Last Updated: {room?.updatedAt}</p> */}
         {/* <p key="">Total Items: {room.total_items}</p> */}
