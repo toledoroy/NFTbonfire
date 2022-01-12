@@ -31,7 +31,7 @@ export const useIsAllowed = (props) => {
       /* ServerSide Validation  - use Hook */
     //   let params = {userId:user.id, hash:hash, chainId, account};
       let params = { hash, chain };
-      Moralis.Cloud.run("useIsAllowed", params).then(res => {
+      Moralis.Cloud.run("isAllowed", params).then(res => {
           console.warn("useIsAllowed() is User Allowed:"+res, {user, params, account });
       })
       .catch(err => {
