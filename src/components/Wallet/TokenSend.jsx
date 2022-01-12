@@ -28,7 +28,7 @@ const styles = {
     backgroundColor: "transparent",
   },
   select: {
-    marginTop: "20px",
+    marginBottom: "20px",
     display: "flex",
     alignItems: "center",
   },
@@ -155,7 +155,7 @@ function TokenSend(props) {
           type="primary"
           size="large"
           loading={isPending}
-          style={{ width: "100%", marginTop: "25px" }}
+          style={{ width: "100%" }}
           onClick={() => transfer()}
           disabled={!tx}
           title={"Send Funds to "+receiver}
