@@ -16,7 +16,7 @@ import Page404 from "components/Page404";
 import TokenSend from "components/Wallet/TokenSend";
 
 //Ant Design
-import { LoadingOutlined, CameraFilled, PlusOutlined, PlusCircleOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
+import { LoadingOutlined, CameraFilled, PlusOutlined, PlusCircleOutlined, DeleteOutlined, DownOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Avatar, Modal, Skeleton, Collapse, Tabs } from 'antd';
 import { Form, Input, Select } from 'antd';
 // import { Row, Col, Form, Space, Cascader } from 'antd';
@@ -315,7 +315,10 @@ function PagePersona(props) {
 
     //Profile Image
     let image = PersonaHelper.getImage(persona);
-    let coverImage = PersonaHelper.getCover(persona);
+    // let coverImage = PersonaHelper.getCover(persona);
+    // let image = metadata.image;
+    let coverImage = metadata?.cover ? IPFS.resolveLink(metadata?.cover) : '';  //From Metadata, So it's Changable
+    
     let size = 200; //Avater Circumference
     if(!isLoading && metadata===null){
         //Log
@@ -328,10 +331,14 @@ function PagePersona(props) {
         <div className="persona framed">
             {/* <Skeleton loading={!isWeb3Enabled}></Skeleton> */}
             <div className="header">
+                <div className={coverImage ? "cover_wrapper" : "cover_wrapper noCover"}>
                 {coverImage 
-                ? <div className="cover" style={{background:"url("+coverImage+")"}}></div>
+                // ? <div className="cover" style={{background:"url("+coverImage+") ", backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center',}}></div>
+                ? <div className="cover" style={{background:"url("+coverImage+") center center / cover no-repeat"}}></div>
                 : <div className="cover"></div>
                 }
+                {isEditMode && <CoverUpload metadata={metadata} setMetadata={updateMetadata} imageUrl={coverImage} />}
+                </div>
             </div>
             <div className="main" style={{marginTop:0}}>
             {/* <div className="persona-body"> */}
@@ -512,21 +519,21 @@ function PagePersona(props) {
                             <Skeleton loading={isLoading} active >
                                 {metadata?.name && <h1 className="name">{metadata.name}</h1>}
                                 {!PersonaHelper.isNew(persona) && <Handle persona={persona} isEditMode={isEditMode} />}
-                                {metadata?.description && <p className="description">
-                                    <span dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(metadata.description))}}></span>
-                                </p>}
-                                {metadata?.location?.name &&
-                                <div className="flex" style={{marginTop:5}}>
+                                {metadata?.location &&
+                                <div className="flex" style={{marginBottom:5}}>
                                     <div className="location">
                                         <i className="bi bi-geo-alt"></i>
-                                        {metadata.location.name}
+                                        {metadata.location}
                                     </div>
                                 </div>
                                 }
-                                {metadata?.purpose && <p className="purpose">
-                                    <h3>purpose</h3>
-                                    <span dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(metadata.purpose))}}></span>
+                                {metadata?.description && <p className="description">
+                                    <span dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(metadata.description))}}></span>
                                 </p>}
+                                {metadata?.purpose && <div className="purpose">
+                                    <h3>purpose</h3>
+                                    <p dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(metadata.purpose))}}></p>
+                                </div>}
                             </Skeleton>
                             }
                         </div>
@@ -741,14 +748,13 @@ export default PagePersona;
     )
 }//AccountAddModal()
 
-
 /**
  * Component: Avatar Changable Upload
  */
  function AvatarChangable(props){
+    const { metadata, setMetadata, imageUrl, size } = props;
     const { Moralis } = useMoralis();
     const [ imageLoading, setImageLoading ] = useState(false);
-    const { metadata, setMetadata, imageUrl, size } = props;
     const updateMetadata = setMetadata;
 
     /**
@@ -764,11 +770,11 @@ export default PagePersona;
         //Set Loading
         setImageLoading(true);
         //Always False - Manual Upload Via handleChangeFile()
-        return false;   
+        return false;
     }
 
     /**
-     * File Upload
+     * File Upload 
      */
      const handleChangeFile = info => {
         // console.log("[TEST] File Upload handleChangeFile() Status:"+info?.file?.status, info);
@@ -778,10 +784,7 @@ export default PagePersona;
                 // IPFS.saveImageToIPFS(Moralis, info.file).then(result => {
                 IPFS.saveImageToIPFS(Moralis, info.file).then(url => {
                     console.log("[TEST] File Upload handleChangeFile() IPFS Hash:", url);
-                    //Set New Image URL
-                    // setImageUrl(url);
                     //Set to Metadata
-                    // setMetadata({...metadata, image:url});
                     updateMetadata({...metadata, image:url});
                     //Done Loading
                     setImageLoading(false);
@@ -829,6 +832,84 @@ export default PagePersona;
 }//AvatarChangable()
 
 
+/**
+ * Component: Avatar Changable Upload
+ */
+ function CoverUpload(props){
+    const { metadata, setMetadata, imageUrl, size } = props;
+    const { Moralis } = useMoralis();
+    const [ imageLoading, setImageLoading ] = useState(false);
+    const updateMetadata = setMetadata;
+
+    /**
+     * File Upload Validation
+     */
+     function beforeUpload(file) {
+        //Validations
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/svg+xml';
+        if (!isJpgOrPng) message.error('Sorry, only JPG/PNG/GIF files are currently supported');
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) message.error('Image must smaller than 2MB!');
+        // return isJpgOrPng && isLt2M;
+        //Set Loading
+        setImageLoading(true);
+        //Always False - Manual Upload Via handleChangeFile()
+        return false;
+    }
+
+    /**
+     * File Upload 
+     */
+     const handleChangeFile = info => {
+        // console.log("[TEST] handleChangeFile() File Upload Status:"+info?.file?.status, info);
+        try{
+            if (info.file.status === undefined) {
+                // saveImageToIPFS(info.file).then(result => {
+                // IPFS.saveImageToIPFS(Moralis, info.file).then(result => {
+                IPFS.saveImageToIPFS(Moralis, info.file).then(url => {
+                    //Set to Metadata
+                    updateMetadata({...metadata, cover:url});
+                    //Done Loading
+                    setImageLoading(false);
+                    //Log
+                    console.log("[TEST] handleChangeFile() Cover Image File Upload - IPFS Hash:", url, metadata);
+                });
+            }//Manual Upload
+            else if (info.file.status === 'error') {
+                console.error("handleChangeFile() File Upload Error:", info.file.error, info);
+            }   
+            else console.error("handleChangeFile() File Upload Error -- Unhandled Status:"+info.file.status, info);
+        }catch(error) {
+            //log
+            console.error("[CAUGHT] handleChangeFile() File Upload Error:", error, info);
+        }
+    }//handleChangeFile()
+
+    return (
+        <div className="cover-uploader">
+           <Upload
+            name="cover"
+            // listType="picture-card"
+            showUploadList={false}
+            // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"    //Disabled
+            multiple={false}
+            style={{position:'relative'}}
+            beforeUpload={beforeUpload}
+            onChange={handleChangeFile}
+            >
+            {imageLoading 
+            ?   <div className="in_progress" style={{textAlign:'center'}}>
+                    <LoadingOutlined /> 
+                    <div className="explanation">Uploading Image to IPFS</div>
+                </div>
+            :   <Button icon={<UploadOutlined />}>Upload New Cover Photo</Button>    
+            }
+            </Upload>
+        </div>
+    );
+}//CoverUpload()
+
+
 
 /**
  * Component: Handle 
@@ -842,31 +923,20 @@ export default PagePersona;
     const [status, setStatus] = useState(null);
     const [newHandle, setNewHandle] = useState(persona.get('handle'));
     const isNew = () => (!persona.get("handle"));
+    
     /**
-     * Check For Handle Vacancy
+     * Validator: Check For Handle Vacancy
      * @param {*} handle 
      * @returns 
-     * /
-    const isHandleFree = async (handle) => {
-        // return Moralis.Cloud.run("isHandleFree", {handle});
-        
-        try{
-            let ret = await Moralis.Cloud.run("isHandleFree", {handle});
-            console.warn("isHandleFree()", {handle, ret});
-            // if(ret) return true;
-            return ret;
-        }catch(error) {
-            console.error("[CAUGHT] isHandleFree()", error);
-            return false;
-        }
-    }//addAccount()
-    */
-    const validator = async (rule, handle) => { 
+     */
+    const isHandleFree = async (rule, handle) => { 
+        // console.warn("isHandleFree() Running", {handle, rule});
         if(handle===undefined || handle===null || handle==='' || handle === persona.get("handle")) return true;
         // let ret = await isHandleFree(value);
         let ret = await Moralis.Cloud.run("isHandleFree", {handle});
+        // console.warn("isHandleFree()", {handle, ret});
         if(!ret) throw new Error("Handle Already Taken");
-    }//validator()
+    }//isHandleFree()
 
     /**
      * Save Handle
@@ -907,7 +977,11 @@ export default PagePersona;
         <div className="handle">
             {(!isEditMode) && <>
                 {persona.get('handle') && <span> @ {persona.get('handle')}</span>}
-                {isOwned && <Button variant="contained" size="small" color="primary" onClick={()=>{setIsEditMode(true)}}>{isNew() ? 'Set Handle' : 'Change'}</Button>}
+                {isOwned && 
+                    isNew() 
+                    ? <Button variant="contained" size="small" color="primary" onClick={()=>{setIsEditMode(true)}}>Claim Handle</Button>
+                    : <Button variant="contained" size="small" onClick={()=>{setIsEditMode(true)}} style={{background: 'none', border:'none'}}><i className="bi bi-pencil-fill"></i></Button>
+                }
             </>}
             {(isOwned && isEditMode) && <>
             <Form name="handleChange" className="flex" onFinish={(values) => saveHandle(values.handle)} size="small">
@@ -916,10 +990,10 @@ export default PagePersona;
                     name="handle"
                     // label="Handle"
                     rules={[
-                        { validator, message: 'Sorry, handle is already Taken',},
+                        { validator: isHandleFree, message: 'Sorry, handle is already Taken',},
                         // {required: true, message: "Oops, You forgot to enter a handle",},    //[X] Allow Empty
-                        { validator: (rule, value) => (value.match(/^[0-9a-zA-Z]+$/) !== null), message: 'Only english letters and numbers are supported',},
-                        { validator: (rule, value) => (value.length >= 5), message: 'Handles must be at least 5 characters long',},
+                        { validator: async (rule, value) => { if(value.match(/^[0-9a-zA-Z]+$/)===null) throw new Error("Handle is too short")}, message: 'Only english letters and numbers are supported',},
+                        { validator: async (rule, value) => { if(value.length > 0 && value.length < 4) throw new Error("Handle is too short")}, message: 'Handles must be at least 4 characters long',},
                     ]}
                     >
                     <Input prefix="@" placeholder="handle" name="handle" defaultValue={persona.get('handle')}
@@ -1229,7 +1303,7 @@ export default PagePersona;
                 
                 <div className="buttons">
                     {(stage==='SavingToIPFS') && <div className="saving">
-                        <span>Please wait while saving Metadata to IPFS</span>
+                        <span>Please wait while saving the metadata to IPFS</span>
                         <Spin style={{display:'block'}} />
                     </div>}
                     {(stage==='MintToken') && <div className="saving">
@@ -1237,7 +1311,7 @@ export default PagePersona;
                         <Spin style={{display:'block'}} />
                     </div>}
                     {(stage==='UpdateToken') && <div className="saving">
-                        <span>Please confirm update request on your web3 wallet</span>
+                        <span>Please confirm the update request on your web3 wallet</span>
                         <Spin style={{display:'block'}} />
                     </div>}
                     {(stage===null) && <Form.Item 

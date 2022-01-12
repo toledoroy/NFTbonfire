@@ -242,7 +242,7 @@ Moralis.Cloud.define("personaRegisterById", async (request) => {
     let isFree = await isHandleFree(handle);
     if(!isFree) throw new Error("Handle:'"+handle+"' is already owned");
     if(handle.match(/^[0-9a-zA-Z]+$/) === null) throw new Error("Handle:'"+handle+"' can't contain special characters");
-    if(handle.length < 5) throw new Error("Handle:'"+handle+"' is too short");
+    if(handle.length < 4) throw new Error("Handle:'"+handle+"' is too short");
     //Set Persona's Handle
     persona.save({handle}, {useMasterKey: true});
     //Log
