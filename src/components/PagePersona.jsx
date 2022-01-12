@@ -365,7 +365,7 @@ function PagePersona(props) {
                                             );
                                             //collapsible="disabled" showArrow={false}
                                         return (
-                                            <Panel header={headerContent} key={network} collapsible="disabled" showArrow={false} className="item">
+                                            <Panel header={headerContent} key={network} collapsible="disabled" showArrow={false} className="item lightUp">
                                                 <p>[Content]</p>
                                             </Panel>
                                         );
@@ -388,7 +388,7 @@ function PagePersona(props) {
                                                 <span className="handle">{link.title}</span>
                                             </a>
                                         </>
-                                    } key={index} collapsible="disabled" showArrow={false}  className="item">
+                                    } key={index} collapsible="disabled" showArrow={false}  className="item lightUp">
                                     </Panel>
                                 ))}
                                 </Collapse>
