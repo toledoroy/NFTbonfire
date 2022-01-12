@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
-// import { useNFTCollections } from "hooks/useNFTCollections";
-// import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 // import { Link } from "react-router-dom";
 // import PersonaEdit from "components/Persona/PersonaEdit";
 import { PersonaHelper } from "helpers/PersonaHelper";
@@ -21,8 +19,7 @@ import TokenSend from "components/Wallet/TokenSend";
 import { LoadingOutlined, CameraFilled, PlusOutlined, PlusCircleOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 import { Button, Avatar, Modal, Skeleton, Collapse, Tabs } from 'antd';
 import { Form, Input, Select } from 'antd';
-// import { Form, Space, Cascader } from 'antd';
-// import { Row, Col } from 'antd';
+// import { Row, Col, Form, Space, Cascader } from 'antd';
 import { Card, Dropdown, Menu, Upload, message } from 'antd';
 import { Popconfirm, Spin, Row, Col } from 'antd';
 import __ from "helpers/__";
@@ -53,24 +50,31 @@ function PagePersona(props) {
     const { Moralis, isWeb3Enabled, isAuthenticated, userError, user, chainId, account } = useMoralis();     //isUserUpdating
     // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMode ] = useState(false);
-    const [ metadata, setMetadata ] = useState(null);
-    const [ isLoading, setIsLoading ] = useState(true);
-    // const [ isLoading, setIsLoading ] = useState(false); //Shows a 404
     const [ isOwned, setIsOwned ] = useState(false);
     const [ persona, setPersonaActual ] = useState( new Persona() );
     const [ isAddAccModalVisible, setIsAddAccModalVisible ] = useState(false);
     const { loadMetadata } = usePersona();   
+    const [ metadata, setMetadata ] = useState(null);
+    // const [ isLoading, setIsLoading ] = useState(true);     //Stuck in loading state if already loaded...
+    // const [ isLoading, setIsLoading ] = useState(false); //Shows a 404
+    const [ isLoading, setIsLoading ] = useState((persona?.get()===undefined)); 
     //File Upload
     const [ imageUrl, setImageUrl ] = useState(metadata?.image);
     // const [ imageLoading, setImageLoading ] = useState(false);
 
     //https://github.com/MoralisWeb3/react-moralis#usemoralisweb3api
     
-    //Cloud Functions
+    //Cloud Function Examples
     // const { data, error, isLoading } = useMoralisCloudFunction("topScores", { limit, });
     // const { fetch, data, error, isLoading } = useMoralisCloudFunction("topScores", {limit}, { autoFetch: false } );  //Trigger Manually (via fetch func.)
       
     // const [form] = Form.useForm();
+
+    useEffect(() => async () => {
+        console.warn("[TEST] PagePersona() Reloading");
+    });
+    console.warn("[TEST] PagePersona() Persona:", persona);
+
 
     /**
      * Set Persona Wrapper Function
@@ -79,6 +83,7 @@ function PagePersona(props) {
        setPersonaActual(persona);
        setIsOwned(String(persona.get('owner')).toLowerCase() === account.toLowerCase());
        persona.get('metadata') && updateMetadata( persona.get('metadata') );
+
     //    console.warn("[TEST] PagePersona() Persona Owner:"+persona.get('owner')+" User ID:"+account, {persona:persona, att:persona.attributes, owned:isOwned, isOwned:(persona.get('owner') == account)});    //V
     }
    
@@ -93,10 +98,6 @@ function PagePersona(props) {
         setIsLoading(false);
     }//updateMetadata()
     
-    useEffect(() => async () => {
-        console.warn("[TEST] PagePersona() Reloading");
-    });
-
     useEffect(() => {
         //When Entering Edit More - Reload Persona from Contract
         if(isEditMode){

@@ -3,7 +3,8 @@ import { useMoralis, useNativeBalance } from "react-moralis";
 import { Image, Select } from "antd";
 import { useMemo } from "react";
 
-export default function AssetSelector({ setAsset, style }) {
+export default function AssetSelector(props) {
+  const { setAsset, style } = props;
   const { assets } = useERC20Balance();
   const { data: nativeBalance, nativeToken } = useNativeBalance();
   const { Moralis } = useMoralis();
@@ -28,7 +29,7 @@ export default function AssetSelector({ setAsset, style }) {
   }
 
   return (
-    <Select onChange={handleChange} size="large" style={style}>
+    <Select onChange={handleChange} size="large" style={style} className={props.className}>
       {fullBalance &&
         fullBalance.map((item, key) => (
           <Select.Option value={item["token_address"]} key={item["token_address"]}>

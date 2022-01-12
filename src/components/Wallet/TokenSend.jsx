@@ -119,7 +119,7 @@ function TokenSend(props) {
   }
 
   return (
-    <div style={styles.card}>
+    <div className="token_send" style={styles.card}>
       <div style={styles.tranfer}>
         {/*
         <div className="title" style={styles.header}>
@@ -138,7 +138,7 @@ function TokenSend(props) {
           <div style={styles.textWrapper}>
             <Text strong>Asset:</Text>
           </div>
-          <AssetSelector setAsset={setAsset} style={{ width: "100%" }} />
+          <AssetSelector setAsset={setAsset} style={{ width: "100%" }} className="inputEl" />
         </div>
         <div style={styles.select}>
           <div style={styles.textWrapper}>
@@ -146,6 +146,7 @@ function TokenSend(props) {
           </div>
           <Input
             size="large"
+            className="inputEl"
             prefix={<CreditCardOutlined />}
             onChange={(e) => {setAmount(`${e.target.value}`)}}
           />
