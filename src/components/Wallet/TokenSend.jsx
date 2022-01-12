@@ -42,7 +42,7 @@ const styles = {
 };
 
 function TokenSend(props) {
-  const { address:receiver } = props;
+  const { address:receiver, name } = props;
   const { Moralis } = useMoralis();
 //   const [receiver, setReceiver] = useState();
   const [asset, setAsset] = useState();
@@ -160,7 +160,7 @@ function TokenSend(props) {
           disabled={!tx}
           title={"Send Funds to "+receiver}
         >
-          Transfer
+          Send {name && <>&nbsp;to {name}</>}
         </Button>
       </div>
     </div>
