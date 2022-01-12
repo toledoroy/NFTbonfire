@@ -62,7 +62,7 @@ export const useVerifyMetadata = () => {
         })
         .catch((err) => {
             //Log
-            console.error("useVerifyMetadata.updateToken() "+err, {NFT, isWeb3Enabled, options});
+            console.error("useVerifyMetadata.updateToken() Error Caught", {err, NFT, isWeb3Enabled, options});
         });
         //Return Hooked NFT Object
         return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT ;

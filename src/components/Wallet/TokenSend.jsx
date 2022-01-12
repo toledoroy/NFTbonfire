@@ -1,5 +1,5 @@
 import { CreditCardOutlined } from "@ant-design/icons";
-import { Button, Input, notification } from "antd";
+import { Button, Input, notification, message } from "antd";
 import Text from "antd/lib/typography/Text";
 import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
@@ -41,18 +41,21 @@ const styles = {
   },
 };
 
-function Transfer() {
+function TokenSend(props) {
+  const { address:receiver } = props;
   const { Moralis } = useMoralis();
-  const [receiver, setReceiver] = useState();
+//   const [receiver, setReceiver] = useState();
   const [asset, setAsset] = useState();
   const [tx, setTx] = useState();
   const [amount, setAmount] = useState();
   const [isPending, setIsPending] = useState(false);
 
   useEffect(() => {
+    //   console.log("[TEST] SendTokens() ", { amount, receiver, asset, props });
     asset && amount && receiver ? setTx({ amount, receiver, asset }) : setTx();
   }, [asset, amount, receiver]);
 
+  /*
   const openNotification = ({ message, description }) => {
     notification.open({
       placement: "bottomRight",
@@ -63,7 +66,11 @@ function Transfer() {
       },
     });
   };
-
+  */
+  
+  /**
+   * Transfer Assets
+   */
   async function transfer() {
     const { amount, receiver, asset } = tx;
 
@@ -93,25 +100,19 @@ function Transfer() {
 
     txStatus
       .on("transactionHash", (hash) => {
-        openNotification({
-          message: "? New Transaction",
-          description: `${hash}`,
-        });
-        console.log("? New Transaction", hash);
+        // openNotification({message: "New Transaction", description: `${hash}`,});
+        message.info("Initiated Transaction", 5);
+        console.log("New Transaction", hash);
       })
       .on("receipt", (receipt) => {
-        openNotification({
-          message: "? New Receipt",
-          description: `${receipt.transactionHash}`,
-        });
-        console.log("? New Receipt: ", receipt);
+        // openNotification({message: "New Receipt", description: `${receipt.transactionHash}`,});
+        message.success("Transfer Successful", 6);
+        console.log("New Receipt: ", receipt);
         setIsPending(false);
       })
       .on("error", (error) => {
-        openNotification({
-          message: "? Error",
-          description: `${error.message}`,
-        });
+        // openNotification({message: "Error", description: `${error.message}`,});
+        message.error("Transaction Failed: " + error.message, 9);
         console.error(error);
         setIsPending(false);
       });
@@ -120,14 +121,24 @@ function Transfer() {
   return (
     <div style={styles.card}>
       <div style={styles.tranfer}>
-        <div style={styles.header}>
-          <h3>Transfer Assets</h3>
+        {/*
+        <div className="title" style={styles.header}>
+          <h3>Send</h3>
         </div>
+        */}
+        {/*!receiver &&
         <div style={styles.select}>
           <div style={styles.textWrapper}>
             <Text strong>Address:</Text>
           </div>
           <AddressInput autoFocus onChange={setReceiver} />
+        </div>
+        */}
+        <div style={styles.select}>
+          <div style={styles.textWrapper}>
+            <Text strong>Asset:</Text>
+          </div>
+          <AssetSelector setAsset={setAsset} style={{ width: "100%" }} />
         </div>
         <div style={styles.select}>
           <div style={styles.textWrapper}>
@@ -136,16 +147,8 @@ function Transfer() {
           <Input
             size="large"
             prefix={<CreditCardOutlined />}
-            onChange={(e) => {
-              setAmount(`${e.target.value}`);
-            }}
+            onChange={(e) => {setAmount(`${e.target.value}`)}}
           />
-        </div>
-        <div style={styles.select}>
-          <div style={styles.textWrapper}>
-            <Text strong>Asset:</Text>
-          </div>
-          <AssetSelector setAsset={setAsset} style={{ width: "100%" }} />
         </div>
         <Button
           type="primary"
@@ -154,12 +157,13 @@ function Transfer() {
           style={{ width: "100%", marginTop: "25px" }}
           onClick={() => transfer()}
           disabled={!tx}
+          title={"Send Funds to "+receiver}
         >
-          Transfer?
+          Transfer
         </Button>
       </div>
     </div>
   );
 }
 
-export default Transfer;
+export default TokenSend;

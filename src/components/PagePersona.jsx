@@ -15,6 +15,7 @@ import NFTCollections from "components/NFTCollections";
 import AddressInput from "components/AddressInput";
 import ChainsData from "components/Chains/ChainsData";
 import Page404 from "components/Page404";
+import TokenSend from "components/Wallet/TokenSend";
 
 //Ant Design
 import { LoadingOutlined, CameraFilled, PlusOutlined, PlusCircleOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
@@ -54,6 +55,7 @@ function PagePersona(props) {
     const [ isEditMode, setIsEditMode ] = useState(false);
     const [ metadata, setMetadata ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(true);
+    // const [ isLoading, setIsLoading ] = useState(false); //Shows a 404
     const [ isOwned, setIsOwned ] = useState(false);
     const [ persona, setPersonaActual ] = useState( new Persona() );
     const [ isAddAccModalVisible, setIsAddAccModalVisible ] = useState(false);
@@ -216,7 +218,7 @@ function PagePersona(props) {
         }
     };//initNewPersona
     
-    /** DEPRECATE ? 
+    /** DEPRECATED
      * 
      * @returns Load Default Metadata
      */
@@ -547,14 +549,16 @@ function PagePersona(props) {
                                     {/* Cancel */}
                                 </Button>}
                             </div>}
-                            {!isOwned &&
-                            <Button variant="contained" color="primary" onClick={()=>{ console.warn("SEND BUTTON PRESSED");}}
+                            {!isOwned && <>
+                            {/* <Button variant="contained" color="primary" onClick={()=>{ console.warn("SEND BUTTON PRESSED");}}
                                 style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
                                 icon={<i className="bi bi-send"></i>}
                                 // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
                                 >
                                 Send
-                            </Button>
+                            </Button> */}
+                            <TokenSend address={persona.get('owner')} />
+                            </>
                             }
                             </>
                             }
@@ -583,7 +587,7 @@ function PagePersona(props) {
                             {metadata?.accounts?.map((account, index) => (
                                 
                                 <TabPane tab={(
-                                    <span title={getChainName(account.chain)}>
+                                    <span title={getChainName(account.chain)} className={(account.address.toLowerCase()==persona.get('owner').toLowerCase()) ? 'verified' : ''}>
                                         {account.address 
                                         ? <Address icon={getChainLogo(account.chain)} copyable address={account.address} size={5} />
                                         : <span>[NO HASH]</span>
