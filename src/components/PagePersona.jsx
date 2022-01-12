@@ -406,12 +406,18 @@ function PagePersona(props) {
                                         <Input 
                                             key={network.name} 
                                             className="item" 
-                                            onChange={(e) => {
-                                                let change = {[e.target.name]: e.target.value.trim()};
+                                            onChange={(evt) => {
+                                                // let change = {[evt.target.name]: evt.target.value.trim()};
+                                                let value = evt.target.value.trim();
                                                 //Validate
-                                                if(change.includes("://")){
-                                                    console.error("[TODO] Extract Handle from Link", {value:change, name:e.target.name});
+                                                if(value.includes("://")){
+                                                    //Extract Username By URL Pattern
+                                                    let pattern = personaFields.social.network[network.name].url;
+                                                    //Remove URL Pattern        //TODO: Maybe Use Regular Expressions? 
+                                                    value = value.replace(pattern, '');
+                                                    // console.warn("[TEST] Extract Handle from Link", {value, name:evt.target.name, pattern, value);
                                                 }
+                                                let change = {[evt.target.name]: value};
                                                 //Set
                                                 setMetadata({...metadata, social:{ ...metadata.social, ...change }});
                                                 //Log
