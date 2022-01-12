@@ -24,6 +24,7 @@ import { Form, Input, Select } from 'antd';
 // import { Row, Col } from 'antd';
 import { Card, Dropdown, Menu, Upload, message } from 'antd';
 import { Popconfirm, Spin, Row, Col } from 'antd';
+import __ from "helpers/__";
 
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
@@ -508,8 +509,9 @@ function PagePersona(props) {
                             <Skeleton loading={isLoading} active >
                                 {metadata?.name && <h1 className="name">{metadata.name}</h1>}
                                 {!PersonaHelper.isNew(persona) && <Handle persona={persona} isEditMode={isEditMode} />}
-                                {/* <div className="handle">@{metadata?.username}</div> */}
-                                {metadata?.description && <q className="description">{metadata.description}</q>}
+                                {metadata?.description && <p className="description">
+                                    <span dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(metadata.description))}}></span>
+                                </p>}
                                 {metadata?.location?.name &&
                                 <div className="flex" style={{marginTop:5}}>
                                     <div className="location">
@@ -518,6 +520,10 @@ function PagePersona(props) {
                                     </div>
                                 </div>
                                 }
+                                {metadata?.purpose && <p className="purpose">
+                                    <h3>purpose</h3>
+                                    <span dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(metadata.purpose))}}></span>
+                                </p>}
                             </Skeleton>
                             }
                         </div>
@@ -1061,6 +1067,8 @@ export default PagePersona;
             //Done Saving
             setIsSaving(false);
             setStage("SUCCESS");
+            //Done Editing
+            // setIsEditMode(false);        //TODO!! Enable (After Move)
         })
         .catch(function(error) {
             message.error('Failed to save file to IPFS. '+error);

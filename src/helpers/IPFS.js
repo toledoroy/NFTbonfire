@@ -2,7 +2,8 @@
 export const IPFS = {
     
     // resolveLink(url){ return (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/"); },
-    resolveLink(url){ return (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/"); },
+    // resolveLink(url){ return (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/"); },
+    resolveLink (url){ return (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://ipfs.moralis.io:2053/ipfs/"); },   //Use Moralis on Client
 
     /** ...Needs Moralis...
      * Save JSON File to IPFS
