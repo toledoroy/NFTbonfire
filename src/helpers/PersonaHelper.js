@@ -44,6 +44,12 @@ export const PersonaHelper = {
         return IPFS.resolveLink(persona?.get('metadata')?.image) || defaultValue;
     },
 
+    getName(persona){
+        return persona?.get('metadata')?.name_first ? persona.get('metadata').name_first : persona?.get('metadata')?.name ;
+    },
+    getNameFull(persona){
+        return persona?.get('metadata')?.name;
+    },
     /**
      * Persona's Cover Image
      * @var ParseObject persona 

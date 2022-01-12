@@ -558,7 +558,7 @@ function PagePersona(props) {
                                 >
                                 Send
                             </Button> */}
-                            <TokenSend address={persona.get('owner')} name={metadata.name} />
+                            <TokenSend address={persona.get('owner')} name={PersonaHelper.getName(persona)} />
                             </>
                             }
                             </>
