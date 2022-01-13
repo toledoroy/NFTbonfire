@@ -1360,7 +1360,7 @@ export default PagePersona;
                             : <Button type="primary" htmlType="submit">Save</Button>
                             }
                             {/* <Button onClick={formReset} style={{marginLeft:'20px' }}>Reset</Button> REMOVED */}
-                            <Button variant="contained" color="primary" onClick={()=>{ reloadmetadata(); setIsEditMode(false)}}>Cancel</Button> {/*TODO: THIS BUTTON SHOULD BE HERE (But on PagePersona)*/}
+                            <Button variant="contained" color="primary" onClick={()=>{ reloadmetadata(); setIsEditMode(false)}}>Cancel</Button>
                         </Form.Item>
                     }
                 </div>
