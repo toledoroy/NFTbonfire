@@ -17,7 +17,7 @@ function MenuItems() {
       {/* <Menu.Item key="room"><NavLink to="/room/bgqJwFMexah0ZqkI3Vu9OW5I/">Room</NavLink></Menu.Item> */}
       <Menu.Item key="persona"><NavLink to="/toledoroy/">Persona</NavLink></Menu.Item>
       {/* <Menu.Item key="quickstart"><NavLink to="/quickstart">Quick Start</NavLink></Menu.Item> */}
-      <Menu.Item key="wallet"><NavLink to="/wallet">Wallet</NavLink></Menu.Item>
+      {/* <Menu.Item key="wallet"><NavLink to="/wallet">Wallet</NavLink></Menu.Item> */}
       {/* <Menu.Item key="onramp"><NavLink to="/onramp">Fiat</NavLink></Menu.Item> */}
       {/* <Menu.Item key="dex"><NavLink to="/1inch">Dex</NavLink></Menu.Item> */}
       <Menu.Item key="balances"><NavLink to="/erc20balance">Balances</NavLink></Menu.Item>
