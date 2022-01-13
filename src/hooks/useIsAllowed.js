@@ -22,7 +22,7 @@ export const useIsAllowed = (props) => {
       //Fetch Balance
       NFTHelper.getBalance(Moralis, account, hash, chain).then(balance => {
         //Log
-        console.log("useIsAllowed() Account's Balance for this Contract:"+balance, {balance, account, hash}); 
+        // console.log("useIsAllowed() Account's Balance for this Contract:"+balance, {balance, account, hash}); 
         //Set Permissions
         setIsAllowed(balance > 0);
       // }, [hash, account]);
