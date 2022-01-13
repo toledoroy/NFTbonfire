@@ -10,15 +10,17 @@ import { PersonaHelper } from "helpers/PersonaHelper";
 import { PersonaContext } from "common/context";
 
 
+
 /**
  * Component: Add New Post
  */
  function RoomAddForm(props) {
-   const { parent, parentId, title } = props;
+   const { parent, parentId, title, type } = props;
     const { Moralis, account, chainId, user, isWeb3Enabled } = useMoralis();
     const { persona } = useContext(PersonaContext);
     const [form] = Form.useForm();
-    const type = title ? 'comment' : 'post';
+    // const type = title ? 'comment' : 'post';
+  
 
     //Objects
     // const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
@@ -96,9 +98,49 @@ import { PersonaContext } from "common/context";
       }
     };//onFinish()
   
-    return(
+    if(type==='comment'){
+      return (
+        <div className={"room_add "+props.className}>  
+        <h3>{(type==='comment') ? 'Add Comment' : 'Start a new bonfire'}</h3>
+        {/* <p>Add a new Room to this Space!</p> */}
+        <Comment
+          avatar={<Avatar src={PersonaHelper.getImage(persona)} alt={persona?.get('metadata').name} />}
+          content={
+            <Form name="postAdd" 
+              onFinish={onFinish}
+              onFinishFailed={console.error}
+              labelCol={{ span: 6, }}
+              wrapperCol={{ span: 16, }}
+              initialValues={{ remember: false, text:''}}
+              autoComplete="off"
+              form={form} 
+              >
+              <Form.Item name="text" rules={[{ required: true, message: "You'd need to enter some text as well..."}]}>
+                <Input.TextArea />
+              </Form.Item>
+              {persona && <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+                <Button type="primary" htmlType="submit" icon={<i className="bi bi-send"></i>}></Button>
+              </Form.Item>
+              }
+              {!persona && <p style={{textAlign:'center'}}>
+                To post content, you'd first need to mint yourself a persona.
+                <a href="/persona">
+                  <Button type="primary" size="large" className="main_button"
+                    style={{ width: "100%", borderRadius: "0.5rem", fontSize: "16px", fontWeight: "400", }}>
+                    Mint New Persona
+                  </Button>
+                </a>
+              </p>}
+
+            </Form>
+          }
+        />
+      </div>
+      );
+    }
+    else return(
       <div className={"room_add "+props.className}>  
-        <h3>{title ? title : 'Start a new bonfire'}</h3>
+        <h3>Start a new bonfire</h3>
         {/* <p>Add a new Room to this Space!</p> */}
         <Comment
           avatar={<Avatar src={PersonaHelper.getImage(persona)} alt={persona?.get('metadata').name} />}
@@ -110,10 +152,11 @@ import { PersonaContext } from "common/context";
               wrapperCol={{ span: 16, }}
               initialValues={{ remember: true, }}
               autoComplete="off"
+              form={form} 
               >
-              {(!title) && <Form.Item label="Topic" name="name" rules={[{ required: true, message: 'You forgot to fill in a Topic'}]}>
+              <Form.Item label="Topic" name="name" rules={[{ required: true, message: 'You forgot to fill in a Topic'}]}>
                 <Input />
-              </Form.Item>}
+              </Form.Item>
               <Form.Item label="Description" name="text" rules={[{ required: true, message: "You'd need to enter some text as well..."}]}>
                 <Input.TextArea />
               </Form.Item>
