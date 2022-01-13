@@ -59,7 +59,7 @@ export const PersonaHelper = {
         return IPFS.resolveLink(persona?.get('metadata')?.cover) || defaultValue;
     },
 
-    isNew(persona){ return (!persona.get('token_id'))},
+    isNew(persona){ return (!persona?.get('token_id'))},
 
 };//personaHelper{}
 
