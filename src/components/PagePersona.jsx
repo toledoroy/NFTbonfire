@@ -71,7 +71,7 @@ function PagePersona(props) {
     // const { data, error, isLoading } = useMoralisCloudFunction("topScores", { limit, });
     // const { fetch, data, error, isLoading } = useMoralisCloudFunction("topScores", {limit}, { autoFetch: false } );  //Trigger Manually (via fetch func.)
       
-    // const [form] = Form.useForm();
+    const [form] = Form.useForm();
 
 
 
@@ -600,12 +600,7 @@ function PagePersona(props) {
 
                     {isEditMode && 
                     <div className="edit">
-                        
-                        
-                        {/* TODO: Move Form Stuff over Here! */}
-
-
-                        <PersonaEdit persona={persona} metadata={metadata} isLoading={isLoading} />
+                        <PersonaEdit persona={persona} metadata={metadata} isLoading={isLoading} form={form} setIsEditMode={setIsEditMode} reloadmetadata={reloadmetadata}/>
                     </div>
                     }
 
@@ -1055,13 +1050,12 @@ export default PagePersona;
 
 /**
  * Component: Persoan Edit Form
- * 
- *  TODO! Move PersonaEdit to PersonaPage
+ * (Creaeted this component as a miniscule attempt to reduce the clutter in this endless spaghetti page)
  * 
  */
  function PersonaEdit(props) {
     // const { persona, contract } = props;
-    const { persona, contract } = props;
+    const { persona, contract, setIsEditMode, form, reloadmetadata } = props;
     // const tokenId = persona.get('token_id');
 
     const [ isSaving, setIsSaving ] = useState(false);
@@ -1084,7 +1078,7 @@ export default PagePersona;
     const contractProcessor = useWeb3ExecuteFunction();
     //Contract Data
     const contractPersona = Persona.getContractData();
-    // const [form] = Form.useForm();
+    // const [form] = Form.useForm();   //Now on Parent for Parental Control
 
     /* All Tokens 
     Moralis.Web3API.token.getAllTokenIds(contractPersona).then(ids => {
@@ -1099,6 +1093,10 @@ export default PagePersona;
     //Log
     // console.warn("PersonaEdit() MEtadata", {chainId, env:process.env, metadata, imageUrl, contract, persona});
 
+    // useEffect(() => { 
+    //     console.log("PersonaEdit() Stage:"+stage);
+    // }, [stage]);
+
     useEffect(() => { 
         //Refresh Metadata on Every Load! (After Updating Chain, This Component's metadata doesn't match the updated parent)
         console.log("PersonaEdit() Reloading Metadata", props.metadata);
@@ -1106,10 +1104,6 @@ export default PagePersona;
         setImageUrl(props.metadata?.image);
     }, [props.metadata]);
     
-    useEffect(() => { 
-        console.log("PersonaEdit() Stage:"+stage);
-    }, [stage]);
-
     /**
      * Sanitize Metadata Before Save
      */
@@ -1172,7 +1166,7 @@ export default PagePersona;
             setIsSaving(false);
             setStage("SUCCESS");
             //Done Editing
-            // setIsEditMode(false);        //TODO!! Enable (After Move)
+            setIsEditMode(false);
         })
         .catch(function(error) {
             message.error('Failed to save file to IPFS. '+error);
@@ -1199,7 +1193,7 @@ export default PagePersona;
         //Save Persona (to Contract)
         savePersona(newMetadata);
 
-        //Redirect
+        //TODO: Redirect to new Persona URL
         // history.push('/room/'+newPost.id);
     
         //Return
@@ -1207,12 +1201,14 @@ export default PagePersona;
     };//onFinish()
     
     /**
-     * Reset Metadata (Form)
+     * Reset Metadata Form
      */
     function formReset(){
         setMetadata(props?.metadata); 
         //Log
         console.log("(i) PersonaEdit() Metadata Form Reset", props?.metadata)
+        //Reset Form
+        form.resetFields();
     }
 
     let size = 200; //Avater Circumference
@@ -1230,6 +1226,7 @@ export default PagePersona;
                 // initialValues={{ remember: true, }}
                 // initialValues={{name: "name",}}  //V
                 autoComplete="off"
+                form={form}
                 >
                 {Object.values(personaFields).map((field) => { if(field.element) return field.element; else{
                     //Extract Placeholder
@@ -1363,7 +1360,7 @@ export default PagePersona;
                             : <Button type="primary" htmlType="submit">Save</Button>
                             }
                             {/* <Button onClick={formReset} style={{marginLeft:'20px' }}>Reset</Button> REMOVED */}
-                            {/* <Button variant="contained" color="primary" onClick={()=>{ reloadmetadata(); setIsEditMode(false)}}>Cancel</Button> */} {/*TODO: THIS BUTTON SHOULD BE HERE (But on PagePersona)*/}
+                            <Button variant="contained" color="primary" onClick={()=>{ reloadmetadata(); setIsEditMode(false)}}>Cancel</Button> {/*TODO: THIS BUTTON SHOULD BE HERE (But on PagePersona)*/}
                         </Form.Item>
                     }
                 </div>
