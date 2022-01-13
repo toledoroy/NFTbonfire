@@ -55,6 +55,7 @@ import { PersonaContext } from "common/context";
 
         values.personaId = PersonaHelper.getGUID(persona);
         values.persona = persona;
+        // values.personaRel = persona;  // schema mismatch for
         
         //Create New Post
         // const Post = await Moralis.Cloud.run("post", values);

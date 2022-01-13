@@ -242,6 +242,7 @@ function RoomEntrance(props) {
     if(Object.keys(persona.attributes).length===0) loadItsPersona(room);
   },[room, persona]);
   const loadItsPersona = async (parseObj) => {
+    // let personaFull = await parseObj.relation('persona').query().find();   //Called relation() on non-relation field persona
     const PersonaQuery = new Moralis.Query(Persona);
     let personaId = parseObj.get('persona').id;
     let personaFull = await PersonaQuery.get(personaId);
