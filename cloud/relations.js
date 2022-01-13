@@ -15,13 +15,15 @@ const Relation = Moralis.Object.extend("Relation");
   const query = new Moralis.Query(Relation);
   query.equalTo("user", user);
   query.equalTo("entity", entity);
-  const results = await query.limit(1).find();
 
+  // const results = await query.limit(1).find();
   // logger.warn("[TEST] relationGetOrMake() "+results.length+" Results -- "+JSON.stringify(results)+"'");  //V
-  
   //Extract relation From Result or Make New
   // const relationGet = async (results) => {
-    if(results.length) return results[0];
+    // if(results.length) return results[0];
+    
+    const result = await query.first();
+    if(result) return result;
     logger.warn("[TEST] relationGetOrMake() Create New Relation to DB entity:'"+entity+"' user:'"+user?.id+"'");
     //Create
     const relation = new Relation({user, entity});

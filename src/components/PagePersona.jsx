@@ -134,11 +134,9 @@ function PagePersona(props) {
             setIsLoading(true);
             //Query
             const query = new Moralis.Query(Persona);
-            query.equalTo("handle", handle).limit(1).find().then((results) => {
-            // query.get({handle}).then((results) => {
-                if(results.length > 0){
-                    //Override by handle
-                    let persona = results[0];
+            query.equalTo("handle", handle).first().then((persona) => {     //TESTING
+                console.warn("[TEST] PagePersona() Get persona By Handle:", persona);
+                if(persona){
                     //Reload Metadata
                     if(persona.get('metadata')){
                         setPersona(persona);
@@ -157,7 +155,7 @@ function PagePersona(props) {
                 }//Known Handle
                 else{//No Such Persona for Handle (404)
                     //Log
-                    console.error("PagePersona() No Results for Handle:"+params.handle, {results, metadata} ); 
+                    console.error("PagePersona() No Persona Found for Handle:"+params.handle, {persona, metadata} ); 
                     //Done Loading
                     setIsLoading(false);
                 }//Unknown Handle
