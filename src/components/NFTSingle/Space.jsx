@@ -177,17 +177,11 @@ function SpaceView({hash, collection, NFTpersonas}) {
               :
               <SpaceEmpty collection={collection} />
               } 
-              {/* Chat Rooms */}
-              {/* <RoomPage hash collection /> */}
-              {/* <RoomEntrance hash collection /> */}
-              {/* {roomsTest && roomsTest.map((room, index) => (<RoomEntrance hash collection room key={collection.hash} />))} */}
-              {/* {(rooms && rooms.length>0) ? rooms.map((room, index) => (<RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />)) : <SpaceEmpty collection={collection} />} */}
             </div>
           </>
           : <div className="disallowed">
               {/* <h2>Private Space</h2> */}
               <h3>This space is only open for {__.sanitize(collection.name)} NFT holders.</h3>
-              
               {user 
               ? <p>To Enter this space you need to own an NFT from this collection</p>
               : <p>To Enter this space please sign-in with an account that owns an NFT from this collection</p>
@@ -238,10 +232,11 @@ function RoomEntrance(props) {
   },[isSelected]);
   
   return (
+    <div className="room_single">
     <div className={className} id={room.id}>
       <Badge.Ribbon placement="start" text="0x...AAA">
         <div className="image">
-          <Avatar src={image} style={{ height:'var(--avatarMD)', width:'var(--avatarMD)'}}>
+          <Avatar src={image} shape="square" style={{ height:'var(--avatarMD)', width:'var(--avatarMD)'}}>
             {/* Fallback */}
             <img
               src={image}
@@ -255,10 +250,23 @@ function RoomEntrance(props) {
       </Badge.Ribbon>
       <div className="content">
         <h2>
-          <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</Link>
+          {/* <Link key="link" to={{ pathname: "/room/"+room.id, }} className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</Link> */}
+          {/* <a className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</a> */}
+          <FireTwoTone twoToneColor="red" />{room?.get('name')}
         </h2>
+
+        {isSelected && <p key="user_info">
+          <p>{PersonaHelper.getNameFull(room.get('persona'))}
+          , {room.get('persona').get('metadata')?.role}
+          </p>
+          {/* <p>{room.get('persona').get('metadata')?.purpose}</p> */}
+          {room.get('persona').get('metadata')?.purpose && 
+            <p dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(room.get('persona').get('metadata')?.purpose))}}></p>
+          }
+        </p>}
+
         {/* <span key="id">ID: {room.id}</span> */}
-        {isSelected && <p key="desc">{room.get('text')}</p>}
+        {/* {isSelected && <p key="desc">{room.get('text')}</p>} */}
         {/* <p key="created">Created: {room?.createdAt}</p> */}
         {/* <p key="updated">Last Updated: {room?.updatedAt}</p> */}
         {/* <p key="">Total Items: {room.total_items}</p> */}
@@ -269,6 +277,10 @@ function RoomEntrance(props) {
       <div className="vote framed" onClick={(evt) => {evt.stopPropagation()}}>
         <VotePane post={room}/>
       </div>
+    </div>
+    {isSelected &&
+      <p dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(room.get('text')))}}></p>
+    }
     </div>
   );
 }//RoomEntrance()

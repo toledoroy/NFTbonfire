@@ -612,6 +612,16 @@
 .room_list {
     clear: both;
     .ant-collapse-header { display:block !important; }
+    .ant-collapse > .ant-collapse-item { border:none; position:relative; }
+    .ant-collapse > .ant-collapse-item:after {
+        content: "";
+        border-bottom: 1px solid #d9d9d9;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        height: 1px;
+        width: 88%;
+      }
     .room_entrance{
         display: flex;
         justify-content: space-between;
