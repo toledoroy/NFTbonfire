@@ -15,6 +15,8 @@ import { CollectionContext } from "common/context";
 import __ from "helpers/__";
 import moment from 'moment';
 import { Space, Room, Comment as CommentObj } from "objects/objects";
+import { Persona } from "objects/Persona";
+
 
 /**
  * Component: SpaceView (W/Chat Room)
@@ -92,9 +94,14 @@ function SpaceView({hash, collection, NFTpersonas}) {
       //Get Rooms for Space (by Space's hash)
       const RoomQuery = new Moralis.Query(Room);
       RoomQuery.equalTo("parentId", hash);  //By Hash
+
+      
+      const PersonaQuery = new Moralis.Query('Persona');
+      RoomQuery.matchesKeyInQuery("persona", "objectId", PersonaQuery);
+
       RoomQuery.limit(limit).find().then(result => {
         //Log
-        console.log("Got "+result.length+" Rooms for Space:"+hash);
+        console.log("Spcae() Got "+result.length+" Rooms for Space:"+hash);
         if(result && result.length > 0) {
           //Log
           // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, result); //V
@@ -255,7 +262,11 @@ function RoomEntrance(props) {
           <FireTwoTone twoToneColor="red" />{room?.get('name')}
         </h2>
 
+
         {isSelected && <p key="user_info">
+          
+          {console.warn("Space() Persona", room.get('persona'), room.get('persona')?.attributes)}
+
           <p>{PersonaHelper.getNameFull(room.get('persona'))}
           , {room.get('persona').get('metadata')?.role}
           </p>
@@ -263,6 +274,7 @@ function RoomEntrance(props) {
           {room.get('persona').get('metadata')?.purpose && 
             <p dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(room.get('persona').get('metadata')?.purpose))}}></p>
           }
+          
         </p>}
 
         {/* <span key="id">ID: {room.id}</span> */}
@@ -271,7 +283,10 @@ function RoomEntrance(props) {
         {/* <p key="updated">Last Updated: {room?.updatedAt}</p> */}
         {/* <p key="">Total Items: {room.total_items}</p> */}
         {/* <p key="">Total Users: {room.total_users}</p> */}
-        {/* <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn">Go!</Link> */}
+
+        {/* Single Room Link is Currently Broken...   //TODO: Single Room Needs its own URL
+        <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn">Go!</Link> 
+        */}
         <div className="clearfloat"></div>
       </div> 
       <div className="vote framed" onClick={(evt) => {evt.stopPropagation()}}>

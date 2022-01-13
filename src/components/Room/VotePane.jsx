@@ -31,12 +31,12 @@ const VotePane = (props) => {
         //Validate
         if(user.get('accounts').includes(String(post.get('account')).toLowerCase())) return message.error("C'mon, this is your post");
         //Log
-        console.log("[DEV] VotePane() Running Moralis Cloud Func 'postVote':", {postId:post.id, vote, voteStatus});
+        // console.log("[DEV] VotePane() Running Moralis Cloud Func 'postVote':", {postId:post.id, vote, voteStatus});
         if(vote === voteStatus) vote = 0;   //Undo Current Vote (Neutral)
         //Vote
         Moralis.Cloud.run("postVote", {postId:post.id, vote}).catch(error => {
             console.error("Post() Error while Saving Vote", {error, postId:post.id, vote});
-            message.error("Sorry, Something went wrong and your vote did not save");
+            message.error("Sorry, Something went wrong and your vote did not go through");
         });
     }//vote()
 
@@ -81,7 +81,7 @@ const VoteCount = ({postId}) => {
     });
     let votes = posts.length > 0 ? posts[0].get('score') ? posts[0].get('score') : 0 : 0;
     //Log
-    console.warn("[TEST] VoteCount() Score:"+votes+" for Post ID:"+posts[0]?.id, {votes, posts});
+    // console.warn("[TEST] VoteCount() Score:"+votes+" for Post ID:"+posts[0]?.id, {votes, posts});    //V
     return ( <> {votes} </> );
 }//VoteCount()
 
