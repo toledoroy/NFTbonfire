@@ -225,10 +225,29 @@ export default SpaceView;
  */
 function RoomEntrance(props) {
   const { hash, collection, room, selected:isSelected } = props;
-  let image = PersonaHelper.getImage(room.get('persona'));
+
+  const [ persona, setPersona ] = useState(room.get('persona'));
+
+  // let image = PersonaHelper.getImage(room.get('persona'));
+  let image = PersonaHelper.getImage(persona);
   // console.warn("[TEST] RoomEntrance() Room (Persona) Image:"+image, props);
   let className = "room_entrance";
   if(isSelected) className += " selected";
+
+  /**
+   * Load Post's Persona When Needed
+   */
+  const { Moralis } = useMoralis();
+  useEffect(() => {   //[DEV] TESTING
+    if(Object.keys(persona.attributes).length===0) loadItsPersona(room);
+  },[room, persona]);
+  const loadItsPersona = async (parseObj) => {
+    const PersonaQuery = new Moralis.Query(Persona);
+    let personaId = parseObj.get('persona').id;
+    let personaFull = await PersonaQuery.get(personaId);
+    console.warn("Space() Persona", personaFull?.attributes,  personaFull);
+    setPersona(personaFull);
+  }
 
   useEffect(() => {
     /* Scroll to Selected/Unselected Element */
@@ -263,10 +282,7 @@ function RoomEntrance(props) {
         </h2>
 
 
-        {isSelected && <p key="user_info">
-          
-          {console.warn("Space() Persona", room.get('persona'), room.get('persona')?.attributes)}
-
+        {isSelected && <div key="user_info">
           <p>{PersonaHelper.getNameFull(room.get('persona'))}
           , {room.get('persona').get('metadata')?.role}
           </p>
@@ -274,8 +290,7 @@ function RoomEntrance(props) {
           {room.get('persona').get('metadata')?.purpose && 
             <p dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(room.get('persona').get('metadata')?.purpose))}}></p>
           }
-          
-        </p>}
+        </div>}
 
         {/* <span key="id">ID: {room.id}</span> */}
         {/* {isSelected && <p key="desc">{room.get('text')}</p>} */}
