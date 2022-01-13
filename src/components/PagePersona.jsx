@@ -531,7 +531,7 @@ function PagePersona(props) {
                                     <span dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(metadata.description))}}></span>
                                 </p>}
                                 {metadata?.purpose && <div className="purpose">
-                                    <h3>purpose</h3>
+                                    <h3>Purpose:</h3>
                                     <p dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(metadata.purpose))}}></p>
                                 </div>}
                             </Skeleton>
@@ -923,7 +923,7 @@ export default PagePersona;
     const [status, setStatus] = useState(null);
     const [newHandle, setNewHandle] = useState(persona.get('handle'));
     const isNew = () => (!persona.get("handle"));
-    
+
     /**
      * Validator: Check For Handle Vacancy
      * @param {*} handle 
@@ -980,7 +980,7 @@ export default PagePersona;
                 {isOwned && 
                     isNew() 
                     ? <Button variant="contained" size="small" color="primary" onClick={()=>{setIsEditMode(true)}}>Claim Handle</Button>
-                    : <Button variant="contained" size="small" onClick={()=>{setIsEditMode(true)}} style={{background: 'none', border:'none'}}><i className="bi bi-pencil-fill"></i></Button>
+                    : <Button variant="contained" size="small" onClick={()=>{setIsEditMode(true)}} style={{background: 'none', border:'none'}} title="Edit handle"><i className="bi bi-pencil-fill"></i></Button>
                 }
             </>}
             {(isOwned && isEditMode) && <>

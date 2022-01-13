@@ -95,7 +95,8 @@ const App = ({ isServerInfo }) => {
   //quickstart
   return (
     <PersonaContext.Provider value={{persona, setPersona}}>
-    <Layout style={{ height: "100vh", overflow: "auto" }}>
+    {/* <Layout style={{ height: "100vh", overflow: "auto" }}> */}
+    <Layout>
       {/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /> */}
       {/* <script src="https://kit.fontawesome.com/62e94cb93f.js" crossorigin="anonymous"></script> */}
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />

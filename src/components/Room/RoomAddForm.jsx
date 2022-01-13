@@ -17,6 +17,9 @@ import { PersonaContext } from "common/context";
    const { parent, parentId, title } = props;
     const { Moralis, account, chainId, user, isWeb3Enabled } = useMoralis();
     const { persona } = useContext(PersonaContext);
+    const [form] = Form.useForm();
+    const type = title ? 'comment' : 'post';
+
     //Objects
     // const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
     // const { isSaving, error, save:savePost } = useNewMoralisObject('post');
@@ -71,12 +74,15 @@ import { PersonaContext } from "common/context";
         console.warn("[TEST] RoomAddForm() ACL: "+JSON.stringify(acl), {isWeb3Enabled, acl, post});
         //Save
         // return post.save();
-        return post.save(values);
-
-        /*
+        let newPost = await post.save(values);
+        
         //Log
         console.log("RoomAddForm() Created new Post:", {values, newPost});
-    
+
+        //Reset Form
+        form.resetFields();
+
+        /*
         //Redirect -- Enter New Room      //https://stackoverflow.com/questions/34735580/how-to-do-a-redirect-to-another-route-with-react-router
         // history.push('/room/'+newPost.id);
     
@@ -105,9 +111,9 @@ import { PersonaContext } from "common/context";
               initialValues={{ remember: true, }}
               autoComplete="off"
               >
-              <Form.Item label="Topic" name="name" rules={[{ required: true, message: 'You forgot to fill in a Topic'}]}>
+              {(!title) && <Form.Item label="Topic" name="name" rules={[{ required: true, message: 'You forgot to fill in a Topic'}]}>
                 <Input />
-              </Form.Item>
+              </Form.Item>}
               <Form.Item label="Description" name="text" rules={[{ required: true, message: "You'd need to enter some text as well..."}]}>
                 <Input.TextArea />
               </Form.Item>

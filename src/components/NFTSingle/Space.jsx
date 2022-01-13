@@ -225,11 +225,20 @@ export default SpaceView;
 function RoomEntrance(props) {
   const { hash, collection, room, selected:isSelected } = props;
   let image = PersonaHelper.getImage(room.get('persona'));
-  console.warn("[TEST] RoomEntrance() Room (Persona) Image:"+image, props);
+  // console.warn("[TEST] RoomEntrance() Room (Persona) Image:"+image, props);
   let className = "room_entrance";
   if(isSelected) className += " selected";
+
+  useEffect(() => {
+    /* Scroll to Selected/Unselected Element */
+    // console.warn("[DEV] RoomEntrance() Room "+room.id+" Selected:"+isSelected, {room, elTop:document.getElementById(room.id).offsetTop});
+    let options = {top: document.getElementById(room.id).offsetTop + 40 ,  behavior: 'smooth'};
+    // if(isSelected) options.behaviour = 'auto';
+    window.scrollTo(options);
+  },[isSelected]);
+  
   return (
-    <div className={className}>
+    <div className={className} id={room.id}>
       <Badge.Ribbon placement="start" text="0x...AAA">
         <div className="image">
           <Avatar src={image} style={{ height:'var(--avatarMD)', width:'var(--avatarMD)'}}>
