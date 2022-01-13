@@ -115,22 +115,17 @@ function PagePersona(props) {
         if(isEditMode && !account) setIsEditMode(false);
     }, [account]);
 
-    //(Re)load Persona on Parameter Changes
+    //Load Persona on first compoent load
+    useEffect(() => { loadPersona(params); },[]);
+
+    //(Re)load Persona on Parameter Change & when Web3 comes Online
     useEffect(() => async () => {
         //Load Persona
         loadPersona(params);
         //Log
         persona && console.log("PagePersona() Loaded Different persona:",  {persona, isWeb3Enabled, user, metadata, personaTokenId: persona?.get('token_id'), params});
-    },[params]);
-
-    //Load Persona if Missing & When Web3 is Ready
-    useEffect(() => {
-        console.warn("[DEBUG] PagePersona() Persona Changed to:", persona);   
-        if(!persona && isWeb3Enabled){  //on Empty Persona & When Web3 Comes Online
-            //Load Persona
-            loadPersona(params);
-        }
-    },[persona, isWeb3Enabled]);
+    // },[params]);
+    },[params, isWeb3Enabled]);
 
     /**
      * Load Persona Procedure
