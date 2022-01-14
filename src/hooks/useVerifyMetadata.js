@@ -51,9 +51,9 @@ export const useVerifyMetadata = () => {
         };
         Moralis.executeFunction(options).then((uri) => {
             //Compare & Update Metadata if Needed
-            if(NFT.token_uri !== uri) {
+            if(!matchURI(NFT.token_uri, uri)) {
                 //Log
-                // console.log("useVerifyMetadata.updateToken() NFT Has Different URI on Chain -- Run Update", {NFT, options, uri, token_uri:NFT.token_uri});
+                // console.log("[TEST] useVerifyMetadata.updateToken() Toekn of:'"+NFT.name+"' Has Different URI on Chain -- Run Update", {NFT, options, uri, token_uri:NFT.token_uri});    //V
                 //Update NFT
                 NFT.token_uri = uri;
                 //Update Metadata
@@ -67,6 +67,26 @@ export const useVerifyMetadata = () => {
         //Return Hooked NFT Object
         return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT ;
     }//updateToken()
+
+    /**
+     * Match URI Function
+     * Try to ignore similar IPFS URLs
+     * @param string uri1 
+     * @param string uri2 
+     * @returns 
+     */    
+    function matchURI(uri1, uri2){
+        if(String(uri1).toLowerCase().includes('ipfs')){
+            //Try to ignore this if URLs have the same IPFS ID
+            let uri1Adjusted = uri1.replace('https://ipfs.moralis.io:2053/ipfs/', '').replace('ipfs://', '');
+            let uri2Adjusted = uri2.replace('https://ipfs.moralis.io:2053/ipfs/', '').replace('ipfs://', '');
+
+            // if(uri1Adjusted !== uri2Adjusted) console.warn("[TEST] Different IPFS IDs", {uri1, uri2, uri1Adjusted, uri2Adjusted});   //V
+
+            return (uri1Adjusted == uri2Adjusted);
+        }
+        return (uri1==uri2);
+    }
 
     /**
      * Fetch Metadata  from NFT and Cache Results
@@ -131,7 +151,8 @@ export const useVerifyMetadata = () => {
         //Add Metadata
         NFT.metadata = metadata;
         //Set Image
-        if(metadata?.image) NFT.image = resolveLink(metadata.image);
+        // if(metadata?.image) NFT.image = resolveLink(metadata.image); //IPFS Moved Outside
+        if(metadata?.image) NFT.image = metadata.image; //Moved Outside
         //Set to State
         if(metadata && !results[NFT.token_uri]) setResults({...results, [NFT.token_uri]: NFT});
     }//setMetadata()

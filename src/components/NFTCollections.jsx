@@ -87,9 +87,11 @@ function NFTCollections(props) {
   if(props?.match?.params?.chain) options.chain = props.match.params.chain;
   const { NFTCollections, NFTpersonas } = useNFTCollections(options);
 
-  //Log
-  console.log("(i) NFTCollections() for Collections: ", {NFTCollections, collectionHash, accountHash, options, params:props.match.params });
-  
+  React.useEffect(() => {  
+    //Log
+    console.log("(i) NFTCollections() Loading Collections: ", {NFTCollections, collectionHash, accountHash, options, params:props.match.params });
+  },[]);
+
   async function testFunc() {
     try {
       if(isWeb3Enabled) {
