@@ -61,9 +61,19 @@
     .mainContent{
         max-height: 100%;
         overflow: auto;
+        .center_wrapper {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+        }
     }
     .ant-layout-footer{
         margin: 0;
+    }
+    footer{
+        display: flex;
+        justify-content: center;
+        padding: 20px 50px 15px 50px;
     }
 }
 /* Request for Authentication */

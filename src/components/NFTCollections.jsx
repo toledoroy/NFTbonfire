@@ -190,6 +190,7 @@ function NFTCollections(props) {
                 
                 return (
                   <CollectionContext.Provider key={collection.hash+'Prov'} value={collection}>
+                    <div className="center_wrapper">
                     {/* <p>{collection.owned ? 'Owned' : 'Not Owned'}</p> */}
                     <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
                       <h2 className="title">
@@ -202,12 +203,19 @@ function NFTCollections(props) {
                         <div key="cards" className="cards">
                           <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} dest={dest} />
                         </div>
-                        {collectionHash && 
+                        {/* {collectionHash && 
                         <div key="space" className="space_container">
                           <Space hash={collectionHash} collection={collection} NFTpersonas={NFTpersonas}/>
                         </div>
-                        }
+                        } */}
                       </div>
+                    </div>
+
+                    {collectionHash && 
+                      <div key="space" className="space_container">
+                        <Space hash={collectionHash} collection={collection} NFTpersonas={NFTpersonas}/>
+                      </div>
+                    }
                     </div>
                   </CollectionContext.Provider>
                 );

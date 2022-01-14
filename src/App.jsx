@@ -174,19 +174,19 @@ const App = ({ isServerInfo }) => {
       <div className="clearfloat"></div>
 
       <Footer style={{ textAlign: "center" }}>
-        <Text style={{ display: "block" }}>
-          🙋 You have questions? Ask them on the {""}
           <a
             target="_blank"
             rel="noopener noreferrer"
             href="https://forum.moralis.io/t/ethereum-boilerplate-questions/3951/29"
-          >
-            Moralis forum
+            style={{margin:'auto 20px'}}
+            >
+            🙋 Moralis forum
           </a>
-        </Text>
-        <Text style={{ display: "block" }}>
-          Built with <a target="_blank" rel="noopener noreferrer" href="https://moralis.io?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplat">Moralis <Logo /></a>
-        </Text>
+          {/* Built with  */}
+          <a target="_blank" rel="noopener noreferrer" href="https://moralis.io?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplat">
+            {/* Moralis <Logo /> */}
+            <img src="/moralis/Powered-by-Moralis-Badge-Green.svg" />
+          </a>
       </Footer>
 
     </Layout>
