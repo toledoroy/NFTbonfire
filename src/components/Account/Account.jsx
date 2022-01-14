@@ -123,42 +123,53 @@ function Account() {
   };//updatePersonas()
 
   useEffect(() => {
+    // console.warn("[TEST] Account() personas:", NFTpersonas, personas);
     //Sync Personas
     if(NFTpersonas.length > 0) updatePersonas();
-    //Recoup Selected Persona
-    if(!curPersona && personas.length > 0){
-      // let curPersonaId = user.get('curPersona');
-      let curPersonaId = user?.get('last_persona')?.global;
-      //Recuperate Last Persona
-      if(curPersonaId){
-
-        for(let personaObj of personas){
-          if(personaObj.id == curPersonaId){
-            setPersona(personaObj);
-            // console.log("Account() Setting Last Selected Persona:"+curPersonaId);  //V
-            break;
-          } 
+    //Check if has Any Usable Personas in DB
+    if(personas.length > 0){  //All Networks...
+      //Recoup Selected Persona
+      if(!curPersona){
+        // let curPersonaId = user.get('curPersona');
+        let curPersonaId = user?.get('last_persona')?.global;
+        //Recuperate Last Persona
+        if(curPersonaId){
+          for(let personaObj of personas){
+            if(personaObj.id === curPersonaId){
+              setPersona(personaObj);
+              // console.log("Account() Setting Last Selected Persona:"+curPersonaId);  //V
+              break;
+            } 
+          }
         }
-      }
-      else{
-        //Default to First Persona
-        setPersona(personas[0]);
-      }
-    } 
+        else{
+          // console.warn("Account() Default to first Persona:"+personas[0].id);  //V
+          //Default to First Persona
+          setPersona(personas[0]);
+        }
+      } 
+    }//Has Personas 
   }, [NFTpersonas, personas]);
 
   useEffect(() => { 
     /* Make sure to change User when account changes */
     if(account !== lastAccount){
-      if(lastAccount!==null) console.log("Account() Account Changed -- Auto Log Out", {account, lastAccount});
       setLastAccount(account);
-      if(lastAccount!==null) logout();
-      /* Alternativly, You can link the accounts
+      //Clear Persona
+      setPersona(null);
+
+      if(lastAccount!==null){
+        // console.log("Account() Account Changed -- Auto Log Out", {account, lastAccount});
+        //Log Out
+        logout();
+      }//Different Account
+
+      /* Alternativly, could link the accounts
       //Another Option is to Link Accounts  //https://docs.moralis.io/moralis-server/web3/web3#linking
       Moralis.link(account, { signingMessage: "Sign this to link your accounts"} );
       console.log("Account() Account Changed -- Account:"+account, Moralis.User.current());
       */
-    }
+    }//Account Changed
   }, [account]);
 
   if (!isAuthenticated) {

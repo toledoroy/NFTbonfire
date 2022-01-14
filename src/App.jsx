@@ -80,13 +80,16 @@ const App = ({ isServerInfo }) => {
    const setPersona = (persona) => { 
     //Remember
     if(user){
-      let record = user.get('last_persona');
-      if(!record) record = {};  //Initiate
-      record.global = persona.id;
-      // user.set('curPersona', persona.id);
-      user.set('last_persona', record);
-      user.save();
-      // console.warn("[TEST] App() Remeber Persona", user);
+      if(persona){
+        let record = user.get('last_persona');
+        if(!record) record = {};  //Initiate
+        record.global = persona.id;
+        // user.set('curPersona', persona.id);
+        user.set('last_persona', record);
+        user.save();
+        // console.warn("[TEST] App() Remeber Persona", user);
+      }
+      else console.error("App() Clear Persona");
     }
     else console.error("App() Change Persona -- No User");
     setPersonaActual(persona); 
