@@ -55,7 +55,7 @@ export const PersonaHelper = {
      * @var ParseObject persona 
      * @var any defaultValue
      */
-     getCover(persona, defaultValue){
+    getCover(persona, defaultValue){
         return IPFS.resolveLink(persona?.get('metadata')?.cover) || defaultValue;
     },
 

@@ -51,12 +51,6 @@ footer { margin-top: 40px; }
 .framed{ padding: 15px; max-width: 1200px; margin:0 auto;} 
 .hr { border-top: 1px solid var(--background-color); border-radius: 0 !important;}
 
-/* Components */
-.collections { transition: all 0.2s ease-in-out; }
-.collections .personas { display: flex; float:right; }
-.collection { margin-bottom: 20px; }
-.collection .title { font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; }
-.collection .title .ant-ribbon { top:0; }
 
 /* NFT Item Display */
 .NFTitems .item .flip-card-back .metadata,

@@ -8,7 +8,7 @@ import React from "react";
     const { persona, contract } = props;
 
     return (
-        <div>
+        <div className="framed">
             <h1>Home</h1>   
         </div>
     );

@@ -54,6 +54,18 @@
     }
 }
 
+/* General Layout */
+.wrapper_main {
+    height: 100vh;
+    overflow: auto;
+    .mainContent{
+        max-height: 100%;
+        overflow: auto;
+    }
+    .ant-layout-footer{
+        margin: 0;
+    }
+}
 /* Request for Authentication */
 .auth_req {
     padding: 50px;
@@ -648,6 +660,26 @@
             color: #999;
         }
     }   
+}
+
+/* Component: NFT Collections */
+.collections { 
+    transition: all 0.2s ease-in-out; 
+    .personas { 
+        display: flex; 
+        float:right; 
+    }
+}
+
+/* Component: Single NFT Collection */
+.collection { 
+    margin-bottom: 20px; 
+    .title { 
+        font-size: 1.1rem; 
+        font-weight: bold; 
+        /* margin-bottom: 20px;  */
+    }
+    .ant-ribbon { top:0; }
 }
 
 /* Token Send Widget */
