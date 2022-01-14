@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
 import { FireTwoTone, StopOutlined } from '@ant-design/icons';
 // import { Skeleton, Image, Form, Input, Button, Checkbox } from "antd";
-import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip } from 'antd';
+import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Radio } from 'antd';
 import { useMoralisQuery } from "react-moralis";
 import VotePane from "components/Room/VotePane";
 // import PersonaChanger from "components/Persona/PersonaChanger";
@@ -20,6 +20,11 @@ import { Persona } from "objects/Persona";
 
 /**
  * Component: SpaceView (W/Chat Room)
+ * 
+ * Inspiration: 
+ *  - https://github.com/gunnarmorling/discussions.morling.dev/discussions/291?sort=top
+ *  - Stack Overflow
+ *  - FB Messenger
  */
 function SpaceView({hash, collection, NFTpersonas}) {
   const { Moralis, isWeb3Enabled, isAuthenticated, chainId, user } = useMoralis();
@@ -293,7 +298,6 @@ function RoomEntrance(props) {
           <FireTwoTone twoToneColor="red" />{room?.get('name')}
         </h2>
 
-
         {isSelected && <div key="user_info">
           <p>{PersonaHelper.getNameFull(room.get('persona'))}
           , {room.get('persona').get('metadata')?.role}
@@ -303,18 +307,19 @@ function RoomEntrance(props) {
             <p dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(room.get('persona').get('metadata')?.purpose))}}></p>
           }
         </div>}
-
-        {/* <span key="id">ID: {room.id}</span> */}
-        {/* {isSelected && <p key="desc">{room.get('text')}</p>} */}
-        {/* <p key="created">Created: {room?.createdAt}</p> */}
-        {/* <p key="updated">Last Updated: {room?.updatedAt}</p> */}
-        {/* <p key="">Total Items: {room.total_items}</p> */}
-        {/* <p key="">Total Users: {room.total_users}</p> */}
-
-        {/* Single Room Link is Currently Broken...   //TODO: Single Room Needs its own URL
-        <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn">Go!</Link> 
-        */}
-        <div className="clearfloat"></div>
+        <div className="info">
+          {/* <span key="id">ID: {room.id}</span> */}
+          {/* {isSelected && <p key="desc">{room.get('text')}</p>} */}
+          {/* <p key="created">Created: {room?.createdAt}</p> */}
+          {/* <p key="updated">Last Updated: {room?.updatedAt}</p> */}
+          {/* <p key="">Total Items: {room.total_items}</p> */}
+          {/* <p key="">Total Users: {room.total_users}</p> */}
+          <p key="commentes">[NUM] Comments</p>
+          {/* Single Room Link is Currently Broken...   //TODO: Single Room Needs its own URL
+          <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn">Go!</Link> 
+          */}
+        </div>
+        
       </div> 
       <div className="vote framed" onClick={(evt) => {evt.stopPropagation()}}>
         <VotePane post={room}/>
@@ -348,21 +353,39 @@ function ShowMore() {
 function ShowComments({room}) {
   const { Moralis } = useMoralis();
   // const [ comments, setComments ] = useState([]);
-  const [ limit, setLimit ] = useState(10);
+  const [ limit, setLimit ] = useState(100);
   
+  const [ order, setOrder ] = useState('best'); //[olde, new, best]  //updatedAt, score
+  
+
   const { data:comments, error, isLoading } = useMoralisQuery(CommentObj, query =>
     query.equalTo("parentId", room.id)
       // .greaterThanOrEqualTo("score", 100)
-      // .descending("score")
+      .descending("updatedAt").descending("score")    //Best First
       // .limit(limit),
       ,[room, limit]
-      ,{ live: true }
+      ,{ live: true }   //Seems like it's not really live...
     );
 
   console.warn("ShowComments() Loaded "+comments.length+" Comments for Room:"+room.id, {comments});
 
   //Render
   return (
+    <div className="comments_wrapper">
+      {/* UNUSED
+      <div className="comments_top_bar">
+        <div className="comments_info">
+          {comments.length} Comments
+        </div>
+        <div className="comments_order">
+          <Radio.Group value={order} size="medium" onChange={(e) => {console.log('ShowComments() Order Canged to:'+e.target.value, e)}}>
+            <Radio.Button value="new">Newest</Radio.Button>
+            <Radio.Button value="old">Oldest</Radio.Button>
+            <Radio.Button value="best">Best</Radio.Button>
+          </Radio.Group>
+        </div>
+      </div>
+      */}
       <div className="comment_list">
         <div className="inner">
             {/* <p>[...COMMENTS for Room:{room.id}]</p> */}
@@ -374,10 +397,15 @@ function ShowComments({room}) {
                   author={comment.get('persona')?.get('metadata')?.name}
                   avatar={<Avatar src={PersonaHelper.getImage(comment.get('persona'))} alt={comment.get('persona')?.get('metadata').name} />}
                   content={
-                    <>
-                      <h3>{comment.get('name')}</h3>
-                      <p>{comment.get('text')}</p>
-                    </>
+                    <div className="inner">
+                      <div className="content">
+                        <h3>{comment.get('name')}</h3>
+                        <p>{comment.get('text')}</p>
+                      </div>
+                      <div className="vote" onClick={(evt) => {evt.stopPropagation()}}>
+                        <VotePane post={comment}/>
+                      </div>
+                    </div>
                   }
                   datetime={
                     <Tooltip title={moment(comment.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss')}>
@@ -389,5 +417,6 @@ function ShowComments({room}) {
             ))}
         </div>
       </div>
+    </div>
   );
 }//ShowComments()
