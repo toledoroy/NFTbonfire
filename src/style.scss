@@ -647,7 +647,7 @@
             font-size: 0.75rem;
             color: #999;
         }
-    }
+    }   
 }
 
 /* Token Send Widget */
@@ -657,5 +657,23 @@
     }
     .ant-select-selector {
         border-radius: 12px !important;
+    }
+}
+
+/* Comment Add Widget */
+.comment_add {
+    .ant-comment { width:100%; }
+    form {
+        background-color:#fff;
+        border-radius: 17px;
+        display: flex;
+        flex: 1 1;
+        .ant-form-item { display: block; }
+        textarea {
+            border:none;
+        }
+        button {
+            float:right; 
+        }
     }
 }

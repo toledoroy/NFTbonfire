@@ -175,7 +175,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
                         <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} selected={(curRoom===room.id)} />
                       } key={room.id} showArrow={false} className="item">
                       <ShowComments room={room} />
-                      <RoomAddForm parent={room} parentId={room.id} collection={collection} title="Add Comment" type='comment' />
+                      <RoomAddForm parent={room} parentId={room.id} collection={collection} type='comment' />
                     </Collapse.Panel>
                   ))}
                 </Collapse>

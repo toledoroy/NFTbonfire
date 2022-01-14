@@ -101,8 +101,9 @@ import { PersonaContext } from "common/context";
   
     if(type==='comment'){
       return (
-        <div className={"room_add "+props.className}>  
-        <h3>{(type==='comment') ? 'Add Comment' : 'Start a new bonfire'}</h3>
+        <div className={"comment_add "+props.className}>  
+        {/* <h3>{(type==='comment') ? 'Add Comment' : 'Start a new bonfire'}</h3> */}
+        {/* <h3>Add Comment</h3> */}
         {/* <p>Add a new Room to this Space!</p> */}
         <Comment
           avatar={<Avatar src={PersonaHelper.getImage(persona)} alt={persona?.get('metadata').name} />}
@@ -116,13 +117,20 @@ import { PersonaContext } from "common/context";
               autoComplete="off"
               form={form} 
               >
+              
               <Form.Item name="text" rules={[{ required: true, message: "You'd need to enter some text as well..."}]}>
                 <Input.TextArea />
               </Form.Item>
-              {persona && <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+
+              {persona &&
+                <Button type="primary" htmlType="submit" icon={<i className="bi bi-send"></i>}></Button>
+              }
+              
+              {/*persona &&
+               <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
                 <Button type="primary" htmlType="submit" icon={<i className="bi bi-send"></i>}></Button>
               </Form.Item>
-              }
+              */}
               {!persona && <p style={{textAlign:'center'}}>
                 To post content, you'd first need to mint yourself a persona.
                 <a href="/persona">
