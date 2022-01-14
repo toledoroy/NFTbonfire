@@ -547,11 +547,17 @@ body { height:100vh; }
 /* Stack */
 .stack {
     flex-wrap: nowrap;
+    .cards {
+        transition: transform 0.8s ease-in-out;
+    }
     .NFTitems { 
-        padding: 20px 182px 20px 80px; flex-wrap: nowrap; min-width: 480px; 
+        padding: 30px 182px 20px 50px; 
+        flex-wrap: nowrap; 
+        min-width: 480px; 
         /* .item:not(:first-child) { margin-left:-300px; } */
         .item { 
-            margin-right:-300px; 
+            margin-right:-282px; 
+            transform-origin: center bottom;
         }
         .item:nth-child(2n) { transform: rotate(10deg); }
         .item:nth-child(3n) { transform: rotate(20deg); }

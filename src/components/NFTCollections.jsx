@@ -188,40 +188,45 @@ function NFTCollections(props) {
                   // search: "?sort=name",
                   // hash: "#the-hash",
                   // state: { fromDashboard: true }
-                };
-                
-                return (
-                  <CollectionContext.Provider key={collection.hash+'Prov'} value={collection}>
-                    <div className="center_wrapper">
-                    {/* <p>{collection.owned ? 'Owned' : 'Not Owned'}</p> */}
-                    <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
-                      <h2 className="title">
-                        <Link key={collection.hash+'Link'} to={dest}>
-                           Collection: {__.sanitize(collection.name)} ({collection.symbol})
-                           <span className="debug">[{collection.contract_type}]</span> 
-                        </Link> 
-                      </h2>
-                      <div className="middle">
-                        <div key="cards" className="cards">
-                          <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} dest={dest} />
-                        </div>
-                        {/* {collectionHash && 
-                        <div key="space" className="space_container">
-                          <Space hash={collectionHash} collection={collection} NFTpersonas={NFTpersonas}/>
-                        </div>
-                        } */}
+              };
+              let style = {};
+              if(collectionHash){
+                let len = (collection.items.length < 4) ? collection.items.length : 4;  //Max of 4 in a stack
+                style.transform = "rotate(-"+5*len+"deg)";
+              } 
+              let title = collectionHash ? "Go Back" : "Pick '"+__.sanitize(collection.name)+"' Collection"
+              return (
+                <CollectionContext.Provider key={collection.hash+'Prov'} value={collection}>
+                  <div className="center_wrapper">
+                  {/* <p>{collection.owned ? 'Owned' : 'Not Owned'}</p> */}
+                  <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
+                    <h2 className="title">
+                      <Link key={collection.hash+'Link'} to={dest}>
+                          Collection: {__.sanitize(collection.name)} ({collection.symbol})
+                          <span className="debug">[{collection.contract_type}]</span> 
+                      </Link> 
+                    </h2>
+                    <div className="middle">
+                      <div key="cards" className="cards" style={style} title={title}>
+                        <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} dest={dest} />
                       </div>
-                    </div>
-
-                    {collectionHash && 
+                      {/* {collectionHash && 
                       <div key="space" className="space_container">
                         <Space hash={collectionHash} collection={collection} NFTpersonas={NFTpersonas}/>
                       </div>
-                    }
+                      } */}
                     </div>
-                  </CollectionContext.Provider>
-                );
-              } else return '';
+                  </div>
+
+                  {collectionHash && 
+                    <div key="space" className="space_container">
+                      <Space hash={collectionHash} collection={collection} NFTpersonas={NFTpersonas}/>
+                    </div>
+                  }
+                  </div>
+                </CollectionContext.Provider>
+              );
+            } else return '';
           })}
       </div>
     </Skeleton>
