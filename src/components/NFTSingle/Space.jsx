@@ -192,6 +192,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
           : <div className="disallowed">
               {/* <h2>Private Space</h2> */}
               <h3>This space is only open for {__.sanitize(collection.name)} NFT holders.</h3>
+              <img src="/images/access_denied.png" alt="Access Denied" style={{margin:'25px ​69px 10px'}}/>
               {user 
               ? <p>To Enter this space you need to own an NFT from this collection</p>
               : <p>To Enter this space please sign-in with an account that owns an NFT from this collection</p>
