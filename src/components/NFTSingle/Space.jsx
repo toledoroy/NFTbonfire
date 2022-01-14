@@ -175,11 +175,14 @@ function SpaceView({hash, collection, NFTpersonas}) {
                         <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} selected={(curRoom===room.id)} />
                       } key={room.id} showArrow={false} className="item">
                       <ShowComments room={room} />
-                      <RoomAddForm parent={room} parentId={room.id} collection={collection} type='comment' />
+                      <ShowMore />
+                      <RoomAddForm parent={room} parentId={room.id} type='comment' />
                     </Collapse.Panel>
                   ))}
                 </Collapse>
-                <ShowMore />
+                {!curRoom && 
+                  <ShowMore />
+                }
               </div>
               :
               <SpaceEmpty collection={collection} />
@@ -250,14 +253,16 @@ function RoomEntrance(props) {
     setPersona(personaFull);
   }
 
+  /* DEPRECATED - No Longer Using the Window.
   useEffect(() => {
-    /* Scroll to Selected/Unselected Element */
+    // Scroll to Selected/Unselected Element
     // console.warn("[DEV] RoomEntrance() Room "+room.id+" Selected:"+isSelected, {room, elTop:document.getElementById(room.id).offsetTop});
     let options = {top: document.getElementById(room.id).offsetTop + 40 ,  behavior: 'smooth'};
     // if(isSelected) options.behaviour = 'auto';
     window.scrollTo(options);
   },[isSelected]);
-  
+  */
+
   return (
     <div className="room_single">
     <div className={className} id={room.id}>
@@ -321,9 +326,11 @@ function RoomEntrance(props) {
  */
 function ShowMore() {
   return (
-      <div className="showMore flex">
+      <div className="show_more flex">
           <div className="inner">
-              <p>Show More</p>
+              <p onClick={ console.warn("ShowMore() Clicked") }>
+                Load More
+              </p>
           </div>
       </div>
   );
@@ -351,30 +358,30 @@ function ShowComments({room}) {
   //Render
   return (
       <div className="comment_list">
-          <div className="inner">
-              {/* <p>[...COMMENTS for Room:{room.id}]</p> */}
-              {comments && comments.map((comment) => (
-                <div className="comment" key={comment.id}>
-                  <Comment
-                    actions={[<span key="comment-nested-reply-to">Reply</span>]}
-                    // author={<a>Han Solo</a>}
-                    author={comment.get('persona')?.get('metadata')?.name}
-                    avatar={<Avatar src={PersonaHelper.getImage(comment.get('persona'))} alt={comment.get('persona')?.get('metadata').name} />}
-                    content={
-                      <>
-                        <h3>{comment.get('name')}</h3>
-                        <p>{comment.get('text')}</p>
-                      </>
-                    }
-                    datetime={
-                      <Tooltip title={moment(comment.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss')}>
-                        <span>{moment(comment.get('updatedAt')).fromNow()}</span>
-                      </Tooltip>
-                    }
-                  />
-                </div>
-              ))}
-          </div>
+        <div className="inner">
+            {/* <p>[...COMMENTS for Room:{room.id}]</p> */}
+            {comments && comments.map((comment) => (
+              <div className="comment" key={comment.id}>
+                <Comment
+                  actions={[<span key="comment-nested-reply-to">Reply</span>]}
+                  // author={<a>Han Solo</a>}
+                  author={comment.get('persona')?.get('metadata')?.name}
+                  avatar={<Avatar src={PersonaHelper.getImage(comment.get('persona'))} alt={comment.get('persona')?.get('metadata').name} />}
+                  content={
+                    <>
+                      <h3>{comment.get('name')}</h3>
+                      <p>{comment.get('text')}</p>
+                    </>
+                  }
+                  datetime={
+                    <Tooltip title={moment(comment.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss')}>
+                      <span>{moment(comment.get('updatedAt')).fromNow()}</span>
+                    </Tooltip>
+                  }
+                />
+              </div>
+            ))}
+        </div>
       </div>
   );
 }//ShowComments()

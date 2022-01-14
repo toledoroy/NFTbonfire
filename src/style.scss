@@ -710,7 +710,11 @@
         border-radius: 17px;
         display: flex;
         flex: 1 1;
-        .ant-form-item { display: block; }
+        .ant-form-item { 
+            display: block; 
+            flex: 1 1;
+            margin: 0;
+        }
         textarea {
             border:none;
         }

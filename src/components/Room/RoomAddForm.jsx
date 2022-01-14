@@ -111,8 +111,8 @@ import { PersonaContext } from "common/context";
             <Form name="postAdd" 
               onFinish={onFinish}
               onFinishFailed={console.error}
-              labelCol={{ span: 6, }}
-              wrapperCol={{ span: 16, }}
+              // labelCol={{ span: 6, }}
+              // wrapperCol={{ span: 16, }}
               initialValues={{ remember: false, text:''}}
               autoComplete="off"
               form={form} 
@@ -125,7 +125,7 @@ import { PersonaContext } from "common/context";
               {persona &&
                 <Button type="primary" htmlType="submit" icon={<i className="bi bi-send"></i>}></Button>
               }
-              
+
               {/*persona &&
                <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
                 <Button type="primary" htmlType="submit" icon={<i className="bi bi-send"></i>}></Button>
