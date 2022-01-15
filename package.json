@@ -27,7 +27,7 @@
     "yarn": "^1.22.17"
   },
   "scripts": {
-	 "start": "node --optimize_for_size --max_old_space_size=460 react-scripts start",
+	 "start": "node --optimize_for_size --max_old_space_size=460 node_modules/.bin/react-scripts start",
     "build": "node --max_old_space_size=2560 node_modules/.bin/react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
