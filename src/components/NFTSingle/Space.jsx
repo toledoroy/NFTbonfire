@@ -199,12 +199,11 @@ function SpaceView({hash, collection, NFTpersonas}) {
               {/* <h2 style={{fontSize:'2em'}}>Stop!</h2> */}
               <h3>This space is only open for {__.sanitize(collection.name)} NFT holders.</h3>
               {/* <img src="/images/access_denied.png" alt="Access Denied" style={{margin:'25px ​69px 10px'}}/> */}
-              
               {/* <img src="/images/doorman2.png" alt="Access Denied" style={{margin:'25px ​69px 10px'}}/> */}
               
               {user 
               ? <p>To Enter this space you need to own an NFT from this collection</p>
-              : <p>To Enter this space please sign-in with an account that owns an NFT from this collection</p>
+              : <p>To Enter this space please <span style={{textDecoration:'underline'}}>sign-in</span> with an account that owns an NFT from this collection</p>
               }
               {/* <div style={{textAlign:'center'}}><StopOutlined style={{fontSize:'9em'}} /></div> */}
               <img src="/images/doorman1.png" alt="Access Denied" style={{marginTop: '20px', maxHeight: '60vh'}}/>

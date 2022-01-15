@@ -672,7 +672,13 @@ body { height:100vh; }
             justify-content: space-between;
         }
         .anticon{ margin-right: 5px; }
-        .vote { margin: auto 0 auto auto ; }
+        .vote { 
+            margin: auto 0 auto auto ; 
+            .vote_count {
+                text-align: right;
+                padding-right: 8px;
+            }
+        }
     }
 }
 
@@ -758,6 +764,10 @@ body { height:100vh; }
             .vote {
                 margin-top:-20px;
                 align-self: flex-end;
+                .vote_count {
+                    text-align: right;
+                    padding-right: 4px;
+                }
             }
         }
     }

@@ -1,8 +1,10 @@
 import { useMoralis } from "react-moralis";
-import { useMoralisQuery, useWeb3ExecuteFunction } from "react-moralis";
+import { useMoralisQuery } from "react-moralis";
 import { useEffect, useState, createElement } from "react";
-import { Comment, Tooltip, Avatar, message, Divider, Skeleton } from "antd";
-import { DislikeOutlined, LikeOutlined, DislikeFilled, LikeFilled } from "@ant-design/icons";
+import { Tooltip, message, } from "antd";
+// import { Comment, Avatar, Divider, Skeleton } from "antd";
+// import { DislikeOutlined, LikeOutlined, DislikeFilled, LikeFilled } from "@ant-design/icons";
+import { UpOutlined, DownOutlined, CaretUpFilled, CaretDownFilled } from "@ant-design/icons";
 // import Text from "antd/lib/typography/Text";
 // import Blockie from "components/Blockie";
 // import glStyles from "components/gstyles";
@@ -44,7 +46,9 @@ const VotePane = (props) => {
         <div className="side_pane">
             <Tooltip key="comment-basic-like" title="Great!" placement="right">
                 <span onClick={(evt) => vote(1)}>
-                    {createElement(voteStatus === 1 ? LikeFilled : LikeOutlined)}
+                    {/* {createElement(voteStatus === 1 ? LikeFilled : LikeOutlined)} */}
+                    {createElement(voteStatus === 1 ? CaretUpFilled : UpOutlined)}
+                    {/* TODO! It would probably be better to just change Color... */}
                 </span>
             </Tooltip>
             <div className="vote_count">
@@ -53,7 +57,8 @@ const VotePane = (props) => {
             </div>
             <Tooltip key="comment-basic-dislike" title="I Don't Like This" placement="right">
                 <span onClick={(evt) => vote(-1)}>
-                    {createElement(voteStatus === -1 ? DislikeFilled : DislikeOutlined)}
+                    {/* {createElement(voteStatus === -1 ? Disl?ikeFilled : DislikeOutlined)} */}
+                    {createElement(voteStatus === -1 ? CaretDownFilled : DownOutlined)}
                 </span>
             </Tooltip>
         </div>
