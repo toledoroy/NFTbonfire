@@ -293,11 +293,11 @@ function RoomEntrance(props) {
         </div>
       </Badge.Ribbon>
       <div className="content">
-        <h2>
+        <h1>
           {/* <Link key="link" to={{ pathname: "/room/"+room.id, }} className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</Link> */}
           {/* <a className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</a> */}
           <FireTwoTone twoToneColor="red" />{room?.get('name')}
-        </h2>
+        </h1>
 
         {isSelected && <div key="user_info">
           <p>{PersonaHelper.getNameFull(room.get('persona'))}
