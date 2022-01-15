@@ -10,6 +10,7 @@ export const ChainsData = {
     native: 'ETH',
     nId:'ND-2H0ETHMainNet',
     live: true,
+    supported: false,
   },
   // {
   //   key: "0x539",
@@ -17,6 +18,7 @@ export const ChainsData = {
   //   icon: <ETHLogo />,
   //   native: 'ETH',
     // live: false,
+    supported: false,
   // },
   "0x3":{
     key: "0x3",
@@ -25,6 +27,7 @@ export const ChainsData = {
     native: 'ETH',
     nId:'',
     live: false,
+    supported: false,
   },
   "0x4":{
     key: "0x4",
@@ -33,6 +36,7 @@ export const ChainsData = {
     native: 'ETH',
     nId:'',
     live: false,
+    supported: true,
   },
   "0x2a":{
     key: "0x2a",
@@ -41,6 +45,7 @@ export const ChainsData = {
     native: 'ETH',
     nId:'',
     live: false,
+    supported: false,
   },
   "0x5":{
     key: "0x5",
@@ -49,6 +54,7 @@ export const ChainsData = {
     native: 'ETH',
     nId:'',
     live: false,
+    supported: false,
   },
   "0x38":{
     key: "0x38",
@@ -57,6 +63,7 @@ export const ChainsData = {
     native: 'BNB',
     nId:'ND-2H0BSCMainNet',
     live: true,
+    supported: false,
   },
   "0x61":{
     key: "0x61",
@@ -65,6 +72,7 @@ export const ChainsData = {
     native: 'BNB',
     nId:'ND-2H0BSCTestNet',
     live: false,
+    supported: false,
   },
   "0x89":{
     key: "0x89",
@@ -73,6 +81,7 @@ export const ChainsData = {
     native: 'MATIC',
     nId:'ND-2H0MaticMainNet',
     live: true,
+    supported: false,
   },
   "0x13881":{
     key: "0x13881",
@@ -81,6 +90,7 @@ export const ChainsData = {
     native: 'MATIC',
     nId:'',
     live: true,
+    supported: false,
   },
   "0xa86a":{
     key: "0xa86a",
@@ -89,6 +99,7 @@ export const ChainsData = {
     native: 'AVAX',
     nId:'',
     live: true,
+    supported: false,
   },
   "0xa869":{
     key: "0xa869",
@@ -96,6 +107,7 @@ export const ChainsData = {
     icon: <AvaxLogo />,
     nId:'',
     live: false,
+    supported: false,
   },
 }
 
