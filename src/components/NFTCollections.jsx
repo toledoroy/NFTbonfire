@@ -14,6 +14,7 @@ import { Post } from "objects/objects";
 import Space from "components/NFTSingle/Space";
 import { CollectionContext } from "common/context";
 // import { NFTHelper } from "helpers/NFTHelper";
+import { ChainHelper } from "helpers/ChainHelper";
 import __ from "helpers/__";
 // import { getChainName, getChainLogo } from "helpers/networks";
     
@@ -83,7 +84,7 @@ function NFTCollections(props) {
     // chain:"0x4", 
     // address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1'
   };
-  options.address = accountHash ? accountHash : account;
+  options.address = accountHash ? accountHash : account;    //Who's NFTs
   if(props?.match?.params?.chain) options.chain = props.match.params.chain;
   const { NFTCollections, NFTpersonas } = useNFTCollections(options);
 
@@ -132,10 +133,15 @@ function NFTCollections(props) {
   }//testFunc()
   // testFunc();
 
-  
   // (process.env.NODE_ENV==='development')
 
+  // console.warn("[TEST] NFTCollections() Collection:", {NFTCollections, collectionHash, thiscollection:NFTCollections[collectionHash] });
   //style={styles.NFTs}
+  
+  //Validate
+  if(!NFTCollections[collectionHash]) return (
+    <div className="framed error 404">Error: Failed to Find Selected Contract '{collectionHash}' on {ChainHelper.get(chainId,'name')}</div>
+  );
   return (
     <Skeleton loading={!isWeb3Enabled}>
       
