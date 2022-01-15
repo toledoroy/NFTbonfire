@@ -150,9 +150,8 @@ export const useVerifyMetadata = () => {
     function setMetadata(NFT, metadata){
         //Add Metadata
         NFT.metadata = metadata;
-        //Set Image
-        // if(metadata?.image) NFT.image = resolveLink(metadata.image); //IPFS Moved Outside
-        if(metadata?.image) NFT.image = metadata.image; //Moved Outside
+        //Set Image     //Resolve IPFS & Save Externally to Metadata
+        if(metadata?.image) NFT.image = resolveLink(metadata.image); 
         //Set to State
         if(metadata && !results[NFT.token_uri]) setResults({...results, [NFT.token_uri]: NFT});
     }//setMetadata()
