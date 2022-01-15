@@ -5,6 +5,9 @@
   "engines": {
     "node": "14.x"
   },
+  "workspaces": [
+	"client"
+  ],
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@testing-library/jest-dom": "^5.11.4",
@@ -27,8 +30,8 @@
     "yarn": "^1.22.17"
   },
   "scripts": {
-	 "start": "node --optimize_for_size --max_old_space_size=460 node_modules/.bin/react-scripts start",
-    "build": "node --max_old_space_size=2560 node_modules/.bin/react-scripts build",
+	 "start": "yran start",
+    "build": "yarn install",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
 	"devchain": "node Truffle/scripts/devChain.js",
