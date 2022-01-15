@@ -53,32 +53,6 @@ function NFTCollections(props) {
   const { isAllowed } = useIsAllowed({hash:collectionHash, chain:props?.match?.params?.chain || chainId});
   // console.warn("[TEST] NFTCollections() Ran useIsAllowed:"+isAllowed, {hash:collectionHash, chain:props?.match?.params?.chain || chainId, props});
 
-  /* MOVED TO useIsAllwed Hook
-  // const [ isAllowed, setIsAllowed ] = useState(false);
-  useEffect(() => {
-    //Default to Current Account
-    if(!accountHash) console.error("NFTCollections() Set Default Account", {accountHash, account});
-    if(!accountHash) accountHash = account; 
-    
-    //Check if Account Owns Any of These Assets
-    if(collectionHash && isWeb3Enabled) {
-      let chain = props?.match?.params?.chain || chainId;
-      //Fetch Balance
-      NFTHelper.getBalance(Moralis, account, collectionHash, chain).then(balance => {
-        //Log
-        console.log("NFTCollections() Account's Balance for this Contract:"+balance, {balance, account, collectionHash}); 
-        //Set Permissions
-        setIsAllowed(balance > 0);
-      // }, [collectionHash, account]);
-      });
-    }else{
-      //Nothing Selected -- Allow to all
-      setIsAllowed(true);
-      return;
-    }
-  }, [accountHash, collectionHash, isWeb3Enabled, chainId, account]);
-  */
-
   //Init Options
   let options = {
     // chain:"0x4", 

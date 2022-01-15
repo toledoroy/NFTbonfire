@@ -150,6 +150,8 @@ const App = ({ isServerInfo }) => {
               {/*<Route path="/nftBalance/:id" component={NFTBalance} />*/} {/* Breaks Things... */}
               {/* <Route path="/nftSingle/:hash" component={NFTSingle} /> */}
               {/* <Route path="/room/:id" component={RoomPage} /> */}
+              
+              {/* THIS SHOULD HAVE DEFINED CHAIN, NOT NECESSARILY ACCOUNT... */}
               <Route path="/nftCollections/:accountHash/:collectionHash/:roomId/:postId" component={NFTCollections} />
               <Route path="/nftCollections/:accountHash/:collectionHash/:roomId" component={NFTCollections} />
               <Route path="/nftCollections/:accountHash/:collectionHash" component={NFTCollections} />
