@@ -121,7 +121,8 @@ function NFTCollections(props) {
       
       {!isAllowed && <p className="debug" style={{float:'right'}}>NOT ALLOWED</p>}
 
-      <div key="collections" className="collections framed">
+      <div key="collections" className={"collections framed count_"+Object.keys(NFTCollections).length}>
+        
           <div key="header" className="header">
             {(props?.match?.params?.showBreadcrumbs !== false) && 
               <>

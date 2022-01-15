@@ -136,6 +136,8 @@ button:active {
   border-radius: 12px;
 }
 
+/* Misc. */
+.show_more { padding: 7px; justify-content: center; cursor: pointer; }
 
 /* Animations */
 @keyframes slideIn {

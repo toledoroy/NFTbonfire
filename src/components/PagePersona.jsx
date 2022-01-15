@@ -4,6 +4,7 @@ import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 // import PersonaEdit from "components/Persona/PersonaEdit";
 import { PersonaHelper } from "helpers/PersonaHelper";
 import { getChainName, getChainLogo } from "helpers/networks";
+import { ChainHelper } from "helpers/ChainHelper";
 import { Persona } from "objects/Persona";
 import { IPFS } from "helpers/IPFS";
 import { usePersona } from "hooks/usePersona";
@@ -608,9 +609,8 @@ function PagePersona(props) {
                             hideAdd={!isEditMode}
                             >
                             {metadata?.accounts?.map((account, index) => (
-                                
                                 <TabPane tab={(
-                                    <span title={getChainName(account.chain)} className={(account.address.toLowerCase()==persona.get('owner').toLowerCase()) ? 'verified' : ''}>
+                                    <span title={ChainHelper.get(account.chain, 'name')} className={(account.address.toLowerCase()===persona.get('owner').toLowerCase()) ? 'verified' : ''}>
                                         {account.address 
                                         ? <Address icon={getChainLogo(account.chain)} copyable address={account.address} size={5} />
                                         : <span>[NO HASH]</span>
