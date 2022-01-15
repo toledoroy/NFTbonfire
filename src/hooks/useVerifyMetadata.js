@@ -83,9 +83,9 @@ export const useVerifyMetadata = () => {
 
             // if(uri1Adjusted !== uri2Adjusted) console.warn("[TEST] Different IPFS IDs", {uri1, uri2, uri1Adjusted, uri2Adjusted});   //V
 
-            return (uri1Adjusted == uri2Adjusted);
+            return (uri1Adjusted === uri2Adjusted);
         }
-        return (uri1==uri2);
+        return (uri1===uri2);
     }
 
     /**
