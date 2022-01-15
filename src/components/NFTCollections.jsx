@@ -113,8 +113,8 @@ function NFTCollections(props) {
   //style={styles.NFTs}
   
   //Validate
-  if(!NFTCollections[collectionHash]) return (
-    <div className="framed error 404">Error: Failed to Find Selected Contract '{collectionHash}' on {ChainHelper.get(chainId,'name')}</div>
+  if(collectionHash && !NFTCollections[collectionHash]) return (
+    <div className="framed error 404">Error: Failed to Find Requested Contract '{collectionHash}' on {ChainHelper.get(chainId,'name')}</div>
   );
   return (
     <Skeleton loading={!isWeb3Enabled}>
