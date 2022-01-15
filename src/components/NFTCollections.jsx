@@ -170,7 +170,7 @@ function NFTCollections(props) {
                   // state: { fromDashboard: true }
               };
               let style = {};
-              if(collectionHash){
+              if(collectionHash && collection.items.length > 1){
                 let len = (collection.items.length < 4) ? collection.items.length : 4;  //Max of 4 in a stack
                 style.transform = "rotate(-"+5*len+"deg)";
               } 
