@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 //import { Card, Image, Tooltip, Modal, Input, Button, Dropdown, Avatar } from "antd";
-import { Breadcrumb, Skeleton } from "antd";
+import { Breadcrumb, Skeleton, Button } from "antd";
 import { useMoralis } from "react-moralis";
 // import { useNFTBalance } from "hooks/useNFTBalance";
 import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
@@ -174,7 +174,8 @@ function NFTCollections(props) {
                 let len = (collection.items.length < 4) ? collection.items.length : 4;  //Max of 4 in a stack
                 style.transform = "rotate(-"+5*len+"deg)";
               } 
-              let title = collectionHash ? "Go Back" : "Pick '"+__.sanitize(collection.name)+"' Collection"
+              let title = collectionHash ? "Go Back" : "Pick '"+__.sanitize(collection.name)+"' Collection";
+
               return (
                 <CollectionContext.Provider key={collection.hash+'Prov'} value={collection}>
                   <div className="center_wrapper">
@@ -186,6 +187,18 @@ function NFTCollections(props) {
                           <span className="debug">[{collection.contract_type}]</span> 
                       </Link> 
                     </h2>
+
+                    {collectionHash && 
+                      <Link key={collection.hash+'Link'} to={dest}>
+                        <Button variant="contained" color="primary" className="backstep"
+                          style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
+                          icon={<i className="bi bi-arrow-left"></i>}
+                          // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
+                          >
+                        </Button>
+                      </Link>
+                    }
+
                     <div className="middle">
                       <div key="cards" className="cards" style={style} title={title}>
                         <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} dest={dest} />

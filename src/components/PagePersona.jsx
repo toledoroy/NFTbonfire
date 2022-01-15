@@ -569,7 +569,7 @@ function PagePersona(props) {
                                         icon={<i className="bi bi-pencil-fill"></i>}>Edit
                                     </Button>}
 
-                                {(isEditMode && !PersonaHelper.isNew(persona)) && <Button variant="contained" color="primary" onClick={()=>{ reloadmetadata(); setIsEditMode(isEditMode===false);}}
+                                {(isEditMode && !PersonaHelper.isNew(persona)) && <Button variant="contained" color="primary" className="backstep" onClick={()=>{ reloadmetadata(); setIsEditMode(isEditMode===false);}}
                                     style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
                                     icon={<i className="bi bi-arrow-left"></i>}
                                     // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
