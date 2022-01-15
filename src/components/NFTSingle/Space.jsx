@@ -61,6 +61,8 @@ function SpaceView({hash, collection, NFTpersonas}) {
    */
   useEffect(() => {
     if (isWeb3Enabled && isAuthenticated) {
+      //Unset Space
+      setSpace(null);
       const query = new Moralis.Query(Space);
       query.equalTo("hash", hash);
       query.first().then(result => {
