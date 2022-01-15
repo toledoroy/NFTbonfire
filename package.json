@@ -30,7 +30,7 @@
     "yarn": "^1.22.17"
   },
   "scripts": {
-	 "start": "yran start",
+	 "start": "yarn start",
     "build": "yarn install",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
