@@ -1,5 +1,5 @@
 import React from "react";
-import { useMoralis } from "react-moralis";
+import { useMoralis, useMoralisQuery } from "react-moralis";
 import NFTCollections from "components/NFTCollections";
 import { ChainHelper } from "helpers/ChainHelper";
 import { Skeleton, Tabs } from 'antd';
@@ -9,6 +9,7 @@ import Address from "components/Address/Address";
 
 const { TabPane } = Tabs;
 
+
 /**
  * Component: Home Page
  */
@@ -16,6 +17,18 @@ const { TabPane } = Tabs;
     const { Moralis, user, chainId, account, isWeb3Enabled } = useMoralis();     //isUserUpdating
     // const { persona, contract } = props;
     const { persona, contract } = props;
+
+    //Fetch Personas -- Live Query (This isn't actually live the way you'd expect. DB changes aren't being detected)
+    const { data : personas } = useMoralisQuery('Persona', query => query.equalTo("owner", String(account).toLowerCase()), [account], { 
+        live: true,
+        /* For Some Mysterious Reason This Query is only Reflect DB Changes if these arguments are (and are wrong, playerName does not exist...)  */    //Maybe onLiveCreate
+        onCreate: data => console.warn(`${data.attributes.playerName} was just Created`),
+        onDelete: data => console.warn(`${data.attributes.playerName} was just Deleted`),
+        onUpdate: data => console.warn(`${data.attributes.playerName} was just Updated`),
+        // onLiveCreate: data => console.warn(`${data.attributes.token_id} was just Created`),  //Nope
+        // onLiveDelete: data => console.warn(`${data.attributes.token_id} was just Deleted`),  //Nope
+        // onLiveUpdate: data => console.warn(`${data.attributes.token_id} was just Updated`),  //Nope
+    });
 
     return (
         <div className="framed home">
@@ -34,7 +47,11 @@ const { TabPane } = Tabs;
                     [Account]
                 </div>
                 <div className="personas">
-                    [Persona]
+                    <h2>Personas</h2>
+                    {personas.map(persona => <div>
+                        {persona.id}
+                        {persona.get('image')}
+                    </div>)}
                 </div>
             </div>
             <div className="row flex">
