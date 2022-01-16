@@ -46,6 +46,7 @@
             "telegram": {"name":"telegram", "url":"https://telegram.com/"},
             "instagram": {"name":"instagram", "url":"https://instagram.com/"},
             "youtube": {"name":"youtube", "url":"https://youtube.com/c/"},
+            "tiktok": {"name":"tiktok", "url":"https://www.tiktok.com/@"},
             "twitch": {"name":"twitch", "url":"https://twitch.tv/"},
             "reddit": {"name":"reddit", "url":"https://reddit.com/user/"},
             "medium": {"name":"medium", "url":"https://medium.com/@"},
