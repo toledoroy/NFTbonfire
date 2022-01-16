@@ -22,9 +22,9 @@ function NFTDisplayMetadata({nft}) {
           {/* <p>Type: {nft.contract_type}</p> */}
           {/* <p>Amount: {nft.amount}</p> */}
           {/* <p>Symbol: {nft.symbol}</p> */}
-          <p>{nft.contract_type}: {nft.symbol}</p>
+          {/* <p>{nft.contract_type}: {nft.symbol}</p> */}
           {nft?.metadata && <dl>
-            <dt>Metadata:</dt>
+            {/* <dt>Metadata:</dt> */}
             {Object.keys(nft?.metadata).map((key, index) => {
               return (nft.metadata[key] && shouldShow(key)) ? <DisplayMetadataField key={key} label={key} value={nft.metadata[key]} /> : null;
             })}
@@ -47,6 +47,8 @@ export default NFTDisplayMetadata;
    let {label, value} = props;
   // console.log("DisplayMetadataField() Start W/", {label, value})
   // const { Moralis } = useMoralis();
+  const exclusions = ['compiler'];
+  if(!label || exclusions.includes(label)) return '';
 
   if(typeof value == 'string' || typeof value == 'number'){
     if(label === 'date'){
