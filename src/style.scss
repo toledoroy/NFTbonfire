@@ -503,6 +503,12 @@ body { height:100vh; }
                     }
                     dd{ 
                         max-width: 100%; 
+                        overflow: hidden;
+                        background: var(--comment-background);
+                        border: 1px solid #ddd;
+                        border-radius: 11px 11px 8px 8px;
+                        padding: 1px 6px;
+                        margin-bottom: 3px;
                         label {
                             text-transform: capitalize;
                             text-decoration: underline;
@@ -662,7 +668,6 @@ body { height:100vh; }
 /* Room List */
 .room_list {
     clear: both;
-    
     .ant-collapse-header { display:block !important; }
     .ant-collapse > .ant-collapse-item { border:none; position:relative; }
     .ant-collapse > .ant-collapse-item:after {
