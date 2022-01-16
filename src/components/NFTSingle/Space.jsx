@@ -30,7 +30,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
   const { Moralis, isWeb3Enabled, isAuthenticated, chainId, user } = useMoralis();
   const [ space, setSpace ] = useState({});
   const [ rooms, setRooms ] = useState([]);
-  const [ curRoom, setCurRoom ] = useState();
+  const [ curRoomId, setcurRoomId ] = useState();
   const [ limit, setLimit ] = useState(8);
   const { isAllowed } = useIsAllowed({hash, chain:chainId});
   // const { persona, setPersona} = useContext(PersonaContext);
@@ -128,14 +128,14 @@ function SpaceView({hash, collection, NFTpersonas}) {
         */
       });
       //Log
-      // console.log("Moralis Query Object for Current Room: ", {hash, curRoom});
+      // console.log("Moralis Query Object for Current Room: ", {hash, curRoomId});
     }//Authenticated
     else setRooms([]);
   }, [hash]);
  
   //Log
   // console.log("SpaceView() For collection:", {collection, rooms});
-  // console.warn("[DEV] Room list Collapse", curRoom);
+  // console.warn("[DEV] Room list Collapse", curRoomId);
 
   //Validate
   // if(collection.contract_type!=="ERC1155") return <div>Unsupported Collection Type:'{collection.contract_type}'</div>;   //It's a mess out there, ERC721 0xcc14dd8e6673fee203366115d3f9240b079a4930 Contains Multiple NFTs (All Have amount=1)
@@ -150,16 +150,8 @@ function SpaceView({hash, collection, NFTpersonas}) {
   return (
     <CollectionContext.Consumer>
     {collection => (
-    <Skeleton active loading={!space}>
+    <Skeleton active loading={!space || rooms.length===0}>
       <div className="space">
-
-          {/* 
-          {NFTpersonas && 
-          <div className="personas">
-            <PersonaChanger persona={NFTpersonas[0]} personas={NFTpersonas}/>
-          </div>
-          } 
-          */}
 
           <h1> Private Space for {collection.name}</h1>
           {/* <h4>[Addr:{collection.hash}]</h4> */}
@@ -168,26 +160,30 @@ function SpaceView({hash, collection, NFTpersonas}) {
           {/* TODO: Add Field: Creator, Total No. of Items, */}
 
           {(isAllowed || process.env.NODE_ENV==='developmentX') ? <>
-            <div className={(curRoom) ? 'room_list single' : 'room_list'}>
+            <div className={(curRoomId) ? 'room_list single' : 'room_list'}>
               {(!isAllowed && process.env.NODE_ENV==='development') && <span className="debug" style={{float:'right'}}>[NOT ALLOWED]</span>}
-            {(rooms && rooms.length>0) ?
+            {(rooms && rooms.length>0) ? 
               <div className="allowed">
               
-                {!curRoom && <RoomAddForm parentId={collection.hash} collection={collection} />}
+                {!curRoomId && <RoomAddForm parentId={collection.hash} collection={collection} selected={curRoomId} />} 
 
-                <Collapse accordion onChange={(selected) => setCurRoom(selected)}>
+                <Collapse accordion onChange={(selected) => setcurRoomId(selected)}>
                   {/* collapsible="disabled" */}
                   {rooms.map((room, index) => (
+                    
                     <Collapse.Panel header={
-                        <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} selected={(curRoom===room.id)} />
-                      } key={room.id} showArrow={false} className="item">
+                      // <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} selected={curRoomId===room.id} />    //MOVE TO PARENT, Though works just as badly... (disapears on node reload)
+                        <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />
+                      } key={room.id} showArrow={false} className={(curRoomId===room.id) ? 'item selected' : 'item'}>
                       <ShowComments room={room} />
+
                       <ShowMore />
                       <RoomAddForm parent={room} parentId={room.id} type='comment' />
+                      {/* {console.warn("[DEV] RoomEntrance() Room "+room.id+" Selected:"+(curRoomId===room.id), curRoomId)} */}
                     </Collapse.Panel>
                   ))}
                 </Collapse>
-                {!curRoom && 
+                {!curRoomId && 
                   <ShowMore />
                 }
               </div>
@@ -275,6 +271,14 @@ function RoomEntrance(props) {
   },[isSelected]);
   */
 
+  
+ 
+ console.warn("[TEST] RoomEntrance() For:"+room.id, {
+  started:moment(room.get('createdAt')).format('YYYY-MM-DD HH:mm:ss'),
+ letInteraction: moment(room.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss'),
+ });
+ 
+ 
   return (
     <div className="room_single">
     <div className={className} id={room.id}>

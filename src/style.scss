@@ -84,6 +84,22 @@ body { height:100vh; }
     min-height: 350px;
 }
 
+/* Page: Home */
+.home {
+    .account {
+        
+    }
+    .personas {
+        
+    }
+    .assets {
+        .collections {
+            padding:15px 0;
+            .header {display: none;}
+        }   
+    }
+}
+
 /* Page:Persona */
 .persona {
     padding-top: 0px;
@@ -596,7 +612,7 @@ body { height:100vh; }
 }
 
 /* Account */
-.account {     
+#account {     
     color: #21bf96;
     height: 48px;
     padding: 0 15px;
@@ -639,6 +655,8 @@ body { height:100vh; }
 .room_list.single{
     .ant-collapse-item {display: none;}
     .ant-collapse-item-active { display: block; }
+    // .ant-collapse>.item {display: none;}
+    // .ant-collapse>.item.selected { display: block; }
 }
 
 /* Room List */

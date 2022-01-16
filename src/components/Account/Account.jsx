@@ -175,7 +175,7 @@ function Account() {
   if (!isAuthenticated) {
     return (
       <>
-        <div className="account out" onClick={() => authenticate({ signingMessage: "Sign in [Free]" })}>
+        <div id="account" className="out lightUp" onClick={() => authenticate({ signingMessage: "Sign in [Free]" })}>
           <p className="text">Authenticate</p>
         </div>
         <Modal
@@ -260,7 +260,7 @@ function Account() {
       </Menu>
       )} placement="bottomRight">
       <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-        <div className="account in lightUp">
+        <div id="account" className="account in lightUp">
           <p className="hash">{getEllipsisTxt(account, 4)}</p>
           {/* <Blockie currentWallet scale={3} /> */}
           <Avatar className='image' src={

@@ -17,8 +17,8 @@ export const ChainsData = {
   //   name: "Local Chain",
   //   icon: <ETHLogo />,
   //   native: 'ETH',
-    // live: false,
-    supported: false,
+  // live: false,
+  // supported: false,
   // },
   "0x3":{
     key: "0x3",

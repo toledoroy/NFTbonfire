@@ -8,7 +8,14 @@ export const ChainHelper = {
      * @param {*} key 
      * @returns 
      */
-    get(chain, key){ return ChainsData[chain]?.[key]; }
+    get(chain, key){ return ChainsData[chain]?.[key]; },
+
+    /**
+     * 
+     */
+    allChains(){
+        return Object.keys(ChainsData);
+    },
 };
 
 export default ChainHelper;

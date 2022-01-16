@@ -28,6 +28,7 @@ export default function Contract() {
   const [responses, setResponses] = useState({});
   const [allContracts, setAllContracts] = useState([]);
   const [contract, setContractActual] = useState(null);
+  const [contractId, setContractId] = useState(null);
   // const [contract, setContractActual] = useState(personaContract);  //Testing
 
   //Set Contract Wrapper
@@ -48,7 +49,10 @@ export default function Contract() {
       console.error('All Contracts:', {results})
 
       //Default to First
-      if(results.length) setContract({...results[0].attributes});
+      if(results.length){
+        setContract({...results[0].attributes});
+        // setContractId();
+      } 
       else setContract(null); //Unset Current Contract
     }
   },[chainId, isWeb3Enabled]);
@@ -90,23 +94,26 @@ export default function Contract() {
 
   return (
     <div style={{ margin: "auto", display: "flex", gap: "20px", marginTop: "25", width: "70vw" }}>
-      <div>
-        
-      <Select mode="tags" label="Contract" name="contract"
-        onChange={(item) => { console.warn("Selected Item:", item); }}
-        >
-          {allContracts.map((item, index) => ( 
-            <Select.Option key={index}>Contract: {item?.get('name')}</Select.Option>
-          ))}
-      </Select>
-      </div>
-
       <Card
         title={
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ justifyContent: "space-between", alignItems: "center" }}>
             {/* Your contract: {contractName} */}
-            {contract?.name && <span>Your contract: {contract.name}</span>}
-            <Address avatar="left" copyable address={contract.address} size={8} />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              {contract?.name && <span>Contract: {contract.name}</span>}
+              <div className="contract_select">
+                {console.warn("[TEST] Contract Select", {allContracts})}
+                <Select label="Contract" name="contract" selected={contract.id}
+                  onChange={(item) => { console.warn("Selected Item:", item); }}
+                  >
+                    {allContracts.map((item, index) => ( 
+                      <Select.Option key={item.id}>{item?.get('name')}</Select.Option>
+                    ))}
+                </Select>
+              </div>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <Address avatar="right" copyable address={contract.address} size={8} />
+            </div>
           </div>
         }
         size="large"

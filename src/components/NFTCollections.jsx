@@ -121,7 +121,8 @@ function NFTCollections(props) {
       
       {!isAllowed && <p className="debug" style={{float:'right'}}>NOT ALLOWED</p>}
 
-      <div key="collections" className="collections framed">
+      <div key="collections" className={"collections framed count_"+Object.keys(NFTCollections).length}>
+        
           <div key="header" className="header">
             {(props?.match?.params?.showBreadcrumbs !== false) && 
               <>
@@ -170,7 +171,7 @@ function NFTCollections(props) {
                   // state: { fromDashboard: true }
               };
               let style = {};
-              if(collectionHash){
+              if(collectionHash && collection.items.length > 1){
                 let len = (collection.items.length < 4) ? collection.items.length : 4;  //Max of 4 in a stack
                 style.transform = "rotate(-"+5*len+"deg)";
               } 
