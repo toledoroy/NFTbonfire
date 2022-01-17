@@ -632,7 +632,22 @@ body { height:100vh; }
         display: flex;
         flex-direction: column-reverse;
     }
-
+}
+/* Room Add */
+.room_add{
+    background-color: var(--comment-background);
+    border-radius: var(--borderRadius);
+    padding: 4px 15px;
+    .inner {
+    }
+    .ant-comment-inner {
+        padding:0;
+    }
+    textarea, input {
+        border:none;
+        border-radius: 17px;
+    }
+    textarea:focus, input:focus { border:none; outline:none; box-shadow: none;}
 }
 
 /* Page: Space */
@@ -644,8 +659,8 @@ body { height:100vh; }
         bottom: var(--footer-height);
         max-width: 50vw;
         width: 700px;
-        border-radius: var(--borderRadius) var(--borderRadius) 0 0 ;
         padding: 4px 15px;
+        border-radius: var(--borderRadius) var(--borderRadius) 0 0 ;
         background-color: var(--comment-background);
         // .comment_text:focus-visible { border:none; outline:none;}
         .ant-form-item-explain {display: none;}
@@ -659,7 +674,7 @@ body { height:100vh; }
     /* height: calc(100vh - 320px); */
     display: flex;
     flex: 1 1;
-    flex-direction: column-reverse;
+    flex-direction: column;
     .disallowed{
         margin-top:10px;
         line-height: 1.8em;
@@ -726,51 +741,54 @@ body { height:100vh; }
 }
 
 /* Room List */
+.room_list:not(.single) .ant-collapse > .ant-collapse-item:after {
+    content: "";
+    border-bottom: 1px solid #d9d9d9;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 1px;
+    width: 88%;
+}
 .room_list {
     clear: both;
     .ant-collapse-header { display:block !important; }
+    .ant-collapse-content{
+        padding-bottom: 60px;   //Comment Add
+    }
     .ant-collapse > .ant-collapse-item { border:none; position:relative; }
-    .ant-collapse > .ant-collapse-item:after {
-        content: "";
-        border-bottom: 1px solid #d9d9d9;
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        height: 1px;
-        width: 88%;
-      }
-    .room_entrance{
+    
+    
+}
+.room_entrance{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    /* margin: 10px 0; */
+    /* border: 1px solid #9ecaed; */
+    /* border-radius: 20px; */
+    /* border-top: 1px solid #9ecaed; */
+    .image { flex: 0 0;}
+    .content { 
+        padding:0 10px; flex: 1 1; 
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
-        padding: 10px 0;
-        /* margin: 10px 0; */
-        /* border: 1px solid #9ecaed; */
-        /* border-radius: 20px; */
-        /* border-top: 1px solid #9ecaed; */
-        .image { flex: 0 0;}
-        .content { 
-            padding:0 10px; flex: 1 1; 
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .anticon{ margin-right: 5px; }
-        .vote { 
-            margin: auto 0 auto auto ; 
-            .vote_count {
-                text-align: right;
-                padding-right: 8px;
-            }
+    }
+    .anticon{ margin-right: 5px; }
+    .vote { 
+        margin: auto 0 auto auto ; 
+        .vote_count {
+            text-align: right;
+            padding-right: 8px;
         }
     }
 }
-
 /* Component: Cards (NFT List) */
 .cards {
     .ant-card-meta-detail {
         flex-direction: column-reverse;
         display: flex;
-        
         .ant-card-meta-description {
             font-size: 0.75rem;
             color: #999;
