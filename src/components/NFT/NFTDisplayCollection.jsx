@@ -3,30 +3,12 @@ import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
 import { Link } from "react-router-dom";
 
 /**
- * Display NFT Colelction
+ * Component: Display Single  NFT Colelction
  * @param {collection, dest} props
  *  object collection   - NFT collection (Contract)
  *  object dest         - Link Destination
  */
  function NFTDisplayCollection({ collection, dest }) {
-
-    const [items, setItems] = useState(collection.items);
-
-    const flip = (arr) => {
-       arr.push(arr.shift());
-        
-        console.warn("[TEST] Flip Collection", {arr, collection});
-        // setItems(arr.push(arr.shift()));
-        setItems(arr);
-        return arr;
-      }
-
-    React.useEffect(() => {
-      console.error("[TEST] Collection() Items Changed:", {items});
-    }, [items]);
-  
-
-
     /* Structure
     contract_type: "ERC1155"
     name: "OpenSea Collections"
@@ -40,18 +22,42 @@ import { Link } from "react-router-dom";
     return (
         <>
         <Link key={collection.hash+'Link'} to={dest}>
-            <div key={collection.symbol+'items'} className="NFTitems"> 
-                {/* {collection && collection.items.map((nft, index) => ( */}
-                {collection && items.map((nft, index) => (
-                    <NFTDisplaySingle key={nft.token_address+nft.token_id} nft={nft} index={collection.items.length-index} style={{ zIndex: index}} />
+            <div key={collection.symbol+'items'} className="NFTitems" id={"NFTitems"+collection.hash}> 
+                {collection && collection.items.map((nft, index) => (
+                    <NFTDisplaySingle key={nft.token_address+nft.token_id} nft={nft} />
                 ))}
             </div>
         </Link>
-        {/* <button onClick={() => {setItems(flip(collection.items)); return false; }}  */}
-        <button onClick={() => {flip(items); return false; }} 
-            style={{zIndex:'9999'}}>Flip</button>
+        <FlipButtons id={"NFTitems"+collection.hash}/>
         </>
     );
 }//NFTDisplayCollection()
 
 export default NFTDisplayCollection;
+
+/**
+ * Component: Collection Flip Buttons
+ */
+ function FlipButtons({ id }) {
+
+    const flipCards = (id, dir=1) => {
+        try{
+            let container = document.getElementById(id);
+            if(dir==1) container.appendChild(container.childNodes[0]);
+            else container.prepend(container.lastElementChild);
+        }
+        catch(error){
+            console.error("[CAUGHT] flipCards() Exception:", {id, error})
+        }
+    }
+
+    return (
+        <>
+        <button onClick={() => {flipCards(id, 0); return false; }} 
+            style={{zIndex:'9999'}}>Prev</button>
+            
+        <button onClick={() => {flipCards(id); return false; }} 
+            style={{zIndex:'9999'}}>Next</button>
+        </>
+    );
+}//FlipButtons()

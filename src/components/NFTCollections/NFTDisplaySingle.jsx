@@ -13,7 +13,7 @@ const { Meta } = Card;
 /**
  * Component: Display a Single NFT
  */
- function NFTDisplaySingle({nft, index}) {
+ function NFTDisplaySingle({nft}) {
     const { Moralis, chainId } = useMoralis();
     const [nftToSend, setNftToSend] = useState(null);
     const [receiverToSend, setReceiver] = useState(null);
@@ -76,7 +76,7 @@ const { Meta } = Card;
 
     return (
       <>
-        <Card size="small" className="item" hoverable key={nft.token_id} style={{ zIndex: index, width: 'var(--cardWidth)', border: "2px solid #e7eaf3", overflow:'hidden'}}
+        <Card size="small" className="item" hoverable key={nft.token_id} style={{ width: 'var(--cardWidth)', border: "2px solid #e7eaf3", overflow:'hidden'}}
             cover={
                 <div className="flip-card" onClick={() => { console.warn("Selected Collection of", nft); }}>
                     <div className="flip-card-inner">

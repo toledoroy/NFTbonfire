@@ -585,11 +585,14 @@ body { height:100vh; }
         .item { 
             margin-right:-282px; 
             transform-origin: center bottom;
+
+        
         }
-        .item:nth-child(2n) { transform: rotate(10deg); }
-        .item:nth-child(3n) { transform: rotate(20deg); }
-        .item:nth-child(4n) { transform: rotate(30deg); }
-        .item:nth-child(n+5) {  display: none;}  /*4 Items Tops*/
+        .item:nth-child(1) { z-index: 5;}
+        .item:nth-child(2n) { transform: rotate(10deg); z-index: 4;}
+        .item:nth-child(3n) { transform: rotate(20deg); z-index: 3;}
+        .item:nth-child(4n) { transform: rotate(30deg); z-index: 2;}
+        .item:nth-child(n+5) { transform: rotate(50deg);  display: none;}  /*4 Items Tops*/
         .item>ul { border-radius: 0 0 20px 20px; }
     }
 }
