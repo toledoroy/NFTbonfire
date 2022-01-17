@@ -177,6 +177,7 @@ function NFTCollections(props) {
               } 
               let title = collectionHash ? "Go Back" : "Pick '"+__.sanitize(collection.name)+"' Collection";
 
+              
               return (
                 <CollectionContext.Provider key={collection.hash+'Prov'} value={collection}>
                   <div className="center_wrapper">
@@ -209,6 +210,7 @@ function NFTCollections(props) {
                         <Space hash={collectionHash} collection={collection} NFTpersonas={NFTpersonas}/>
                       </div>
                       } */}
+                      
                     </div>
                   </div>
 

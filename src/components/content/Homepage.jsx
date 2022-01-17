@@ -2,10 +2,11 @@ import React from "react";
 import { useMoralis, useMoralisQuery } from "react-moralis";
 import NFTCollections from "components/NFTCollections";
 import { ChainHelper } from "helpers/ChainHelper";
-import { Skeleton, Tabs } from 'antd';
+import { Skeleton, Tabs, Row, Col } from 'antd';
 // import { PersonaContext } from "common/context";
 //Components
 import Address from "components/Address/Address";
+import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
 
 const { TabPane } = Tabs;
 

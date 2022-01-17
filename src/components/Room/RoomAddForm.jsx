@@ -15,7 +15,7 @@ import { PersonaContext } from "common/context";
  * Component: Add New Post
  */
  function RoomAddForm(props) {
-   const { parent, parentId, title, type } = props;
+   const { parentId, title, type } = props;
     const { Moralis, account, chainId, user, isWeb3Enabled } = useMoralis();
     const { persona } = useContext(PersonaContext);
     const [form] = Form.useForm();
@@ -47,7 +47,6 @@ import { PersonaContext } from "common/context";
 
         //Additions
         values.parentId = parentId;
-        // values.parent = parentId;   //TEST [X]
         values.account = account;
         values.chain = chainId;
         values.userId = user?.id;
@@ -100,8 +99,9 @@ import { PersonaContext } from "common/context";
     };//onFinish()
   
     if(type==='comment'){
+      const className = props.className ? "comment_add "+props.className : "comment_add";
       return (
-        <div className={"comment_add "+props.className}>  
+        <div className={className}>  
         {/* <h3>{(type==='comment') ? 'Add Comment' : 'Start a new bonfire'}</h3> */}
         {/* <h3>Add Comment</h3> */}
         {/* <p>Add a new Room to this Space!</p> */}

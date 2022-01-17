@@ -41,7 +41,8 @@ body{
   color: var(--color);
 }
 dt { text-transform: capitalize; }
-.mainContent{ margin-top: var(--headerHeight); /* Header Adjustment */ }
+.ant-layout-content { margin-top: var(--headerHeight); }
+/* .mainContent{ margin-top: var(--headerHeight); } */
 footer { margin-top: 40px; }
 /* .mainContent { min-height: 64vh;} */
 
@@ -71,7 +72,13 @@ footer { margin-top: 40px; }
 
 .ant-card-body:empty {display: none;} /* AntD Card */
 
-.collections .middle { display:flex; justify-content: space-between;}
+.collections .middle { 
+  display:flex; 
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+}
+
 
 /* Space - Room List */
 .room_list .ant-collapse { border:none; background:none; }

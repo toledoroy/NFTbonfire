@@ -4,7 +4,7 @@ import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
 import { FireTwoTone, StopOutlined } from '@ant-design/icons';
 // import { Skeleton, Image, Form, Input, Button, Checkbox } from "antd";
-import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Radio } from 'antd';
+import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Radio, Button } from 'antd';
 import { useMoralisQuery } from "react-moralis";
 import VotePane from "components/Room/VotePane";
 // import PersonaChanger from "components/Persona/PersonaChanger";
@@ -178,7 +178,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
                       <ShowComments room={room} />
 
                       <ShowMore />
-                      <RoomAddForm parent={room} parentId={room.id} type='comment' />
+                      {/* <RoomAddForm parent={room} parentId={room.id} type='comment' /> */}
                       {/* {console.warn("[DEV] RoomEntrance() Room "+room.id+" Selected:"+(curRoomId===room.id), curRoomId)} */}
                     </Collapse.Panel>
                   ))}
@@ -186,6 +186,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
                 {!curRoomId && 
                   <ShowMore />
                 }
+                {/* {curRoomId && <RoomAddForm parentId={curRoomId} type='comment' />} */}
               </div>
               :
               <SpaceEmpty collection={collection} />
@@ -209,6 +210,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
           }
           <div className="clearfloat"></div>
       </div>
+      {curRoomId && <RoomAddForm parentId={curRoomId} type='comment' />}
     </Skeleton>
     )}
     </CollectionContext.Consumer> 
@@ -324,7 +326,14 @@ function RoomEntrance(props) {
           <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn">Go!</Link> 
           */}
         </div>
-        
+        <div className="actions">
+          <a href="#">Join</a>
+          <a href="#">Leave</a>
+          {(1) 
+            ? <Button variant="contained" size="small" color="primary" onClick={()=>{console.warn("CLICKED JOIN")}} title="Join the group">Join</Button>
+            : <Button variant="contained" size="small" onClick={()=>{console.warn("CLICKED LEAVE")}} style={{background: 'none', border:'none'}} title="Leave the group">Leave</Button>
+          }  
+        </div>
       </div> 
       <div className="vote framed" onClick={(evt) => {evt.stopPropagation()}}>
         <VotePane post={room}/>

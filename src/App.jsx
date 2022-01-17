@@ -34,7 +34,7 @@ import { PersonaContext } from "common/context";
 
 // lessc "./style.less"
 
-const { Header, Footer } = Layout;
+const { Header, Footer, Content } = Layout;
 const styles = {
   header: {
     // position: "fixed",
@@ -99,11 +99,12 @@ const App = ({ isServerInfo }) => {
   return (
     <PersonaContext.Provider value={{persona, setPersona}}>
     {/* <Layout className="wrapper_main" style={{ height: "100vh", overflow: "auto" }}> */}
+    <Router> 
     <Layout className="wrapper_main" >
       {/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /> */}
       {/* <script src="https://kit.fontawesome.com/62e94cb93f.js" crossorigin="anonymous"></script> */}
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
-      <Router> 
+      
         <Header style={styles.header}>
         <div>
           <a href="/" style={{ display: "flex" }}>
@@ -117,6 +118,7 @@ const App = ({ isServerInfo }) => {
             <Account />
           </div>
         </Header>
+        <Content>
         <div className="mainContent">
           {/*<Redirect to="/quickstart" />*/}
           {/* <Skeleton loading={!isWeb3Enabled}> */}
@@ -178,9 +180,10 @@ const App = ({ isServerInfo }) => {
             </Switch>
           {/* </Skeleton> */}
         </div>
-      </Router>
       
       <div className="clearfloat"></div>
+      
+      </Content>
 
       <Footer style={{ textAlign: "center" }}>
           <a
@@ -199,6 +202,8 @@ const App = ({ isServerInfo }) => {
       </Footer>
 
     </Layout>
+    </Router>
+      
     </PersonaContext.Provider>
   );
 };

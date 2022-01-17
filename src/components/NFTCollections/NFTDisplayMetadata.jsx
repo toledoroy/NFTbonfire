@@ -44,7 +44,7 @@ export default NFTDisplayMetadata;
  * Component: Single Metadata ITem
  */
  function DisplayMetadataField(props){
-   let {label, value} = props;
+   let { label, value } = props;
   // console.log("DisplayMetadataField() Start W/", {label, value})
   // const { Moralis } = useMoralis();
   const exclusions = ['compiler'];
