@@ -1,6 +1,7 @@
 import React from "react";
 import { useMoralis, useMoralisQuery } from "react-moralis";
 import NFTCollections from "components/NFTCollections";
+import { PersonaHelper } from "helpers/PersonaHelper";
 import { ChainHelper } from "helpers/ChainHelper";
 import { Skeleton, Tabs, Row, Col } from 'antd';
 // import { PersonaContext } from "common/context";
@@ -31,6 +32,19 @@ const { TabPane } = Tabs;
         // onLiveUpdate: data => console.warn(`${data.attributes.token_id} was just Updated`),  //Nope
     });
 
+    let personaNFTs = personas.map(persona => {
+        //Make it look like a NFT Object
+        return {
+            image: PersonaHelper.getImage(persona),
+            name: PersonaHelper.getName(persona),
+            // name: 'Persona',
+            token_address: persona.get('address'),
+            token_id: persona.get('token_id'),
+            metadata: persona.get('metadata'),
+        };
+    });
+    console.warn("[TEST] Persona NFTs:", personaNFTs);
+
     return (
         <div className="framed home">
             <h1>Home</h1>   
@@ -47,12 +61,28 @@ const { TabPane } = Tabs;
                 <div className="account">
                     [Account]
                 </div>
-                <div className="personas">
+                <div className="personas stack">
                     <h2>Personas</h2>
-                    {personas.map(persona => <div>
-                        {persona.id}
-                        {persona.get('image')}
-                    </div>)}
+            
+
+                    <div className="cards">
+                        <div key={'persons'} className="NFTitems" id={"NFTitems"+personas[0]?.get('address')}> 
+                            {personas.map(persona => {
+                                //Make it look like a NFT Object
+                                let nft = {
+                                    image: PersonaHelper.getImage(persona),
+                                    name: PersonaHelper.getName(persona),
+                                    // name: 'Persona',
+                                    token_address: persona.get('address'),
+                                    token_id: persona.get('token_id'),
+                                    metadata: persona.get('metadata'),
+                                };
+                                console.warn("[DEV] Persona:", {persona, nft});
+                                
+                                return (<NFTDisplaySingle key={nft.token_address+nft.token_id} nft={nft} />);
+                            })}
+                        </div>
+                    </div>
                 </div>
             </div>
             <div className="row flex">

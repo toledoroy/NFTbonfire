@@ -28,6 +28,7 @@ import { Link } from "react-router-dom";
                 ))}
             </div>
         </Link>
+        FLIP
         <FlipButtons id={"NFTitems"+collection.hash}/>
         </>
     );
