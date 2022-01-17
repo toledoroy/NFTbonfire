@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
  *  object collection   - NFT collection (Contract)
  *  object dest         - Link Destination
  */
- function NFTDisplayCollection({ collection, dest }) {
+ function NFTDisplayCollection({ collection, dest, flip }) {
     /* Structure
     contract_type: "ERC1155"
     name: "OpenSea Collections"
@@ -21,20 +21,20 @@ import { Link } from "react-router-dom";
     // console.log("[TEST] NFTDisplayCollection", {collection, dest});
     return (
         <>
-        <Link key={collection.hash+'Link'} to={dest}>
+        {/* <Link key={collection.hash+'Link'} to={dest}> */}
             <div key={collection.symbol+'items'} className="NFTitems" id={"NFTitems"+collection.hash}> 
                 {collection && collection.items.map((nft, index) => (
                     <NFTDisplaySingle key={nft.token_address+nft.token_id} nft={nft} />
                 ))}
             </div>
-        </Link>
-        FLIP
-        <FlipButtons id={"NFTitems"+collection.hash}/>
+        {/* </Link> */}
+        {(flip && collection.items.length) && <FlipButtons id={"NFTitems"+collection.hash}/>}
         </>
     );
 }//NFTDisplayCollection()
 
 export default NFTDisplayCollection;
+
 
 /**
  * Component: Collection Flip Buttons
@@ -44,7 +44,7 @@ export default NFTDisplayCollection;
     const flipCards = (id, dir=1) => {
         try{
             let container = document.getElementById(id);
-            if(dir==1) container.appendChild(container.childNodes[0]);
+            if(dir===1) container.appendChild(container.childNodes[0]);
             else container.prepend(container.lastElementChild);
         }
         catch(error){
@@ -54,10 +54,10 @@ export default NFTDisplayCollection;
 
     return (
         <>
-        <button onClick={() => {flipCards(id, 0); return false; }} 
+        <button onClick={(evt) => { evt.stopPropagation(); flipCards(id, 0); return false; }}  
             style={{zIndex:'9999'}}>Prev</button>
             
-        <button onClick={() => {flipCards(id); return false; }} 
+        <button onClick={(evt) => { evt.stopPropagation(); flipCards(id); return false; }} 
             style={{zIndex:'9999'}}>Next</button>
         </>
     );

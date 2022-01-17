@@ -113,7 +113,7 @@ function NFTCollections(props) {
   //style={styles.NFTs}
   
   //Validate
-  if(collectionHash && !NFTCollections[collectionHash]) return (
+  if(isWeb3Enabled && collectionHash && !NFTCollections[collectionHash]) return (
     <div className="framed error 404">Error: Failed to Find Requested Contract '{collectionHash}' on {ChainHelper.get(chainId,'name')}</div>
   );
   return (
@@ -203,7 +203,10 @@ function NFTCollections(props) {
 
                     <div className="middle">
                       <div key="cards" className="cards" style={style} title={title}>
-                        <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} dest={dest} />
+                        <Link key={collection.hash+'Link'} to={dest}>
+                          <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection}/>
+                        </Link>
+                        {/* <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} dest={dest} /> */}
                       </div>
                       {/* {collectionHash && 
                       <div key="space" className="space_container">

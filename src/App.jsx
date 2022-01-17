@@ -105,7 +105,7 @@ const App = ({ isServerInfo }) => {
       {/* <script src="https://kit.fontawesome.com/62e94cb93f.js" crossorigin="anonymous"></script> */}
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
       
-        <Header style={styles.header}>
+        <Header style={styles.header} width={'1500'}>
         <div>
           <a href="/" style={{ display: "flex" }}>
             <Logo />
