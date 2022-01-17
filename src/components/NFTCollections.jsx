@@ -62,6 +62,7 @@ function NFTCollections(props) {
   if(props?.match?.params?.chain) options.chain = props.match.params.chain;
   const { NFTCollections, NFTpersonas } = useNFTCollections(options);
 
+
   React.useEffect(() => {  
     //Log
     console.log("(i) NFTCollections() Loading Collections: ", {NFTCollections, collectionHash, accountHash, options, params:props.match.params });
@@ -222,6 +223,7 @@ function NFTCollections(props) {
                       <Space hash={collectionHash} collection={collection} NFTpersonas={NFTpersonas}/>
                     </div>
                   }
+                  
                   </div>
                 </CollectionContext.Provider>
               );

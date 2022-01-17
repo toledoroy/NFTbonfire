@@ -5,8 +5,8 @@ import { MoralisProvider } from "react-moralis";
 import "./index.css";
 import QuickStart from "components/QuickStart";
 import { MoralisDappProvider } from "./providers/MoralisDappProvider/MoralisDappProvider";
-import { PersonaContext } from "common/context";
-import { useMoralis } from "react-moralis";
+// import { PersonaContext } from "common/context";
+// import { useMoralis } from "react-moralis";
 
 // import { Provider } from 'react-redux'
 // import store from './store'

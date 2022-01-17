@@ -72,9 +72,10 @@ body { height:100vh; }
         margin: 0;
     }
     footer{
+        height: var(--footer-height);
         display: flex;
         justify-content: center;
-        padding: 20px 50px 15px 50px;
+        padding: 10px 50px 10px 50px;
         background: var(--comment-background);
         z-index: 100;
     }
@@ -597,9 +598,60 @@ body { height:100vh; }
     }
 }
 
+
+/* Comment Add Widget */
+.comment_add {
+    .ant-comment { width:100%; }
+    form {
+        // background-color:#fff;
+        border-radius: 17px;
+        display: flex;
+        flex: 1 1;
+        overflow: hidden;
+        .ant-form-item { 
+            display: block; 
+            flex: 1 1;
+            margin: 0;
+        }
+        textarea {
+            border:none;
+            border-radius: 17px;
+        }
+        button {
+            float:right; 
+        }
+        .send {
+            // margin: auto 5px 5px 10px;
+            margin-top: auto;
+            margin-left: 10px;
+        }
+    }
+    .comment_text:empty:before { content: attr(data-placeholder); }
+    textarea:focus { border:none; outline:none; box-shadow: none;}
+    .ant-comment-avatar {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+}
+
 /* Page: Space */
 .pageSpace .middle { display:flex; }
 .space_container {
+    width: 100%;
+    .comment_add { 
+        position: fixed;
+        bottom: var(--footer-height);
+        max-width: 50vw;
+        width: 700px;
+        border-radius: var(--borderRadius) var(--borderRadius) 0 0 ;
+        padding: 4px 15px;
+        background-color: var(--comment-background);
+        // .comment_text:focus-visible { border:none; outline:none;}
+        .ant-form-item-explain {display: none;}
+    }
+}
+.space {
     transform: translateX(100%);
     animation: slideIn 0.6s ease-in-out forwards;
     animation-delay: 0.15s;
@@ -616,18 +668,13 @@ body { height:100vh; }
         max-height: 100%;
     }
 }
-.space_container:nth-child(odd) { animation-duration: 0.6s; /* So they look staggered */ }
+.space:nth-child(odd) { animation-duration: 0.6s; /* So they look staggered */ }
 .SpaceEmpty p { margin:10px 0; }
 .space {
     transition-delay: 0.6s;
     flex: 1 1;
     overflow: hidden;
     .ant-collapse-content { background: none;}
-    .comment_add {
-        position: fixed;
-        bottom: 5px;
-        width: 97%;
-    }
 }
 
 /* Account */
@@ -758,28 +805,6 @@ body { height:100vh; }
     }
     .ant-select-selector {
         border-radius: 12px !important;
-    }
-}
-
-/* Comment Add Widget */
-.comment_add {
-    .ant-comment { width:100%; }
-    form {
-        background-color:#fff;
-        border-radius: 17px;
-        display: flex;
-        flex: 1 1;
-        .ant-form-item { 
-            display: block; 
-            flex: 1 1;
-            margin: 0;
-        }
-        textarea {
-            border:none;
-        }
-        button {
-            float:right; 
-        }
     }
 }
 

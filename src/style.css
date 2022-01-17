@@ -25,6 +25,7 @@
 *{
   --background-color: #f0f2f5;
   --headerHeight:64px;
+  --footer-height:63px;
   --cardWidth: 260px;
   --cardHeight: 365px;
   --cardBG: #fff;
@@ -100,14 +101,6 @@ footer { margin-top: 40px; }
 }
 .post .avatar .crypto_addr { font-size: 0.8em; margin: -32px auto 0; }
 
-.comment_add {
-  display: flex;
-  border-radius: var(--borderRadius);
-  padding: 4px 15px;
-  background-color: var(--comment-background);
-}
-.comment_add .comment_text:focus-visible { border:none; outline:none;}
-.comment_add .comment_text:empty:before { content: attr(data-placeholder); }
 
 /* Simple Click Effect  https://stackoverflow.com/questions/13630229/can-i-have-an-onclick-effect-in-css?rq=1 */
 .ant-btn,

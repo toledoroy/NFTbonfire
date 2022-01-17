@@ -119,11 +119,14 @@ import { PersonaContext } from "common/context";
               >
               
               <Form.Item name="text" rules={[{ required: true, message: "You'd need to enter some text as well..."}]}>
-                <Input.TextArea />
+                <Input.TextArea 
+                // showCount 
+                autoSize={{ minRows: 1, maxRows: 6 }}
+                />
               </Form.Item>
 
               {persona &&
-                <Button type="primary" htmlType="submit" icon={<i className="bi bi-send"></i>}></Button>
+                <Button type="primary" htmlType="submit" className="send" icon={<i className="bi bi-send"></i>}></Button>
               }
 
               {/*persona &&

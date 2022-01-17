@@ -150,9 +150,9 @@ function SpaceView({hash, collection, NFTpersonas}) {
   return (
     <CollectionContext.Consumer>
     {collection => (
-    <Skeleton active loading={!space || rooms.length===0}>
+      <>
       <div className="space">
-
+        <Skeleton active loading={!space || rooms.length===0}>
           <h1> Private Space for {collection.name}</h1>
           {/* <h4>[Addr:{collection.hash}]</h4> */}
           {/* <span key="typs">Type: {collection.contract_type}</span> */}
@@ -209,9 +209,10 @@ function SpaceView({hash, collection, NFTpersonas}) {
             </div>
           }
           <div className="clearfloat"></div>
+          </Skeleton>
       </div>
       {curRoomId && <RoomAddForm parentId={curRoomId} type='comment' />}
-    </Skeleton>
+    </>
     )}
     </CollectionContext.Consumer> 
   );
