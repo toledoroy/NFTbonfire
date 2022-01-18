@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useMoralis, useMoralisQuery } from "react-moralis";
 import NFTCollections from "components/NFTCollections";
 import { PersonaHelper } from "helpers/PersonaHelper";
@@ -8,6 +8,7 @@ import { Skeleton, Tabs, Row, Col } from 'antd';
 //Components
 import Address from "components/Address/Address";
 import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
+import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
 
 const { TabPane } = Tabs;
 
@@ -19,6 +20,8 @@ const { TabPane } = Tabs;
     const { Moralis, user, chainId, account, isWeb3Enabled } = useMoralis();     //isUserUpdating
     // const { persona, contract } = props;
     const { persona, contract } = props;
+      
+    const [ personaCollection, setPersonaCollection ] = useState();
 
     //Fetch Personas -- Live Query (This isn't actually live the way you'd expect. DB changes aren't being detected)
     const { data : personas } = useMoralisQuery('Persona', query => query.equalTo("owner", String(account).toLowerCase()), [account], { 
@@ -32,18 +35,27 @@ const { TabPane } = Tabs;
         // onLiveUpdate: data => console.warn(`${data.attributes.token_id} was just Updated`),  //Nope
     });
 
-    let personaNFTs = personas.map(persona => {
-        //Make it look like a NFT Object
-        return {
-            image: PersonaHelper.getImage(persona),
-            name: PersonaHelper.getName(persona),
-            // name: 'Persona',
-            token_address: persona.get('address'),
-            token_id: persona.get('token_id'),
-            metadata: persona.get('metadata'),
-        };
-    });
-    console.warn("[TEST] Persona NFTs:", personaNFTs);
+    //Create a Faux NFT Collection from Personas Data
+    useEffect(() => {
+        let items = personas.map(persona => {
+            //Make it look like a NFT Object
+            return {
+                image: PersonaHelper.getImage(persona),
+                name: PersonaHelper.getName(persona),
+                token_address: persona.get('address'),
+                token_id: persona.get('token_id'),
+                metadata: persona.get('metadata'),
+            };
+        });
+        const collection = {
+            hash: items[0]?.token_address,
+            name: 'Persona',
+            symbol: 'PERSONA',
+            items,
+        }
+        console.warn("[TEST] Persona NFTs Collection:", {collection, items} );
+        setPersonaCollection(collection);
+    }, [personas]);
 
     return (
         <div className="framed home">
@@ -66,6 +78,10 @@ const { TabPane } = Tabs;
             
 
                     <div className="cards">
+                        {personaCollection && 
+                        <NFTDisplayCollection key={personaCollection.hash+'Collection'} collection={personaCollection} flip />}
+
+                        {/* 
                         <div key={'persons'} className="NFTitems" id={"NFTitems"+personas[0]?.get('address')}> 
                             {personas.map(persona => {
                                 //Make it look like a NFT Object
@@ -81,7 +97,8 @@ const { TabPane } = Tabs;
                                 
                                 return (<NFTDisplaySingle key={nft.token_address+nft.token_id} nft={nft} />);
                             })}
-                        </div>
+                        </div> */}
+
                     </div>
                 </div>
             </div>
