@@ -2,7 +2,7 @@
 export const __ = {
     sanitize: (str) => {
         try{
-          return str.toString().replace(/_/g, ' '); 
+          return typeof str === 'string' ? str.toString().replace(/_/g, ' ') : str; 
         }
         catch(err){
           console.error("__.sanitize() Error sanitizing metadata field:", {str, err});
