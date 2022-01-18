@@ -5,6 +5,7 @@ import { PersonaHelper } from "helpers/PersonaHelper";
 import { ChainHelper } from "helpers/ChainHelper";
 import { Skeleton, Tabs, Row, Col } from 'antd';
 // import { PersonaContext } from "common/context";
+import __ from "helpers/__";
 //Components
 import Address from "components/Address/Address";
 import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
@@ -57,6 +58,8 @@ const { TabPane } = Tabs;
         setPersonaCollection(collection);
     }, [personas]);
 
+    console.warn("[TEST] Persona NFTs Collection:", {personaCollection, style:__.stackContainerStyle(personaCollection?.items.length)} );
+    
     return (
         <div className="framed home">
             <h1>Home</h1>   
@@ -69,17 +72,17 @@ const { TabPane } = Tabs;
             } 
             */}
 
-            <div className="row flex">
-                <div className="account">
+            <Row className="row flex">
+                <Col xs={24} md={12} className="account">
                     [Account]
-                </div>
-                <div className="personas stack">
+                </Col>
+                <Col xs={24} md={12} className="personas stack">
                     <h2>Personas</h2>
             
 
                     <div className="cards">
                         {personaCollection && 
-                        <NFTDisplayCollection key={personaCollection.hash+'Collection'} collection={personaCollection} flip />}
+                        <NFTDisplayCollection key={personaCollection.hash+'Collection'} collection={personaCollection} flip style={__.stackContainerStyle(personaCollection?.items.length)} />}
 
                         {/* 
                         <div key={'persons'} className="NFTitems" id={"NFTitems"+personas[0]?.get('address')}> 
@@ -100,8 +103,8 @@ const { TabPane } = Tabs;
                         </div> */}
 
                     </div>
-                </div>
-            </div>
+                </Col>
+            </Row>
             <div className="row flex">
                 {/* {console.log("[TEST] Homepage() ChainHelper.allChains:", ChainHelper.allChains())} */}
                 <div className="assets">

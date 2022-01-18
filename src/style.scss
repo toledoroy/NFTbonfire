@@ -430,7 +430,8 @@ body { height:100vh; }
 /* NFT Item Display */
 .NFTitems { 
     transition-delay: 5s; 
-    transition: all 1s ease-in-out; flex-shrink:0; 
+    transition: all 0.12s ease-in-out; 
+    flex-shrink:0; 
     width: 100%;
     display: flex;
     flex-wrap: wrap;
@@ -580,6 +581,7 @@ body { height:100vh; }
     }
     .NFTitems { 
         padding: 30px 182px 20px 50px; 
+        transition: all 1s ease-in-out; 
         flex-wrap: nowrap; 
         min-width: 480px; 
         /* .item:not(:first-child) { margin-left:-300px; } */
@@ -850,4 +852,12 @@ body { height:100vh; }
             }
         }
     }
+}
+
+/* Card Flip Buttons */
+.flip_buttons{
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    bottom: 210px;
 }

@@ -171,14 +171,8 @@ function NFTCollections(props) {
                   // hash: "#the-hash",
                   // state: { fromDashboard: true }
               };
-              let style = {};
-              if(collectionHash && collection.items.length > 1){
-                let len = (collection.items.length < 4) ? collection.items.length : 4;  //Max of 4 in a stack
-                style.transform = "rotate(-"+5*len+"deg)";
-              } 
+              let style = collectionHash ? __.stackContainerStyle(collection.items.length) : {};
               let title = collectionHash ? "Go Back" : "Pick '"+__.sanitize(collection.name)+"' Collection";
-
-              
               return (
                 <CollectionContext.Provider key={collection.hash+'Prov'} value={collection}>
                   <div className="center_wrapper">
@@ -203,9 +197,9 @@ function NFTCollections(props) {
                     }
 
                     <div className="middle">
-                      <div key="cards" className="cards" style={style} title={title}>
+                      <div key="cards" className="cards" title={title}>
                         <Link key={collection.hash+'Link'} to={dest}>
-                          <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection}/>
+                          <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} style={style}/>
                         </Link>
                         {/* <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} dest={dest} /> */}
                       </div>

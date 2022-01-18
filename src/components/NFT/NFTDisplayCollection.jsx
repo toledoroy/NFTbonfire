@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
 import { Link } from "react-router-dom";
+import { Button } from 'antd';
+import { RightOutlined, LeftOutlined } from '@ant-design/icons';
 
 /**
  * Component: Display Single  NFT Colelction
@@ -8,7 +10,8 @@ import { Link } from "react-router-dom";
  *  object collection   - NFT collection (Contract)
  *  object dest         - Link Destination
  */
- function NFTDisplayCollection({ collection, dest, flip }) {
+ function NFTDisplayCollection(props) {
+     const { collection, dest, flip } = props;
     /* Structure
     contract_type: "ERC1155"
     name: "OpenSea Collections"
@@ -22,7 +25,7 @@ import { Link } from "react-router-dom";
     return (
         <>
         {/* <Link key={collection.hash+'Link'} to={dest}> */}
-            <div key={collection.symbol+'items'} className="NFTitems" id={"NFTitems"+collection.hash}> 
+            <div key={collection.symbol+'items'} className="NFTitems" id={"NFTitems"+collection.hash} style={props.style}> 
                 {collection && collection.items.map((nft, index) => (
                     <NFTDisplaySingle key={nft.token_address+nft.token_id} nft={nft} />
                 ))}
@@ -53,12 +56,12 @@ export default NFTDisplayCollection;
     }
 
     return (
-        <>
-        <button onClick={(evt) => { evt.stopPropagation(); flipCards(id, 0); return false; }}  
-            style={{zIndex:'9999'}}>Prev</button>
+        <div className="flip_buttons">
+        <Button className="lightUp" onClick={(evt) => { evt.stopPropagation(); flipCards(id, 0); return false; }}  
+            style={{zIndex:'9999'}} icon={<LeftOutlined />}></Button>
             
-        <button onClick={(evt) => { evt.stopPropagation(); flipCards(id); return false; }} 
-            style={{zIndex:'9999'}}>Next</button>
-        </>
+        <Button className="lightUp" onClick={(evt) => { evt.stopPropagation(); flipCards(id); return false; }} 
+            style={{zIndex:'9999'}} icon={<RightOutlined />}></Button>
+        </div>
     );
 }//FlipButtons()
