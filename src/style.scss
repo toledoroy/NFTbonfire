@@ -515,10 +515,10 @@ body { height:100vh; }
                             margin-bottom: 3px;
                             label {
                                 text-transform: capitalize;
-                                text-decoration: underline;
+                                // text-decoration: underline;
                                 
                             }
-                            label:after { content: ': '; }
+                            // label:after { content: ': '; }
                             span {
                                 white-space: nowrap;
                             }
