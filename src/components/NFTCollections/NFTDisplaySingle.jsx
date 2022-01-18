@@ -55,24 +55,6 @@ const { Meta } = Card;
             setIsPending(false);
         });
     }
-    
-    /* DEBUGGING MISSING IPFS IMAGES * /
-    //Log
-    if(nft.token_id===undefined)  console.warn("NFTDisplaySingle() nft.token_id is undefined", nft);
-    const image = nft?.image ? IPFS.resolveLink(nft.image) : '';
-    if(!image) console.warn("NFTDisplaySingle() Missing Image", {nft, nftImage:nft.image, image});
-    useEffect(() => {
-        if(nft?.metadata?.name == '#608'){
-            console.warn("NFTDisplaySingle() NFT CHANGED", {nft, nftImage:nft.image, image});
-            // let img = IPFS.resolveLink(nft?.image);
-            // // let img = IPFS.resolveLinkCloudflare(nft.image);
-            // if(nft?.image && img!==image){
-            //     // setImage(img);
-            //     console.warn("NFTDisplaySingle() Set New Image: "+nft.image, {img});
-            // }
-        }
-    },[nft.image]);
-    */
 
     return (
       <>
