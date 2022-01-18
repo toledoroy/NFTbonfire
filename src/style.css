@@ -57,7 +57,7 @@ footer { margin-top: 40px; }
 /* NFT Item Display */
 .NFTitems .item .flip-card-back .metadata,
 .NFTitems .item .flip-card-front,
-.NFTitems .item .flip-card-back { border-radius: 15px ;}
+.NFTitems .item .flip-card-back { border-radius: 15px 15px 0 0 ;}
 .item .flip-card-back dl dl dd { margin-left:10px; }
 
 

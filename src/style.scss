@@ -92,7 +92,31 @@ body { height:100vh; }
         
     }
     .personas {
-        
+        .mintNewPersona {
+            a{
+                // border: 1px solid #333;
+                color: #555;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                text-align: center;
+                            
+                width: var(--cardWidth);
+                height: var(--cardHeight);
+
+                border: 2px solid rgb(231, 234, 243);
+                box-shadow: 0 0 10px #9ecaed;
+
+                border-radius: 18px;
+
+                margin: 20px 10px;
+                
+                background: var(--comment-background);
+                i {
+                    font-size: 120px;
+                }
+            }
+        }    
     }
     .assets {
         .collections {
@@ -428,6 +452,13 @@ body { height:100vh; }
 
 
 /* NFT Item Display */
+
+.NFT{
+    border-radius: 18px;
+    .ant-card-actions {
+        border-radius: 0 0 18px 18px;
+    }
+}
 .NFTitems { 
     transition-delay: 5s; 
     transition: all 0.12s ease-in-out; 
@@ -436,13 +467,13 @@ body { height:100vh; }
     display: flex;
     flex-wrap: wrap;
     .item {
-        border-radius: 18px;
+        
         transform-origin: center bottom;
         border-color:#9ecaed;
         box-shadow:0 0 10px #9ecaed;
         margin: 20px 10px;
         transition: all 0.6s ease-in-out;
-        overflow: visible !important; 
+        overflow: visible !important;    
         /* Flip Cards  https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_flip_card */
         .flip-card {
             background-color: transparent;
@@ -580,6 +611,7 @@ body { height:100vh; }
         transition: transform 0.8s ease-in-out;
     }
     .NFTitems { 
+        padding-left: 75px;
         padding: 30px 182px 20px 50px; 
         transition: all 1s ease-in-out; 
         flex-wrap: nowrap; 

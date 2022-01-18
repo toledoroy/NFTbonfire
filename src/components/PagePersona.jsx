@@ -917,7 +917,7 @@ export default PagePersona;
                     <LoadingOutlined /> 
                     <div className="explanation">Uploading Image to IPFS</div>
                 </div>
-            :   <Button icon={<UploadOutlined />}>Upload New Cover Photo</Button>    
+            :   <Button icon={<UploadOutlined />}>Upload Cover Photo</Button>    
             }
             </Upload>
         </div>
