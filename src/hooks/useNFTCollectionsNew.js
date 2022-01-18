@@ -59,7 +59,7 @@ export const useNFTCollections = (options) => {
   //Get NFTs for Account
   const { data: NFTBalances, isLoading, error } = useNFTBalances(options);   
   useEffect(() => {
-    // console.log("[TEST] NEW NFTBalances", NFTBalances, );
+    console.log("[TEST] useNFTCollections() NFTBalances", NFTBalances, options);
     if (isWeb3Enabled && NFTBalances?.result) {
       const NFTs = NFTBalances.result;
       for (let NFT of NFTs) {
@@ -79,6 +79,7 @@ export const useNFTCollections = (options) => {
     }//Has Results
     // eslint-disable-next-line
   }, [NFTBalances, isWeb3Enabled]);
+// }, [NFTBalances, isWeb3Enabled, options]);
 
   return { NFTCollections, NFTpersonas, error, isLoading };
 };//useNFTCollections

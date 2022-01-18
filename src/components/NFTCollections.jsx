@@ -59,7 +59,8 @@ function NFTCollections(props) {
     // address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1'
   };
   options.address = accountHash ? accountHash : account;    //Who's NFTs
-  if(props?.match?.params?.chain) options.chain = props.match.params.chain;
+  // if(props?.match?.params?.chain) options.chain = props.match.params.chain;
+  options.chain = (props?.match?.params?.chain) ? props.match.params.chain : chainId;
   const { NFTCollections, NFTpersonas } = useNFTCollections(options);
 
 
@@ -115,7 +116,7 @@ function NFTCollections(props) {
   
   //Validate
   if(isWeb3Enabled && collectionHash && !NFTCollections[collectionHash]) return (
-    <div className="framed error 404">Error: Failed to Find Requested Contract '{collectionHash}' on {ChainHelper.get(chainId,'name')}</div>
+    <div className="framed error 404">Error: Failed to Find Requested Contract '{collectionHash}' on {ChainHelper.get(options.chain,'name')}</div>
   );
   return (
     <Skeleton loading={!isWeb3Enabled}>
@@ -166,7 +167,8 @@ function NFTCollections(props) {
               let dest = {
                   // pathname: "/nftSingle/"+collection.hash,
                   // pathname: collectionHash ? `${accountHash ? "/nftCollections/"+accountHash : '/nftCollections/'}` : `${accountHash ? accountHash+"/"+collection.hash : '/nftSingle/'+collection.hash}`,
-                  pathname: collectionHash ? "/nftCollections/"+options.address : '/nftCollections/'+options.address+'/'+collection.hash,
+                  // pathname: collectionHash ? "/nftCollections/"+options.address : '/nftCollections/'+options.address+'/'+collection.hash,
+                  pathname: collectionHash ? "/nftCollections/"+options.address : '/nftCollection/'+options.chain+'/'+collection.hash,
                   // search: "?sort=name",
                   // hash: "#the-hash",
                   // state: { fromDashboard: true }

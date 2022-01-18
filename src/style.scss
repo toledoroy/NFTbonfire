@@ -677,6 +677,9 @@ body { height:100vh; }
     display: flex;
     flex: 1 1;
     flex-direction: column;
+    button {
+        border: var(--background-color);
+    }
     .disallowed{
         margin-top:10px;
         line-height: 1.8em;
