@@ -182,7 +182,7 @@ import { PersonaContext } from "common/context";
                     form={form} 
                     >
                     <Form.Item name="name" rules={[{ required: true, message: 'You forgot to fill in a Topic'}]}>
-                      <Input placeholder="Topic"/>
+                      <Input placeholder="Topic" maxLength={250} />
                     </Form.Item>
                     <Form.Item name="text" rules={[{ required: true, message: "You'd need to enter some text as well..."}]}>
                       <Input.TextArea placeholder="Content" />
