@@ -3,7 +3,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
 import { FireTwoTone, StopOutlined } from '@ant-design/icons';
-// import { Skeleton, Image, Form, Input, Button, Checkbox } from "antd";
+// import { Image, Form, Input, Button, Checkbox } from "antd";
 import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Radio, Button } from 'antd';
 import { useMoralisQuery } from "react-moralis";
 import VotePane from "components/Room/VotePane";
@@ -152,7 +152,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
     {collection => (
       <>
       <div className="space">
-        <Skeleton active loading={!space || rooms.length===0}>
+        <Skeleton active loading={!space || !isWeb3Enabled}>
           <h1> Private Space for {collection.name}</h1>
           {/* <h4>[Addr:{collection.hash}]</h4> */}
           {/* <span key="typs">Type: {collection.contract_type}</span> */}
