@@ -3,20 +3,21 @@ import { useMoralis, useMoralisQuery } from "react-moralis";
 import NFTCollections from "components/NFTCollections";
 import { PersonaHelper } from "helpers/PersonaHelper";
 import { ChainHelper } from "helpers/ChainHelper";
-import { Skeleton, Tabs, Row, Col, Button } from 'antd';
-import { Card, Image } from "antd";
-import { PlusOutlined } from '@ant-design/icons';
+import { Skeleton, Tabs, Row, Col } from 'antd';
+// import { Button } from 'antd';
+// import { Card, Image } from "antd";
+// import { PlusOutlined } from '@ant-design/icons';
 
 // import { PersonaContext } from "common/context";
 import __ from "helpers/__";
 //Components
 import Address from "components/Address/Address";
-import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
+// import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
 import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
 import PageAuthenticate from "components/PageAuthenticate";
 import ERC20Balance from "components/ERC20Balance";
 
-const { TabPane } = Tabs;
+// const { TabPane } = Tabs;
 
 
 /**
@@ -25,7 +26,7 @@ const { TabPane } = Tabs;
  function Homepage(props) {
     const { Moralis, user, chainId, account, isWeb3Enabled } = useMoralis();     //isUserUpdating
     // const { persona, contract } = props;
-    const { persona, contract } = props;
+    // const { persona, contract } = props;
       
     const [ personaCollection, setPersonaCollection ] = useState();
 
@@ -64,7 +65,7 @@ const { TabPane } = Tabs;
     }, [personas]);
 
     console.warn("[TEST] Homepage() Persona NFTs Collection:", {personaCollection, style:__.stackContainerStyle(personaCollection?.items.length)} );
-    console.warn("[TEST] Homepage() Persona NFTs Collection:", {user, account, } );
+    // console.warn("[TEST] Homepage() Persona NFTs Collection:", {user, account, } );
     
     if(!account) return (
         <Row>
@@ -95,7 +96,7 @@ const { TabPane } = Tabs;
                         <p>Current Account:</p>
                         <Address avatar="left" copyable address={account} size={9} />
                         {/* icon={<i className="bi bi-explicit"></i>} */}
-                        <h3>Fungible Assets</h3>
+                        <h2>Fungible Assets</h2>
                         <ERC20Balance />
                     </>}
                 </Col>

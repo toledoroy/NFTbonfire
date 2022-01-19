@@ -88,10 +88,28 @@ body { height:100vh; }
 
 /* Page: Home */
 .home {
+    h1{
+        // text-align: center;
+        // border-bottom: 1px solid #999;
+    }
     .account {
-        
+        .token_balaces{
+            padding-right: 40px;
+        }
+        li, 
+        button{
+            border-radius: 50%;
+        }
+        .ant-table{
+            border-radius: var(--borderRadius);
+            overflow: hidden;
+        }
+    }
+    .stack{
+        padding-left:50px;
     }
     .personas {
+        
         .mintNewPersona {
             a{
                 // border: 1px solid #333;
@@ -100,17 +118,12 @@ body { height:100vh; }
                 flex-direction: column;
                 justify-content: center;
                 text-align: center;
-                            
                 width: var(--cardWidth);
                 height: var(--cardHeight);
-
                 border: 2px solid rgb(231, 234, 243);
                 box-shadow: 0 0 10px #9ecaed;
-
                 border-radius: 18px;
-
                 margin: 20px 10px;
-                
                 background: var(--comment-background);
                 i {
                     font-size: 120px;
@@ -611,8 +624,7 @@ body { height:100vh; }
         transition: transform 0.8s ease-in-out;
     }
     .NFTitems { 
-        padding-left: 75px;
-        padding: 30px 182px 20px 50px; 
+        padding: 30px 182px 20px 75px; 
         transition: all 1s ease-in-out; 
         flex-wrap: nowrap; 
         min-width: 480px; 
