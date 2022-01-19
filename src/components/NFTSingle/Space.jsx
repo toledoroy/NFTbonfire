@@ -300,7 +300,7 @@ function RoomEntrance(props) {
     <div className={className} id={room.id}>
       <Badge.Ribbon placement="start" 
         // text={room.get('persona').get('owner')} 
-        text={<Address address={room.get('persona').get('owner')} size={6} size2={2} />} 
+        text={<Address address={room.get('persona')?.get('owner')} size={6} size2={2} />} 
         // onHover={console.warn("[TEST] HOVERING ABOVE THE RIBBON")}
         title="Owner"
         >
