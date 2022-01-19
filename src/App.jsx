@@ -100,7 +100,7 @@ const App = ({ isServerInfo }) => {
     <PersonaContext.Provider value={{persona, setPersona}}>
     <Router> 
     {/* <Layout className="wrapper_main" style={{ height: "100vh", overflow: "auto" }}> */}
-    {/* <Layout className={"wrapper_main env_"+process.env.NODE_ENV} > */}
+    {/* <Layout className={"wrapper_main env_"+process?.env?.NODE_ENV} > */}
     <Layout className="wrapper_main env_">
       {/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /> */}
       {/* <script src="https://kit.fontawesome.com/62e94cb93f.js" crossorigin="anonymous"></script> */}

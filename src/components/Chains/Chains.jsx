@@ -32,8 +32,8 @@ function Chains() {
   const { switchNetwork, chainId, chain } = useChain();
   const [selected, setSelected] = useState({});
   //Filter
-  // const menuItems = allChains.filter((chainData) => (chainData.key == chainId || chainData.supported && (chainData.live || process.env.NODE_ENV==='development')));
-  const menuItems = allChains.filter((chainData) => (chainData.key == chainId || chainData.supported));   //This Allows Test Networks on Production
+  // const menuItems = allChains.filter((chainData) => (chainData.key == chainId || chainData.supported && (chainData.live || process?.env?.NODE_ENV==='development')));
+  const menuItems = allChains.filter((chainData) => (chainData.key === chainId || chainData.supported));   //This Allows Test Networks on Production
 
   // console.log("chain", chain);
 

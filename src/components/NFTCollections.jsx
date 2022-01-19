@@ -119,7 +119,7 @@ function NFTCollections(props) {
   }//testFunc()
   // testFunc();
 
-  // (process.env.NODE_ENV==='development')
+  // (process?.env?.NODE_ENV==='development')
 
   // console.warn("[TEST] NFTCollections() Collection:", {NFTCollections, collectionHash, thiscollection:NFTCollections[collectionHash] });
   //style={styles.NFTs}

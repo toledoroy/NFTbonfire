@@ -170,10 +170,11 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
           {/* <span key="typs">Type: {collection.contract_type}</span> */}
           {/* <span key="symbol">Symbol: {collection.symbol}</span> */}
           {/* TODO: Add Field: Creator, Total No. of Items, */}
+          {console.log("[DEV] SpaceView() in NODE_ENV:"+process?.env?.NODE_ENV)}
 
-          {(isAllowed || process.env.NODE_ENV==='developmentX') ? <>
+          {(isAllowed || process?.env?.NODE_ENV==='development') ? <>
             <div className={(curRoomId) ? 'room_list single' : 'room_list'}>
-              {(!isAllowed && process.env.NODE_ENV==='development') && <span className="debug" style={{float:'right'}}>[NOT ALLOWED]</span>}
+              {(!isAllowed && process?.env?.NODE_ENV==='development') && <span className="debug" style={{float:'right'}}>[NOT ALLOWED]</span>}
             {(rooms && rooms.length>0) ? 
               <div className="allowed">
               
