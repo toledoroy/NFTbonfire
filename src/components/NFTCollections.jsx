@@ -9,12 +9,12 @@ import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
 // import Address from "components/Address/Address";
 // import { useNFTCollections } from "hooks/useNFTCollections";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
-import { useIsAllowed } from "hooks/useIsAllowed";
+// import { useIsAllowed } from "hooks/useIsAllowed";
 import { Post } from "objects/objects";
 import Space from "components/NFTSingle/Space";
 import { CollectionContext } from "common/context";
 // import { NFTHelper } from "helpers/NFTHelper";
-import { ChainHelper } from "helpers/ChainHelper";
+// import { ChainHelper } from "helpers/ChainHelper";
 import __ from "helpers/__";
 // import { getChainName, getChainLogo } from "helpers/networks";
     

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FileSearchOutlined, SendOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { Card, Image, Tooltip, Modal, Input } from "antd";
 import { useMoralis } from "react-moralis";
 import { getExplorer } from "helpers/networks";
 import AddressInput from "components/AddressInput";
 import NFTDisplayMetadata from "components/NFTCollections/NFTDisplayMetadata";
-import { IPFS } from "helpers/IPFS";
+// import { IPFS } from "helpers/IPFS";
 import __ from "helpers/__";
 
 const { Meta } = Card;

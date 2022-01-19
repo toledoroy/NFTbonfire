@@ -24,7 +24,7 @@ import ERC20Balance from "components/ERC20Balance";
  * Component: Home Page
  */
  function Homepage(props) {
-    const { Moralis, user, chainId, account, isWeb3Enabled } = useMoralis();     //isUserUpdating
+    const { account, isWeb3Enabled } = useMoralis();     //, Moralis, user, chainId, isUserUpdating
     // const { persona, contract } = props;
     // const { persona, contract } = props;
       

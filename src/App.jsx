@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";  //, Redirect
 import Account from "components/Account/Account";
 import Chains from "components/Chains";
 import Homepage from "components/content/Homepage";
