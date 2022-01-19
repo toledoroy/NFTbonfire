@@ -2,6 +2,12 @@
   "name": "NFTBonfire",
   "version": "1.0.0",
   "private": true,
+   "engines": {
+    "yarn": "1.x"
+  },
+  "workspaces": [
+    "client"
+  ],
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@testing-library/jest-dom": "^5.11.4",
