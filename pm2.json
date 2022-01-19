@@ -1,0 +1,15 @@
+{
+  "name": "NFT Bonfire",
+  "script": "src/App.js",
+  "instances": "2",
+  "env": {
+    "NODE_ENV": "development",
+	"REACT_APP_MORALIS_APPLICATION_ID": "rJP4Zowh9GcYb339LwRqAPF9FmYpxpUPrONC1dRX",
+	"REACT_APP_MORALIS_SERVER_URL": "https://o0geymqane76.usemoralis.com:2053/server"
+  },
+  "env_production" : {
+    "NODE_ENV": "production"
+	"REACT_APP_MORALIS_APPLICATION_ID": "rJP4Zowh9GcYb339LwRqAPF9FmYpxpUPrONC1dRX",
+	"REACT_APP_MORALIS_SERVER_URL": "https://o0geymqane76.usemoralis.com:2053/server"
+  }
+}
