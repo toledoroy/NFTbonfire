@@ -430,7 +430,7 @@ function ShowComments({room}) {
                   author={comment.get('persona')?.get('metadata')?.name}
                   avatar={
                     <Link to={{pathname: PersonaHelper.getLink(comment.get('persona'))}}>
-                      <Avatar src={PersonaHelper.getImage(comment.get('persona'))} alt={comment.get('persona')?.get('metadata').name} />
+                      <Avatar src={PersonaHelper.getImage(comment.get('persona'))} alt={PersonaHelper.getName(comment.get('persona'))} />
                     </Link> 
                   }
                   content={
