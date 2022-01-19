@@ -30,9 +30,6 @@ export const usePersona = () => {
         } 
     }//loadMetadata()
 
-    
-
-
     /** TODO: Try to just Make use of that Same (Generic) Function in useContract() 
      * Wrapper for Contract Calls via Moralis 
      * @param string funcName 
@@ -44,7 +41,7 @@ export const usePersona = () => {
         if(!abi) abi = Persona.getABI(chain);   //Default ABI
         //Validate ABI
         if(!abi) throw "No Default ABI Found for Chain:"+chain;
-        if(chain===undefined || chain == chainId){//Current Chain
+        if(chain===undefined || chain === chainId){//Current Chain
             let options = {
                 contractAddress: Persona.getContractAddress(chain),
                 abi,
@@ -67,7 +64,7 @@ export const usePersona = () => {
 
 
 
-    /**
+    /** UNUSED
      * Fetch Token's Owner Account
      * @param {*} parseObj 
      */
@@ -268,6 +265,12 @@ export const usePersona = () => {
         });
     }//update()
 
-    return { loadMetadata, updateToken, fetchMetadata, mint, update };
+    
+    function validateChain(chainId){
+        return (Persona.getContractAddress(chainId));
+    }
+
+    
+    return { validateChain, loadMetadata, updateToken, fetchMetadata, mint, update };
  
 }//usePersona()
