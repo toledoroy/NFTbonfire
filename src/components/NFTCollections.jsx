@@ -135,7 +135,7 @@ function NFTCollections(props) {
   return (
     <Skeleton loading={!isWeb3Enabled}>
       
-      {!isAllowed && <p className="debug" style={{float:'right'}}>NOT ALLOWED</p>}
+      {(!isAllowed && process?.env?.NODE_ENV==='development') && <p className="debug" style={{float:'right'}}>[NOT ALLOWED (C)]</p>}
 
       <div key="collections" className={"collections framed count_"+Object.keys(NFTCollections).length}>
         

@@ -174,7 +174,7 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
 
           {(isAllowed || process?.env?.NODE_ENV==='development') ? <>
             <div className={(curRoomId) ? 'room_list single' : 'room_list'}>
-              {(!isAllowed && process?.env?.NODE_ENV==='development') && <span className="debug" style={{float:'right'}}>[NOT ALLOWED]</span>}
+              {(!isAllowed && process?.env?.NODE_ENV==='development') && <span className="debug" style={{float:'right'}}>[NOT ALLOWED (S)]</span>}
             {(rooms && rooms.length>0) ? 
               <div className="allowed">
               
@@ -252,7 +252,6 @@ export default SpaceView;
  */
 function RoomEntrance(props) {
   const { hash, collection, room, selected:isSelected } = props;
-
   const [ persona, setPersona ] = useState(room.get('persona'));
 
   // let image = PersonaHelper.getImage(room.get('persona'));
@@ -371,8 +370,8 @@ function ShowMore() {
   return (
       <div className="show_more flex">
           <div className="inner">
-              <p onClick={ console.warn("ShowMore() Clicked") }>
-                Load More
+              <p className="debug" onClick={ console.warn("ShowMore() Clicked") }>
+                [Load More]
               </p>
           </div>
       </div>
@@ -390,7 +389,8 @@ function ShowComments({room}) {
   const [ order, setOrder ] = useState('best'); //[olde, new, best]  //updatedAt, score
   
 
-  const { data:comments, error, isLoading } = useMoralisQuery(CommentObj, query =>
+  // const { data:comments, error, isLoading } = useMoralisQuery(CommentObj, query =>
+  const { data:comments } = useMoralisQuery(CommentObj, query =>
     query.equalTo("parentId", room.id)
       // .greaterThanOrEqualTo("score", 100)
       .descending("updatedAt").descending("score")    //Best First
