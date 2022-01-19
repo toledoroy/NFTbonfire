@@ -18,7 +18,7 @@ import { Space, Room, Comment as CommentObj } from "objects/objects";
 import { Persona } from "objects/Persona";
 //Components
 import Address from "components/Address/Address";
-
+import PageAuthenticate from "components/PageAuthenticate";
 
 /**
  * Component: SpaceView (W/Chat Room)
@@ -158,6 +158,7 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
   //  {collection => {console.warn("[TEST] SpaceView() CollectionContext: ", {collection})}} 
   //  </CollectionContext.Consumer> 
     */
+  if(!isAuthenticated) return <PageAuthenticate />;
   return (
     <CollectionContext.Consumer>
     {collection => (
@@ -382,7 +383,7 @@ function ShowMore() {
  * Component: Show Comments
  */
 function ShowComments({room}) {
-  const { Moralis } = useMoralis();
+  const { isAuthenticated } = useMoralis();
   // const [ comments, setComments ] = useState([]);
   const [ limit, setLimit ] = useState(100);
   
@@ -394,7 +395,7 @@ function ShowComments({room}) {
       // .greaterThanOrEqualTo("score", 100)
       .descending("updatedAt").descending("score")    //Best First
       // .limit(limit),
-      ,[room, limit]
+      ,[room, limit, isAuthenticated, order]
       ,{ live: true }   //Seems like it's not really live...
     );
 
