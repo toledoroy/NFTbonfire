@@ -88,9 +88,14 @@ body { height:100vh; }
 
 /* Page: Home */
 .home {
+    
     h1{
         // text-align: center;
         // border-bottom: 1px solid #999;
+        margin-bottom: 10px;
+    }
+    .row{
+        margin-top: 20px;
     }
     .account {
         .token_balaces{

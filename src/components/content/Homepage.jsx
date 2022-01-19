@@ -89,16 +89,20 @@ import ERC20Balance from "components/ERC20Balance";
             } 
             */}
             
-            <Row className="row flex">
+            <Row className="flex">
                 <Col xs={24} md={12} className="account">
+                    <div className="row">
                     <h1>Account</h1>
                     {account && <>
                         <p>Current Account:</p>
                         <Address avatar="left" copyable address={account} size={9} />
                         {/* icon={<i className="bi bi-explicit"></i>} */}
-                        <h2>Fungible Assets</h2>
-                        <ERC20Balance />
+                        <div className="row">
+                            <h2>Fungible Assets</h2>
+                            <ERC20Balance />
+                        </div>
                     </>}
+                    </div>
                 </Col>
                 <Col xs={24} md={12} className="personas stack">
                     <h1>Personas</h1>
@@ -115,7 +119,7 @@ import ERC20Balance from "components/ERC20Balance";
                 </Col>
             </Row>
             
-            <Row className="row flex">
+            <Row className="flex">
                 {/* {console.log("[TEST] Homepage() ChainHelper.allChains:", ChainHelper.allChains())} */}
                 <div className="assets">
                     <h1>Non-Fungible Assets</h1>
