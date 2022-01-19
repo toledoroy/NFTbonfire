@@ -94,9 +94,10 @@ const personaDefaultMetadatas = [
     */
     /* Anonymous */
     {
-        // username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
-        "name": "Anonymous",
+        "type": "Persona",
         "role": "Hacker",
+        "name": "Anonymous",
+        // username: handle,   //Internal User Handle (Slug)           //This Should Be Somewhere Else... 
         // "image": "https://images.unsplash.com/photo-1636716642701-01754aef1066?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",  //Random Dark Lady
         "image": "https://ipfs.moralis.io:2053/ipfs/QmZ2oHHLUUARUTz3Jx2wSWYTtALUtEhQtT1hpxb7Fbvr5y",   //Anon in hood
         // "image": "https://ipfs.moralis.io:2053/ipfs/QmWyKVFkUCfwUFQZyKjJ9ifqyWatUFStMi8B3MtT3CkhyP",      //Anon logo

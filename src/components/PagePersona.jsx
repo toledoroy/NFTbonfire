@@ -273,7 +273,7 @@ function PagePersona(props) {
      * Create a Fresh (Empty) Metadata Object
      */
     const freshMetadata = () => {
-        let metadata = {social:{}, accounts:[], links:[],};
+        let metadata = {type:'persona', social:{}, accounts:[], links:[],};
         //Default Accounts (Current User Accounts)
         // for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
         metadata.accounts.push({account, chain:chainId});   //Current Address only
