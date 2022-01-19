@@ -1066,16 +1066,11 @@ export default PagePersona;
     // const { persona, contract } = props;
     const { persona, contract, setIsEditMode, form, reloadmetadata } = props;
     // const tokenId = persona.get('token_id');
-
     const [ isSaving, setIsSaving ] = useState(false);
     const [ stage, setStage ] = useState(null);
     // const [ formSocial, setFormSocial ] = useState({});
-    // const [ metadata, setMetadata ] = useState(props?.metadata);
-    // const [ metadata, setMetadata ] = useState(persona.get('metadata'));
-    // const [ metadata, setMetadata ] = useState({});    //Start Empty     //Now Sharing Metadata with Container
     const [ metadata, setMetadata ] = useState(props.metadata);    //From Parent
     const { mint, update } = usePersona(); 
-
     //File Upload
     // const [ imageUrl, setImageUrl ] = useState(persona.getFallback('image'));
     const [ imageUrl, setImageUrl ] = useState(metadata?.image);
@@ -1084,9 +1079,9 @@ export default PagePersona;
     // const { verifyMetadata, updateToken } = useVerifyMetadata();
     // const { Moralis, setUserData, user, isAuthenticated } = useMoralis();
     const { Moralis, user, isAuthenticated } = useMoralis();
-    const contractProcessor = useWeb3ExecuteFunction();
+    // const contractProcessor = useWeb3ExecuteFunction();
     //Contract Data
-    const contractPersona = Persona.getContractData();
+    // const contractPersona = Persona.getContractData();
     // const [form] = Form.useForm();   //Now on Parent for Parental Control
 
     /* All Tokens 
