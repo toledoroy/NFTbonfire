@@ -21,7 +21,9 @@ export const __ = {
         style.transform = "rotate(-"+5*(len-1)+"deg)";
       } 
       return style;
-    }
+    },
+
+    matchAddr: (a1, a2) => (String(a1).toLowerCase() === String(a2).toLowerCase()),
 
 };
 

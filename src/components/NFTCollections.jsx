@@ -187,7 +187,7 @@ function NFTCollections(props) {
                     // : '/space/'+options.chain+'/'+collection.hash,  //NFT Collection Page
                   pathname: collectionHash 
                     ? `${accountHash ? "/nftCollections/"+accountHash : '/nftCollections/'}`  //Collections Page
-                    : `${accountHash ? accountHash+"/"+collection.hash : '/space/'+options.chain+'/'+collection.hash}`, //Single (Room)
+                    : `${(accountHash && !__.matchAddr(accountHash,account)) ? "/nftCollections/"+accountHash+"/"+collection.hash : '/space/'+options.chain+'/'+collection.hash}`, //Single (Room)
                   // pathname: '/space/'+options.chain+'/'+collection.hash,  //This is this page///
                   // search: "?sort=name",
                   // hash: "#the-hash",
