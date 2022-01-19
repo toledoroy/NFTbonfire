@@ -10,7 +10,7 @@ import VotePane from "components/Room/VotePane";
 // import PersonaChanger from "components/Persona/PersonaChanger";
 import PersonaHelper from "helpers/PersonaHelper";
 import { PersonaContext } from "common/context";
-import { useIsAllowed } from "hooks/useIsAllowed";
+// import { useIsAllowed } from "hooks/useIsAllowed";
 import { CollectionContext } from "common/context";
 import __ from "helpers/__";
 import moment from 'moment';
@@ -34,9 +34,18 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
   const [ rooms, setRooms ] = useState([]);
   const [ curRoomId, setcurRoomId ] = useState();
   const [ limit, setLimit ] = useState(8);
-  const { isAllowed } = useIsAllowed({hash, chain,});
+  const [isAllowed, setIsAllowed] = useState(null);
+  // const { isAllowed } = useIsAllowed({hash, chain,});
   // const { persona, setPersona} = useContext(PersonaContext);
   
+  
+  React.useEffect(() => {  
+    setIsAllowed((collection.owned));
+    //Log
+    console.log("(i) Space() Check if Allowed on Collection:"+collection.owned, collection);
+
+  },[collection]);
+
   /**
    * [DEV] Insert Rooms
    */

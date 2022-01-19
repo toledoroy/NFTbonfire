@@ -17,24 +17,39 @@ export const useIsAllowed = (props) => {
   useEffect(() => { 
     /* Check if Account Owns Any Assets on Specified Contract */
     if(hash && isWeb3Enabled && user && account){
-      //Fetch Balance
-      NFTHelper.getBalance(Moralis, account, hash, chain).then(balance => {
-        //Log
-        // console.log("useIsAllowed() Account's Balance for this Contract:"+balance, {balance, account, hash}); 
-        //Set Permissions
-        setIsAllowed(balance > 0);
-      // }, [hash, account]);
-      });
-      
-      /* ServerSide Validation  - use Hook */
-      let params = { hash, chain };
-      Moralis.Cloud.run("isAllowed", params).then(res => {
-          console.warn("useIsAllowed() is User Allowed:"+res, {user, params, account, props });
-      })
-      .catch(err => {
-          console.error("useIsAllowed() is User Allowed Failed:", {user, err, params, account });
-      });
-      
+      /* TODO: Maybe Try to Reduce Server load by using Wallet
+      if(chain === chainId){
+
+        let options = {
+          contractAddress: hash,
+          abi,
+          params,
+          functionName: functionName,
+        };
+        return Moralis.executeFunction(options);   //From Wallet - Only Current Chain 
+        
+      }else{
+        */
+        //Fetch Balance
+        NFTHelper.getBalance(Moralis, account, hash, chain).then(balance => {
+          //Log
+          // console.log("useIsAllowed() Account's Balance for this Contract:"+balance, {balance, account, hash}); 
+          //Set Permissions
+          setIsAllowed(balance > 0);
+        // }, [hash, account]);
+        });
+        
+        /* ServerSide Validation  - use Hook */
+        let params = { hash, chain };
+        Moralis.Cloud.run("isAllowed", params).then(res => {
+            console.warn("useIsAllowed() is User Allowed:"+res, {user, params, account, props });
+        })
+        .catch(err => {
+            console.error("useIsAllowed() is User Allowed Failed:", {user, err, params, account });
+        });
+
+      // }
+
     }
     else{
       //Nothing Selected -- Allow to all

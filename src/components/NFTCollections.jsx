@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 //import { Card, Image, Tooltip, Modal, Input, Button, Dropdown, Avatar } from "antd";
 import { Breadcrumb, Skeleton, Button } from "antd";
@@ -50,7 +50,8 @@ function NFTCollections(props) {
   //Extract Props
   let { accountHash, collectionHash } = props.match.params;
   const { Moralis, isWeb3Enabled , chainId, account  } = useMoralis();
-  const { isAllowed } = useIsAllowed({hash:collectionHash, chain:props?.match?.params?.chain || chainId});
+  const [isAllowed, setIsAllowed] = useState(null);
+  // const { isAllowed } = useIsAllowed({hash:collectionHash, chain:props?.match?.params?.chain || chainId});
   // console.warn("[TEST] NFTCollections() Ran useIsAllowed:"+isAllowed, {hash:collectionHash, chain:props?.match?.params?.chain || chainId, props});
 
   //Init Options
@@ -63,6 +64,15 @@ function NFTCollections(props) {
   options.chain = (props?.match?.params?.chain) ? props.match.params.chain : chainId;
   const { NFTCollections, NFTpersonas } = useNFTCollections(options);
 
+  React.useEffect(() => {  
+    if(!collectionHash) setIsAllowed(true);
+    else if(isWeb3Enabled && collectionHash && !NFTCollections[collectionHash]) setIsAllowed(false);
+    else{
+      //Log
+      console.log("(i) NFTCollections() Check if Allowed on Collection:"+collectionHash, NFTCollections, NFTCollections[collectionHash]?.owned, (NFTCollections[collectionHash]?.owned));
+      setIsAllowed((NFTCollections[collectionHash]?.owned));
+    }
+  },[collectionHash]);
 
   React.useEffect(() => {  
     //Log
@@ -113,11 +123,15 @@ function NFTCollections(props) {
 
   // console.warn("[TEST] NFTCollections() Collection:", {NFTCollections, collectionHash, thiscollection:NFTCollections[collectionHash] });
   //style={styles.NFTs}
-  
+  /* MOVED TO isAllowed()
   //Validate
-  if(isWeb3Enabled && collectionHash && !NFTCollections[collectionHash]) return (
-    <div className="framed error 404">Error: Failed to Find Requested Contract '{collectionHash}' on {ChainHelper.get(options.chain,'name')}</div>
-  );
+  if(isWeb3Enabled && collectionHash && !NFTCollections[collectionHash]){
+    console.error("NFTCollections() Requested Collection Not Found:", {NFTCollections, collectionHash, thisCollection:NFTCollections[collectionHash] });
+    return (
+      <div className="framed error 404">Error: Failed to Find Requested Contract '{collectionHash}' on {ChainHelper.get(options.chain,'name')}</div>
+    );
+  }
+  */
   return (
     <Skeleton loading={!isWeb3Enabled}>
       
@@ -168,9 +182,12 @@ function NFTCollections(props) {
                   // pathname: "/nftSingle/"+collection.hash,
                   // pathname: collectionHash ? `${accountHash ? "/nftCollections/"+accountHash : '/nftCollections/'}` : `${accountHash ? accountHash+"/"+collection.hash : '/nftSingle/'+collection.hash}`,
                   // pathname: collectionHash ? "/nftCollections/"+options.address : '/nftCollections/'+options.address+'/'+collection.hash,
+                  // pathname: collectionHash 
+                    // ? "/nftCollections/"+options.address  //Account NFTs Page
+                    // : '/space/'+options.chain+'/'+collection.hash,  //NFT Collection Page
                   pathname: collectionHash 
-                    ? "/nftCollections/"+options.address  //Account NFTs Page
-                    : '/space/'+options.chain+'/'+collection.hash,  //NFT Collection Page
+                    ? `${accountHash ? "/nftCollections/"+accountHash : '/nftCollections/'}`  //Collections Page
+                    : `${accountHash ? accountHash+"/"+collection.hash : '/space/'+options.chain+'/'+collection.hash}`, //Single (Room)
                   // pathname: '/space/'+options.chain+'/'+collection.hash,  //This is this page///
                   // search: "?sort=name",
                   // hash: "#the-hash",

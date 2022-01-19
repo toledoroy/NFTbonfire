@@ -47,7 +47,7 @@ Moralis.Cloud.define("isAllowed", async (request) => {
   //Get Balance
   const balance = await getBalance(account, request.params.hash, request.params.chain);
   //Log
-  // logger.info("[TEST] isAllowed() Chain:"+request?.params?.chain+" Account:"+account+" Balance:"+balance);
+  logger.info("(i) isAllowed() Chain:"+request?.params?.chain+" Account:"+account+" Balance:"+balance);
   //True if has any balance
   return (balance > 0);
 });
