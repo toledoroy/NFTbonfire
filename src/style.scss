@@ -924,10 +924,10 @@ body { height:100vh; }
 
 
 /* ENV Specific */
-.debug{ visibility: hidden; }
+.debug{ display: none; }
 .env_development{
-    .debug{ visibility: visible; }
+    .debug{ display: auto; }
 }
 .env_production{
-    .debug{ visibility: hidden; }
+    .debug{ display: none; }
 }
