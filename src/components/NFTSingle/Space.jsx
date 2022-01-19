@@ -287,13 +287,12 @@ function RoomEntrance(props) {
   },[isSelected]);
   */
 
-  
- 
- console.warn("[TEST] RoomEntrance() For:"+room.id, {
-  started:moment(room.get('createdAt')).format('YYYY-MM-DD HH:mm:ss'),
- letInteraction: moment(room.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss'),
- });
- 
+  /*
+  console.warn("[TEST] RoomEntrance() For:"+room.id, {
+    started:moment(room.get('createdAt')).format('YYYY-MM-DD HH:mm:ss'),
+  letInteraction: moment(room.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss'),
+  });
+  */
  
   return (
     <div className="room_single">
