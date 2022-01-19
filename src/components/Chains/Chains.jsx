@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Menu, Dropdown, Button } from "antd";
 import { DownOutlined } from "@ant-design/icons";
-import { AvaxLogo, PolygonLogo, BSCLogo, ETHLogo } from "./Logos";
+// import { AvaxLogo, PolygonLogo, BSCLogo, ETHLogo } from "./Logos";
 import { useChain } from "react-moralis";
-import { getChainLogo } from "helpers/networks";    //Usage: getChainLogo("0x1")
+// import { getChainLogo } from "helpers/networks";    //Usage: getChainLogo("0x1")
+import { ChainHelper } from "helpers/ChainHelper";
 
 const styles = {
   item: {
@@ -21,72 +22,18 @@ const styles = {
   // },
 };
 
-const menuItems = [
-  {
-    key: "0x1",
-    value: "Ethereum",
-    icon: <ETHLogo />,
-  },
-  {
-    key: "0x539",
-    value: "Local Chain",
-    icon: <ETHLogo />,
-  },
-  {
-    key: "0x3",
-    value: "Ropsten Testnet",
-    icon: <ETHLogo />,
-  },
-  {
-    key: "0x4",
-    value: "Rinkeby Testnet",
-    icon: <ETHLogo />,
-  },
-  {
-    key: "0x2a",
-    value: "Kovan Testnet",
-    icon: <ETHLogo />,
-  },
-  {
-    key: "0x5",
-    value: "Goerli Testnet",
-    icon: <ETHLogo />,
-  },
-  {
-    key: "0x38",
-    value: "Binance",
-    icon: <BSCLogo />,
-  },
-  {
-    key: "0x61",
-    value: "Smart Chain Testnet",
-    icon: <BSCLogo />,
-  },
-  {
-    key: "0x89",
-    value: "Polygon",
-    icon: <PolygonLogo />,
-  },
-  {
-    key: "0x13881",
-    value: "Mumbai",
-    icon: <PolygonLogo />,
-  },
-  {
-    key: "0xa86a",
-    value: "Avalanche",
-    icon: <AvaxLogo />,
-  },
-  {
-    key: "0xa869",
-    value: "Avalanche Testnet",
-    icon: <AvaxLogo />,
-  },
-];
 
+const allChains = ChainHelper.allChainsData();
+
+/**
+ * Component: Chain Changer
+ */
 function Chains() {
   const { switchNetwork, chainId, chain } = useChain();
   const [selected, setSelected] = useState({});
+  //Filter
+  // const menuItems = allChains.filter((chainData) => (chainData.key == chainId || chainData.supported && (chainData.live || process.env.NODE_ENV==='development')));
+  const menuItems = allChains.filter((chainData) => (chainData.key == chainId || chainData.supported));   //This Allows Test Networks on Production
 
   // console.log("chain", chain);
 
@@ -102,23 +49,26 @@ function Chains() {
     switchNetwork(e.key);
   };
 
-  const menu = (
+  const menu = menuItems.length < 2 ? '' : (
     <Menu onClick={handleMenuClick}>
-      {menuItems.map((item) => (
-        <Menu.Item key={item.key} icon={item.icon} style={styles.item}>
-          <span style={{ marginLeft: "5px" }}>{item.value}</span>
-        </Menu.Item>
-      ))}
+      {menuItems.map((item) => { 
+        return (
+          <Menu.Item key={item.key} icon={item.icon} style={styles.item}>
+            <span style={{ marginLeft: "5px" }}>{item.name}</span>
+          </Menu.Item>
+        )
+      })}
     </Menu>
   );
 
+  let className = menuItems.length > 1 ? "chainSelect lightUp" :"chainSelect"; 
   return (
     <div>
       <Dropdown overlay={menu} trigger={["click"]}>
         {/* <Button className="chainSelect" key={selected?.key} icon={selected?.icon} style={{ ...styles.button, ...styles.item }}> */}
-        <Button className="chainSelect lightUp" key={selected?.key} icon={selected?.icon}>
-          <span style={{ marginLeft: "5px" }}>{selected?.value}</span>
-          <DownOutlined />
+        <Button className={className} key={selected?.key} icon={selected?.icon}>
+          <span style={{ marginLeft: "5px" }}>{selected?.name}</span>
+          {menuItems.length>1 && <DownOutlined />}
         </Button>
       </Dropdown>
     </div>

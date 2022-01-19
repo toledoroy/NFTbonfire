@@ -16,6 +16,13 @@ export const ChainHelper = {
     allChains(){
         return Object.keys(ChainsData);
     },
+    
+    /**
+     * 
+     */
+    allChainsData(){
+        return Object.values(ChainsData);
+    },
 };
 
 export default ChainHelper;
