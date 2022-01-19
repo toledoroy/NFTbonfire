@@ -14,6 +14,7 @@ import Address from "components/Address/Address";
 import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
 import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
 import PageAuthenticate from "components/PageAuthenticate";
+import ERC20Balance from "components/ERC20Balance";
 
 const { TabPane } = Tabs;
 
@@ -65,9 +66,19 @@ const { TabPane } = Tabs;
     console.warn("[TEST] Homepage() Persona NFTs Collection:", {personaCollection, style:__.stackContainerStyle(personaCollection?.items.length)} );
     console.warn("[TEST] Homepage() Persona NFTs Collection:", {user, account, } );
     
+    if(!account) return (
+        <Row>
+            <PageAuthenticate />
+        </Row>
+    );
     return (
+
         <div className="framed home">
-            <h1>Home</h1>   
+            {/* <h1>Home</h1>    * /}
+
+            {(!account) && <Row>
+                <PageAuthenticate />
+            </Row> */}
 
             {/* 
             {NFTpersonas && 
@@ -76,23 +87,23 @@ const { TabPane } = Tabs;
             </div>
             } 
             */}
-            {(!account) && <Row>
-                <PageAuthenticate />
-            </Row>}
-
-            {account && <Row className="row flex">
+            
+            <Row className="row flex">
                 <Col xs={24} md={12} className="account">
-                    <h2>Account</h2>
+                    <h1>Account</h1>
                     {account && <>
-                        <p>Logged In W/Account:</p>
-                        <Address icon={<i className="bi bi-explicit"></i>} avatar="left" copyable address={account} size={9} />
+                        <p>Current Account:</p>
+                        <Address avatar="left" copyable address={account} size={9} />
+                        {/* icon={<i className="bi bi-explicit"></i>} */}
+                        <h3>Token Balances</h3>
+                        <ERC20Balance />
                     </>}
                 </Col>
                 <Col xs={24} md={12} className="personas stack">
-                    <h2>Personas</h2>
+                    <h1>Personas</h1>
                     {!personaCollection?.hash && <div className="cards">
                         <div className="mintNewPersona NFT">
-                            <h3>Why Don't You Mint Yourself a New Persona</h3>
+                            <h2>Why Don't You Mint Yourself a New Persona</h2>
                             <a href="/persona"><i className="bi bi-plus"></i></a>
                         </div>
                     </div>}
@@ -101,11 +112,12 @@ const { TabPane } = Tabs;
                         <NFTDisplayCollection key={personaCollection.hash+'Collection'} collection={personaCollection} flip style={__.stackContainerStyle(personaCollection?.items.length)} />
                     </div>}
                 </Col>
-            </Row>}
+            </Row>
+            
             <Row className="row flex">
                 {/* {console.log("[TEST] Homepage() ChainHelper.allChains:", ChainHelper.allChains())} */}
                 <div className="assets">
-                    <h2>My NFTs</h2>
+                    <h1>My NFTs</h1>
                     <Skeleton loading={!isWeb3Enabled}>
                     {ChainHelper.allChains().map(chain => (
                         <div key={chain} className={"chain_"+chain}>

@@ -16,7 +16,7 @@ function PageAuthenticate(props) {
     }
     return (
         // <div className="framed">
-        <div>
+        <div className="authenticate framed">
             {/* <h1>Unauthenticated</h1> */}
             <p>This page requires you to connect your web3 wallet</p>
             <h2>Please login using the "Authenticate" button on the top right corner to log in via your web3 wallet</h2>
