@@ -216,7 +216,7 @@ function NFTCollections(props) {
 
                   {collectionHash && 
                     <div key="space" className="space_container">
-                      <Space hash={collectionHash} collection={collection} NFTpersonas={NFTpersonas}/>
+                      <Space hash={collectionHash} chain={options.chain} collection={collection} NFTpersonas={NFTpersonas}/>
                     </div>
                   }
                   

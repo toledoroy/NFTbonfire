@@ -29,8 +29,11 @@ export const usePersona = () => {
             return parseObj.get('metadata');
         } 
     }//loadMetadata()
+
     
-    /** [TEST]
+
+
+    /** TODO: Try to just Make use of that Same (Generic) Function in useContract() 
      * Wrapper for Contract Calls via Moralis 
      * @param string funcName 
      * @param object params 
@@ -61,6 +64,8 @@ export const usePersona = () => {
             return Moralis.Web3API.native.runContractFunction(options);   //Through Server (All Chains)
         }
     }//contractCall()
+
+
 
     /**
      * Fetch Token's Owner Account

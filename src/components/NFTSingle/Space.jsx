@@ -26,13 +26,13 @@ import { Persona } from "objects/Persona";
  *  - Stack Overflow
  *  - FB Messenger
  */
-function SpaceView({hash, collection, NFTpersonas}) {
-  const { Moralis, isWeb3Enabled, isAuthenticated, chainId, user } = useMoralis();
+function SpaceView({hash, chain, collection, NFTpersonas}) {
+  const { Moralis, isWeb3Enabled, isAuthenticated, user } = useMoralis();
   const [ space, setSpace ] = useState({});
   const [ rooms, setRooms ] = useState([]);
   const [ curRoomId, setcurRoomId ] = useState();
   const [ limit, setLimit ] = useState(8);
-  const { isAllowed } = useIsAllowed({hash, chain:chainId});
+  const { isAllowed } = useIsAllowed({hash, chain,});
   // const { persona, setPersona} = useContext(PersonaContext);
   
   /**

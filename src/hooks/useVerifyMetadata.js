@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useIPFS } from "./useIPFS";
 import { useMoralis } from "react-moralis";
-import { Exception } from "sass";
+import { useContract } from "hooks/useContract";
 
 /**
  * This is a hook that loads the NFT metadata in case it doesn't alreay exist
@@ -12,6 +12,7 @@ export const useVerifyMetadata = () => {
     const { resolveLink } = useIPFS();
     const [results, setResults] = useState({});
     const { Moralis, chainId, isWeb3Enabled } = useMoralis();
+    const { contractCall } = useContract();
 
     /**
      * Moralis sometimes gives the wrong token_uri
@@ -19,10 +20,16 @@ export const useVerifyMetadata = () => {
      * @param object NFT 
      */
     function updateToken(NFT){
+        
+
+        /* Now Supported
+        //Should Use contractCall() From userPersona()
         //Validate
         if(NFT.chain && NFT.chain !== chainId){
             throw new Exception ("useVerifyMetadata.updateToken() '"+chainId+"' is the Wrong Chain. Token is from:'"+NFT.chain+"'")
         }
+        */
+
         let abi = [{
             "name": "tokenURI",
             "stateMutability": "view",
@@ -42,14 +49,17 @@ export const useVerifyMetadata = () => {
                 }
             ]
         }];
+
         //W3 - Fetch Token URI
         let options = {
             contractAddress: NFT.token_address,
             functionName: "tokenURI",
             params: { tokenId:NFT.token_id },
             abi,
+            chain: NFT.chain
         };
-        Moralis.executeFunction(options).then((uri) => {
+        contractCall(options).then((uri) => {
+        // Moralis.executeFunction(options).then((uri) => {
             //Compare & Update Metadata if Needed
             if(!matchURI(NFT.token_uri, uri)) {
                 //Log

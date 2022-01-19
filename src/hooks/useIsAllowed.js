@@ -10,11 +10,9 @@ export const useIsAllowed = (props) => {
     const [isAllowed, setIsAllowed] = useState(false);
     const { Moralis, isWeb3Enabled, chainId, account, user } = useMoralis();
 
-    // useEffect(() =>{
-
-    // }, [isWeb3Enabled, hash]);
-    //  return { isAllowed };
- 
+  useEffect(() =>{
+    if(!chain) console.error('useIsAllowed() Unspeified Chain', props);
+  }, [chain]);
     
   useEffect(() => { 
     /* Check if Account Owns Any Assets on Specified Contract */
@@ -29,10 +27,9 @@ export const useIsAllowed = (props) => {
       });
       
       /* ServerSide Validation  - use Hook */
-    //   let params = {userId:user.id, hash:hash, chainId, account};
       let params = { hash, chain };
       Moralis.Cloud.run("isAllowed", params).then(res => {
-          console.warn("useIsAllowed() is User Allowed:"+res, {user, params, account });
+          console.warn("useIsAllowed() is User Allowed:"+res, {user, params, account, props });
       })
       .catch(err => {
           console.error("useIsAllowed() is User Allowed Failed:", {user, err, params, account });
