@@ -97,8 +97,14 @@ import { PersonaContext } from "common/context";
         return null;
       }
     };//onFinish()
-  
-    if(type==='comment'){
+    //Validate
+    if(!persona){
+      console.error("RoomAddForm() No Persona Selected");
+      return (<div className="personaMissing">
+        <h2>To post, you must first mint yourself a persona</h2>
+      </div>);
+    }
+    else if(type==='comment'){
       const className = props.className ? "comment_add "+props.className : "comment_add";
       return (
         <div className={className}>  

@@ -302,7 +302,7 @@ Moralis.Cloud.define("personaUpdate", async (request) => {
   // logger.warn("[TEST] personaUpdate() Start W/Persona ID:'"+personaId+"'" );
 
   //Validate Parameters
-  if(!personaId) throw new Error("Missing Parameters (personaId:'"+personaId+"')  Params: "+JSON.stringify(request.params));
+  if(!personaId) throw new Error("personaUpdate() Missing Parameters (personaId:'"+personaId+"')  Params: "+JSON.stringify(request.params));
   const query = new Moralis.Query(Persona);
   let persona = await query.get(personaId,  {useMasterKey: true})
     .catch(err => {throw new Error("personaUpdate() Failed to Fetch Persona:'"+personaId+"' Error:'"+err+"'")});
@@ -389,7 +389,7 @@ const personaGetOrMake = async (chain, contract, token_id) => {
   // const { params } = request;
   const { contract, token_id, chain } = request.params;
   //Validate Parameters
-  if(!contract || !token_id || !chain) throw new Error("Missing Parameters (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"')");
+  if(!contract || !token_id || !chain) throw new Error("getPersona() Missing Parameters (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"')");
 
   //Fetch Persona
   let persona = await personaGetOrMake(chain, contract, token_id);
@@ -405,8 +405,10 @@ const personaGetOrMake = async (chain, contract, token_id) => {
  * Un-Register Persona from Network
  */
 Moralis.Cloud.define("personaUnregister", async (request) => { 
-    const handle = request?.params?.handle;
+    
+  const handle = request?.params?.handle;
     if(!handle) throw new Error("Missing Handle");
+
     const query = new Moralis.Query(Persona);
     query.equalTo("handle", String(handle).trim().toLowerCase());
     const results = await query.find();
