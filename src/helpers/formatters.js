@@ -22,9 +22,11 @@ export const c2 = new Intl.NumberFormat("en-us", {
  * @param {number} n number of chars to keep at front/end
  * @returns {string}
  */
-export const getEllipsisTxt = (str, n=6, n2) => {
-  if(n2===undefined) n2 = n;
-  return (str) ? `${str.slice(0, n2)}...${str.slice(str.length - n)}` : "";
+export const getEllipsisTxt = (str, n = 6) => {
+  if (str) {
+    return `${str.slice(0, n)}...${str.slice(str.length - n)}`;
+  }
+  return "";
 };
 
 export const tokenValue = (value, decimals) => (decimals ? value / Math.pow(10, decimals) : value);

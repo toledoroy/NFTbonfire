@@ -16,8 +16,6 @@ import __ from "helpers/__";
 import moment from 'moment';
 import { Space, Room, Comment as CommentObj } from "objects/objects";
 import { Persona } from "objects/Persona";
-//Components
-import Address from "components/Address/Address";
 
 
 /**
@@ -296,12 +294,7 @@ function RoomEntrance(props) {
   return (
     <div className="room_single">
     <div className={className} id={room.id}>
-      <Badge.Ribbon placement="start" 
-        // text={room.get('persona').get('owner')} 
-        text={<Address address={room.get('persona').get('owner')} size={6} size2={2} />} 
-        // onHover={console.warn("[TEST] HOVERING ABOVE THE RIBBON")}
-        title="Owner"
-        >
+      <Badge.Ribbon placement="start" text="0x...AAA">
         <div className="image">
           <Avatar src={image} shape="square" style={{ height:'var(--avatarMD)', width:'var(--avatarMD)'}}>
             {/* Fallback */}
