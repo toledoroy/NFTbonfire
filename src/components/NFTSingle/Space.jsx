@@ -407,7 +407,7 @@ function ShowComments({room}) {
             {comments && comments.map((comment) => (
               <div className="comment" key={comment.id}>
                 <Comment
-                  actions={[<span key="comment-nested-reply-to">Reply</span>]}
+                  // actions={[<span key="comment-nested-reply-to">Reply</span>]}
                   // author={<a>Han Solo</a>}
                   author={comment.get('persona')?.get('metadata')?.name}
                   avatar={
