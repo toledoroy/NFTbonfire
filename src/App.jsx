@@ -165,9 +165,9 @@ const App = ({ isServerInfo }) => {
               <Route path="/nftSingle/:selected" component={NFTCollections} />
               <Route path="/personatoken/:chain/:contract/:token_id" component={PagePersona} />
               
-              <Route path="/nftCollection/:chain/:collectionHash" component={NFTCollections} /> {/* Single Collection */}
-              <Route path="/nftCollection/:chain/:collectionHash/:roomId/" component={NFTCollections} />
-              <Route path="/nftCollection/:chain/:collectionHash/:roomId/:postId" component={NFTCollections} />
+              <Route path="/space/:chain/:collectionHash" component={NFTCollections} /> {/* Single Collection */}
+              <Route path="/space/:chain/:collectionHash/:roomId/" component={NFTCollections} />
+              <Route path="/space/:chain/:collectionHash/:roomId/:postId" component={NFTCollections} />
               
               
               {/* <Route path="/personatoken/" component={PagePersona} />  */} {/* New Persona */}

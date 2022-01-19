@@ -170,8 +170,8 @@ function NFTCollections(props) {
                   // pathname: collectionHash ? "/nftCollections/"+options.address : '/nftCollections/'+options.address+'/'+collection.hash,
                   pathname: collectionHash 
                     ? "/nftCollections/"+options.address  //Account NFTs Page
-                    : '/nftCollection/'+options.chain+'/'+collection.hash,  //NFT Collection Page
-                  // pathname: '/nftCollection/'+options.chain+'/'+collection.hash,  //This is this page///
+                    : '/space/'+options.chain+'/'+collection.hash,  //NFT Collection Page
+                  // pathname: '/space/'+options.chain+'/'+collection.hash,  //This is this page///
                   // search: "?sort=name",
                   // hash: "#the-hash",
                   // state: { fromDashboard: true }
