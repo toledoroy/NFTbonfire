@@ -1345,8 +1345,9 @@ export default PagePersona;
                         <span>Please confirm the update request on your web3 wallet</span>
                         <Spin style={{display:'block'}} />
                     </div>}
-                    {(stage===null) && <Form.Item 
-                            wrapperCol={{ offset: 6, span: 6 }}
+                    {(stage===null) && 
+                        <Form.Item 
+                            wrapperCol={{ offset: 6 }}
                             // wrapperCol={{ offset: 1, span: 10 }}
                             >
                             {PersonaHelper.isNew(persona) 
