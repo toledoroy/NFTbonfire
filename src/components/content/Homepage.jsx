@@ -122,7 +122,7 @@ import ERC20Balance from "components/ERC20Balance";
             <Row className="flex">
                 {/* {console.log("[TEST] Homepage() ChainHelper.allChains:", ChainHelper.allChains())} */}
                 <div className="assets">
-                    <h1>Non-Fungible Assets</h1>
+                    <h1>Non-Fungible Assets (Bonfires)</h1>
                     <Skeleton loading={!isWeb3Enabled}>
                     {ChainHelper.allChains().map(chain => (
                         <div key={chain} className={"chain_"+chain}>
