@@ -187,7 +187,7 @@ function PagePersona(props) {
         else{//New Persona
             //Validate Authenticated User
             if(isAuthenticated){
-                
+
 
 
                 //Validate Chain
@@ -275,7 +275,8 @@ function PagePersona(props) {
     const freshMetadata = () => {
         let metadata = {social:{}, accounts:[], links:[],};
         //Default Accounts (Current User Accounts)
-        for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
+        // for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
+        metadata.accounts.push({account, chain:chainId});   //Current Address only
         return metadata;
     }//freshMetadata()
 

@@ -915,11 +915,11 @@ body { height:100vh; }
 }
 
 
-.debug{ opacity: 0.75;}
+.debug{ opacity: 0.5;}
 /* ENV Specific         //DISABLED TEMPORARILY
 .debug{ 
-    display: none; 
-    opacity: 0.75  ;
+    display: none;
+    opacity: 0.5  ;
 }
 .env_development{
     .debug{ display: auto; }
