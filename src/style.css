@@ -22,6 +22,8 @@
 
 /*-- CUSTOM STYLES --*/
 
+.ant-comment-avatar {cursor: default;}
+
 *{
   --background-color: #f0f2f5;
   --headerHeight:64px;

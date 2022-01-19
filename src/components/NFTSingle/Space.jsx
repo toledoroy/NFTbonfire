@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
 import { FireTwoTone, StopOutlined } from '@ant-design/icons';
@@ -410,7 +410,11 @@ function ShowComments({room}) {
                   actions={[<span key="comment-nested-reply-to">Reply</span>]}
                   // author={<a>Han Solo</a>}
                   author={comment.get('persona')?.get('metadata')?.name}
-                  avatar={<Avatar src={PersonaHelper.getImage(comment.get('persona'))} alt={comment.get('persona')?.get('metadata').name} />}
+                  avatar={
+                    <Link to={{pathname: PersonaHelper.getLink(comment.get('persona'))}}>
+                      <Avatar src={PersonaHelper.getImage(comment.get('persona'))} alt={comment.get('persona')?.get('metadata').name} />
+                    </Link> 
+                  }
                   content={
                     <div className="inner">
                       <div className="content">

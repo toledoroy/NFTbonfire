@@ -168,7 +168,10 @@ function NFTCollections(props) {
                   // pathname: "/nftSingle/"+collection.hash,
                   // pathname: collectionHash ? `${accountHash ? "/nftCollections/"+accountHash : '/nftCollections/'}` : `${accountHash ? accountHash+"/"+collection.hash : '/nftSingle/'+collection.hash}`,
                   // pathname: collectionHash ? "/nftCollections/"+options.address : '/nftCollections/'+options.address+'/'+collection.hash,
-                  pathname: collectionHash ? "/nftCollections/"+options.address : '/nftCollection/'+options.chain+'/'+collection.hash,
+                  pathname: collectionHash 
+                    ? "/nftCollections/"+options.address  //Account NFTs Page
+                    : '/nftCollection/'+options.chain+'/'+collection.hash,  //NFT Collection Page
+                  // pathname: '/nftCollection/'+options.chain+'/'+collection.hash,  //This is this page///
                   // search: "?sort=name",
                   // hash: "#the-hash",
                   // state: { fromDashboard: true }
@@ -193,6 +196,7 @@ function NFTCollections(props) {
                           style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
                           icon={<i className="bi bi-arrow-left"></i>}
                           // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
+                          title="To Collection Page"
                           >
                         </Button>
                       </Link>
