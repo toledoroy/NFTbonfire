@@ -923,11 +923,16 @@ body { height:100vh; }
 }
 
 
-/* ENV Specific */
-.debug{ display: none; }
+.debug{ opacity: 0.75;}
+/* ENV Specific         //DISABLED TEMPORARILY
+.debug{ 
+    display: none; 
+    opacity: 0.75  ;
+}
 .env_development{
     .debug{ display: auto; }
 }
 .env_production{
     .debug{ display: none; }
 }
+*/
