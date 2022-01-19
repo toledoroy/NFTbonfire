@@ -95,7 +95,7 @@ const { TabPane } = Tabs;
                         <p>Current Account:</p>
                         <Address avatar="left" copyable address={account} size={9} />
                         {/* icon={<i className="bi bi-explicit"></i>} */}
-                        <h3>Token Balances</h3>
+                        <h3>Fungible Assets</h3>
                         <ERC20Balance />
                     </>}
                 </Col>
@@ -117,7 +117,7 @@ const { TabPane } = Tabs;
             <Row className="row flex">
                 {/* {console.log("[TEST] Homepage() ChainHelper.allChains:", ChainHelper.allChains())} */}
                 <div className="assets">
-                    <h1>My NFTs</h1>
+                    <h1>Non-Fungible Assets</h1>
                     <Skeleton loading={!isWeb3Enabled}>
                     {ChainHelper.allChains().map(chain => (
                         <div key={chain} className={"chain_"+chain}>
