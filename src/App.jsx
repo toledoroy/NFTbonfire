@@ -11,6 +11,7 @@ import "./style.css";
 import "./style.scss";
 // import QuickStart from "components/QuickStart";
 import Text from "antd/lib/typography/Text";
+// if(1) import "style/production.css";
 
 //Pages
 // import TokenPrice from "components/TokenPrice";
@@ -100,7 +101,7 @@ const App = ({ isServerInfo }) => {
     <PersonaContext.Provider value={{persona, setPersona}}>
     {/* <Layout className="wrapper_main" style={{ height: "100vh", overflow: "auto" }}> */}
     <Router> 
-    <Layout className="wrapper_main" >
+    <Layout className={"wrapper_main env_"+process.env.NODE_ENV} >
       {/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /> */}
       {/* <script src="https://kit.fontawesome.com/62e94cb93f.js" crossorigin="anonymous"></script> */}
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />

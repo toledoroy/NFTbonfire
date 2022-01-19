@@ -343,7 +343,7 @@ function RoomEntrance(props) {
           <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn">Go!</Link> 
           */}
         </div>
-        <div className="actions">
+        <div className="actions debug">
           <a href="#">Join</a>
           <a href="#">Leave</a>
           {(1) 
