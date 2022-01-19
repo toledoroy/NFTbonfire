@@ -32,12 +32,6 @@ const { Panel } = Collapse;
 //Persona Fields Mapping
 const personaFields = require('schema/PersonaData.json');
 
-//Persona Contract ABI
-// import personaABI from "contracts/abi/PERSONA.json";
-// const personaABI = require('contracts/abi/PERSONA.json');
-// console.log("PagePersona() personaABI:", personaABI);
-// const contractPersona = Persona.getContractData();
-
 /**
  * Component - Page:Persona 
  * @param {handle} OR {chain, contract, token_id}
@@ -53,11 +47,11 @@ function PagePersona(props) {
     const [ isEditMode, setIsEditMode ] = useState(false);
     const [ isOwned, setIsOwned ] = useState(false);
     
-    // const [ persona, setPersonaActual ] = useState( new Persona() );
-    const [ persona, setPersonaActual ] = useState();
+    const [ persona, setPersonaActual ] = useState( new Persona() );
+    // const [ persona, setPersonaActual ] = useState();
 
     const [ isAddAccModalVisible, setIsAddAccModalVisible ] = useState(false);
-    const { loadMetadata } = usePersona();
+    const { loadMetadata, validateChain } = usePersona();
     const [ metadata, setMetadata ] = useState(null);
     // const [ isLoading, setIsLoading ] = useState(true);     //Stuck in loading state if already loaded...
     // const [ isLoading, setIsLoading ] = useState(false); //Shows a 404
@@ -71,10 +65,12 @@ function PagePersona(props) {
     //Cloud Function Examples
     // const { data, error, isLoading } = useMoralisCloudFunction("topScores", { limit, });
     // const { fetch, data, error, isLoading } = useMoralisCloudFunction("topScores", {limit}, { autoFetch: false } );  //Trigger Manually (via fetch func.)
-      
-    const [form] = Form.useForm();
+          
+    const [form] = Form.useForm();  //Form Handle
 
-
+    // useEffect(() => { 
+    //     console.log("Persona() Valid Chain:"+validateChain(chainId), chainId);
+    // }, [chainId]);
 
     /**
      * Set Persona Wrapper Function
@@ -82,7 +78,7 @@ function PagePersona(props) {
     function setPersona(persona){
        setPersonaActual(persona);
        //Set Derivitives
-       setIsOwned(String(persona.get('owner')).toLowerCase() === account.toLowerCase());
+       setIsOwned(__.matchAddr(account, persona?.get('owner')));
        if(persona.get('metadata')) updateMetadata(persona.get('metadata'));
        else console.warn("PagePersona() Persona Has no Metadata", {persona});
     }//setPersona()
@@ -95,7 +91,7 @@ function PagePersona(props) {
         //Validate
         if(typeof metadata != 'object') console.error("PagePersona.updateMetadata() Invalid Metadata:", metadata);
         //Set Metadata State
-        setMetadata(metadata);
+        setMetadata(metadata); 
         //Set Derivitives (Image)       //Deprecate?
         setImageUrl(metadata?.image); 
         //Done Loading
@@ -121,10 +117,12 @@ function PagePersona(props) {
 
     //(Re)load Persona on Parameter Change & when Web3 comes Online
     useEffect(() => async () => {
-        //Load Persona
-        loadPersona(params);
-        //Log
-        persona && console.log("PagePersona() Loaded Different persona:",  {persona, isWeb3Enabled, user, metadata, personaTokenId: persona?.get('token_id'), params});
+        if(isWeb3Enabled){
+            //Load Persona
+            loadPersona(params);
+            //Log
+            persona && console.log("PagePersona() Loaded Different persona:",  {persona, isWeb3Enabled, user, metadata, personaTokenId: persona?.get('token_id'), params});
+        }
     // },[params]);
     },[params, isWeb3Enabled]);
 
@@ -189,6 +187,22 @@ function PagePersona(props) {
         else{//New Persona
             //Validate Authenticated User
             if(isAuthenticated){
+                
+
+
+                //Validate Chain
+                let valid = validateChain(chainId);
+                console.warn("Persona.loadPersona() Valid Chain:"+chainId+" - "+valid);                
+                if(!valid){
+                    console.warn("Persona.loadPersona() Invalid Chain:"+chainId+" - "+valid);                
+                    message.error("Current Chain () is not yet supported. Please change to a supported chain", 60);    
+                    //TODO: Display Something Else Does Not Support Minting Chain is Not Supported    
+                    // <ChainUnsupported />
+                }
+                else console.warn("Persona.loadPersona() Valid Chain:"+chainId+" - "+valid);                
+
+
+
                 //Log
                 console.warn("PagePersona() New Persona -- Init in Edit Mode", {params}); 
                 initNewPersona();
@@ -212,14 +226,10 @@ function PagePersona(props) {
         try{
             const contractAddr = Persona.getContractAddress(chainId);
             //Validate
-            if(!contractAddr) throw "No Persona Contract on Chain:"+chainId+"";
+            if(!contractAddr) throw "[UNSUPPORTED] No Persona Contract on Chain:"+chainId+"";
 
             //[DEV] Default Persona Data  
-            let personaData = { 
-                // chain:'0x4', 
-                // address:Persona.getContractAddress('0x4'), 
-                // token_id:'1',
-                // metadata: Persona.getDefaultMetadata(),
+            let personaData = {
                 chain: chainId, 
                 address: contractAddr,
                 owner: account,
@@ -343,10 +353,12 @@ function PagePersona(props) {
     let size = 200; //Avater Circumference
     if(!isLoading && metadata===null){
         //Log
-        console.warn("Persona Handle Not Found :"+persona.id, {handle, persona, isLoading, metadata});
+        console.warn("Persona Handle Not Found:"+persona?.id, {handle, persona, isLoading, metadata});
         //404 - Persona Not Found
         return (<Page404 />);
     }
+
+    
     // console.warn("Persona ID:"+persona.id, {persona, isLoading, metadata});
     return (
         <div className="persona framed">
@@ -575,18 +587,19 @@ function PagePersona(props) {
                                     icon={<i className="bi bi-arrow-left"></i>}
                                     // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
                                     >
+                                        
                                     {/* Cancel */}
                                 </Button>}
                             </div>}
                             {!isOwned && <>
-                            {/* <Button variant="contained" color="primary" onClick={()=>{ console.warn("SEND BUTTON PRESSED");}}
-                                style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
-                                icon={<i className="bi bi-send"></i>}
-                                // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
-                                >
-                                Send
-                            </Button> */}
-                            <TokenSend address={persona.get('owner')} name={PersonaHelper.getName(persona)} />
+                                {/* <Button variant="contained" color="primary" onClick={()=>{ console.warn("SEND BUTTON PRESSED");}}
+                                    style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
+                                    icon={<i className="bi bi-send"></i>}
+                                    // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
+                                    >
+                                    Send
+                                </Button> */}
+                                {(!isEditMode && metadata) && <TokenSend address={persona?.get('owner')} name={PersonaHelper.getName(persona)} />}
                             </>
                             }
                             </>
@@ -610,7 +623,7 @@ function PagePersona(props) {
                             >
                             {metadata?.accounts?.map((account, index) => (
                                 <TabPane tab={(
-                                    <span title={ChainHelper.get(account.chain, 'name')} className={(account.address.toLowerCase()===persona.get('owner').toLowerCase()) ? 'verified' : ''}>
+                                    <span title={ChainHelper.get(account.chain, 'name')} className={__.matchAddr(account, persona?.get('owner')) ? 'verified' : ''}>
                                         {account.address 
                                         ? <Address icon={getChainLogo(account.chain)} copyable address={account.address} size={5} />
                                         : <span>[NO HASH]</span>
@@ -1364,3 +1377,21 @@ export default PagePersona;
         </Col>
     );
 }//PersonaEdit()
+
+
+
+
+
+
+/**
+ * Component: Unsupported Chain
+ */
+ function ChainUnsupported(props){
+    return (
+        <div className="wrong_chain">
+            <h1>Sorry, Current Chain () is not yet supported</h1>
+            <h2>Please use one of the supported chains</h2>
+        </div>
+    );
+}//ChainUnsupported()
+
