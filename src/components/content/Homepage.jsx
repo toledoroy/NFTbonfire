@@ -94,7 +94,7 @@ import ERC20Balance from "components/ERC20Balance";
                     <div className="row">
                     <h1>Account</h1>
                     {account && <>
-                        <p>Current Account:</p>
+                        <h3>Current Account:</h3>
                         <Address avatar="left" copyable address={account} size={9} />
                         {/* icon={<i className="bi bi-explicit"></i>} */}
                         <div className="row">
