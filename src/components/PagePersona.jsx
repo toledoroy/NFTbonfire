@@ -487,7 +487,7 @@ function PagePersona(props) {
                             <div className="links_wrapper">
                                 <h2>
                                     {/* <i className="bi bi-link"></i>  */}
-                                    Custom Links
+                                    Links
                                 </h2>
                                 <div className="items">
                                     
@@ -521,14 +521,16 @@ function PagePersona(props) {
                                         })//Each Link
                                         }
                                     </Skeleton>
-                                    {/* Add Item */ }
-                                    <Button type="primary" shape="circle" style={{float:'right'}} icon={<PlusCircleOutlined />} onClick={() => {
-                                        console.log("[TEST] Metadtaa Links", metadata, metadata.links); 
-                                        let links = metadata.links ? [...metadata.links] : [];    //Clone
-                                        // links.splice(index, 1);
-                                        links.push({type:'website', title:'', url:''});
-                                        setMetadata({...metadata, links});
-                                    }}/>
+                                    <div className="link_add">
+                                        {/* Add Item */ }
+                                        <Button type="primary" shape="circle" icon={<PlusCircleOutlined />} onClick={() => {
+                                            console.log("[TEST] Metadtaa Links", metadata, metadata.links); 
+                                            let links = metadata.links ? [...metadata.links] : [];    //Clone
+                                            // links.splice(index, 1);
+                                            links.push({type:'website', title:'', url:''});
+                                            setMetadata({...metadata, links});
+                                        }}/>
+                                    </div>
                                     <div className="clearfloat"></div>
                                 </div>
                             </div>
@@ -1231,6 +1233,7 @@ export default PagePersona;
                     let placeholder = Array.isArray(field.placeholder) ? field.placeholder[Math.floor(Math.random()*field.placeholder.length)] : field.placeholder;
                     if(field.name === 'links'){
                         return null;    //MOVED
+                        /* MOVED
                         return( 
                         <div className="links_wrapper">
                             <h2><i className="bi bi-link"></i> Links</h2>
@@ -1249,7 +1252,6 @@ export default PagePersona;
                                                 </Select>}
                                             />
                                             <Input name="name" placeholder="Title" defaultValue={link.title} style={{flexShrink:'2'}}/>
-                                            {/* Remove Item */ }
                                             <Button type="danger" shape="circle" icon={<DeleteOutlined />} onClick={() => {
                                                 // let links = metadata.links;
                                                 let links = [...metadata.links];    //Clone
@@ -1263,7 +1265,6 @@ export default PagePersona;
                                 })//Each Link
                                 }
                                 <div key="clear1" className="clearfloat"></div>
-                                {/* Add Item */ }
                                 <Button type="primary" shape="circle" icon={<PlusCircleOutlined />} onClick={() => {
                                     let links = [...metadata.links];    //Clone
                                     // links.splice(index, 1);
@@ -1275,6 +1276,7 @@ export default PagePersona;
                             </div>
                         </div>
                         );
+                        */
                     }//Links
                     else if(field.type === 'object'){
                         console.log("[UNHANDLED] PersonaEdit() object field:", {field, fieldData:metadata?.[field.name]});
