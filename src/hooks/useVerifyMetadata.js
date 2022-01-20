@@ -22,9 +22,8 @@ export const useVerifyMetadata = () => {
      * @param object NFT 
      */
     function updateToken(NFT){
-        
 
-        /* Now Supported
+        /* Multichain Now Supported
         //Should Use contractCall() From userPersona()
         //Validate
         if(NFT.chain && NFT.chain !== chainId){
@@ -84,8 +83,6 @@ export const useVerifyMetadata = () => {
         //Return Hooked NFT Object
         return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT ;
     }//updateToken()
-
-
 
     /**
      * Fetch Metadata  from NFT and Cache Results
@@ -155,6 +152,17 @@ export const useVerifyMetadata = () => {
         if(metadata && !results[NFT.token_uri]) setResults({...results, [NFT.token_uri]: NFT});
     }//setMetadata()
     
-    return { verifyMetadata, updateToken };
+    
+    /**
+     * Update Persona from DB to save a Web3 Call
+     */
+    function personaUpdateFromDB(NFT){
+        console.warn("[TODO] personaUpdateFromDB()", {NFT});
+
+        // Persona.
+        return NFT;
+    }//personaUpdateFromDB()
+
+    return { verifyMetadata, updateToken, personaUpdateFromDB };
 
 }//useVerifyMetadata()

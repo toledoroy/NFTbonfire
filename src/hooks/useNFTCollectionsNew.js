@@ -3,6 +3,7 @@ import { useNFTBalances } from "react-moralis";
 import { useMoralis } from "react-moralis";
 import { useVerifyMetadata } from "hooks/useVerifyMetadata";
 import __ from "helpers/__";
+import { Persona } from "objects/Persona";
 
 /**
  * Hook - Fetches NFT Balances for Account
@@ -12,7 +13,7 @@ export const useNFTCollections = (options) => {
   const { account, chainId, isWeb3Enabled } = useMoralis();
   const [ NFTCollections, setNFTCollections ] = useState({});
   const [ NFTpersonas, setPersonas ] = useState([]);
-  const { verifyMetadata, updateToken } = useVerifyMetadata();
+  const { verifyMetadata, personaUpdateFromDB } = useVerifyMetadata();  //updateToken
 
   /**
    * Check if Token is a  Persona
@@ -29,16 +30,14 @@ export const useNFTCollections = (options) => {
     let collections = {};
     let personas = [];
     for(let NFT of NFTs){
-
-      
-      
-      
-      /* This is too heavy for the server. Use Personas from DB */ 
-      
       if(isPersona(NFT)){
+        //Moralis Persona data is often Out of Date
         try{
+          /* This is too heavy for the Moralis Web3 API. Use Personas from DB 
           //Force Full Metadata Update (Moralis sometimes gives outdated token_uri)
           NFT = updateToken(NFT);
+          */
+         NFT = personaUpdateFromDB(NFT);
           //Append Persona
           personas.push(NFT);
         }
@@ -46,7 +45,6 @@ export const useNFTCollections = (options) => {
           console.error("[CAUGHT] collect() Exception while updating token", {NFT, error});
         }
       }//Persona
-      
 
 
       // else{//Regular Collection

@@ -10,7 +10,7 @@ export const useNFTCollections = (options) => {
   const [NFTCollections, setNFTCollections] = useState([]);
   
   /**
-   * Arrange User's NFTs by Collection
+   * Arrange User's NFTs by Collection (Using Web3 Call)
    * @param array NFTs 
    * @ret object
    */
