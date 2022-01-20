@@ -42,7 +42,7 @@ function Chains() {
     const newSelected = menuItems.find((item) => item.key === chainId);
     setSelected(newSelected);
     console.log("current chainId: ", chainId);
-  }, [chainId]);
+  }, [chainId, menuItems]);
 
   const handleMenuClick = (e) => {
     console.log("switch to: ", e.key);

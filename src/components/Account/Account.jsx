@@ -2,14 +2,14 @@ import { useEffect, useState, useContext } from "react";
 import { useMoralis, useMoralisQuery } from "react-moralis";
 import { getEllipsisTxt } from "helpers/formatters";
 import Blockie from "../Blockie";
-import { Button, Modal, Menu, Dropdown } from "antd";
-// import { Card } from "antd";
+import { Button, Modal, Menu, Dropdown, message } from "antd";
 import Address from "../Address/Address";
 import { SelectOutlined } from "@ant-design/icons";
 import { getExplorer } from "helpers/networks";
 import BusinessCard from "components/Persona/BusinessCard";
 // import { Persona } from "objects/Persona";
 import { PersonaHelper } from "helpers/PersonaHelper";
+import __ from "helpers/__";
 // import { IPFS } from "helpers/IPFS";
 // import { Link } from "react-router-dom";
 import { PersonaContext } from "common/context";
@@ -62,9 +62,8 @@ function Account() {
   // const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);
   const [lastAccount, setLastAccount] = useState(account);  //Remember Last Account
-  // const [personas, setPersonas] = useState([]);
   const { persona:curPersona, setPersona} = useContext(PersonaContext);
-  const { NFTpersonas, NFTCollections } = useNFTCollections();
+  const { NFTpersonas } = useNFTCollections();    // NFTCollections
 
   //Fetch Personas -- Live Query (This isn't actually live the way you'd expect. DB changes aren't being detected)
   const { data : personas } = useMoralisQuery('Persona', query => query.equalTo("owner", String(account).toLowerCase()), [account], { 
@@ -93,14 +92,24 @@ function Account() {
         //Match Perona (chain, token_address, token_id)
         if(DBpersona.get('chain') === persona.chain && DBpersona.get('address') === persona.token_address && DBpersona.get('token_id') === persona.token_id){//Same Persona
           //Check if Up-To-Date (token_uri, owner)    //(Moralis is usually not up to date...)
-          if(DBpersona.get('owner') !== persona.owner_of || DBpersona.get('token_uri') !== persona.token_uri){
+          if(!__.matchAddr(persona.owner_of, DBpersona?.get('owner')) 
+            || DBpersona.get('token_uri') !== persona.token_uri){
             //Mismatch - Might need an update
-            // console.warn("[TEST] Account() DB Persona Needs an Update:"+DBpersona.id, {DBpersona, persona,
-            //   DBOwner:DBpersona.get('owner'), owner: persona.owner_of , DBURI: DBpersona.get('token_uri') , tokenURI: persona.token_uri
-            // });
+            console.warn("[TEST] Account() DB Persona might Need an Update:"+DBpersona.id+" (Owner Mismatch)", {
+              DBpersona, persona,
+              DBOwner:DBpersona.get('owner'), owner: persona.owner_of, 
+              DBURI: DBpersona.get('token_uri') , tokenURI: persona.token_uri
+            });
             let params = {personaId:DBpersona.id};
             const result = await Moralis.Cloud.run("personaUpdate", params)  //Update
-              .catch(error => { console.error("[TEST] Account() personaRegister Error:", {error, params}); });
+              .catch(error => { 
+                if(error.code === 141){
+                  console.error("[CAUGHT] Account() Moralis Rate Limit Hit While Calling Cloud.personaRegister()", {error, params}); 
+                  //User Message
+                  message.error("Woha, slow down. Our moralis hosting plan is overflowing! Please wait a bit and try again", 30);    
+                }
+                else console.error("[CAUGHT] Account() Cloud.personaRegister() Error:", {error, params}); 
+              });
             // console.log("[TEST] Account() personaUpdate Update Result:", {result, params});
           }//Needs Update
           exist = true;
@@ -259,7 +268,7 @@ function Account() {
        
       </Menu>
       )} placement="bottomRight">
-      <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+      <a href="#" className="ant-dropdown-link" onClick={e => e.preventDefault()}>
         <div id="account" className="account in lightUp">
           <p className="hash">{getEllipsisTxt(account, 4)}</p>
           {/* <Blockie currentWallet scale={3} /> */}

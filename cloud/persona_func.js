@@ -112,7 +112,7 @@ const getTokenOwner = async (chain, contract, tokenId) => {
   //Validate
   if(!res) throw new Error("getTokenURI() Failed to Fetch Persona res("+res+") from Chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"'");
   //Log
-  // logger.warn("[DEBUG] getTokenURI() Request Params: chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"' Ret:" + JSON.stringify(res) );  //V
+  logger.warn("[DEBUG] getTokenURI() Request Params: chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"' Ret URI:" + JSON.stringify(res) );  //V
   return res;
 };
 
@@ -330,7 +330,12 @@ Moralis.Cloud.define("personaUpdate", async (request) => {
 
   //Fetch Token URI
   let token_uri = await getTokenURI(chain, contract, tokenId)
-    .catch(err => { throw new Error("personaUpdate() Failed to Fetch Token Owner:'"+personaId+"' Error:'"+err+"'"); });
+    .catch(err => { 
+      if(err.code == 141){
+        // throw new Error("personaUpdate() Failed to Fetch Token Owner:'"+personaId+"' Error:'"+err+"'");   
+      }
+      throw new Error("personaUpdate() Failed to Fetch Token Owner:'"+personaId+"' Error:'"+err+"'"); 
+    });
   //Validate
   if(token_uri !== persona.get('token_uri')){
     //Fetch Metadata

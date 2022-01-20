@@ -28,7 +28,7 @@ export default function Contract() {
   const [responses, setResponses] = useState({});
   const [allContracts, setAllContracts] = useState([]);
   const [contract, setContractActual] = useState(null);
-  const [contractId, setContractId] = useState(null);
+  // const [contractId, setContractId] = useState(null);
   // const [contract, setContractActual] = useState(personaContract);  //Testing
 
   //Set Contract Wrapper
@@ -38,24 +38,24 @@ export default function Contract() {
     setContractActual(contract);
   }
 
-  useEffect(async () => {
-    console.error('Running Contract Query', {isWeb3Enabled})
+  useEffect(() => {
+    console.error('Contract() Running Contract Query', {isWeb3Enabled})
     if(isWeb3Enabled){
       const query = new Moralis.Query("Contract");
       query.equalTo("chain", chainId);
       // query.equalTo("address", address);
-      const results = await query.find();
-      setAllContracts(results);
-      console.error('All Contracts:', {results})
-
-      //Default to First
-      if(results.length){
-        setContract({...results[0].attributes});
-        // setContractId();
-      } 
-      else setContract(null); //Unset Current Contract
+      query.find().then(results =>{
+        setAllContracts(results);
+        console.error('Contract() All Contracts:', {results})
+        //Default to First
+        if(results.length){
+          setContract({...results[0].attributes});
+        } 
+        else setContract(null); //Unset Current Contract
+      })
+      .catch(err => console.error("[CAUGHT] Contract() Error:", {err, query}))
     }
-  },[chainId, isWeb3Enabled]);
+  },[chainId, isWeb3Enabled, Moralis.Query]);
   //TODO: use contract State Instead of hardcoded Stuff
 
   

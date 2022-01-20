@@ -1,6 +1,11 @@
 //Export IPFS Helper
 export const IPFS = {
-    
+    //IPFS Gateway Servers
+    gateway:{
+        moralis: "https://ipfs.moralis.io:2053/ipfs/",
+        cloudflare: "https://cloudflare-ipfs.com/ipfs/",
+    },
+
     // resolveLink(url){ return (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/"); },
     // resolveLink(url){ return (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/"); },
     resolveLink (url){ return (!url || !url.includes("ipfs://")) ? url : url.replace("ipfs://", "https://ipfs.moralis.io:2053/ipfs/"); },   //Use Moralis on Client
@@ -54,7 +59,7 @@ export const IPFS = {
      * @returns object
      */
     fetchJSONFromIPFS: async (ipfsHash) => {
-        const url = `https://ipfs.moralis.io:2053/ipfs/${ipfsHash}`;
+        const url = `https://ipfs.moralis.io:2053/ipfs/${ipfsHash}`;    //Force Moralis Gateway
         const response = await fetch(url);
         return await response.json();
     },

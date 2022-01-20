@@ -1,15 +1,15 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
 import { FireTwoTone, StopOutlined } from '@ant-design/icons';
 // import { Image, Form, Input, Button, Checkbox } from "antd";
-import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Radio, Button } from 'antd';
+import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Button } from 'antd';
 import { useMoralisQuery } from "react-moralis";
 import VotePane from "components/Room/VotePane";
 // import PersonaChanger from "components/Persona/PersonaChanger";
 import PersonaHelper from "helpers/PersonaHelper";
-import { PersonaContext } from "common/context";
+// import { PersonaContext } from "common/context";
 // import { useIsAllowed } from "hooks/useIsAllowed";
 import { CollectionContext } from "common/context";
 import __ from "helpers/__";
@@ -100,7 +100,7 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
       });
     }//Web3 Enabled
     else console.log("SpaceView() Waiting for Web3...");
-  }, [isWeb3Enabled, hash]);
+  }, [isWeb3Enabled, hash, Moralis.Query]);
 
   /**
    * Fetch Rooms for Current Space
@@ -142,7 +142,7 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
       // console.log("Moralis Query Object for Current Room: ", {hash, curRoomId});
     }//Authenticated
     else setRooms([]);
-  }, [hash]);
+  }, [hash, Moralis.Query]);
  
   //Log
   // console.log("SpaceView() For collection:", {collection, rooms});

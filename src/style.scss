@@ -734,7 +734,7 @@ body { height:100vh; }
     display: flex;
     flex: 1 1;
     flex-direction: column;
-    button {
+    button {  
         border: var(--background-color);
     }
     .disallowed{

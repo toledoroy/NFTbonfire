@@ -203,7 +203,7 @@ const App = ({ isServerInfo }) => {
           {/* Built with  */}
           <a target="_blank" rel="noopener noreferrer" href="https://moralis.io?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplat">
             {/* Moralis <Logo /> */}
-            <img src="/moralis/Powered-by-Moralis-Badge-Green.svg" />
+            <img src="/moralis/Powered-by-Moralis-Badge-Green.svg" alt="Moralis Power!"/>
           </a>
       </Footer>
 
