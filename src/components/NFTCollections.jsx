@@ -74,10 +74,10 @@ function NFTCollections(props) {
     }
   },[collectionHash, isWeb3Enabled]);
 
-  React.useEffect(() => {
-    //Log
-    console.log("(i) NFTCollections() Loading Collections: ", {NFTCollections, collectionHash, accountHash, options, params:props.match.params });
-  },[]);
+  // React.useEffect(() => {
+  //   //Log
+  //   console.log("(i) NFTCollections() Loading Collections: ", {NFTCollections, collectionHash, accountHash, options, params:props.match.params });
+  // },[]);
 
   async function testFunc() {
     try {

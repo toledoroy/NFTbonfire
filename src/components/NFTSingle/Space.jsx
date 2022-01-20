@@ -272,7 +272,7 @@ function RoomEntrance(props) {
     const PersonaQuery = new Moralis.Query(Persona);
     let personaId = parseObj.get('persona').id;
     let personaFull = await PersonaQuery.get(personaId);
-    console.warn("Space() Persona", personaFull?.attributes,  personaFull);
+    // console.warn("Space() Persona", personaFull?.attributes,  personaFull);
     setPersona(personaFull);
   }
 
@@ -399,7 +399,7 @@ function ShowComments({room}) {
       ,{ live: true }   //Seems like it's not really live...
     );
 
-  console.warn("ShowComments() Loaded "+comments.length+" Comments for Room:"+room.id, {comments});
+  console.warn("[DEBUG] ShowComments() Loaded "+comments.length+" Comments for Room:"+room.id, {comments});
 
   //Render
   return (
