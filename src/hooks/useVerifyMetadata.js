@@ -76,7 +76,7 @@ export const useVerifyMetadata = () => {
             if(err?.code==141){ //Morlis Server Error
                 //Log
                 console.error("useVerifyMetadata.updateToken() Moralis rate-limite reached -- Token:"+NFT?.symbol+" "+NFT.token_id, err);
-                message.error("Woha, slow down. Our moralis hosting plan is overflowing! Please wait a bit and try again", 30);    
+                message.error("Woah, slow down. Our moralis hosting plan is overflowing! Please wait a bit and try again", 30);    
             }
             else console.error("useVerifyMetadata.updateToken() Error Caught", {err, NFT, isWeb3Enabled, options});
 

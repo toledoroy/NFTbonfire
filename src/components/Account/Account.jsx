@@ -110,7 +110,7 @@ function Account() {
                 if(error.code === 141){
                   console.error("[CAUGHT] Account() Moralis Rate Limit Hit While Calling Cloud.personaRegister()", {error, params}); 
                   //User Message
-                  message.error("Woha, slow down. Our moralis hosting plan is overflowing! Please wait a bit and try again", 30);    
+                  message.error("Woah, slow down. Our moralis hosting plan is overflowing! Please wait a bit and try again", 30);    
                 }
                 else console.error("[CAUGHT] Account() Cloud.personaRegister() Error:", {error, params}); 
               });
