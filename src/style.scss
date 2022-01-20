@@ -320,7 +320,7 @@ body { height:100vh; }
         .ant-collapse-arrow {margin: 0 0 0 12px !important;}
         
         .textSwitch {
-            // justify-content: start;        
+            // justify-content: flex-start;        
             height: 3em;
             flex-wrap: nowrap; 
             padding-top: 0.8em;
@@ -430,7 +430,7 @@ body { height:100vh; }
     .social_wrapper .items {
         display: flex;
         flex-wrap: wrap;
-        justify-content: start;
+        justify-content: flex-start;
         .item { width: 18%; }
     }
     .saving { 
@@ -465,9 +465,12 @@ body { height:100vh; }
     }
 
     .bottom { 
-        display: flex; flex-direction: row; justify-content: end; 
+        display: flex; 
+        flex-direction: row; 
+        justify-content: flex-end; 
         .actions {
-            display: flex; justify-content: space-evenly;
+            display: flex; 
+            justify-content: space-evenly;
         }
     }
     

@@ -12,7 +12,7 @@ function PageAuthenticate(props) {
     const { isAuthenticated } = useMoralis();
 
     if(isAuthenticated){
-        console.error("PageAuthenticate() Should Not Be Here", {isAuthenticated});
+        console.error("[DEV] PageAuthenticate() Should Not Be Here -- Authenticated:"+isAuthenticated);
     }
     return (
         // <div className="framed">

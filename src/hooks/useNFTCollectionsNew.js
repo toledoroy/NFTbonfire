@@ -28,6 +28,12 @@ export const useNFTCollections = (options) => {
     let collections = {};
     let personas = [];
     for(let NFT of NFTs){
+
+      
+      
+      
+      /* This is too heavy for the server. Use Personas from DB */ 
+      
       if(isPersona(NFT)){
         try{
           //Force Full Metadata Update (Moralis sometimes gives outdated token_uri)
@@ -39,6 +45,9 @@ export const useNFTCollections = (options) => {
           console.error("[CAUGHT] collect() Exception while updating token", {NFT, error});
         }
       }//Persona
+      
+
+
       // else{//Regular Collection
         //Verify Metadata (Moralis sometimes gives outdated metadata)
         NFT = verifyMetadata(NFT);

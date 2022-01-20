@@ -64,7 +64,7 @@ import ERC20Balance from "components/ERC20Balance";
         setPersonaCollection(collection);
     }, [personas]);
 
-    console.warn("[TEST] Homepage() Persona NFTs Collection:", {personaCollection, style:__.stackContainerStyle(personaCollection?.items.length)} );
+    // console.warn("[TEST] Homepage() Persona NFTs Collection:", {personaCollection, style:__.stackContainerStyle(personaCollection?.items.length)} );
     // console.warn("[TEST] Homepage() Persona NFTs Collection:", {user, account, } );
     
     if(!account) return (

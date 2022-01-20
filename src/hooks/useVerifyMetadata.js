@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useIPFS } from "./useIPFS";
 import { useMoralis } from "react-moralis";
 import { useContract } from "hooks/useContract";
-
+import { message } from 'antd';
 /**
  * This is a hook that loads the NFT metadata in case it doesn't alreay exist
  * If metadata is missing, the object is replaced with a reactive object that updatees when the data becomes available
@@ -71,8 +71,18 @@ export const useVerifyMetadata = () => {
             }//Wrong URI
         })
         .catch((err) => {
-            //Log
-            console.error("useVerifyMetadata.updateToken() Error Caught", {err, NFT, isWeb3Enabled, options});
+            if(err?.code==141){ //Morlis Server Error
+                //Log
+                console.error("useVerifyMetadata.updateToken() Moralis rate-limite reached -- Token:"+NFT?.symbol+" "+NFT.token_id, err);
+
+                try{    //TESTING THIS...
+                    message.error("Woha, slow down. Our moralis hosting plan is overflowing! Please wait a bit and try again", 30);    
+                }
+                catch(error){ console.error("[DEV] useVerifyMetadata() Error with the ant error Component", {err, error})}
+
+            }
+            else console.error("useVerifyMetadata.updateToken() Error Caught", {err, NFT, isWeb3Enabled, options});
+
         });
         //Return Hooked NFT Object
         return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT ;
