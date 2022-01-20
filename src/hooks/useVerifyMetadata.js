@@ -13,7 +13,7 @@ import __ from "helpers/__";
 export const useVerifyMetadata = () => {
     const { resolveLink } = useIPFS();
     const [results, setResults] = useState({});
-    const { Moralis, chainId, isWeb3Enabled } = useMoralis();
+    const { isWeb3Enabled } = useMoralis(); //Moralis, chainId, 
     const { contractCall } = useContract();
 
     /**
@@ -63,7 +63,7 @@ export const useVerifyMetadata = () => {
         // Moralis.executeFunction(options).then((uri) => {
             //Compare & Update Metadata if Needed
             if(!__.matchURI(NFT.token_uri, uri)) {
-                //Log
+                //LuseVerifyMetadataog
                 // console.log("[TEST] useVerifyMetadata.updateToken() Toekn of:'"+NFT.name+"' Has Different URI on Chain -- Run Update", {NFT, options, uri, token_uri:NFT.token_uri});    //V
                 //Update NFT
                 NFT.token_uri = uri;
@@ -72,7 +72,7 @@ export const useVerifyMetadata = () => {
             }//Wrong URI
         })
         .catch((err) => {
-            if(err?.code==141){ //Morlis Server Error
+            if(err?.code===141){ //Morlis Server Error
                 //Log
                 console.error("useVerifyMetadata.updateToken() Moralis rate-limite reached -- Token:"+NFT?.symbol+" "+NFT.token_id, err);
                 message.error("Woah, slow down. Our moralis hosting plan is overflowing! Please wait a bit and try again", 30);    

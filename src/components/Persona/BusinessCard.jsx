@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useContext } from "react";
-import { useMoralis, useMoralisWeb3Api } from "react-moralis";
+import React, { useContext } from "react";
+// import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import { PersonaContext } from "common/context";
 
 // import { Link } from "react-router-dom";
@@ -9,8 +9,8 @@ import { Avatar, Button } from 'antd';
 // import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 // import { Space, Cascader } from 'antd';
 import { PersonaHelper } from "helpers/PersonaHelper";
-import { Link } from "react-router-dom";
-import { IPFS } from "helpers/IPFS";
+// import { Link } from "react-router-dom";
+// import { IPFS } from "helpers/IPFS";
 
 /**
  * Component: Persoan Edit Form
@@ -85,4 +85,3 @@ import { IPFS } from "helpers/IPFS";
 
 
 export default BusinessCard;
-

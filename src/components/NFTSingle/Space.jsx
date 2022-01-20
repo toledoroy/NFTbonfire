@@ -142,7 +142,8 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
       // console.log("Moralis Query Object for Current Room: ", {hash, curRoomId});
     }//Authenticated
     else setRooms([]);
-  }, [hash, Moralis.Query]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hash, limit, isAuthenticated]);
  
   //Log
   // console.log("SpaceView() For collection:", {collection, rooms});
@@ -344,8 +345,6 @@ function RoomEntrance(props) {
           */}
         </div>
         <div className="actions debug">
-          <a href="#">Join</a>
-          <a href="#">Leave</a>
           {(1) 
             ? <Button variant="contained" size="small" color="primary" onClick={()=>{console.warn("CLICKED JOIN")}} title="Join the group">Join</Button>
             : <Button variant="contained" size="small" onClick={()=>{console.warn("CLICKED LEAVE")}} style={{background: 'none', border:'none'}} title="Leave the group">Leave</Button>

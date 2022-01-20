@@ -3,7 +3,6 @@ import { useNFTBalances } from "react-moralis";
 import { useMoralis } from "react-moralis";
 import { useVerifyMetadata } from "hooks/useVerifyMetadata";
 import __ from "helpers/__";
-import { Persona } from "objects/Persona";
 
 /**
  * Hook - Fetches NFT Balances for Account

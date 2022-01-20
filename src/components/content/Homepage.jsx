@@ -3,11 +3,9 @@ import { useMoralis, useMoralisQuery } from "react-moralis";
 import NFTCollections from "components/NFTCollections";
 import { PersonaHelper } from "helpers/PersonaHelper";
 import { ChainHelper } from "helpers/ChainHelper";
-import { Skeleton, Tabs, Row, Col } from 'antd';
-// import { Button } from 'antd';
-// import { Card, Image } from "antd";
+import { Skeleton, Row, Col } from 'antd';
+// import { Button, Tabs, Card, Image } from "antd";
 // import { PlusOutlined } from '@ant-design/icons';
-
 // import { PersonaContext } from "common/context";
 import __ from "helpers/__";
 //Components

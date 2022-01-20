@@ -40,7 +40,7 @@ export const usePersona = () => {
     async function contractCall(funcName, params, chain, abi){
         if(!abi) abi = Persona.getABI(chain);   //Default ABI
         //Validate ABI
-        if(!abi) throw "No Default ABI Found for Chain:"+chain;
+        if(!abi) throw new Error("No Default ABI Found for Chain:"+chain);
         if(chain===undefined || chain === chainId){//Current Chain
             let options = {
                 contractAddress: Persona.getContractAddress(chain),
