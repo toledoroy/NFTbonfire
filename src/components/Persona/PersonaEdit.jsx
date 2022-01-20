@@ -158,9 +158,6 @@ const personaFields = require('schema/PersonaData.json');
      * @ret void
      */
      const onFinish = async (values) => {
-        //Create
-        // const newPost = await Moralis.Cloud.run("post", values);
-        //Log
         // console.warn("[TEST] PersonaEdit.onFinish() Updated Values ", {values});
 
         //Update Metadata

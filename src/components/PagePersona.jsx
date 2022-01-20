@@ -1187,9 +1187,6 @@ export default PagePersona;
      * @ret void
      */
      const onFinish = async (values) => {
-        //Create
-        // const newPost = await Moralis.Cloud.run("post", values);
-        //Log
         // console.warn("[TEST] PersonaEdit.onFinish() Updated Values ", {values});
 
         //Update Metadata
@@ -1199,9 +1196,6 @@ export default PagePersona;
 
         //TODO: Redirect to new Persona URL
         // history.push('/room/'+newPost.id);
-    
-        //Return
-        // return newPost;
     };//onFinish()
     
     /**

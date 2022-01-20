@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
-import { FireTwoTone, StopOutlined } from '@ant-design/icons';
+import { FireTwoTone } from '@ant-design/icons';
 // import { Image, Form, Input, Button, Checkbox } from "antd";
 import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Button } from 'antd';
 import { useMoralisQuery } from "react-moralis";
@@ -217,7 +217,6 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
               ? <p>To Enter this space you need to own an NFT from this collection</p>
               : <p>To Enter this space please <span style={{textDecoration:'underline'}}>sign-in</span> with an account that owns an NFT from this collection</p>
               }
-              {/* <div style={{textAlign:'center'}}><StopOutlined style={{fontSize:'9em'}} /></div> */}
               <img src="/images/doorman1.png" alt="Access Denied" style={{marginTop: '20px', maxHeight: '60vh'}}/>
             </div>
           }
@@ -251,7 +250,7 @@ export default SpaceView;
  * Component: Link To Room
  */
 function RoomEntrance(props) {
-  const { hash, collection, room, selected:isSelected } = props;
+  const { room, selected:isSelected } = props;  //hash, collection, 
   const [ persona, setPersona ] = useState(room.get('persona'));
 
   // let image = PersonaHelper.getImage(room.get('persona'));
@@ -264,8 +263,9 @@ function RoomEntrance(props) {
    * Load Post's Persona When Needed
    */
   const { Moralis } = useMoralis();
-  useEffect(() => {   //[DEV] TESTING
+  useEffect(() => {
     if(Object.keys(persona.attributes).length===0) loadItsPersona(room);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[room, persona]);
   const loadItsPersona = async (parseObj) => {
     // let personaFull = await parseObj.relation('persona').query().find();   //Called relation() on non-relation field persona
@@ -385,7 +385,6 @@ function ShowComments({room}) {
   const { isAuthenticated } = useMoralis();
   // const [ comments, setComments ] = useState([]);
   const [ limit, setLimit ] = useState(100);
-  
   const [ order, setOrder ] = useState('best'); //[olde, new, best]  //updatedAt, score
   
 

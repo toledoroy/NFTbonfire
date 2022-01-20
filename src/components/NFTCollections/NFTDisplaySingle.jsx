@@ -86,9 +86,9 @@ const { Meta } = Card;
                 <Tooltip title="Transfer NFT"><SendOutlined onClick={(event) => { event.preventDefault(); handleTransferClick(nft); }} /></Tooltip>,
                 // <Tooltip title="Sell On OpenSea"><ShoppingCartOutlined onClick={(event) => { event.preventDefault(); alert("OPENSEA INTEGRATION COMING!");}} /></Tooltip>,
                 <Tooltip title="Bonfire">
-                    <Link to={{pathname:'/space/'+nft.chain+'/'+nft.token_address}}>
+                    {/* <Link to={{pathname:'/space/'+nft.chain+'/'+nft.token_address}}> */}
                         <FireTwoTone twoToneColor="red" />
-                    </Link>
+                    {/* </Link> */}
                 </Tooltip>,
             ]}
             >

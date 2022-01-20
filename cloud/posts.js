@@ -1,6 +1,8 @@
 //Objects
 const Post = Moralis.Object.extend("Post");
 
+//-- DEV
+
 
 /** UNUSED - THIS SHOUD MOVE TO CLIENTSIDE!
  * New Post
@@ -61,12 +63,10 @@ const Post = Moralis.Object.extend("Post");
     catch(err){
       logger.error("[CAUGHT] post() Error:"+err, {err, request});
     }
-  });
+});
   
   
-//-- DEV
-
-/** UNUSED
+/** TODO: Check NFT Privileges before returning posts
  * 
 
 Moralis.Cloud.define("getPosts", async (request) => {  
