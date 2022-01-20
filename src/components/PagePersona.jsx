@@ -625,7 +625,7 @@ function PagePersona(props) {
                             {metadata?.accounts?.map((account, index) => (
                                 <TabPane tab={(
                                     <span title={ChainHelper.get(account.chain, 'name')} className={__.matchAddr(account, persona?.get('owner')) ? 'verified' : ''}>
-                                        {account.address 
+                                        {account?.address 
                                         ? <Address icon={getChainLogo(account.chain)} copyable address={account.address} size={5} />
                                         : <span>[NO HASH]</span>
                                         }

@@ -72,9 +72,9 @@ function NFTCollections(props) {
       console.log("(i) NFTCollections() Check if Allowed on Collection:"+collectionHash, NFTCollections, NFTCollections[collectionHash]?.owned, (NFTCollections[collectionHash]?.owned));
       setIsAllowed((NFTCollections[collectionHash]?.owned));
     }
-  },[collectionHash]);
+  },[collectionHash, isWeb3Enabled]);
 
-  React.useEffect(() => {  
+  React.useEffect(() => {
     //Log
     console.log("(i) NFTCollections() Loading Collections: ", {NFTCollections, collectionHash, accountHash, options, params:props.match.params });
   },[]);

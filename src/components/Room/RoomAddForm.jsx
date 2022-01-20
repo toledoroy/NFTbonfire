@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { Form, Input, Button, Comment, Avatar, message } from 'antd';
 import { FireTwoTone } from '@ant-design/icons';
 import { useMoralis } from "react-moralis";
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 // import { Room } from "objects/objects";
 // import { Post } from "objects/objects";  //This is in the wrong Context...
 import { PersonaHelper } from "helpers/PersonaHelper";
@@ -15,7 +15,7 @@ import { PersonaContext } from "common/context";
  * Component: Add New Post
  */
  function RoomAddForm(props) {
-   const { parentId, title, type } = props;
+   const { parentId, type } = props;  //, title
     const { Moralis, account, chainId, user, isWeb3Enabled } = useMoralis();
     const { persona } = useContext(PersonaContext);
     const [form] = Form.useForm();
@@ -191,7 +191,7 @@ import { PersonaContext } from "common/context";
                       <Input placeholder="Topic" maxLength={250} />
                     </Form.Item>
                     <Form.Item name="text" rules={[{ required: true, message: "You'd need to enter some text as well..."}]}>
-                      <Input.TextArea placeholder="Content" />
+                      <Input.TextArea placeholder="Text" />
                     </Form.Item>
                     {persona && <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
                       <Button type="primary" htmlType="submit"><FireTwoTone twoToneColor="red" />Light Up</Button>

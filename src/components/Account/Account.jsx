@@ -93,15 +93,19 @@ function Account() {
         if(DBpersona.get('chain') === persona.chain && DBpersona.get('address') === persona.token_address && DBpersona.get('token_id') === persona.token_id){//Same Persona
           //Check if Up-To-Date (token_uri, owner)    //(Moralis is usually not up to date...)
           if(!__.matchAddr(persona.owner_of, DBpersona?.get('owner')) 
-            || DBpersona.get('token_uri') !== persona.token_uri){
+            // || DBpersona.get('token_uri') !== persona.token_uri
+            || !__.matchURI(DBpersona.get('token_uri'), persona.token_uri)
+            ){
             //Mismatch - Might need an update
             console.warn("[TEST] Account() DB Persona might Need an Update:"+DBpersona.id+" (Owner Mismatch)", {
               DBpersona, persona,
               DBOwner:DBpersona.get('owner'), owner: persona.owner_of, 
-              DBURI: DBpersona.get('token_uri') , tokenURI: persona.token_uri
+              DBURI: DBpersona.get('token_uri') , tokenURI: persona.token_uri,
+              matchURI:__.matchURI(DBpersona.get('token_uri'), persona.token_uri)
             });
             let params = {personaId:DBpersona.id};
-            const result = await Moralis.Cloud.run("personaUpdate", params)  //Update
+            // const result = 
+            await Moralis.Cloud.run("personaUpdate", params)  //Update
               .catch(error => { 
                 if(error.code === 141){
                   console.error("[CAUGHT] Account() Moralis Rate Limit Hit While Calling Cloud.personaRegister()", {error, params}); 
@@ -158,7 +162,7 @@ function Account() {
         }
       } 
     }//Has Personas 
-  }, [NFTpersonas, personas]);
+  }, [NFTpersonas, personas, curPersona]);  //,curPersona NOT! 
 
   useEffect(() => { 
     /* Make sure to change User when account changes */

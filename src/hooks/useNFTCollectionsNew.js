@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNFTBalances } from "react-moralis";
 import { useMoralis } from "react-moralis";
 import { useVerifyMetadata } from "hooks/useVerifyMetadata";
+import __ from "helpers/__";
 
 /**
  * Hook - Fetches NFT Balances for Account
@@ -75,7 +76,7 @@ export const useNFTCollections = (options) => {
         //Add Chain ID
         NFT.chain = options?.chain || chainId;
         //Check if Owned By Current User
-        NFT.owned = (NFT.owner_of === account?.address);  //?
+        NFT.owned = __.matchAddr(account, NFT.owner_of);
       }//Each NFT
       //Organize Into Collections
       // let collections = collect(NFTs);

@@ -3,6 +3,8 @@ import { useIPFS } from "./useIPFS";
 import { useMoralis } from "react-moralis";
 import { useContract } from "hooks/useContract";
 import { message } from 'antd';
+import __ from "helpers/__";
+
 /**
  * This is a hook that loads the NFT metadata in case it doesn't alreay exist
  * If metadata is missing, the object is replaced with a reactive object that updatees when the data becomes available
@@ -61,7 +63,7 @@ export const useVerifyMetadata = () => {
         contractCall(options).then((uri) => {
         // Moralis.executeFunction(options).then((uri) => {
             //Compare & Update Metadata if Needed
-            if(!matchURI(NFT.token_uri, uri)) {
+            if(!__.matchURI(NFT.token_uri, uri)) {
                 //Log
                 // console.log("[TEST] useVerifyMetadata.updateToken() Toekn of:'"+NFT.name+"' Has Different URI on Chain -- Run Update", {NFT, options, uri, token_uri:NFT.token_uri});    //V
                 //Update NFT
@@ -83,25 +85,7 @@ export const useVerifyMetadata = () => {
         return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT ;
     }//updateToken()
 
-    /**
-     * Match URI Function
-     * Try to ignore similar IPFS URLs
-     * @param string uri1 
-     * @param string uri2 
-     * @returns 
-     */    
-    function matchURI(uri1, uri2){
-        if(String(uri1).toLowerCase().includes('ipfs')){
-            //Try to ignore this if URLs have the same IPFS ID
-            let uri1Adjusted = uri1.replace('https://ipfs.moralis.io:2053/ipfs/', '').replace('ipfs://', '');
-            let uri2Adjusted = uri2.replace('https://ipfs.moralis.io:2053/ipfs/', '').replace('ipfs://', '');
 
-            // if(uri1Adjusted !== uri2Adjusted) console.warn("[TEST] Different IPFS IDs", {uri1, uri2, uri1Adjusted, uri2Adjusted});   //V
-
-            return (uri1Adjusted === uri2Adjusted);
-        }
-        return (uri1===uri2);
-    }
 
     /**
      * Fetch Metadata  from NFT and Cache Results

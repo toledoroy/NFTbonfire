@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useMoralis } from "react-moralis";
 import PagePersona from "components/PagePersona";
 // import PageAuthenticate from "components/PageAuthenticate";

@@ -25,6 +25,25 @@ export const __ = {
 
     matchAddr: (a1, a2) => (String(a1).toLowerCase() === String(a2).toLowerCase()),
 
+    /**
+     * Match URI Function
+     * Try to ignore similar IPFS URLs
+     * @param string uri1 
+     * @param string uri2 
+     * @returns 
+     */    
+    matchURI: (uri1, uri2) =>{
+      if(String(uri1).toLowerCase().includes('ipfs')){
+          //Try to ignore this if URLs have the same IPFS ID
+          let uri1Adjusted = uri1.replace('https://ipfs.moralis.io:2053/ipfs/', '').replace('ipfs://', '');
+          let uri2Adjusted = uri2.replace('https://ipfs.moralis.io:2053/ipfs/', '').replace('ipfs://', '');
+
+          // if(uri1Adjusted !== uri2Adjusted) console.warn("[TEST] Different IPFS IDs", {uri1, uri2, uri1Adjusted, uri2Adjusted});   //V
+
+          return (uri1Adjusted === uri2Adjusted);
+      }
+      return (uri1===uri2);
+    },
 };
 
 export default __;

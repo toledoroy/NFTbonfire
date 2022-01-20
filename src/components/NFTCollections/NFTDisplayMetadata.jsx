@@ -92,19 +92,6 @@ export default NFTDisplayMetadata;
     else if(label === 'accounts'){
       if(value.length > 0){
         return (<DisplayMetadataField key={label} label={"Crypto "+label} value={value.length} className="item"/>)
-        return (
-          <dd key={label}>
-            <label>{label}</label> 
-            <span className="value" title={value}>
-              {(value.length > 0) && <dl>
-                {value.map((field) => {
-                    return ['address','chain'].map((key) => <DisplayMetadataField key={key} label={key} value={field[key]} className="item"/>);
-                })}
-              </dl>}
-              {/* {value.map((field) => (<DisplayMetadataField key={field.label} label={field.label} value={field.value} className="item"/>))} */}
-            </span>
-          </dd>
-        );
       }//Has Data
     }//Accounts
     else if(label === 'links'){

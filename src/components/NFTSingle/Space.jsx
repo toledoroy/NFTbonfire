@@ -92,7 +92,7 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
           // newSpace.set("rooms", []); //Other Way...
           newSpace.save().then(result => {
             //Log
-            console.log("Created new Space:", result);
+            console.log("(i) Automatically Created new Space for:"+hash);
             //Set
             setSpace(result);
           });
@@ -100,7 +100,7 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
       });
     }//Web3 Enabled
     else console.log("SpaceView() Waiting for Web3...");
-  }, [isWeb3Enabled, hash, Moralis.Query]);
+  }, [isWeb3Enabled, isAuthenticated, hash, Moralis.Query]);
 
   /**
    * Fetch Rooms for Current Space
@@ -185,8 +185,8 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
                   {rooms.map((room, index) => (
                     
                     <Collapse.Panel header={
-                      // <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} selected={curRoomId===room.id} />    //MOVE TO PARENT, Though works just as badly... (disapears on node reload)
-                        <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />
+                        <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} selected={curRoomId===room.id} />    //MOVE TO PARENT, Though works just as badly... (disapears on node reload)
+                        // <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />
                       } key={room.id} showArrow={false} className={(curRoomId===room.id) ? 'item selected' : 'item'}>
                       <ShowComments room={room} />
 
@@ -333,7 +333,7 @@ function RoomEntrance(props) {
         </div>}
         <div className="info">
           {/* <span key="id">ID: {room.id}</span> */}
-          {/* {isSelected && <p key="desc">{room.get('text')}</p>} */}
+          {isSelected && <p key="desc">{room.get('text')}</p>}
           {/* <p key="created">Created: {room?.createdAt}</p> */}
           {/* <p key="updated">Last Updated: {room?.updatedAt}</p> */}
           {/* <p key="">Total Items: {room.total_items}</p> */}
@@ -370,7 +370,7 @@ function ShowMore() {
   return (
       <div className="show_more flex">
           <div className="inner">
-              <p className="debug" onClick={ console.warn("ShowMore() Clicked") }>
+              <p className="debug">
                 [Load More]
               </p>
           </div>

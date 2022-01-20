@@ -54,7 +54,7 @@ export const useNFTCollections = (options) => {
           //Image Might Be an IPFS ID
           if(NFT.metadata?.image) NFT.image = resolveLink(NFT.metadata?.image);
           //Check if Owned By Current User
-          NFT.owned = (NFT.owner_of === account?.address);
+          NFT.owned = (NFT.owner_of === account);
         }
         else console.log("NFT.metadata (SHOULD BE A JSON STRING)", NFT.metadata);
 

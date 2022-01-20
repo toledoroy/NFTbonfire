@@ -24,7 +24,7 @@ import { RightOutlined, LeftOutlined } from '@ant-design/icons';
     // console.log("[TEST] NFTDisplayCollection", {collection, dest});
     return (
         <>
-        {/* <Link key={collection.hash+'Link'} to={dest}> */}
+        {/* <Link key={collection.hash+'Link'} to={dest}>   MOVED OUTSIDE */}
             <div key={collection.symbol+'items'} className="NFTitems" id={"NFTitems"+collection.hash} style={props.style}> 
                 {collection && collection.items.map((nft, index) => (
                     <NFTDisplaySingle key={nft.token_address+nft.token_id} nft={nft} />
