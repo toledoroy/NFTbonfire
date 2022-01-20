@@ -1,7 +1,7 @@
 // import { IPFS } from "helpers/IPFS";
 const Moralis = require("moralis/node");
-const APP_ID = process.env.REACT_APP_MORALIS_APPLICATION_ID;
-const SERVER_URL = process.env.REACT_APP_MORALIS_SERVER_URL;
+const APP_ID = process?.env?.REACT_APP_MORALIS_APPLICATION_ID;
+const SERVER_URL = process?.env?.REACT_APP_MORALIS_SERVER_URL;
 Moralis.initialize(APP_ID);
 Moralis.serverURL = SERVER_URL;
 

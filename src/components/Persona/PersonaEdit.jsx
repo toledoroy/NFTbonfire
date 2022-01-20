@@ -68,7 +68,7 @@ const personaFields = require('schema/PersonaData.json');
     */
 
     //Log
-    console.warn("PersonaEdit() MEtadata", {chainId, env:process.env, metadata, imageUrl, contract, persona});
+    console.warn("PersonaEdit() MEtadata", {chainId, env:process?.env, metadata, imageUrl, contract, persona});
 
     useEffect(() => { 
         //Refresh Metadata on Every Load! (After Updating Chain, This Component's metadata doesn't match the updated parent)
