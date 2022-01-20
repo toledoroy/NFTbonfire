@@ -734,7 +734,7 @@ body { height:100vh; }
     display: flex;
     flex: 1 1;
     flex-direction: column;
-    button {  
+    button { 
         border: var(--background-color);
     }
     .disallowed{
@@ -944,3 +944,7 @@ body { height:100vh; }
     .debug{ display: none; }
 }
 */
+/* FIX THAT WEIRD IFRAME THAT HIDES EVERYTHING AFTER Hot Page Reload */
+body>iframe{
+    display:none;
+}
