@@ -89,7 +89,7 @@ export const ChainsData = {
     icon: <PolygonLogo />,
     native: 'MATIC',
     nId:'',
-    live: true,
+    live: false,
     supported: false,
   },
   "0xa86a":{

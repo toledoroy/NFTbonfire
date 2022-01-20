@@ -24,7 +24,7 @@ import ERC20Balance from "components/ERC20Balance";
  * Component: Home Page
  */
  function Homepage(props) {
-    const { account, isWeb3Enabled } = useMoralis();     //, Moralis, user, chainId, isUserUpdating
+    const { account, isWeb3Enabled, chainId } = useMoralis();     //, Moralis, user, chainId, isUserUpdating
     // const { persona, contract } = props;
     // const { persona, contract } = props;
       
@@ -120,15 +120,16 @@ import ERC20Balance from "components/ERC20Balance";
             </Row>
             
             <Row className="flex">
-                {/* {console.log("[TEST] Homepage() ChainHelper.allChains:", ChainHelper.allChains())} */}
                 <div className="assets">
                     <h1>Non-Fungible Assets (Bonfires)</h1>
                     <Skeleton loading={!isWeb3Enabled}>
-                    {ChainHelper.allChains().map(chain => (
-                        <div key={chain} className={"chain_"+chain}>
-                            <h3>{ChainHelper.get(chain, 'name')}</h3>
+                    {ChainHelper.allChainsData()
+                        .filter((chainData) => (chainData.key === chainId || chainData.supported || chainData.live))
+                        .map(chainData => (
+                        <div key={chainData.key} className={"chain_"+chainData.key}>
+                            <h3>{chainData.name}</h3>
                             <div className="NFTs">
-                                <NFTCollections match={{params:{accountHash:account, chain:chain, showBreadcrumbs:false}}} />
+                                <NFTCollections match={{params:{accountHash:account, chain:chainData.key, showBreadcrumbs:false}}} />
                             </div>
                         </div>
                     ))}
