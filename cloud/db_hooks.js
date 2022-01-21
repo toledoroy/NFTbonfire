@@ -1,9 +1,16 @@
 /* DB Hooks */
+
+
+//-- TESTING
+
+
+//-- DEV
+
 /**
  * DB - Custom Post Save Validation
  * Make sure that author has access to Room
  */
- Moralis.Cloud.beforeSave('Post', async request => {
+Moralis.Cloud.beforeSave('Post', async request => {
     if(request.master) return;
     //Fetch Post Object
     const object = request.object;
@@ -26,16 +33,7 @@
     //Get Balance
     const balance = await getBalance(data.account, data.hash, data.chainId);
     if(balance <= 0) throw new Error("User Not Allowed in Room (balance:"+balance+")");
-  });
-  
-
-  
-
-//-- TESTING
-
-//-- DEV
-
-
+});
 
 
 Moralis.Cloud.afterSave("Relation", (request) => {
