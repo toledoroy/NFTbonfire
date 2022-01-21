@@ -102,30 +102,24 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
     else console.log("SpaceView() Waiting for Web3...");
   }, [isWeb3Enabled, isAuthenticated, hash, Moralis.Query]);
 
-  /**
-   * Fetch Rooms for Current Space
-   */
-  useEffect(() => {
+  const loadRooms = () => {
     if(isAuthenticated){ 
       //Log
       // console.log("[TEST] SpaceView() RUNNUING W/Hash:"+hash);
       //Get Rooms for Space (by Space's hash)
       const RoomQuery = new Moralis.Query(Room);
       RoomQuery.equalTo("parentId", hash);  //By Hash
-
-      
       const PersonaQuery = new Moralis.Query('Persona');
       RoomQuery.matchesKeyInQuery("persona", "objectId", PersonaQuery);
-
-      RoomQuery.limit(limit).find().then(result => {
+      RoomQuery.limit(limit).find().then(results => {
         //Log
-        console.log("Spcae() Got "+result.length+" Rooms for Space:"+hash);
-        if(result && result.length > 0) {
+        console.log("Spcae() Got "+results.length+" Rooms for Space:"+hash);
+        if(results && results.length > 0) {
           //Log
-          // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, result); //V
-          // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, result[0].sayHi());
+          // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, results); //V
+          // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, results[0].sayHi());
           //Set Rooms
-          setRooms(result);
+          setRooms(results);
         }//Found Rooms
         /* Cancelled - Allow for No Rooms
         else {
@@ -142,6 +136,12 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
       // console.log("Moralis Query Object for Current Room: ", {hash, curRoomId});
     }//Authenticated
     else setRooms([]);
+  }
+  /**
+   * Fetch Rooms for Current Space
+   */
+  useEffect(() => {
+    loadRooms();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hash, limit, isAuthenticated]);
  
@@ -179,7 +179,7 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
             {(rooms && rooms.length>0) ? 
               <div className="allowed">
               
-                {!curRoomId && <RoomAddForm parentId={collection.hash} collection={collection} selected={curRoomId} />} 
+                {!curRoomId && <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} selected={curRoomId} onFinish={loadRooms}/>} 
 
                 <Collapse accordion onChange={(selected) => setcurRoomId(selected)}>
                   {/* collapsible="disabled" */}
@@ -242,7 +242,7 @@ export default SpaceView;
       {/* <div>Loading Rooms...</div> */}
       <p key="R1">Congratulations! You're the first person in this Space</p>
       <p key="R2">Why don't you go ahead and light up a new bonfire for your {__.sanitize(collection.name)} NFT buddies</p>
-      <RoomAddForm parentId={collection.hash} collection={collection} />
+      <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} />
     </div>
   );
  }//SpaceEmpty()

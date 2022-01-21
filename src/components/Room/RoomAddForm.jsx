@@ -60,7 +60,10 @@ import { PersonaContext } from "common/context";
         //Additions
         values.parentId = parentId;
         values.account = account;
-        values.chain = chainId;
+        
+        // values.chain = chainId;     //THIS IS WRONG...
+        values.chain = props.chain || chainId;
+
         values.userId = user?.id;
         // values.user = user;
 
@@ -100,9 +103,15 @@ import { PersonaContext } from "common/context";
         //Redirect -- Enter New Room      //https://stackoverflow.com/questions/34735580/how-to-do-a-redirect-to-another-route-with-react-router
         // history.push('/room/'+newPost.id);
         */
+       //Callback
+       if(props.onFinish && typeof props.onFinish === 'function'){
+         console.warn("[TEST] RoomAddForm() onFinish() Has a Callback Func", props.onFinish);
+         //Run
+         props.onFinish();
+       }
       }
       catch(err){
-        console.error("RoomAddForm() Failed to Create a new Post:", {values, err});
+        console.error("RoomAddForm() Failed to Create a new Post:", {values, props, err});
         message.error("Ooops! I didn't manage to save this post. Maybe try again later...");
       }
     };//onFinish()
