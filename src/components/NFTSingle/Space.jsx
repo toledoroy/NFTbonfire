@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
-import { FireTwoTone } from '@ant-design/icons';
+import { FireTwoTone, ArrowLeftOutlined } from '@ant-design/icons';
 // import { Image, Form, Input, Button, Checkbox } from "antd";
 import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Button } from 'antd';
 import { useMoralisQuery } from "react-moralis";
@@ -28,16 +28,16 @@ import PageAuthenticate from "components/PageAuthenticate";
  *  - Stack Overflow
  *  - FB Messenger
  */
-function SpaceView({hash, chain, collection, NFTpersonas}) {
+function SpaceView({hash, collection, NFTpersonas}) {
   const { Moralis, isWeb3Enabled, isAuthenticated, user } = useMoralis();
   const [ space, setSpace ] = useState({});
   const [ rooms, setRooms ] = useState([]);
   const [ curRoomId, setcurRoomId ] = useState();
-  const [ limit, setLimit ] = useState(8);
+  const [ limit, setLimit ] = useState(24);
   const [isAllowed, setIsAllowed] = useState(null);
   // const { isAllowed } = useIsAllowed({hash, chain,});
   // const { persona, setPersona} = useContext(PersonaContext);
-  
+  const chain = collection.chain;
   
   React.useEffect(() => {  
     setIsAllowed((collection.owned));
@@ -102,30 +102,33 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
     else console.log("SpaceView() Waiting for Web3...");
   }, [isWeb3Enabled, isAuthenticated, hash, Moralis.Query]);
 
-  /**
-   * Fetch Rooms for Current Space
-   */
-  useEffect(() => {
+  
+  const loadRooms = (postId) => {
     if(isAuthenticated){ 
       //Log
       // console.log("[TEST] SpaceView() RUNNUING W/Hash:"+hash);
       //Get Rooms for Space (by Space's hash)
       const RoomQuery = new Moralis.Query(Room);
       RoomQuery.equalTo("parentId", hash);  //By Hash
-
-      
       const PersonaQuery = new Moralis.Query('Persona');
       RoomQuery.matchesKeyInQuery("persona", "objectId", PersonaQuery);
-
-      RoomQuery.limit(limit).find().then(result => {
+      RoomQuery.limit(limit).find().then(results => {
         //Log
-        console.log("Spcae() Got "+result.length+" Rooms for Space:"+hash);
-        if(result && result.length > 0) {
+        console.log("Spcae() Got "+results.length+" Rooms for Space:"+hash);
+        if(results && results.length > 0) {
           //Log
-          // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, result); //V
-          // console.log("[TEST] SpaceView() Got Rooms for Space:"+hash, result[0].sayHi());
+          console.log("[DEBUG] SpaceView() Got "+results.length+" Rooms for Space:"+hash, results); 
           //Set Rooms
-          setRooms(result);
+          setRooms(results);
+          //Option to Set Current Room
+          if(postId){
+            //TODO: Verify
+            
+            //Log
+            console.warn("[TEST] SpaceView() Setting Current Room to:"+postId, results);
+            //Set
+            setcurRoomId(postId);
+          } 
         }//Found Rooms
         /* Cancelled - Allow for No Rooms
         else {
@@ -142,6 +145,52 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
       // console.log("Moralis Query Object for Current Room: ", {hash, curRoomId});
     }//Authenticated
     else setRooms([]);
+  }
+
+  const loadRoomsAsync = async () => {
+    if(isAuthenticated){ 
+      try{
+        //Log
+        // console.log("[TEST] SpaceView() RUNNUING W/Hash:"+hash);
+        //Get Rooms for Space (by Space's hash)
+        const RoomQuery = new Moralis.Query(Room);
+        RoomQuery.equalTo("parentId", hash);  //By Hash
+        const PersonaQuery = new Moralis.Query('Persona');
+        RoomQuery.matchesKeyInQuery("persona", "objectId", PersonaQuery);
+        const results = await RoomQuery.limit(limit).find();
+        //Log
+        console.log("Spcae() Got "+results.length+" Rooms for Space:"+hash);
+        if(results && results.length > 0) {
+          //Log
+          console.log("[DEBUG] SpaceView() Got "+results.length+" Rooms for Space:"+hash, results); 
+          //Set Rooms
+          setRooms(results);
+        }//Found Rooms
+        /* Cancelled - Allow for No Rooms
+        else {
+          //Init Rooms
+          let roomsInit = initRooms(hash); 
+          //Set Rooms
+          // setRooms(roomsInit); //Try Without... Also Use Live Query
+          //Log
+          // console.log("[TEST] SpaceView() No Rooms Found for Space:"+hash+" --> Init Rooms", roomsInit);
+        }//No Rooms
+        */
+        //Log
+        // console.log("Moralis Query Object for Current Room: ", {hash, curRoomId});
+      }
+      catch(error){
+        console.error("[TEST] Error Fetching Rooms for Space:"+hash, error);
+      }
+
+    }//Authenticated
+    else setRooms([]);
+  }
+  /**
+   * Fetch Rooms for Current Space
+   */
+  useEffect(() => {
+    loadRooms();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hash, limit, isAuthenticated]);
  
@@ -179,15 +228,17 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
             {(rooms && rooms.length>0) ? 
               <div className="allowed">
               
-                {!curRoomId && <RoomAddForm parentId={collection.hash} collection={collection} selected={curRoomId} />} 
+                {!curRoomId && <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} onSuccess={(post) => {loadRooms(post.id)}}/>} 
 
-                <Collapse accordion onChange={(selected) => setcurRoomId(selected)}>
+                <Collapse accordion onChange={(selected) => setcurRoomId(selected)} activeKey={curRoomId} > 
                   {/* collapsible="disabled" */}
                   {rooms.map((room, index) => (
                     
                     <Collapse.Panel header={
-                        <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} selected={curRoomId===room.id} />    //MOVE TO PARENT, Though works just as badly... (disapears on node reload)
-                        // <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />
+                        <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} 
+                          // selected={curRoomId===room.id}     //MOVE TO PARENT, Though works just as badly... (disapears on node reload)
+                        />
+                        // <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} chain={chain}/>
                       } key={room.id} showArrow={false} className={(curRoomId===room.id) ? 'item selected' : 'item'}>
                       <ShowComments room={room} />
 
@@ -200,7 +251,7 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
                 {!curRoomId && 
                   <ShowMore />
                 }
-                {/* {curRoomId && <RoomAddForm parentId={curRoomId} type='comment' />} */}
+                {/* {curRoomId && <RoomAddForm parentId={curRoomId} type='comment' chain={chain} />} */}
               </div>
               :
               <SpaceEmpty collection={collection} />
@@ -224,7 +275,7 @@ function SpaceView({hash, chain, collection, NFTpersonas}) {
           <div className="clearfloat"></div>
           </Skeleton>
       </div>
-      {curRoomId && <RoomAddForm parentId={curRoomId} type='comment' />}
+      {curRoomId && <RoomAddForm parentId={curRoomId} type='comment' chain={chain} />}
     </>
     )}
     </CollectionContext.Consumer> 
@@ -242,7 +293,7 @@ export default SpaceView;
       {/* <div>Loading Rooms...</div> */}
       <p key="R1">Congratulations! You're the first person in this Space</p>
       <p key="R2">Why don't you go ahead and light up a new bonfire for your {__.sanitize(collection.name)} NFT buddies</p>
-      <RoomAddForm parentId={collection.hash} collection={collection} />
+      <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} />
     </div>
   );
  }//SpaceEmpty()
@@ -294,6 +345,8 @@ function RoomEntrance(props) {
   });
   */
  
+  let purpose = room.get('persona').get('metadata')?.purpose;
+  let role = room.get('persona').get('metadata')?.role;
   return (
     <div className="room_single">
     <div className={className} id={room.id}>
@@ -317,24 +370,23 @@ function RoomEntrance(props) {
         </div>
       </Badge.Ribbon>
       <div className="content">
+        {isSelected && <div key="back" className="back link" style={{position:'absolute', right:'15px'}}><ArrowLeftOutlined />Back</div>}
         <h1>
           {/* <Link key="link" to={{ pathname: "/room/"+room.id, }} className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</Link> */}
           {/* <a className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</a> */}
           <FireTwoTone twoToneColor="red" />{room?.get('name')}
         </h1>
-
+        
         {isSelected && <div key="user_info">
-          <p>{PersonaHelper.getNameFull(room.get('persona'))}
-          , {room.get('persona').get('metadata')?.role}
+          <p>
+            {PersonaHelper.getNameFull(room.get('persona'))}
+            {role && ", "+role}
           </p>
-          {/* <p>{room.get('persona').get('metadata')?.purpose}</p> */}
-          {room.get('persona').get('metadata')?.purpose && 
-            <p dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(room.get('persona').get('metadata')?.purpose))}}></p>
-          }
+          {purpose && <p key="purp" className="purpose" dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(purpose))}}></p>}
         </div>}
         <div className="info">
           {/* <span key="id">ID: {room.id}</span> */}
-          {isSelected && <p key="desc">{room.get('text')}</p>}
+          {/* {isSelected && <p key="desc">{room.get('text')}</p>} */}
           {/* <p key="created">Created: {room?.createdAt}</p> */}
           {/* <p key="updated">Last Updated: {room?.updatedAt}</p> */}
           {/* <p key="">Total Items: {room.total_items}</p> */}
@@ -356,7 +408,7 @@ function RoomEntrance(props) {
       </div>
     </div>
     {isSelected &&
-      <p dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(room.get('text')))}}></p>
+      <p className="text" dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(room.get('text')))}}></p>
     }
     </div>
   );

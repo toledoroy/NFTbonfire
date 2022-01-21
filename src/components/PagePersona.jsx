@@ -8,6 +8,7 @@ import { ChainHelper } from "helpers/ChainHelper";
 import { Persona } from "objects/Persona";
 import { IPFS } from "helpers/IPFS";
 import { usePersona } from "hooks/usePersona";
+import { useHistory } from 'react-router-dom';
 //Components
 import Address from "components/Address/Address";
 import NFTCollections from "components/NFTCollections";
@@ -59,6 +60,7 @@ function PagePersona(props) {
     //File Upload
     const [ imageUrl, setImageUrl ] = useState(metadata?.image);
     // const [ imageLoading, setImageLoading ] = useState(false);
+    // const history = useHistory();
 
     //https://github.com/MoralisWeb3/react-moralis#usemoralisweb3api
     

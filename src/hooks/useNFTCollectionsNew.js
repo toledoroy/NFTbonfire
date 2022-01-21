@@ -12,7 +12,7 @@ export const useNFTCollections = (options) => {
   const { account, chainId, isWeb3Enabled } = useMoralis();
   const [ NFTCollections, setNFTCollections ] = useState({});
   const [ NFTpersonas, setPersonas ] = useState([]);
-  const { verifyMetadata, personaUpdateFromDB } = useVerifyMetadata();  //updateToken
+  const { verifyMetadata, personaUpdateFromDB, updateToken } = useVerifyMetadata();  //updateToken
 
   /**
    * Check if Token is a  Persona
@@ -24,11 +24,13 @@ export const useNFTCollections = (options) => {
    * @param array NFTs 
    * @ret object
    */
-  function collect(NFTs){
+  function collect(NFTs, chain){
     //Init Return
     let collections = {};
     let personas = [];
     for(let NFT of NFTs){
+
+
       if(isPersona(NFT)){
         //Moralis Persona data is often Out of Date
         try{
@@ -36,7 +38,7 @@ export const useNFTCollections = (options) => {
           //Force Full Metadata Update (Moralis sometimes gives outdated token_uri)
           NFT = updateToken(NFT);
           */
-         NFT = personaUpdateFromDB(NFT);
+          NFT = personaUpdateFromDB(NFT);
           //Append Persona
           personas.push(NFT);
         }
@@ -45,20 +47,26 @@ export const useNFTCollections = (options) => {
         }
       }//Persona
 
-
-      // else{//Regular Collection
-        //Verify Metadata (Moralis sometimes gives outdated metadata)
-        NFT = verifyMetadata(NFT);
-        //Init Collection Slot
-        if(!collections[NFT.token_address]) collections[NFT.token_address] = {owned:false, items:[], hash:NFT.token_address, symbol:NFT.symbol, name:NFT.name, contract_type:NFT.contract_type,};
-        //Add NFT to Collection
-        collections[NFT.token_address].items.push(NFT);
-        //ANY - Ownes Something in This Collection
-        if(NFT.owner_of === account) collections[NFT.token_address].owned = true;
-        // else console.warn("No Match", NFT.owner_of, account);  //V
-        // if(collections[NFT.token_address]?.est === undefined || collections[NFT.token_address].est > NFT.est) collections[NFT.token_address].est = NFT.est;   //Should be: Time sicne last TX
-      // }//Default
+      //Verify Metadata (Moralis sometimes gives outdated metadata)
+      NFT = verifyMetadata(NFT);
+      //Init Collection Slot
+      if(!collections[NFT.token_address]) collections[NFT.token_address] = {
+        items:[], 
+        hash:NFT.token_address, 
+        symbol:NFT.symbol, 
+        name:NFT.name, 
+        contract_type:NFT.contract_type, 
+        chain,        //For OWnership Verification
+        owned:false, 
+      };
+      //Add NFT to Collection
+      collections[NFT.token_address].items.push(NFT);
+      //ANY - Ownes Something in This Collection
+      if(NFT.owner_of === account) collections[NFT.token_address].owned = true;
+      // else console.warn("No Match", NFT.owner_of, account);  //V
+      // if(collections[NFT.token_address]?.est === undefined || collections[NFT.token_address].est > NFT.est) collections[NFT.token_address].est = NFT.est;   //Should be: Time sicne last TX
     }//Each NFT
+
     // return collections;
     return { collections, personas };
   }//collect()
@@ -68,16 +76,17 @@ export const useNFTCollections = (options) => {
   useEffect(() => {
     // console.log("[TEST] useNFTCollections() NFTBalances", NFTBalances, options);
     if (isWeb3Enabled && NFTBalances?.result) {
+      const chain = options?.chain || chainId;
       const NFTs = NFTBalances.result;
       for (let NFT of NFTs) {
         //Add Chain ID
-        NFT.chain = options?.chain || chainId;
+        NFT.chain = chain;
         //Check if Owned By Current User
         NFT.owned = __.matchAddr(account, NFT.owner_of);
       }//Each NFT
       //Organize Into Collections
       // let collections = collect(NFTs);
-      let { collections, personas } = collect(NFTs);
+      let { collections, personas } = collect(NFTs, chain);
       //Log
       console.log("(i) useNFTCollections() collections:", {options, NFTs, collections, personas});
       //Set

@@ -28,6 +28,13 @@
 .corner_menu {
     display: flex;
     flex-direction: column;
+    
+    .text{ 
+        flex: 1 1;
+    }
+    
+    
+    .ant-dropdown-menu-title-content{ cursor: default; }
     .title:hover { background: none; cursor: default;}
     .title {
         font-size: 1.2rem;
@@ -138,7 +145,7 @@ body { height:100vh; }
     }
     .assets {
         .collections {
-            padding:15px 0;
+            padding:var(--padding) 0;
             .header {display: none;}
         }   
     }
@@ -214,7 +221,7 @@ body { height:100vh; }
         i { margin-right: 3px; }
     }
     .info{ 
-        margin-left: 15px;
+        margin-left: var(--padding);
         flex: 1 1;
         h3 {
             text-transform: capitalize;
@@ -668,6 +675,7 @@ body { height:100vh; }
 
 
 /* Comment Add Widget */
+#postAdd .ant-form-item-with-help .ant-form-item-explain { padding-left: 8px;}
 .comment_add {
     .ant-comment { width:100%; }
     form {
@@ -705,8 +713,9 @@ body { height:100vh; }
 .room_add{
     background-color: var(--comment-background);
     border-radius: var(--borderRadius);
-    padding: 4px 15px;
+    padding: 4px var(--padding);
     .inner {
+
     }
     .ant-comment-inner {
         padding:0;
@@ -722,12 +731,13 @@ body { height:100vh; }
 .pageSpace .middle { display:flex; }
 .space_container {
     width: 100%;
+    overflow: hidden;
     .comment_add { 
         position: fixed;
         bottom: var(--footer-height);
         max-width: 50vw;
         width: 700px;
-        padding: 4px 15px;
+        padding: 4px var(--padding);
         border-radius: var(--borderRadius) var(--borderRadius) 0 0 ;
         background-color: var(--comment-background);
         // .comment_text:focus-visible { border:none; outline:none;}
@@ -753,11 +763,18 @@ body { height:100vh; }
     div {
         max-height: 100%;
     }
+    .ant-ribbon-wrapper {
+        margin-bottom: 8px;
+    }
     .ant-ribbon {
         top:auto;
-        bottom: -14px;
         left:-1px;
         border-radius: 0 5px 5px 0;
+    }
+    .room_single{
+        .text{
+            padding: var(--padding) 5px 10px 5px;
+        }        
     }
 }
 .space:nth-child(odd) { animation-duration: 0.6s; /* So they look staggered */ }
@@ -773,7 +790,7 @@ body { height:100vh; }
 #account {     
     color: #21bf96;
     height: 48px;
-    padding: 0 15px;
+    padding: 0 var(--padding);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -812,6 +829,7 @@ body { height:100vh; }
 
 .room_list.single{
     .ant-collapse-item {display: none;}
+    // .ant-collapse-item.selected, 
     .ant-collapse-item-active { display: block; }
     // .ant-collapse>.item {display: none;}
     // .ant-collapse>.item.selected { display: block; }
@@ -825,11 +843,20 @@ body { height:100vh; }
     bottom: 0;
     right: 0;
     height: 1px;
-    width: 88%;
+    width: 590px;
+    max-width: 100%;
 }
 .room_list {
     clear: both;
-    .ant-collapse-header { display:block !important; }
+    .ant-collapse {
+        padding-left:var(--padding);
+    }
+    .ant-collapse-header { 
+        display:block !important; 
+    }
+    .ant-collapse > .ant-collapse-item.ant-collapse-no-arrow > .ant-collapse-header {
+        padding-left: 0px;
+    }
     .ant-collapse-content{
         padding-bottom: 60px;   //Comment Add
     }
@@ -847,17 +874,24 @@ body { height:100vh; }
     /* border-top: 1px solid #9ecaed; */
     .image { flex: 0 0;}
     .content { 
-        padding:0 10px; flex: 1 1; 
+        padding:0 10px; 
+        flex: 1 1; 
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        overflow: hidden;
     }
     .anticon{ margin-right: 5px; }
     .vote { 
         margin: auto 0 auto auto ; 
-        .vote_count {
+        .inner {
             text-align: right;
             padding-right: 8px;
+        }
+        .side_pane {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
         }
     }
 }
@@ -925,6 +959,7 @@ body { height:100vh; }
                 .vote_count {
                     text-align: right;
                     padding-right: 4px;
+                    direction: rtl;
                 }
             }
         }

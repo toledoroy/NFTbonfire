@@ -34,10 +34,12 @@
   --avatarMD:120px;
   --comment-background: #f5f5f5;
   --color:#262626;
+  --colorLink:#1890ff;
   /* --color:rgb(4, 24, 54); */
   /* --invert: black; */
   --monochrome: #fff;
   --borderRadius: 12px;
+  --padding: 15px;
 }
 h1, h2, h3, h4, h5, h6 {
   color: var(--color);
@@ -57,9 +59,9 @@ footer { margin-top: 40px; }
 /* GLOBAL MODIFIERS */
 .flex {display: flex;}
 .clearfloat{  clear: both; width: 100%; display: block; }
-.framed{ padding: 15px; max-width: 1200px; margin:0 auto;} 
+.framed{ padding: var(--padding); max-width: 1200px; margin:0 auto;} 
 .hr { border-top: 1px solid var(--background-color); border-radius: 0 !important;}
-
+.link {color:var(--colorLink);}
 
 /* NFT Item Display */
 .NFTitems .item .flip-card-back .metadata,

@@ -21,6 +21,18 @@ import { PersonaContext } from "common/context";
     const [form] = Form.useForm();
     // const type = title ? 'comment' : 'post';
   
+    /**
+     * Submit on Enter
+     * @param {*} evt 
+     */
+    const onEnterPress = (evt) => {
+        // console.warn("[TEST] RoomAddForm() Key Press", evt.keyCode);
+        if(evt.keyCode === 13 && evt.shiftKey === false) {
+            evt.preventDefault();
+            form.submit();
+        }
+    }
+    
 
     //Objects
     // const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
@@ -38,17 +50,18 @@ import { PersonaContext } from "common/context";
      * Form Submit Function
      */
     const onFinish = async (values) => {
+      //Validate
+      if(!persona){
+        message.error("To post, you must first mint yourself a persona");
+        // throw new Error("RoomAddForm() No Persona Selected");
+        return;
+      }
       try{
-        //Validate
-        if(!persona){
-          message.error("To post, you must first mint yourself a persona");
-          throw new Error("RoomAddForm() No Persona Selected");
-        } 
-
         //Additions
         values.parentId = parentId;
         values.account = account;
-        values.chain = chainId;
+        // values.chain = chainId;     //THIS IS WRONG...
+        values.chain = props.chain || chainId;
         values.userId = user?.id;
         // values.user = user;
 
@@ -77,31 +90,35 @@ import { PersonaContext } from "common/context";
         //Save
         // return post.save();
         let newPost = await post.save(values);
-        
-        //Log
-        console.log("RoomAddForm() Created new Post:", {values, newPost});
+        // console.log("RoomAddForm() Created new Post:", {values, newPost});
 
         //Reset Form
         form.resetFields();
+          
+       //Run Success Callback
+       if(props.onSuccess && typeof props.onSuccess === 'function'){
+         console.warn("[TEST] RoomAddForm() onFinish() Has a Success Callback Func", props.onSuccess);
+         //Run
+         props.onSuccess(newPost);
+       }
 
         /*
         //Redirect -- Enter New Room      //https://stackoverflow.com/questions/34735580/how-to-do-a-redirect-to-another-route-with-react-router
         // history.push('/room/'+newPost.id);
-    
-        //Return
-        return newPost;
         */
+       
       }
-      catch(error){
-        console.error("RoomAddForm() Save Post Failed", {values, error});
-        return null;
+      catch(err){
+        console.error("RoomAddForm() Failed to Create a new Post:", {values, props, err});
+        message.error("Ooops! I didn't manage to save this post. Maybe try again later...");
       }
     };//onFinish()
+
     //Validate
     if(!persona){
       console.error("RoomAddForm() No Persona Selected");
       return (<div className="personaMissing">
-        <h2>To post, you must first mint yourself a persona</h2>
+        <h2>To post, you must first <a href="/persona">mint yourself a persona</a></h2>
       </div>);
     }
     else if(type==='comment'){
@@ -128,6 +145,7 @@ import { PersonaContext } from "common/context";
                 <Input.TextArea 
                 // showCount 
                 autoSize={{ minRows: 1, maxRows: 6 }}
+                onKeyUp={onEnterPress}
                 />
               </Form.Item>
 
@@ -187,11 +205,14 @@ import { PersonaContext } from "common/context";
                     autoComplete="off"
                     form={form} 
                     >
-                    <Form.Item name="name" rules={[{ required: true, message: 'You forgot to fill in a Topic'}]}>
+                    <Form.Item name="name" rules={[{ required: true, message: 'The topic is actually kind of a big deal here...'}]}>
                       <Input placeholder="Topic" maxLength={250} />
                     </Form.Item>
-                    <Form.Item name="text" rules={[{ required: true, message: "You'd need to enter some text as well..."}]}>
-                      <Input.TextArea placeholder="Text" />
+                    <Form.Item name="text" rules={[{ required: true, message: "You'd need to enter some text as well."}]}>
+                      <Input.TextArea 
+                        placeholder="Text" 
+                        // onKeyUp={onEnterPress}
+                      />
                     </Form.Item>
                     {persona && <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
                       <Button type="primary" htmlType="submit"><FireTwoTone twoToneColor="red" />Light Up</Button>
