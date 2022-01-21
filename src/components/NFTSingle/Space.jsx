@@ -294,6 +294,8 @@ function RoomEntrance(props) {
   });
   */
  
+  let purpose = room.get('persona').get('metadata')?.purpose;
+  let role = room.get('persona').get('metadata')?.role;
   return (
     <div className="room_single">
     <div className={className} id={room.id}>
@@ -324,17 +326,15 @@ function RoomEntrance(props) {
         </h1>
 
         {isSelected && <div key="user_info">
-          <p>{PersonaHelper.getNameFull(room.get('persona'))}
-          , {room.get('persona').get('metadata')?.role}
+          <p>
+            {PersonaHelper.getNameFull(room.get('persona'))}
+            {role && ", "+role}
           </p>
-          {/* <p>{room.get('persona').get('metadata')?.purpose}</p> */}
-          {room.get('persona').get('metadata')?.purpose && 
-            <p dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(room.get('persona').get('metadata')?.purpose))}}></p>
-          }
+          {purpose && <p key="purp" className="purpose" dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(purpose))}}></p>}
         </div>}
         <div className="info">
           {/* <span key="id">ID: {room.id}</span> */}
-          {isSelected && <p key="desc">{room.get('text')}</p>}
+          {/* {isSelected && <p key="desc">{room.get('text')}</p>} */}
           {/* <p key="created">Created: {room?.createdAt}</p> */}
           {/* <p key="updated">Last Updated: {room?.updatedAt}</p> */}
           {/* <p key="">Total Items: {room.total_items}</p> */}
@@ -356,7 +356,7 @@ function RoomEntrance(props) {
       </div>
     </div>
     {isSelected &&
-      <p dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(room.get('text')))}}></p>
+      <p className="text" dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(room.get('text')))}}></p>
     }
     </div>
   );
