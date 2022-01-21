@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
-import { FireTwoTone } from '@ant-design/icons';
+import { FireTwoTone, ArrowLeftOutlined } from '@ant-design/icons';
 // import { Image, Form, Input, Button, Checkbox } from "antd";
 import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Button } from 'antd';
 import { useMoralisQuery } from "react-moralis";
@@ -319,12 +319,13 @@ function RoomEntrance(props) {
         </div>
       </Badge.Ribbon>
       <div className="content">
+        {isSelected && <div key="back" className="back link" style={{position:'absolute', right:'15px'}}><ArrowLeftOutlined />Back</div>}
         <h1>
           {/* <Link key="link" to={{ pathname: "/room/"+room.id, }} className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</Link> */}
           {/* <a className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</a> */}
           <FireTwoTone twoToneColor="red" />{room?.get('name')}
         </h1>
-
+        
         {isSelected && <div key="user_info">
           <p>
             {PersonaHelper.getNameFull(room.get('persona'))}

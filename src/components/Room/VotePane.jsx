@@ -51,7 +51,7 @@ const VotePane = (props) => {
                     {/* TODO! It would probably be better to just change Color... */}
                 </span>
             </Tooltip>
-            <div className="vote_count">
+            <div className="vote_count inner">
                 <VoteCount postId={post.id}/> 
                 {/* {post.get('votes') || '0'}  */}
             </div>
