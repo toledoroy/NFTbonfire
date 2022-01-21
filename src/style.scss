@@ -62,7 +62,10 @@
 }
 
 /* General Layout */
-body { height:100vh; }
+body { 
+    height:100vh; 
+    // background: #5E2B84;
+}
 .wrapper_main {
     height: 100vh;
     overflow: auto;
