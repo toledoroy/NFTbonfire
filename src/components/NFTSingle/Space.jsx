@@ -32,7 +32,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
   const { Moralis, isWeb3Enabled, isAuthenticated, user } = useMoralis();
   const [ space, setSpace ] = useState({});
   const [ rooms, setRooms ] = useState([]);
-  const [ curRoomId, setcurRoomId ] = useState();
+  const [ curRoomId, setCurRoomId ] = useState();
   const [ limit, setLimit ] = useState(24);
   const [isAllowed, setIsAllowed] = useState(null);
   // const { isAllowed } = useIsAllowed({hash, chain,});
@@ -112,7 +112,12 @@ function SpaceView({hash, collection, NFTpersonas}) {
       RoomQuery.equalTo("parentId", hash);  //By Hash
       const PersonaQuery = new Moralis.Query('Persona');
       RoomQuery.matchesKeyInQuery("persona", "objectId", PersonaQuery);
-      RoomQuery.limit(limit).find().then(results => {
+      
+      RoomQuery
+        .addDescending("score")    //Best First
+        .addDescending("updatedAt") //Latest Activity
+        .limit(limit);
+      RoomQuery.find().then(results => {
         //Log
         console.log("Spcae() Got "+results.length+" Rooms for Space:"+hash);
         if(results && results.length > 0) {
@@ -122,12 +127,16 @@ function SpaceView({hash, collection, NFTpersonas}) {
           setRooms(results);
           //Option to Set Current Room
           if(postId){
-            //TODO: Verify
-            
+            //Verify
+            if(results.find(post => (post.id === postId))){
+              // console.warn("[TEST] SpaceView() Setting Current Room to:"+postId, results);
+              setCurRoomId(postId);
+            } 
             //Log
-            console.warn("[TEST] SpaceView() Setting Current Room to:"+postId, results);
-            //Set
-            setcurRoomId(postId);
+            else{
+              console.error("[DEV] SpaceView() Can't Set Set New Room -- Room:"+postId+" not in list");
+              //TODO: Maybe Redirect to Single Room Page ?
+            } 
           } 
         }//Found Rooms
         /* Cancelled - Allow for No Rooms
@@ -157,7 +166,12 @@ function SpaceView({hash, collection, NFTpersonas}) {
         RoomQuery.equalTo("parentId", hash);  //By Hash
         const PersonaQuery = new Moralis.Query('Persona');
         RoomQuery.matchesKeyInQuery("persona", "objectId", PersonaQuery);
-        const results = await RoomQuery.limit(limit).find();
+        
+        const results = await RoomQuery
+          // .addDescending("updatedAt")
+          .addDescending("score")    //Best First
+          .limit(limit)
+          .find();
         //Log
         console.log("Spcae() Got "+results.length+" Rooms for Space:"+hash);
         if(results && results.length > 0) {
@@ -220,7 +234,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
           {/* <span key="typs">Type: {collection.contract_type}</span> */}
           {/* <span key="symbol">Symbol: {collection.symbol}</span> */}
           {/* TODO: Add Field: Creator, Total No. of Items, */}
-          {console.log("[DEV] SpaceView() in NODE_ENV:"+process?.env?.NODE_ENV)}
+          {/* {console.log("[DEV] SpaceView() in NODE_ENV:"+process?.env?.NODE_ENV)} */}
 
           {(isAllowed || process?.env?.NODE_ENV==='development') ? <>
             <div className={(curRoomId) ? 'room_list single' : 'room_list'}>
@@ -230,21 +244,18 @@ function SpaceView({hash, collection, NFTpersonas}) {
               
                 {!curRoomId && <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} onSuccess={(post) => {loadRooms(post.id)}}/>} 
 
-                <Collapse accordion onChange={(selected) => setcurRoomId(selected)} activeKey={curRoomId} > 
+                <Collapse accordion onChange={(selected) => setCurRoomId(selected)} activeKey={curRoomId} > 
                   {/* collapsible="disabled" */}
                   {rooms.map((room, index) => (
-                    
                     <Collapse.Panel header={
-                        <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} 
-                          // selected={curRoomId===room.id}     //MOVE TO PARENT, Though works just as badly... (disapears on node reload)
-                        />
-                        // <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} chain={chain}/>
+                        <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />
                       } key={room.id} showArrow={false} className={(curRoomId===room.id) ? 'item selected' : 'item'}>
-                      <ShowComments room={room} />
 
+                      <ShowComments room={room} />
                       <ShowMore />
                       {/* <RoomAddForm parent={room} parentId={room.id} type='comment' /> */}
                       {/* {console.warn("[DEV] RoomEntrance() Room "+room.id+" Selected:"+(curRoomId===room.id), curRoomId)} */}
+
                     </Collapse.Panel>
                   ))}
                 </Collapse>
@@ -391,7 +402,7 @@ function RoomEntrance(props) {
           {/* <p key="updated">Last Updated: {room?.updatedAt}</p> */}
           {/* <p key="">Total Items: {room.total_items}</p> */}
           {/* <p key="">Total Users: {room.total_users}</p> */}
-          <p key="commentes">[NUM] Comments</p>
+          <p key="commentes">{room.get('childCount') || 0} Comments</p>
           {/* Single Room Link is Currently Broken...   //TODO: Single Room Needs its own URL
           <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn">Go!</Link> 
           */}
