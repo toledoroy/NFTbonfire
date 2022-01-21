@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { Button } from 'antd';
 import { RightOutlined, LeftOutlined } from '@ant-design/icons';
 
@@ -11,7 +11,7 @@ import { RightOutlined, LeftOutlined } from '@ant-design/icons';
  *  object dest         - Link Destination
  */
  function NFTDisplayCollection(props) {
-     const { collection, dest, flip } = props;
+     const { collection, flip } = props;    //dest, 
     /* Structure
     contract_type: "ERC1155"
     name: "OpenSea Collections"

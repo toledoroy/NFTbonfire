@@ -413,26 +413,35 @@ body { height:100vh; }
 // }
 
 /* Persona Edit */ 
-.personaEdit{
+.edit{
     .buttons { 
         margin: 30px 0; 
         button{
             margin-right: 20px;
         }
     }
-    .social_wrapper,
-    .links_wrapper { margin-top: 20px; }
+    .social_wrapper{
+        margin-top: 20px; 
+    }
+    .links_wrapper { 
+        margin-top: 20px; 
+        .link_add{
+            justify-content: flex-end;
+            display: flex;
+            margin-top: 12px;
+            svg {
+                font-size: 1.2rem;
+            }
+        }
+    }
     .items{ 
-        margin-top: 10px;
-        .item { min-width: 200px; margin: 5px; }
+        margin-top: 8px;
+        .item { 
+            min-width: 200px; 
+            margin-bottom: 7px; 
+        }
     }
     .accounts .crypto_addr { font-size: 0.9em;}
-    .social_wrapper .items {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        .item { width: 18%; }
-    }
     .saving { 
         text-align:center; 
         .ant-spin {display: block; }

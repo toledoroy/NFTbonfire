@@ -13,7 +13,7 @@ import __ from "helpers/__";
 export const useVerifyMetadata = () => {
     const { resolveLink } = useIPFS();
     const [results, setResults] = useState({});
-    const { Moralis, chainId, isWeb3Enabled } = useMoralis();
+    const { isWeb3Enabled } = useMoralis(); //Moralis, chainId, 
     const { contractCall } = useContract();
 
     /**
@@ -22,9 +22,8 @@ export const useVerifyMetadata = () => {
      * @param object NFT 
      */
     function updateToken(NFT){
-        
 
-        /* Now Supported
+        /* Multichain Now Supported
         //Should Use contractCall() From userPersona()
         //Validate
         if(NFT.chain && NFT.chain !== chainId){
@@ -64,7 +63,7 @@ export const useVerifyMetadata = () => {
         // Moralis.executeFunction(options).then((uri) => {
             //Compare & Update Metadata if Needed
             if(!__.matchURI(NFT.token_uri, uri)) {
-                //Log
+                //LuseVerifyMetadataog
                 // console.log("[TEST] useVerifyMetadata.updateToken() Toekn of:'"+NFT.name+"' Has Different URI on Chain -- Run Update", {NFT, options, uri, token_uri:NFT.token_uri});    //V
                 //Update NFT
                 NFT.token_uri = uri;
@@ -73,7 +72,7 @@ export const useVerifyMetadata = () => {
             }//Wrong URI
         })
         .catch((err) => {
-            if(err?.code==141){ //Morlis Server Error
+            if(err?.code===141){ //Morlis Server Error
                 //Log
                 console.error("useVerifyMetadata.updateToken() Moralis rate-limite reached -- Token:"+NFT?.symbol+" "+NFT.token_id, err);
                 message.error("Woah, slow down. Our moralis hosting plan is overflowing! Please wait a bit and try again", 30);    
@@ -84,8 +83,6 @@ export const useVerifyMetadata = () => {
         //Return Hooked NFT Object
         return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT ;
     }//updateToken()
-
-
 
     /**
      * Fetch Metadata  from NFT and Cache Results
@@ -155,6 +152,17 @@ export const useVerifyMetadata = () => {
         if(metadata && !results[NFT.token_uri]) setResults({...results, [NFT.token_uri]: NFT});
     }//setMetadata()
     
-    return { verifyMetadata, updateToken };
+    
+    /**
+     * Update Persona from DB to save a Web3 Call
+     */
+    function personaUpdateFromDB(NFT){
+        console.warn("[TODO] personaUpdateFromDB()", {NFT});
+
+        // Persona.
+        return NFT;
+    }//personaUpdateFromDB()
+
+    return { verifyMetadata, updateToken, personaUpdateFromDB };
 
 }//useVerifyMetadata()

@@ -67,7 +67,7 @@ const calcEntityScore = async (entity) => {
  */
 Moralis.Cloud.define("postVote", async (request) => {  
   //Validate
-  if(!request?.user?.id) throw "postVote() Unauthorized User - Must Log In";
+  if(!request?.user?.id) throw new Error("postVote() Unauthorized User - Must Log In");
   //Log
   logger.warn("[TEST] postVote() for Current User:"+request.user?.id+" PostId:"+request.params?.postId+" Vote:"+request.params?.vote);
   //Extract Parameters
@@ -129,7 +129,7 @@ Moralis.Cloud.define("postVote", async (request) => {
  */
 Moralis.Cloud.define("postStar", async (request) => {  
   //Validate
-  if(!request?.user?.id) throw "postStar() Unauthorized User - Must Log In";
+  if(!request?.user?.id) throw new Error("postStar() Unauthorized User - Must Log In");
   //Log
   logger.warn("[TEST] postStar() for Current User:"+request.user?.id+" PostId:"+request.params?.postId+" Vote:"+request.params?.vote);
   //Extract Parameters

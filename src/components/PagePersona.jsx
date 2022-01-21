@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+import { useMoralis } from "react-moralis"; //useWeb3ExecuteFunction
 // import { Link } from "react-router-dom";
 // import PersonaEdit from "components/Persona/PersonaEdit";
 import { PersonaHelper } from "helpers/PersonaHelper";
-import { getChainName, getChainLogo } from "helpers/networks";
+// import { getChainName, getChainLogo } from "helpers/networks";
 import { ChainHelper } from "helpers/ChainHelper";
 import { Persona } from "objects/Persona";
 import { IPFS } from "helpers/IPFS";
@@ -17,12 +17,12 @@ import Page404 from "components/Page404";
 import TokenSend from "components/Wallet/TokenSend";
 
 //Ant Design
-import { LoadingOutlined, CameraFilled, PlusOutlined, PlusCircleOutlined, DeleteOutlined, DownOutlined, UploadOutlined } from '@ant-design/icons';
+import { LoadingOutlined, CameraFilled, PlusCircleOutlined, DeleteOutlined, DownOutlined, UploadOutlined } from '@ant-design/icons';   //PlusOutlined,
 import { Button, Avatar, Modal, Skeleton, Collapse, Tabs } from 'antd';
 import { Form, Input, Select } from 'antd';
 // import { Row, Col, Form, Space, Cascader } from 'antd';
 import { Card, Dropdown, Menu, Upload, message } from 'antd';
-import { Popconfirm, Spin, Row, Col } from 'antd';
+import { Popconfirm, Spin, Col } from 'antd';
 import __ from "helpers/__";
 
 const { TabPane } = Tabs;
@@ -104,16 +104,21 @@ function PagePersona(props) {
             if(persona && persona.get('token_id') !== undefined) reloadmetadata();
             else updateMetadata( freshMetadata() );
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[isEditMode]);
 
     // useEffect(() => async () => {
     useEffect(() => {
             //Disable EditMode on Logout
         if(isEditMode && !account) setIsEditMode(false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [account]);
 
-    //Load Persona on first compoent load
-    useEffect(() => { loadPersona(params); },[]);
+    //Load Persona on first Component load
+    useEffect(() => { 
+        loadPersona(params); 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
 
     //(Re)load Persona on Parameter Change & when Web3 comes Online
     useEffect(() => async () => {
@@ -121,9 +126,10 @@ function PagePersona(props) {
             //Load Persona
             loadPersona(params);
             //Log
-            persona && console.log("PagePersona() Loaded Different persona:",  {persona, isWeb3Enabled, user, metadata, personaTokenId: persona?.get('token_id'), params});
+            // persona && console.log("PagePersona() Loaded Different persona:",  {persona, isWeb3Enabled, user, metadata, personaTokenId: persona?.get('token_id'), params});
         }
     // },[params]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[params, isWeb3Enabled]);
 
     /**
@@ -157,7 +163,7 @@ function PagePersona(props) {
             //Query
             const query = new Moralis.Query(Persona);
             query.equalTo("handle", handle).first().then((persona) => {     //TESTING
-                console.warn("[TEST] PagePersona() Got persona By Handle:'"+handle+"'", persona);
+                // console.warn("[TEST] PagePersona() Got persona By Handle:'"+handle+"'", persona);    //V
                 if(persona){
                     //Reload Metadata
                     if(persona.get('metadata')){
@@ -226,7 +232,7 @@ function PagePersona(props) {
         try{
             const contractAddr = Persona.getContractAddress(chainId);
             //Validate
-            if(!contractAddr) throw "[UNSUPPORTED] No Persona Contract on Chain:"+chainId+"";
+            if(!contractAddr) throw new Error ("[UNSUPPORTED] No Persona Contract on Chain:"+chainId+"");
 
             //[DEV] Default Persona Data  
             let personaData = {
@@ -253,7 +259,7 @@ function PagePersona(props) {
     /** DEPRECATED
      * 
      * @returns Load Default Metadata
-     */
+     * /
      const loadDefaultMetadata = () => {
         console.warn("[TEST] PagePersona.loadDefaultMetadata() Add Default Accounts:", {user, persona, metadata});
         let defaultMetadata = Persona.getDefaultMetadata();
@@ -424,7 +430,7 @@ function PagePersona(props) {
                                     <Panel header={
                                         <>
                                             {/* {link.type} */}
-                                            <a href={link.url} key={index} target="_blank"> 
+                                            <a href={link.url} key={index} target="_blank" rel="noopener noreferrer"> 
                                                 <i className="bi bi-link"></i>
                                                 <span className="handle">{link.title}</span>
                                             </a>
@@ -487,7 +493,7 @@ function PagePersona(props) {
                             <div className="links_wrapper">
                                 <h2>
                                     {/* <i className="bi bi-link"></i>  */}
-                                    Custom Links
+                                    Links
                                 </h2>
                                 <div className="items">
                                     
@@ -521,14 +527,16 @@ function PagePersona(props) {
                                         })//Each Link
                                         }
                                     </Skeleton>
-                                    {/* Add Item */ }
-                                    <Button type="primary" shape="circle" style={{float:'right'}} icon={<PlusCircleOutlined />} onClick={() => {
-                                        console.log("[TEST] Metadtaa Links", metadata, metadata.links); 
-                                        let links = metadata.links ? [...metadata.links] : [];    //Clone
-                                        // links.splice(index, 1);
-                                        links.push({type:'website', title:'', url:''});
-                                        setMetadata({...metadata, links});
-                                    }}/>
+                                    <div className="link_add">
+                                        {/* Add Item */ }
+                                        <Button type="primary" shape="circle" icon={<PlusCircleOutlined />} onClick={() => {
+                                            console.log("[TEST] Metadtaa Links", metadata, metadata.links); 
+                                            let links = metadata.links ? [...metadata.links] : [];    //Clone
+                                            // links.splice(index, 1);
+                                            links.push({type:'website', title:'', url:''});
+                                            setMetadata({...metadata, links});
+                                        }}/>
+                                    </div>
                                     <div className="clearfloat"></div>
                                 </div>
                             </div>
@@ -626,7 +634,7 @@ function PagePersona(props) {
                                 <TabPane tab={(
                                     <span title={ChainHelper.get(account.chain, 'name')} className={__.matchAddr(account, persona?.get('owner')) ? 'verified' : ''}>
                                         {account?.address 
-                                        ? <Address icon={getChainLogo(account.chain)} copyable address={account.address} size={5} />
+                                        ? <Address icon={ChainHelper.get(account.chain, 'icon')} copyable address={account.address} size={5} />
                                         : <span>[NO HASH]</span>
                                         }
                                     </span>
@@ -707,6 +715,7 @@ export default PagePersona;
 
     useEffect(() => {
         if(chainId && chainId!==chain) setChain(chainId);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chainId]);
 
     //Handle Account Add
@@ -865,7 +874,7 @@ export default PagePersona;
  * Component: Avatar Changable Upload
  */
  function CoverUpload(props){
-    const { metadata, setMetadata, imageUrl, size } = props;
+    const { metadata, setMetadata } = props;
     const { Moralis } = useMoralis();
     const [ imageLoading, setImageLoading ] = useState(false);
     const updateMetadata = setMetadata;
@@ -917,22 +926,21 @@ export default PagePersona;
     return (
         <div className="cover-uploader">
            <Upload
-            name="cover"
-            // listType="picture-card"
-            showUploadList={false}
-            // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"    //Disabled
-            multiple={false}
-            style={{position:'relative'}}
-            beforeUpload={beforeUpload}
-            onChange={handleChangeFile}
-            >
-            {imageLoading 
-            ?   <div className="in_progress" style={{textAlign:'center'}}>
-                    <LoadingOutlined /> 
-                    <div className="explanation">Uploading Image to IPFS</div>
-                </div>
-            :   <Button icon={<UploadOutlined />}>Upload Cover Photo</Button>    
-            }
+                name="cover"
+                showUploadList={false}
+                // action=""    //No Form Action
+                multiple={false}
+                style={{position:'relative'}}
+                beforeUpload={beforeUpload}
+                onChange={handleChangeFile}
+                >
+                {imageLoading 
+                ?   <div className="in_progress" style={{textAlign:'center'}}>
+                        <LoadingOutlined /> 
+                        <div className="explanation">Uploading Image to IPFS</div>
+                    </div>
+                :   <Button icon={<UploadOutlined />}>Upload Cover Photo</Button>    
+                }
             </Upload>
         </div>
     );
@@ -1064,18 +1072,18 @@ export default PagePersona;
  */
  function PersonaEdit(props) {
     // const { persona, contract } = props;
-    const { persona, contract, setIsEditMode, form, reloadmetadata } = props;
+    const { persona, contract, isLoading, setIsEditMode, form, reloadmetadata } = props;
     // const tokenId = persona.get('token_id');
     const [ isSaving, setIsSaving ] = useState(false);
     const [ stage, setStage ] = useState(null);
     // const [ formSocial, setFormSocial ] = useState({});
     const [ metadata, setMetadata ] = useState(props.metadata);    //From Parent
     const { mint, update } = usePersona(); 
+
     //File Upload
-    // const [ imageUrl, setImageUrl ] = useState(persona.getFallback('image'));
-    const [ imageUrl, setImageUrl ] = useState(metadata?.image);
+    // const [ imageUrl, setImageUrl ] = useState(metadata?.image);
     // const [ imageLoading, setImageLoading ] = useState(false);
-    const { isLoading } = props;
+
     // const { verifyMetadata, updateToken } = useVerifyMetadata();
     // const { Moralis, setUserData, user, isAuthenticated } = useMoralis();
     const { Moralis, user, isAuthenticated } = useMoralis();
@@ -1101,11 +1109,12 @@ export default PagePersona;
     //     console.log("PersonaEdit() Stage:"+stage);
     // }, [stage]);
 
+    //Listen to Props Metadata Update
     useEffect(() => { 
         //Refresh Metadata on Every Load! (After Updating Chain, This Component's metadata doesn't match the updated parent)
         console.log("PersonaEdit() Reloading Metadata", props.metadata);
         setMetadata(props.metadata); 
-        setImageUrl(props.metadata?.image);
+        // setImageUrl(props.metadata?.image);
     }, [props.metadata]);
     
     /**
@@ -1187,9 +1196,6 @@ export default PagePersona;
      * @ret void
      */
      const onFinish = async (values) => {
-        //Create
-        // const newPost = await Moralis.Cloud.run("post", values);
-        //Log
         // console.warn("[TEST] PersonaEdit.onFinish() Updated Values ", {values});
 
         //Update Metadata
@@ -1199,9 +1205,6 @@ export default PagePersona;
 
         //TODO: Redirect to new Persona URL
         // history.push('/room/'+newPost.id);
-    
-        //Return
-        // return newPost;
     };//onFinish()
     
     /**
@@ -1237,6 +1240,7 @@ export default PagePersona;
                     let placeholder = Array.isArray(field.placeholder) ? field.placeholder[Math.floor(Math.random()*field.placeholder.length)] : field.placeholder;
                     if(field.name === 'links'){
                         return null;    //MOVED
+                        /* MOVED
                         return( 
                         <div className="links_wrapper">
                             <h2><i className="bi bi-link"></i> Links</h2>
@@ -1255,7 +1259,6 @@ export default PagePersona;
                                                 </Select>}
                                             />
                                             <Input name="name" placeholder="Title" defaultValue={link.title} style={{flexShrink:'2'}}/>
-                                            {/* Remove Item */ }
                                             <Button type="danger" shape="circle" icon={<DeleteOutlined />} onClick={() => {
                                                 // let links = metadata.links;
                                                 let links = [...metadata.links];    //Clone
@@ -1269,18 +1272,17 @@ export default PagePersona;
                                 })//Each Link
                                 }
                                 <div key="clear1" className="clearfloat"></div>
-                                {/* Add Item */ }
                                 <Button type="primary" shape="circle" icon={<PlusCircleOutlined />} onClick={() => {
                                     let links = [...metadata.links];    //Clone
                                     // links.splice(index, 1);
                                     links.push({type:'', title:'', url:''});
                                     setMetadata({...metadata, links});
                                 }}/>
-                                    
                             </Row>
                             </div>
                         </div>
                         );
+                        */
                     }//Links
                     else if(field.type === 'object'){
                         console.log("[UNHANDLED] PersonaEdit() object field:", {field, fieldData:metadata?.[field.name]});
@@ -1324,6 +1326,7 @@ export default PagePersona;
                             </Form.Item>
                         );
                     }
+                    return null;    //if all else missed
                 }//Each Field
                 })}
                 

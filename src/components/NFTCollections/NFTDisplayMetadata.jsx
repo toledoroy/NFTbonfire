@@ -106,11 +106,11 @@ export default NFTDisplayMetadata;
           <label>{label}: (IS ARRAY) </label> 
           <span className="value" title={value}>
             {value.toString(value)}
-            {value.map((field) => {
+            {/* {value.map((field) => {
               // if(typeof field === 'object') console.warn("[TEST] DisplayMetadata() '"+label+"' FIeld is an Object", field);
               // else console.error("[TEST] DisplayMetadata() '"+label+"' FIeld is NOT an Object", field);
               // if(typeof field === 'object') return (<DisplayMetadataField key={field.label} label={field.label} value={field.value} className="item"/>)
-            })}
+            })} */}
           </span>
         </dd>
       );
@@ -146,10 +146,3 @@ export default NFTDisplayMetadata;
   } 
   return null;
 }//DisplayMetadataField()
-
-/**
- * Component
- */
-function DisplayAttributeField({label, value}){
-
-}//DisplayAttributeField

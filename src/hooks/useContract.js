@@ -19,7 +19,7 @@ export const useContract = () => {
     async function contractCall(options, debug=false){
         const { contractAddress, functionName, params, chain, abi } = options;
         //Validate ABI
-        if(!abi) throw "No Default ABI Found for Chain:"+chain;
+        if(!abi) throw new Error("No Default ABI Found for Chain:"+chain);
         if(chain === undefined || chain === chainId){//Current Chain
             //Log
             debug && console.warn("(D) contractCall() Running Via Wallet", {chain, chainId});

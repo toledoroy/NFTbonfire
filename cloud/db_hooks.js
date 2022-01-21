@@ -57,7 +57,7 @@ Moralis.Cloud.afterSave("Relation", (request) => {
 // Moralis.Cloud.beforeSave('_User', request => {
 //     const user = request.object;
 //     if (!user.get("email")) {
-//       throw "Every user must have an email address.";
+//       throw new Error("Every user must have an email address.");
 //     }
 // });
 

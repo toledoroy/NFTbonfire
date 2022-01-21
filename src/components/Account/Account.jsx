@@ -97,7 +97,7 @@ function Account() {
             || !__.matchURI(DBpersona.get('token_uri'), persona.token_uri)
             ){
             //Mismatch - Might need an update
-            console.warn("[TEST] Account() DB Persona might Need an Update:"+DBpersona.id+" (Owner Mismatch)", {
+            console.warn("[FYI] Account() DB Persona might Need an Update:"+DBpersona.id+" (Data Mismatch)", {
               DBpersona, persona,
               DBOwner:DBpersona.get('owner'), owner: persona.owner_of, 
               DBURI: DBpersona.get('token_uri') , tokenURI: persona.token_uri,
@@ -162,7 +162,8 @@ function Account() {
         }
       } 
     }//Has Personas 
-  }, [NFTpersonas, personas, curPersona]);  //,curPersona NOT! 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [NFTpersonas, personas, curPersona, user]);  //,curPersona NOT! 
 
   useEffect(() => { 
     /* Make sure to change User when account changes */
@@ -183,6 +184,7 @@ function Account() {
       console.log("Account() Account Changed -- Account:"+account, Moralis.User.current());
       */
     }//Account Changed
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account]);
 
   if (!isAuthenticated) {
@@ -272,15 +274,15 @@ function Account() {
        
       </Menu>
       )} placement="bottomRight">
-      <a href="#" className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-        <div id="account" className="account in lightUp">
+      {/* <a href="#" className="ant-dropdown-link" onClick={e => e.preventDefault()}> */}
+        <div id="account" className="account in lightUp" onClick={e => e.preventDefault()}>
           <p className="hash">{getEllipsisTxt(account, 4)}</p>
           {/* <Blockie currentWallet scale={3} /> */}
           <Avatar className='image' src={
             PersonaHelper.getImage(curPersona, <Blockie currentWallet scale={3} size={32} />)
           }  />
         </div>
-      </a>
+      {/* </a> */}
     </Dropdown>
     </>
   );
