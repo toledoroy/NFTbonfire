@@ -259,7 +259,8 @@ function Account() {
         <Menu.Item key="title2" className="title hr">{personas.length===0 ? <span>No Personas</span> : <span>My Personas</span>}</Menu.Item>
 
         {personas.map((persona, index) => (
-          <Menu.Item key={"pers"+index} className="persona_select" onClick={(evt) => {setPersona(persona)}}>
+          <Menu.Item key={"pers"+index} className="persona_select" onClick={(evt) => {}}>
+            {/* setPersona(persona) */}
             <BusinessCard key={index} persona={persona} className="item"/> 
           </Menu.Item>
         ))}

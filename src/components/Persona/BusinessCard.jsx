@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useHistory } from 'react-router-dom';
 // import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import { PersonaContext } from "common/context";
 
@@ -22,6 +23,9 @@ import { PersonaHelper } from "helpers/PersonaHelper";
     // const [ metadata, setMetadata ] = useState(props?.metadata);
     // const { Moralis, setUserData, userError, isUserUpdating, user } = useMoralis();
     const metadata = receivedMeta ? receivedMeta : persona.get('metadata');
+    const history = useHistory();
+
+    
     let image = PersonaHelper.getImage(persona);
     // let coverImage = PersonaHelper.getCover(persona);
     let link = PersonaHelper.getLink(persona);
@@ -54,8 +58,10 @@ import { PersonaHelper } from "helpers/PersonaHelper";
     return (
         <>
         {/* <a key="link" href={link} className="inner flex"> */}
+        {/* <div className={className} onClick={() => {console.log(link); history.push(link)}}> No Dice - Uses stale props */}
         <div className={className}>
             <div className="top">
+                
                 <div className="image">
                     <Avatar size={60} src={image} />
                 </div>
@@ -65,18 +71,21 @@ import { PersonaHelper } from "helpers/PersonaHelper";
                         {metadata?.role && <span className="role"> the {metadata.role}</span>}
                     </p>
                     {metadata?.description && <q key="desc" className="description">{metadata.description}</q>}
+
+                    
+                        {(props.actions!==false) && <div className="actions flex">
+                            {/* <Link key="link" to={{ pathname:link }} className="inner flex">View</Link> */}
+                            <a key="aView" href={link} className="inner flex">
+                                <Button className="button">view</Button>
+                            </a>
+                            <Button className="button lightUp" style={{zIndex:100}} onClick={(event) => { setPersona(persona);}}>use</Button>
+                            {/* event.stopPropagation();  */}
+                            {/* <a key="aUse" onClick={(event) => { event.preventDefault(); setPersona(persona); return false;}} className="inner flex">use</a> */}
+                        </div>}
+
                 </div>
             </div>
-            <div className="bottom">
-                {(props.actions!==false) && <div className="actions flex">
-                    {/* <Link key="link" to={{ pathname:link }} className="inner flex">View</Link> */}
-                    <a key="aView" href={link} className="inner flex">
-                        <Button className="button">view</Button>
-                    </a>
-                    <Button className="button" onClick={(event) => { event.preventDefault(); setPersona(persona);}}>use</Button>
-                    {/* <a key="aUse" onClick={(event) => { event.preventDefault(); setPersona(persona); return false;}} className="inner flex">use</a> */}
-                </div>}
-            </div>
+            {/* <div className="bottom"></div> */}
         </div>
         {/* </a> */}
         </>

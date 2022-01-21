@@ -28,6 +28,13 @@
 .corner_menu {
     display: flex;
     flex-direction: column;
+    
+    .text{ 
+        flex: 1 1;
+    }
+    
+    
+    .ant-dropdown-menu-title-content{ cursor: default; }
     .title:hover { background: none; cursor: default;}
     .title {
         font-size: 1.2rem;
