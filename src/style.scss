@@ -829,6 +829,7 @@ body { height:100vh; }
 
 .room_list.single{
     .ant-collapse-item {display: none;}
+    // .ant-collapse-item.selected, 
     .ant-collapse-item-active { display: block; }
     // .ant-collapse>.item {display: none;}
     // .ant-collapse>.item.selected { display: block; }

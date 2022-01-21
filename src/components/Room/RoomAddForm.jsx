@@ -60,10 +60,8 @@ import { PersonaContext } from "common/context";
         //Additions
         values.parentId = parentId;
         values.account = account;
-        
         // values.chain = chainId;     //THIS IS WRONG...
         values.chain = props.chain || chainId;
-
         values.userId = user?.id;
         // values.user = user;
 
@@ -92,23 +90,23 @@ import { PersonaContext } from "common/context";
         //Save
         // return post.save();
         let newPost = await post.save(values);
-        
-        //Log
-        console.log("RoomAddForm() Created new Post:", {values, newPost});
+        // console.log("RoomAddForm() Created new Post:", {values, newPost});
 
         //Reset Form
         form.resetFields();
           
+       //Run Success Callback
+       if(props.onSuccess && typeof props.onSuccess === 'function'){
+         console.warn("[TEST] RoomAddForm() onFinish() Has a Success Callback Func", props.onSuccess);
+         //Run
+         props.onSuccess(newPost);
+       }
+
         /*
         //Redirect -- Enter New Room      //https://stackoverflow.com/questions/34735580/how-to-do-a-redirect-to-another-route-with-react-router
         // history.push('/room/'+newPost.id);
         */
-       //Callback
-       if(props.onFinish && typeof props.onFinish === 'function'){
-         console.warn("[TEST] RoomAddForm() onFinish() Has a Callback Func", props.onFinish);
-         //Run
-         props.onFinish();
-       }
+       
       }
       catch(err){
         console.error("RoomAddForm() Failed to Create a new Post:", {values, props, err});
