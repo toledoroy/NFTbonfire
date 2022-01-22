@@ -73,6 +73,12 @@ const App = ({ isServerInfo }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, isWeb3Enabled]);
 
+  /* Creates an Error
+  useEffect(() => {
+    console.warn("[DEV]  App() Process Env:"+process.env);
+  }, [process?.env]);
+  */
+
   /**
    * Set Persona Wrapper (Full Procedure)
    * @param ParseObject persona 
@@ -100,8 +106,8 @@ const App = ({ isServerInfo }) => {
     <PersonaContext.Provider value={{persona, setPersona}}>
     <Router> 
     {/* <Layout className="wrapper_main" style={{ height: "100vh", overflow: "auto" }}> */}
-    {/* <Layout className={"wrapper_main env_"+process?.env?.NODE_ENV} > */}
-    <Layout className="wrapper_main env_">
+    {/* <Layout className={"wrapper_main env_"+process?.env?.NODE_ENV} >  -- Error */}
+    <Layout className="wrapper_main">
       {/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /> */}
       {/* <script src="https://kit.fontawesome.com/62e94cb93f.js" crossorigin="anonymous"></script> */}
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
