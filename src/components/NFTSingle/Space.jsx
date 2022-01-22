@@ -245,7 +245,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
                 {!curRoomId && <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} onSuccess={(post) => {loadRooms(post.id)}}/>} 
 
                 <div className={'room_list container'}>
-                <Collapse className="" accordion bordered={false} onChange={(selected) => setCurRoomId(selected)} activeKey={curRoomId} > 
+                <Collapse accordion bordered={false} onChange={(selected) => setCurRoomId(selected)} activeKey={curRoomId} > 
                   {/* collapsible="disabled" */}
                   {rooms.map((room, index) => (
                     <Collapse.Panel header={
