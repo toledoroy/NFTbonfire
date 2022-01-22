@@ -237,14 +237,15 @@ function SpaceView({hash, collection, NFTpersonas}) {
           {/* {console.log("[DEV] SpaceView() in NODE_ENV:"+process?.env?.NODE_ENV)} */}
 
           {(isAllowed || process?.env?.NODE_ENV==='development') ? <>
-            <div className={(curRoomId) ? 'room_list single' : 'room_list'}>
+            <div className={(curRoomId) ? 'room_container single' : 'room_container'}>
               {(!isAllowed && process?.env?.NODE_ENV==='development') && <span className="debug" style={{float:'right'}}>[NOT ALLOWED (S)]</span>}
             {(rooms && rooms.length>0) ? 
               <div className="allowed">
               
                 {!curRoomId && <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} onSuccess={(post) => {loadRooms(post.id)}}/>} 
 
-                <Collapse className="container" accordion bordered={false} onChange={(selected) => setCurRoomId(selected)} activeKey={curRoomId} > 
+                <div className={'room_list container'}>
+                <Collapse accordion bordered={false} onChange={(selected) => setCurRoomId(selected)} activeKey={curRoomId} > 
                   {/* collapsible="disabled" */}
                   {rooms.map((room, index) => (
                     <Collapse.Panel header={
@@ -255,14 +256,12 @@ function SpaceView({hash, collection, NFTpersonas}) {
                       <ShowMore />
                       {/* <RoomAddForm parent={room} parentId={room.id} type='comment' /> */}
                       {/* {console.warn("[DEV] RoomEntrance() Room "+room.id+" Selected:"+(curRoomId===room.id), curRoomId)} */}
-
                     </Collapse.Panel>
                   ))}
                 </Collapse>
-                {!curRoomId && 
-                  <ShowMore />
-                }
+                {!curRoomId &&  <ShowMore /> }
                 {/* {curRoomId && <RoomAddForm parentId={curRoomId} type='comment' chain={chain} />} */}
+                </div>
               </div>
               :
               <SpaceEmpty collection={collection} />

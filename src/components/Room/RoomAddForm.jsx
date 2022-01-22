@@ -30,6 +30,7 @@ import { PersonaContext } from "common/context";
         if(evt.keyCode === 13 && evt.shiftKey === false) {
             evt.preventDefault();
             form.submit();
+            return false;
         }
     }
     
@@ -177,7 +178,7 @@ import { PersonaContext } from "common/context";
     else{
       let image = PersonaHelper.getImage(persona);
       return(
-        <div className={"room_add "+props.className}>  
+        <div className={(props.className) ? 'room_add '+props.className : 'room_add'}>  
           <h3>[+] Light a new bonfire</h3>
           <div className="inner room_entrance">
             <div className="image">

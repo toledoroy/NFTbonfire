@@ -863,6 +863,7 @@ body {
 }
 .room_list {
     clear: both;
+    overflow: hidden;
     .ant-collapse {
         padding-left:var(--padding);
         min-height: 60vh;
@@ -877,8 +878,6 @@ body {
         padding-bottom: 60px;   //Comment Add
     }
     .ant-collapse > .ant-collapse-item { border:none; position:relative; }
-    
-    
 }
 .room_entrance{
     display: flex;
@@ -940,6 +939,7 @@ body {
 /* Component: Single NFT Collection */
 .collection { 
     margin-bottom: 20px; 
+    width: 100%;
     .title { 
         font-size: 1.1rem; 
         font-weight: bold; 
@@ -996,7 +996,10 @@ body {
 }
 
 
-.debug{ opacity: 0.5;}
+.debug{ 
+    opacity: 0.4;
+    color: blueviolet;
+}
 /* ENV Specific         //DISABLED TEMPORARILY
 .debug{ 
     display: none;

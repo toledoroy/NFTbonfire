@@ -34,7 +34,8 @@
   --avatarMD:120px;
   --comment-background: #f5f5f5;
   --color:#262626;
-  --colorLink:#1890ff;
+  /* --colorLink:#1890ff; */
+  --colorLink: blueviolet;
   /* --color:rgb(4, 24, 54); */
   /* --invert: black; */
   --monochrome: #fff;
