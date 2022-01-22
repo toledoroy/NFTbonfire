@@ -1082,30 +1082,14 @@ export default PagePersona;
     const [ metadata, setMetadata ] = useState(props.metadata);    //From Parent
     const { mint, update } = usePersona(); 
 
-    //File Upload
-    // const [ imageUrl, setImageUrl ] = useState(metadata?.image);
-    // const [ imageLoading, setImageLoading ] = useState(false);
-
     // const { verifyMetadata, updateToken } = useVerifyMetadata();
     // const { Moralis, setUserData, user, isAuthenticated } = useMoralis();
     const { Moralis, user, isAuthenticated } = useMoralis();
     // const contractProcessor = useWeb3ExecuteFunction();
+
     //Contract Data
     // const contractPersona = Persona.getContractData();
     // const [form] = Form.useForm();   //Now on Parent for Parental Control
-
-    /* All Tokens 
-    Moralis.Web3API.token.getAllTokenIds(contractPersona).then(ids => {
-        console.warn("PersonaEdit() Persona Token IDs", ids);
-    });
-    */
-   /* All Tokens W/Owners
-    Moralis.Web3API.token.getNFTOwners(contractPersona).then(ids => {
-        console.warn("PersonaEdit() Persona Owners", ids);
-    });
-    */
-    //Log
-    // console.warn("PersonaEdit() MEtadata", {chainId, env:process.env, metadata, imageUrl, contract, persona});
 
     // useEffect(() => { 
     //     console.log("PersonaEdit() Stage:"+stage);
@@ -1132,6 +1116,9 @@ export default PagePersona;
                 break;
             }
         }
+        //Trimming any whitespace? 
+        for(let key of ['role','name','description','purpose']) if(metadata[key]) metadata[key] = metadata[key].trim();
+        //Return
         return metadata;
     }//metadataSanitize
     
@@ -1141,18 +1128,16 @@ export default PagePersona;
     function savePersona(metadata){
         //Sanitize
         metadata = metadataSanitize(metadata);
+        //Add generator tag to metadata 
+        metadata.generator = 'bonfire.space';
         //Update Metadata
         // setMetadata({...metadata, ...values});
         setMetadata(metadata);
-
         //Update Persona (local)
         persona.set('metadata', metadata);
 
         //Log
         console.warn("[TEST] PersonaEdit.saveMetadata() Updated Values to Metadata", {persona, metadata});
-
-        //TODO: Trimming any whitespace
-        // .trim();
 
         setIsSaving(true);
         setStage('SavingToIPFS');

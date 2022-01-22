@@ -991,7 +991,10 @@ body {
 }
 
 
-.debug{ opacity: 0.5;}
+.debug{ 
+    opacity: 0.4;
+    color: red;
+}
 /* ENV Specific         //DISABLED TEMPORARILY
 .debug{ 
     display: none;
