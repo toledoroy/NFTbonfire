@@ -192,19 +192,20 @@ const App = ({ isServerInfo }) => {
       </Content>
 
       <Footer style={{ textAlign: "center" }}>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://forum.moralis.io/t/ethereum-boilerplate-questions/3951/29"
-            style={{margin:'auto 20px'}}
-            >
-            🙋 Moralis forum
-          </a>
-          {/* Built with  */}
-          <a target="_blank" rel="noopener noreferrer" href="https://moralis.io?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplat">
-            {/* Moralis <Logo /> */}
-            <img src="/moralis/Powered-by-Moralis-Badge-Green.svg" alt="Moralis Power!"/>
-          </a>
+        <Logo />
+        {/* Built with  */}
+        <a target="_blank" rel="noopener noreferrer" href="https://moralis.io?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplat">
+          <img src="/moralis/Powered-by-Moralis-Badge-Green.svg" alt="Moralis Power!"/>
+        </a>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://forum.moralis.io/t/ethereum-boilerplate-questions/3951/29"
+          style={{margin:'auto 20px'}}
+          >
+          🙋 Moralis forum
+        </a>
+        
       </Footer>
 
     </Layout>

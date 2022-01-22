@@ -93,11 +93,10 @@ function Account() {
         if(DBpersona.get('chain') === persona.chain && DBpersona.get('address') === persona.token_address && DBpersona.get('token_id') === persona.token_id){//Same Persona
           //Check if Up-To-Date (token_uri, owner)    //(Moralis is usually not up to date...)
           if(!__.matchAddr(persona.owner_of, DBpersona?.get('owner')) 
-            // || DBpersona.get('token_uri') !== persona.token_uri
             || !__.matchURI(DBpersona.get('token_uri'), persona.token_uri)
             ){
             //Mismatch - Might need an update
-            console.warn("[FYI] Account() DB Persona might Need an Update:"+DBpersona.id+" (Data Mismatch)", {
+            console.error("[FYI] Account() Data Mismatch -- NFT Needs an Update:"+DBpersona.id+"", {
               DBpersona, persona,
               DBOwner:DBpersona.get('owner'), owner: persona.owner_of, 
               DBURI: DBpersona.get('token_uri') , tokenURI: persona.token_uri,

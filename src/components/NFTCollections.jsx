@@ -14,7 +14,7 @@ import { Post } from "objects/objects";
 import Space from "components/NFTSingle/Space";
 import { CollectionContext } from "common/context";
 // import { NFTHelper } from "helpers/NFTHelper";
-// import { ChainHelper } from "helpers/ChainHelper";
+import { ChainHelper } from "helpers/ChainHelper";
 import __ from "helpers/__";
 // import { getChainName, getChainLogo } from "helpers/networks";
     
@@ -165,7 +165,10 @@ function NFTCollections(props) {
                 : <>
                   {collectionHash 
                     ? <>Private Space for {NFTCollections[collectionHash].name}</>
-                    : <>My NFTs</>
+                    : <>My NFTs on  {ChainHelper.get(options.chain,'name')}
+                      {/* <span>{ChainHelper.get(options.chain,'icon')}</span> */}
+                      
+                    </>
                   }
                 </>}
               </h2>
@@ -202,8 +205,18 @@ function NFTCollections(props) {
                   <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
                     <h2 className="title">
                       <Link key={collection.hash+'Link'} to={dest}>
-                          Collection: {__.sanitize(collection.name)} ({collection.symbol})
+                          {/* Collection: {__.sanitize(collection.name)} ({collection.symbol}) */}
+                          
+                          <Button variant="contained" color="primary" className="link"
+                            style={{fontSize: '1em', lineHeight: '1.5em', borderRadius:12, width:'100%'}}
+                            // icon={<i className="bi bi-arrow-left"></i>}
+                            title="To Collection Page"
+                            >
+                              Enter {__.sanitize(collection.name)} Space
+                              <i className="bi bi-arrow-right"></i>
+                          </Button>
                           <span className="debug">[{collection.contract_type}]</span> 
+
                       </Link> 
                     </h2>
 

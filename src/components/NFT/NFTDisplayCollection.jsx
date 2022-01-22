@@ -58,10 +58,10 @@ export default NFTDisplayCollection;
     return (
         <div className="flip_buttons">
         <Button className="lightUp" title="Back" onClick={(evt) => { evt.stopPropagation(); flipCards(id, 0); return false; }}  
-            style={{zIndex:'9999'}} icon={<LeftOutlined />}></Button>
+            style={{zIndex:'102'}} icon={<LeftOutlined />}></Button>
             
         <Button className="lightUp" title="Next" onClick={(evt) => { evt.stopPropagation(); flipCards(id); return false; }} 
-            style={{zIndex:'9999'}} icon={<RightOutlined />}></Button>
+            style={{zIndex:'102'}} icon={<RightOutlined />}></Button>
         </div>
     );
 }//FlipButtons()

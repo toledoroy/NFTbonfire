@@ -244,7 +244,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
               
                 {!curRoomId && <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} onSuccess={(post) => {loadRooms(post.id)}}/>} 
 
-                <Collapse accordion onChange={(selected) => setCurRoomId(selected)} activeKey={curRoomId} > 
+                <Collapse className="container" accordion bordered={false} onChange={(selected) => setCurRoomId(selected)} activeKey={curRoomId} > 
                   {/* collapsible="disabled" */}
                   {rooms.map((room, index) => (
                     <Collapse.Panel header={
@@ -322,14 +322,21 @@ function RoomEntrance(props) {
   let className = "room_entrance";
   if(isSelected) className += " selected";
 
+
+
   /**
    * Load Post's Persona When Needed
    */
   const { Moralis } = useMoralis();
   useEffect(() => {
-    if(Object.keys(persona.attributes).length===0) loadItsPersona(room);
+    if(Object.keys(persona.attributes).length===0){
+
+      console.warn("[TEST] RoomEntrance() Loading Missing Persona for Room:"+room.id, room);
+      loadItsPersona(room);
+    } 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[room, persona]);
+
   const loadItsPersona = async (parseObj) => {
     // let personaFull = await parseObj.relation('persona').query().find();   //Called relation() on non-relation field persona
     const PersonaQuery = new Moralis.Query(Persona);
@@ -385,7 +392,8 @@ function RoomEntrance(props) {
         <h1>
           {/* <Link key="link" to={{ pathname: "/room/"+room.id, }} className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</Link> */}
           {/* <a className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</a> */}
-          <FireTwoTone twoToneColor="red" />{room?.get('name')}
+          {/* <FireTwoTone twoToneColor="red" /> */}
+          {room?.get('name')}
         </h1>
         
         {isSelected && <div key="user_info">

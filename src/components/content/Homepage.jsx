@@ -46,7 +46,8 @@ import ERC20Balance from "components/ERC20Balance";
             //Make it look like a NFT Object
             return {
                 image: PersonaHelper.getImage(persona),
-                name: PersonaHelper.getName(persona),
+                // name: PersonaHelper.getName(persona),
+                name: persona.get('metadata')?.role,   //Used as Title
                 token_address: persona.get('address'),
                 token_id: persona.get('token_id'),
                 metadata: persona.get('metadata'),

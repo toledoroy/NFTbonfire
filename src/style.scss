@@ -64,7 +64,9 @@
 /* General Layout */
 body { 
     height:100vh; 
-    // background: #5E2B84;
+    // background-color: #5E2B84;
+    // background: url("/images/bg_purple.png") no-repeat center center;
+    // background-size: cover;
 }
 .wrapper_main {
     height: 100vh;
@@ -680,6 +682,7 @@ body {
 /* Comment Add Widget */
 #postAdd .ant-form-item-with-help .ant-form-item-explain { padding-left: 8px;}
 .comment_add {
+    box-shadow: 0 0 9px #ccc;
     .ant-comment { width:100%; }
     form {
         // background-color:#fff;
@@ -717,6 +720,7 @@ body {
     background-color: var(--comment-background);
     border-radius: var(--borderRadius);
     padding: 4px var(--padding);
+    margin-bottom: 12px;
     .inner {
 
     }
@@ -738,11 +742,12 @@ body {
     .comment_add { 
         position: fixed;
         bottom: var(--footer-height);
-        max-width: 50vw;
-        width: 700px;
-        padding: 4px var(--padding);
+        // max-width: 50vw;
+        width: 670px;
+        margin-left: 10px;
         border-radius: var(--borderRadius) var(--borderRadius) 0 0 ;
         background-color: var(--comment-background);
+        padding: 4px var(--padding) 0px var(--padding);
         // .comment_text:focus-visible { border:none; outline:none;}
         .ant-form-item-explain {display: none;}
     }
@@ -771,7 +776,7 @@ body {
     }
     .ant-ribbon {
         top:auto;
-        left:-1px;
+        left:0px;
         border-radius: 0 5px 5px 0;
     }
     .room_single{
@@ -800,7 +805,7 @@ body {
     width: fit-content;
     border: 2px solid rgb(231, 234, 243);
     border-radius: 12px;
-    background-color: rgb(244, 244, 244);
+    background-color: rgba(244, 244, 244, 0.87);
     cursor: pointer;
     .image { 
         height: 38px; 
@@ -853,6 +858,7 @@ body {
     clear: both;
     .ant-collapse {
         padding-left:var(--padding);
+        min-height: 60vh;
     }
     .ant-collapse-header { 
         display:block !important; 
@@ -875,7 +881,12 @@ body {
     /* border: 1px solid #9ecaed; */
     /* border-radius: 20px; */
     /* border-top: 1px solid #9ecaed; */
-    .image { flex: 0 0;}
+    .image { flex: 0 0;
+        img {
+            border-radius: 6px;
+            border-bottom-left-radius: 0px;
+        }
+    }
     .content { 
         padding:0 10px; 
         flex: 1 1; 

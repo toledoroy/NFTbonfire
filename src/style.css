@@ -44,12 +44,30 @@
 h1, h2, h3, h4, h5, h6 {
   color: var(--color);
   font-weight: 500;
-  font-family: Avenir,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,apple color emoji,segoe ui emoji,Segoe UI Symbol,noto color emoji,sans-serif;
+  font-family: "Avenir","-apple-system",BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,apple color emoji,segoe ui emoji,Segoe UI Symbol,noto color emoji,sans-serif;
 }
 body{
+  height:100vh;
   font-family: Roboto, sans-serif;
   color: var(--color);
 }
+
+.wrapper_main {
+  background-image: url("images/bg_purple.png"); 
+  background-color: rebeccapurple;
+  background-size: cover;
+
+}
+.container {
+  /* background-color: rgba(240, 240, 240, 0.87); */
+  background: var(--comment-background);
+  border-radius: var(--borderRadius);
+
+}
+.wrapper_main .mainContent{
+  background-color: rgba(240, 240, 240, 0.87);
+}
+
 dt { text-transform: capitalize; }
 .ant-layout-content { margin-top: var(--headerHeight); }
 /* .mainContent{ margin-top: var(--headerHeight); } */
@@ -91,7 +109,7 @@ footer { margin-top: 40px; }
 
 
 /* Space - Room List */
-.room_list .ant-collapse { border:none; background:none; }
+/* .room_list .ant-collapse { border:none; background:none; } */
 .room_list .room_entrance:last-child {
   /* border-bottom: 1px solid #9ecaed; */
   /* margin-bottom:10px; */
@@ -143,6 +161,7 @@ button:active {
   padding: 22px 10px;
   border: 2px solid rgb(231, 234, 243);
   border-radius: 12px;
+  background-color: rgba(244, 244, 244, 0.87);
 }
 
 /* Misc. */
