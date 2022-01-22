@@ -215,7 +215,7 @@ const App = ({ isServerInfo }) => {
   );
 };
 
-export const Logo = () => (<img src="/apple-touch-icon.png" style={{height:'45px'}} alt='NFT Bonfire' />);
+export const Logo = () => (<img src="/bonfire_only_45px.png" style={{height:'45px'}} alt='NFT Bonfire' />);
 export const LogoMoralis = () => (
   // 
     <svg width="60" height="38" viewBox="0 0 50 38" fill="none" xmlns="http://www.w3.org/2000/svg">
