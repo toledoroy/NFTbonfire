@@ -30,6 +30,7 @@ import { PersonaContext } from "common/context";
         if(evt.keyCode === 13 && evt.shiftKey === false) {
             evt.preventDefault();
             form.submit();
+            return false;
         }
     }
     

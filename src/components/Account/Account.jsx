@@ -186,7 +186,7 @@ function Account() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account]);
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !account) {
     return (
       <>
         <div id="account" className="out lightUp" onClick={() => authenticate({ signingMessage: "Sign in [Free]" })}>
@@ -257,6 +257,7 @@ function Account() {
 
         <Menu.Item key="title2" className="title hr">{personas.length===0 ? <span>No Personas</span> : <span>My Personas</span>}</Menu.Item>
 
+        {/* TODO: Add Custom Scroll */}
         {personas.map((persona, index) => (
           <Menu.Item key={"pers"+index} className="persona_select" onClick={(evt) => {}}>
             {/* setPersona(persona) */}
