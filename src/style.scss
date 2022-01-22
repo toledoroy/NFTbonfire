@@ -856,6 +856,7 @@ body {
 }
 .room_list {
     clear: both;
+    overflow: hidden;
     .ant-collapse {
         padding-left:var(--padding);
         min-height: 60vh;
@@ -933,6 +934,7 @@ body {
 /* Component: Single NFT Collection */
 .collection { 
     margin-bottom: 20px; 
+    width: 100%;
     .title { 
         font-size: 1.1rem; 
         font-weight: bold; 
