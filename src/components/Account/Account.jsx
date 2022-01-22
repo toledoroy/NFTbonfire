@@ -186,8 +186,8 @@ function Account() {
     }//Account Changed
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account]);
-
-  if (!isAuthenticated) {
+console.warn("[TEST] Account() Account:"+account, {account, isAuthenticated, user, });
+  if (!isAuthenticated || !account) {
     return (
       <>
         <div id="account" className="out lightUp" onClick={() => authenticate({ signingMessage: "Sign in [Free]" })}>
