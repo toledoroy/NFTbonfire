@@ -205,12 +205,13 @@ import { PersonaContext } from "common/context";
                     autoComplete="off"
                     form={form} 
                     >
-                    <Form.Item name="name" rules={[{ required: true, message: 'The topic is actually kind of a big deal here...'}]}>
-                      <Input placeholder="Topic" maxLength={250} />
+                    <Form.Item label="Topic" name="name" rules={[{ required: true, message: 'The topic is actually kind of a big deal here...'}]}>
+                      <Input placeholder="In a nut shell" maxLength={250} />
                     </Form.Item>
-                    <Form.Item name="text" rules={[{ required: true, message: "You'd need to enter some text as well."}]}>
+                    <Form.Item label="Details" name="text" rules={[{ required: true, message: "You'd need to enter some text as well."}]}>
                       <Input.TextArea 
-                        placeholder="Text" 
+                        // label="Details"
+                         placeholder="Tell me more..." 
                         // onKeyUp={onEnterPress}
                       />
                     </Form.Item>
