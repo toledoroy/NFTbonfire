@@ -76,7 +76,7 @@ function NFTCollections(props) {
 
   // React.useEffect(() => {
   //   //Log
-  //   console.log("(i) NFTCollections() Loading Collections: ", {NFTCollections, collectionHash, accountHash, options, params:props.match.params });
+  //   console.log("(i) NFTCollecAnonymoustions() Loading Collections: ", {NFTCollections, collectionHash, accountHash, options, params:props.match.params });
   // },[]);
 
   async function testFunc() {
@@ -178,7 +178,7 @@ function NFTCollections(props) {
               }
               </>
             }
-            {!collectionHash && <h4 className="subheading">{Object.keys(NFTCollections).length} Collections</h4>}
+            {/* {!collectionHash && <h4 className="subheading">{Object.keys(NFTCollections).length} Collections</h4>} */}
           </div>
 
           {NFTCollections && Object.values(NFTCollections).map((collection, index) => {
@@ -209,14 +209,15 @@ function NFTCollections(props) {
                     {!collectionHash && 
                     <h2 className="title">
                       <Link key={collection.hash+'Link'} to={dest}>
-                          {/* Collection: {__.sanitize(collection.name)} ({collection.symbol}) */}
+                          Collection: {__.sanitize(collection.name)} ({collection.symbol})
                           
                           <Button variant="contained" color="primary" className="link"
                             style={{fontSize: '1em', lineHeight: '1.5em', borderRadius:12, }}
                             // icon={<i className="bi bi-arrow-left"></i>}
                             title="To Collection Page"
                             >
-                              Enter Private Space for '{__.sanitize(collection.name)}' Collection
+                              Enter Private Space for 
+                              {/* '{__.sanitize(collection.name)}' Collection */}
                               <i className="bi bi-arrow-right"></i>
                           </Button>
                           <span className="debug">[{collection.contract_type}]</span> 

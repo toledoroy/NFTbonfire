@@ -45,6 +45,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
     console.log("(i) Space() Check if Allowed on Collection:"+collection.owned, collection);
 
   },[collection]);
+  
 
   /**
    * [DEV] Insert Rooms
@@ -209,7 +210,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
   }, [hash, limit, isAuthenticated]);
  
   //Log
-  // console.log("SpaceView() For collection:", {collection, rooms});
+  console.log("SpaceView() For collection:", {collection, rooms});
   // console.warn("[DEV] Room list Collapse", curRoomId);
 
   //Validate
@@ -227,7 +228,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
     <CollectionContext.Consumer>
     {collection => (
       <>
-      <div className="space">
+      <div id="space" className="space">
         <Skeleton active loading={!space || !isWeb3Enabled}>
           <h1> Private Space for {collection.name}</h1>
           {/* <h4>[Addr:{collection.hash}]</h4> */}
@@ -245,7 +246,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
                 {!curRoomId && <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} onSuccess={(post) => {loadRooms(post.id)}}/>} 
 
                 <div className={'room_list container'}>
-                <Collapse accordion bordered={false} onChange={(selected) => setCurRoomId(selected)} activeKey={curRoomId} > 
+                <Collapse accordion ghost onChange={(selected) => setCurRoomId(selected)} activeKey={curRoomId} > 
                   {/* collapsible="disabled" */}
                   {rooms.map((room, index) => (
                     <Collapse.Panel header={
@@ -421,7 +422,7 @@ function RoomEntrance(props) {
           }  
         </div>
       </div> 
-      <div className="vote framed" onClick={(evt) => {evt.stopPropagation()}}>
+      <div className="vote" onClick={(evt) => {evt.stopPropagation()}}>
         <VotePane post={room}/>
       </div>
     </div>

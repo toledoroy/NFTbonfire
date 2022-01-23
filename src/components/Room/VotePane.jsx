@@ -44,7 +44,7 @@ const VotePane = (props) => {
 
     return (
         <div className="side_pane">
-            <Tooltip key="comment-basic-like" title={voteStatus === 1 ? "Undo" : "Great!"} placement="right">
+            <Tooltip key="comment-basic-like" title={voteStatus === 1 ? "Undo" : "Great!"} placement="right" className="pointer">
                 <span onClick={(evt) => vote(1)}>
                     {/* {createElement(voteStatus === 1 ? LikeFilled : LikeOutlined)} */}
                     {createElement(voteStatus === 1 ? CaretUpFilled : UpOutlined)}
@@ -55,7 +55,7 @@ const VotePane = (props) => {
                 <VoteCount postId={post.id}/> 
                 {/* {post.get('votes') || '0'}  */}
             </div>
-            <Tooltip key="comment-basic-dislike" title={voteStatus === -1 ? "Undo" : "I Don't Like This"} placement="right">
+            <Tooltip key="comment-basic-dislike" title={voteStatus === -1 ? "Undo" : "I Don't Like This"} placement="right" className="pointer">
                 <span onClick={(evt) => vote(-1)}>
                     {/* {createElement(voteStatus === -1 ? Disl?ikeFilled : DislikeOutlined)} */}
                     {createElement(voteStatus === -1 ? CaretDownFilled : DownOutlined)}

@@ -5,6 +5,7 @@ import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 // import { getEllipsisTxt } from "../../helpers/formatters";
 import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
 import Space from "components/NFTSingle/Space";
+import { CollectionContext } from "common/context";
 
 /** DEPRECATED
  * Page: Display Single NFT
@@ -19,7 +20,7 @@ function NFTSingle(props) {
   }
 
   //Log
-  console.log('NFTSingle() ID: '+props.match.params.hash, {props, hash, valid:isValid(hash)});
+  console.warn('NFTSingle() ID: '+props.match.params.hash, {props, hash, valid:isValid(hash), NFTCollections});
   // console.log("NFTSingle() props.NFT:", props.nft); 
   
   const options = { token_address: hash };
@@ -30,7 +31,7 @@ function NFTSingle(props) {
 
   //Single: Load NFT TXs: getNFTTransfers
   
-
+/*
   //TESTING
   // const polygonNFTs = await Moralis.Web3API.account.getNFTsForContract(options);
   // Moralis.start();   //Required, but doesn't work
@@ -42,14 +43,15 @@ function NFTSingle(props) {
       });
     }
   });
-
+*/
 
   if(isLoading) return <div>Loading...</div>; //Waiting
   else if(isValid(hash)){//Valid Access
     //Get NFT
     const collectionCurrent = NFTCollections[hash];
     return (
-      <div className="pageContent pageSpace">
+      <CollectionContext.Provider key={collectionCurrent.hash+'Prov'} value={collectionCurrent}>
+      <div className="pageContent pageSpace framed">
         <div className="top">
           <div className="network">[NETWORK]</div>
           <div className="address">{hash}</div>
@@ -57,11 +59,15 @@ function NFTSingle(props) {
         </div>
           <div className="middle">
             <div className="stack">
-              <NFTDisplayCollection collection={collectionCurrent} />
+              {console.log("[TEST] NFTSingle() ", {collection:collectionCurrent})}
+              {/* <NFTDisplayCollection collection={collectionCurrent} /> */}
             </div>
+            <div className="space container">
             <Space hash={hash} collection={collectionCurrent} />
+            </div>
           </div>
       </div>
+      </CollectionContext.Provider>
     );
   }//Valid Access
   else{//Invalid Access

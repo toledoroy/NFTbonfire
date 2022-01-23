@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 // import { Skeleton, Image} from 'antd';
 import { Form, Input, Button, Comment, Avatar, message } from 'antd';
 import { FireTwoTone } from '@ant-design/icons';
@@ -14,26 +14,47 @@ import { PersonaContext } from "common/context";
 /**
  * Component: Add New Post
  */
- function RoomAddForm(props) {
-   const { parentId, type } = props;  //, title
-    const { Moralis, account, chainId, user, isWeb3Enabled } = useMoralis();
-    const { persona } = useContext(PersonaContext);
-    const [form] = Form.useForm();
-    // const type = title ? 'comment' : 'post';
+function RoomAddForm(props) {
+  const { parentId, type } = props;  //, title
+  const { Moralis, account, chainId, user, isWeb3Enabled } = useMoralis();
+  const { persona } = useContext(PersonaContext);
+  const [form] = Form.useForm();
+  // const type = title ? 'comment' : 'post';
   
-    /**
-     * Submit on Enter
-     * @param {*} evt 
-     */
-    const onEnterPress = (evt) => {
-        // console.warn("[TEST] RoomAddForm() Key Press", evt.keyCode);
-        if(evt.keyCode === 13 && evt.shiftKey === false) {
-            evt.preventDefault();
-            form.submit();
-            return false;
-        }
-    }
     
+  /* Inherit Width for Comment_Add */
+  React.useEffect(() => {  
+    if(type==='comment'){
+      //Run
+      resizeComment();
+      //Add Listener
+      window.onresize = resizeComment;
+    }
+  }, []);
+  const resizeComment = () => {
+    // let box = document.querySelector('.space');
+    let width = document.querySelector('.space')?.offsetWidth;
+    // console.log("(i) Space() Effecnt:Window Changed"+width);
+    let commentBox = document.querySelector('.comment_add');
+    if(commentBox) commentBox.style.width = width+"px";
+  };
+
+  /**
+   * Submit on Enter
+   * @param {*} evt 
+   */
+  const onEnterPress = (evt) => {
+      // console.warn("[TEST] RoomAddForm() Key Press", evt.keyCode);
+      if(evt.keyCode === 13 && evt.shiftKey === false) {
+          evt.preventDefault();
+          form.submit();
+          return false;
+      }
+  }
+  useEffect(() => {
+
+    if(type==='comment') console.warn("[DEV] RoomAddForm() Rendered ", type);
+  },[]);
 
     //Objects
     // const Room = Moralis.Object.extend("Post"); //Use Posts as Rooms
@@ -146,7 +167,7 @@ import { PersonaContext } from "common/context";
                 <Input.TextArea 
                 // showCount 
                 autoSize={{ minRows: 1, maxRows: 6 }}
-                onKeyUp={onEnterPress}
+                onKeyDown={onEnterPress}
                 />
               </Form.Item>
 
@@ -178,7 +199,7 @@ import { PersonaContext } from "common/context";
     else{
       let image = PersonaHelper.getImage(persona);
       return(
-        <div className={(props.className) ? 'room_add '+props.className : 'room_add'}>  
+        <div className={(props.className) ? 'room_add container '+props.className : 'room_add container'}>  
           <h3>[+] Light a new bonfire</h3>
           <div className="inner room_entrance">
             <div className="image">

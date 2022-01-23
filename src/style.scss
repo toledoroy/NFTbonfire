@@ -83,13 +83,17 @@ body {
     .ant-layout-footer{
         margin: 0;
     }
-    footer{
+    >header{
+        border-radius: 12px 12px 0 0;
+    }
+    >footer{
         height: var(--footer-height);
         display: flex;
         justify-content: space-around;
         padding: 10px 50px 10px 50px;
-        background: var(--comment-background);
+        // background: var(--comment-background);
         z-index: 100;
+        border-radius: 0 0 12px 12px ;
         .bi-discord{
             font-size: 32px;
             color: #5865F2;
@@ -159,6 +163,7 @@ body {
         .collections {
             padding:var(--padding) 0;
             .header {display: none;}
+            
         }   
     }
 }
@@ -696,6 +701,8 @@ body {
 }
 .comment_add {
     box-shadow: 0 0 9px #ccc;
+    position: sticky;
+    bottom: 0;
     .ant-comment { width:100%; }
     form {
         // background-color:#fff;
@@ -730,7 +737,7 @@ body {
 }
 /* Room Add */
 .room_add{
-    background-color: var(--comment-background);
+    // background-color: var(--comment-background);
     border-radius: var(--borderRadius);
     padding: 4px var(--padding);
     margin-bottom: 12px;
@@ -758,13 +765,17 @@ body {
 .pageSpace .middle { display:flex; }
 .space_container {
     width: 100%;
+    // height: calc( 100vh - var(--headerHeight) - var(--footer-height) - var(--padding) );
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     overflow: hidden;
     .comment_add { 
         position: fixed;
         bottom: var(--footer-height);
         // max-width: 50vw;
-        width: 670px;
-        margin-left: 10px;
+        // width: 670px;
+        // margin-left: 10px;
         border-radius: var(--borderRadius) var(--borderRadius) 0 0 ;
         background-color: var(--comment-background);
         padding: 4px var(--padding) 0px var(--padding);
@@ -788,9 +799,9 @@ body {
         margin-top:10px;
         line-height: 1.8em;
     }
-    div {
-        max-height: 100%;
-    }
+    // div {
+        // max-height: 100%;
+    // }
     .ant-ribbon-wrapper {
         margin-bottom: 8px;
     }
@@ -855,7 +866,7 @@ body {
     box-shadow: 0 0 7px #9ecaed;
 }
 
-.room_list.single{
+.room_container.single{
     .ant-collapse-item {display: none;}
     // .ant-collapse-item.selected, 
     .ant-collapse-item-active { display: block; }
@@ -864,7 +875,7 @@ body {
 }
 
 /* Room List */
-.room_list:not(.single) .ant-collapse > .ant-collapse-item:after {
+.room_container:not(.single) .ant-collapse > .ant-collapse-item:after {
     content: "";
     border-bottom: 1px solid #d9d9d9;
     position: absolute;
@@ -879,7 +890,7 @@ body {
     overflow: hidden;
     .ant-collapse {
         padding-left:var(--padding);
-        min-height: 60vh;
+        // min-height: 60vh;
     }
     .ant-collapse-header { 
         display:block !important; 
@@ -1007,13 +1018,14 @@ body {
     position: relative;
     bottom: 314px;
     button {
-       opacity: 0.5;
-       width: 48px;
-       height: 200px;
-       color: #222;
-       svg { 
-        height: 20px;
-        width: 20px;
+        border: none;
+        opacity: 0.4;
+        width: 48px;
+        height: 200px;
+        color: #222;
+        svg { 
+            height: 20px;
+            width: 20px;
         }
     }
     button:hover{

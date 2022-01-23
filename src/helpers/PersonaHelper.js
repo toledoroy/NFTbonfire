@@ -45,7 +45,8 @@ export const PersonaHelper = {
     },
 
     getName(persona){
-        return persona?.get('metadata')?.name_first ? persona.get('metadata').name_first : persona?.get('metadata')?.name ;
+        return persona?.get('metadata')?.name_first ? persona.get('metadata').name_first 
+        : persona?.get('metadata')?.name ? persona?.get('metadata')?.name : 'Anonymous' ;
     },
     getNameFull(persona){
         return persona?.get('metadata')?.name;

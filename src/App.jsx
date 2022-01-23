@@ -22,7 +22,7 @@ import Wallet from "components/Wallet";
 import NativeBalance from "components/NativeBalance";
 import Contract from "components/Contract/Contract";
 import Ramper from "components/Ramper";
-// import NFTSingle from "components/NFTSingle";
+import NFTSingle from "components/NFTSingle";
 import NFTCollections from "components/NFTCollections";
 // import RoomPage from "components/RoomPage";
 import PagePersona from "components/PagePersona";
@@ -161,7 +161,7 @@ const App = ({ isServerInfo }) => {
               <Route path="/onramp"><Ramper /></Route>
               {/*<Route path="/erc20transfers"><ERC20Transfers /></Route>*/}
               {/*<Route path="/nftBalance/:id" component={NFTBalance} />*/} {/* Breaks Things... */}
-              {/* <Route path="/nftSingle/:hash" component={NFTSingle} /> */}
+              
               {/* <Route path="/room/:id" component={RoomPage} /> */}
               
               {/* THIS SHOULD HAVE DEFINED CHAIN, NOT NECESSARILY ACCOUNT... */}
@@ -169,7 +169,8 @@ const App = ({ isServerInfo }) => {
               <Route path="/nftCollections/:accountHash/:collectionHash/:roomId" component={NFTCollections} />
               <Route path="/nftCollections/:accountHash/:collectionHash" component={NFTCollections} />
               <Route path="/nftCollections/:accountHash" component={NFTCollections} />
-              <Route path="/nftSingle/:selected" component={NFTCollections} />
+              <Route path="/nftSingle/:hash" component={NFTSingle} />
+              {/* <Route path="/nftSingle/:selected" component={NFTCollections} /> */}
               <Route path="/personatoken/:chain/:contract/:token_id" component={PagePersona} />
               
               <Route path="/space/:chain/:collectionHash" component={NFTCollections} /> {/* Single Collection */}
@@ -197,7 +198,7 @@ const App = ({ isServerInfo }) => {
       
       </Content>
 
-      <Footer>
+      <Footer className="container">
         <div className="flex" style={{lineHeight:'60px'}}>
           <Logo />
           <span>NFT Bonfire</span>

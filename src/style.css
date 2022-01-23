@@ -69,10 +69,9 @@ body{
 
 }
 .container {
-  /* background-color: rgba(240, 240, 240, 0.87); */
-  background: var(--comment-background);
+  background-color: rgba(240, 240, 240, 0.87);
+  /* background: var(--comment-background); */
   border-radius: var(--borderRadius);
-
 }
 .wrapper_main .mainContent{
   background-color: rgba(240, 240, 240, 0.87);
@@ -92,6 +91,7 @@ header, footer { box-shadow: 0 0 8px #bbb;}
 .hr { border-top: 1px solid var(--background-color); border-radius: 0 !important;}
 .link {color:var(--colorLink);}
 .glass { background-color: rgba(255, 255, 255, 0.5);}
+.pointer { cursor: pointer; } 
 
 /* NFT Item Display */
 .NFTitems .item .flip-card-back .metadata,
@@ -180,6 +180,14 @@ button:active {
 .show_more { padding: 7px; justify-content: center; cursor: pointer; }
 .floor_mat {
 
+}
+
+/* Responsivity */
+/* @media only screen and (max-width: 920px) {
+  .collections .center_wrapper{ flex-direction: column; }
+} */
+@media only screen and (max-width: 1100px) {
+  .collections .stack {display: none;}
 }
 
 /* Animations */
