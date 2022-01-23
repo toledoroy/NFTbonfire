@@ -23,7 +23,16 @@
 /*-- CUSTOM STYLES --*/
 
 .ant-comment-avatar {cursor: default;}
-
+.ant-btn-primary:hover, .ant-btn-primary:focus,
+.ant-btn-primary { 
+  /* background-color: #F68B4F; */
+  /* #FDE348 */
+    
+  background: rgb(246,115,79);
+  background: linear-gradient(0deg, rgba(246,115,79,1) 14%, rgba(246,208,79,1) 100%);
+  /* border-color: #F68B4F; */
+  border: none;
+}
 *{
   --background-color: #f0f2f5;
   --headerHeight:64px;
@@ -45,11 +54,11 @@
 h1, h2, h3, h4, h5, h6 {
   color: var(--color);
   font-weight: 500;
-  font-family: "Avenir","-apple-system",BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,apple color emoji,segoe ui emoji,Segoe UI Symbol,noto color emoji,sans-serif;
+  font-family: Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,apple color emoji,segoe ui emoji,Segoe UI Symbol,noto color emoji,sans-serif;
 }
 body{
   height:100vh;
-  font-family: Roboto, sans-serif;
+  font-family: "Open Sans", Roboto, sans-serif;
   color: var(--color);
 }
 

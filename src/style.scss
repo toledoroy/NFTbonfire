@@ -86,10 +86,14 @@ body {
     footer{
         height: var(--footer-height);
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
         padding: 10px 50px 10px 50px;
         background: var(--comment-background);
         z-index: 100;
+        .bi-discord{
+            font-size: 32px;
+            color: #5865F2;
+        }
     }
 }
 /* Request for Authentication */
@@ -513,12 +517,12 @@ body {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
+    margin: 10px -10px;    //Compensate for the margin of the NFT items
     .item {
-        
         transform-origin: center bottom;
         border-color:#9ecaed;
         box-shadow:0 0 10px #9ecaed;
-        margin: 20px 10px;
+        margin: 10px 10px;
         transition: all 0.6s ease-in-out;
         overflow: visible !important;    
         /* Flip Cards  https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_flip_card */
@@ -680,7 +684,13 @@ body {
 
 
 /* Comment Add Widget */
-#postAdd .ant-form-item-with-help .ant-form-item-explain { padding-left: 8px;}
+#postAdd {
+    .ant-form-item-label > label {font-size: 1.1rem; }
+    .ant-form-item-with-help .ant-form-item-explain { padding-left: 8px;}
+    .ant-form-item-label > label.ant-form-item-required {padding-left: 2px; height: auto;}
+    .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before { content: ''; }
+    .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::after { content: ''; }
+}
 .comment_add {
     box-shadow: 0 0 9px #ccc;
     .ant-comment { width:100%; }

@@ -216,9 +216,10 @@ import { PersonaContext } from "common/context";
                         // onKeyUp={onEnterPress}
                       />
                     </Form.Item>
-                    {persona && <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+                    {persona && 
+                    // <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
                       <Button type="primary" htmlType="submit"><FireTwoTone twoToneColor="red" />Light Up</Button>
-                    </Form.Item>
+                    // </Form.Item>
                     }
                     {!persona && <p style={{textAlign:'center'}}>
                       To post content, you'd first need to mint yourself a persona.

@@ -142,6 +142,7 @@ function NFTCollections(props) {
           <div key="header" className="header">
             {(props?.match?.params?.showBreadcrumbs !== false) && 
               <>
+              {false &&              
               <Breadcrumb separator=">">
                 {/* <Breadcrumb.Item key="1">Home</Breadcrumb.Item> */}
                 {accountHash && <Breadcrumb.Item key="2">
@@ -155,6 +156,8 @@ function NFTCollections(props) {
                 {/* <Breadcrumb.Item key="4"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>SELECT</Link></Breadcrumb.Item> */}
                 {/* <Breadcrumb.Item key="4">Post</Breadcrumb.Item> */}
               </Breadcrumb>
+              }
+
               {!collectionHash && 
               <h2>
                 {accountHash 
@@ -203,30 +206,31 @@ function NFTCollections(props) {
                   <div className="center_wrapper">
                   {/* <p>{collection.owned ? 'Owned' : 'Not Owned'}</p> */}
                   <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
+                    {!collectionHash && 
                     <h2 className="title">
                       <Link key={collection.hash+'Link'} to={dest}>
                           {/* Collection: {__.sanitize(collection.name)} ({collection.symbol}) */}
                           
                           <Button variant="contained" color="primary" className="link"
-                            style={{fontSize: '1em', lineHeight: '1.5em', borderRadius:12, width:'100%'}}
+                            style={{fontSize: '1em', lineHeight: '1.5em', borderRadius:12, }}
                             // icon={<i className="bi bi-arrow-left"></i>}
                             title="To Collection Page"
                             >
-                              Enter {__.sanitize(collection.name)} Space
+                              Enter Private Space for '{__.sanitize(collection.name)}' Collection
                               <i className="bi bi-arrow-right"></i>
                           </Button>
                           <span className="debug">[{collection.contract_type}]</span> 
 
                       </Link> 
                     </h2>
-
+                    }
                     {collectionHash && 
                       <Link key={collection.hash+'Link'} to={dest}>
                         <Button variant="contained" color="primary" className="backstep"
                           style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
                           icon={<i className="bi bi-arrow-left"></i>}
                           // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
-                          title="To Collection Page"
+                          title="Back To Collections Page"
                           >
                         </Button>
                       </Link>

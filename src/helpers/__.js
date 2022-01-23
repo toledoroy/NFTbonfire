@@ -44,6 +44,16 @@ export const __ = {
       }
       return (uri1===uri2);
     },
+    
+    /**
+     * Chop string to size & Add '...' at the end
+     * @param {string} str 
+     * @param {number} n    Max number of chars
+     * @returns {string}
+     */
+    ellipsis: (str, n=6) => {
+      return (str.length > n) ? `${str.trim().slice(0, n)}...` : str;
+    },
 };
 
 export default __;

@@ -11,7 +11,8 @@ function MenuItems() {
       mode="horizontal"
       // defaultSelectedKeys={["quickstart"]}
       >
-      <Menu.Item key="nftCollections"><NavLink to="/nftCollections">My NFTs</NavLink></Menu.Item>
+      <Menu.Item key="home"><NavLink to="/">Home</NavLink></Menu.Item>
+      <Menu.Item key="nftCollections"><NavLink to="/nftCollections">Bonfires</NavLink></Menu.Item>
       {process?.env?.NODE_ENV==='development' && <Menu.Item key="nftCollections2"><NavLink to="/nftCollections/0x9e87f6bd0964300d2bde778b0a6444217d09f3c1">NFTs (T)</NavLink></Menu.Item>}
       {process?.env?.NODE_ENV==='development' && <Menu.Item key="nftSingle"><NavLink to="/nftSingle/0x88b48f654c30e99bc2e4a1559b4dcf1ad93fa656/">nftSingle</NavLink></Menu.Item>}
       {/* <Menu.Item key="room"><NavLink to="/room/bgqJwFMexah0ZqkI3Vu9OW5I/">Room</NavLink></Menu.Item> */}

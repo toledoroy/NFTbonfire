@@ -59,7 +59,7 @@ const styles = {
   },
 };
 const App = ({ isServerInfo }) => {
-  const { isWeb3Enabled, enableWeb3, isInitialized, isAuthenticated, isWeb3EnableLoading, user } = useMoralis();
+  const { isWeb3Enabled, enableWeb3, isInitialized, isAuthenticated, isWeb3EnableLoading, user, account } = useMoralis();
   const [ persona, setPersonaActual ] = useState();
 
   useEffect(() => {
@@ -120,7 +120,7 @@ const App = ({ isServerInfo }) => {
         </div>
 		      <MenuItems />
           <div style={styles.headerRight}>
-            <Chains />
+            {account && <Chains />}
             <NativeBalance />
             <Account />
           </div>
@@ -197,21 +197,16 @@ const App = ({ isServerInfo }) => {
       
       </Content>
 
-      <Footer style={{ textAlign: "center" }}>
-        <Logo />
+      <Footer>
+        <div className="flex" style={{lineHeight:'60px'}}>
+          <Logo />
+          <span>NFT Bonfire</span>
+        </div>
         {/* Built with  */}
         <a target="_blank" rel="noopener noreferrer" href="https://moralis.io?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplat">
           <img src="/moralis/Powered-by-Moralis-Badge-Green.svg" alt="Moralis Power!"/>
         </a>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://forum.moralis.io/t/ethereum-boilerplate-questions/3951/29"
-          style={{margin:'auto 20px'}}
-          >
-          🙋 Moralis forum
-        </a>
-        
+        <i className="bi bi-discord"></i>
       </Footer>
 
     </Layout>
