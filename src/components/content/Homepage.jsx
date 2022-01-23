@@ -74,8 +74,10 @@ import ERC20Balance from "components/ERC20Balance";
     return (
 
         <div className="framed home">
-            {/* <h1>Home</h1>    * /}
-
+            
+            <h1 className='floor_mat'>Welcome Home</h1>
+            
+            {/*
             {(!account) && <Row>
                 <PageAuthenticate />
             </Row> */}

@@ -114,9 +114,7 @@ body {
         margin-top: 20px;
     }
     .account {
-        .token_balaces{
-            padding-right: 40px;
-        }
+        padding-right: 40px;
         li, 
         button{
             border-radius: 50%;
@@ -125,6 +123,11 @@ body {
             border-radius: var(--borderRadius);
             overflow: hidden;
         }
+    }
+    .crypto_addr {
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: var(--borderRadius);
+        padding: 5px ​10p;
     }
     .stack{
         padding-left:50px;
@@ -1002,7 +1005,23 @@ body {
     display: flex;
     justify-content: space-between;
     position: relative;
-    bottom: 210px;
+    bottom: 314px;
+    button {
+       opacity: 0.5;
+       width: 48px;
+       height: 200px;
+       color: #222;
+       svg { 
+        height: 20px;
+        width: 20px;
+        }
+    }
+    button:hover{
+        color: #222;
+        opacity: 0.85;
+        
+    }
+    
 }
 
 

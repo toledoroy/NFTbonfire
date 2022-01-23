@@ -82,6 +82,7 @@ dt { text-transform: capitalize; }
 .ant-layout-content { margin-top: var(--headerHeight); }
 /* .mainContent{ margin-top: var(--headerHeight); } */
 footer { margin-top: 40px; }
+header, footer { box-shadow: 0 0 8px #bbb;}
 /* .mainContent { min-height: 64vh;} */
 
 /* GLOBAL MODIFIERS */
@@ -90,6 +91,7 @@ footer { margin-top: 40px; }
 .framed{ padding: var(--padding); max-width: 1200px; margin:0 auto;} 
 .hr { border-top: 1px solid var(--background-color); border-radius: 0 !important;}
 .link {color:var(--colorLink);}
+.glass { background-color: rgba(255, 255, 255, 0.5);}
 
 /* NFT Item Display */
 .NFTitems .item .flip-card-back .metadata,
@@ -176,6 +178,9 @@ button:active {
 
 /* Misc. */
 .show_more { padding: 7px; justify-content: center; cursor: pointer; }
+.floor_mat {
+
+}
 
 /* Animations */
 @keyframes slideIn {
