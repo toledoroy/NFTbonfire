@@ -66,29 +66,24 @@ import ERC20Balance from "components/ERC20Balance";
     // console.warn("[TEST] Homepage() Persona NFTs Collection:", {personaCollection, style:__.stackContainerStyle(personaCollection?.items.length)} );
     // console.warn("[TEST] Homepage() Persona NFTs Collection:", {user, account, } );
     
+    /* Make the element Slowly Shrink Upwards */
     useEffect(() => {
         if(account){
             console.warn("[TEST] Homepage() LOADED", account);
-            setTimeout(function() {
-                let el = document.getElementById('welcom_mat');
-                /* TODO: Make the element Slowly Shrink Upwards
-                if(el) {
-                        // let pos = el?.offsetTop + el.offsetHeight
-                        let pos = el.offsetHeight + 20;
-                        console.warn("Homepage() Scroll to pos:"+pos);
-                        let options = {top: pos ,  behavior: 'smooth'};
-                    // if(isSelected) options.behaviour = 'auto';
-                    document.getElementById('mainContent').scrollTo(options);
-
-                    setTimeout(function() {
-                        //Remove Mat
-                        el.remove();
-                    }, 300);
-                }
-                else console.warn("Homepage() No Mat Found");
-                */
-            }, 1100);
-                
+            //Fetch Element
+            let el = document.getElementById('welcome_mat');
+            if(el) {
+                //Initial Height
+                el.style.height = el.querySelector('img').offsetHeight + 'px'; 
+                console.warn("Homepage() Scroll From:'"+el.querySelector('img').offsetHeight+"' to:0");
+                setTimeout(function() {
+                    let speed = 1000;
+                    // let seconds = speed/1000;
+                    // el.style.transition = "height "+speed+"ms ease";
+                    el.style.height = 0+'px';
+                }, 1100);
+            }
+            else console.warn("Homepage() No Mat Found");
         }
     }, []);
 
@@ -101,9 +96,11 @@ import ERC20Balance from "components/ERC20Balance";
 
         <div className="framed home">
             
-            <h1 id="welcom_mat" className='floor_mat'>
-                <img alt="welcom_mat" src="/images/welcome_mat.jpg"/>
-                {/* Welcome Home */}
+            <h1 id="welcome_mat" className='floor_mat' style={{overflow:'hidden', transition: 'height 1000ms ease-in', display:'flex', justifyContent:'flex-end', flexDirection:'column'}}>
+                <div className="inner">
+                    <img alt="welcome_mat" src="/images/welcome_mat.jpg"/>
+                    {/* Welcome Home */}
+                </div>
             </h1>
 
             {/*
