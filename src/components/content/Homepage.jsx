@@ -91,10 +91,10 @@ import ERC20Balance from "components/ERC20Balance";
             
             <Row className="flex">
                 <Col xs={24} md={12} className="account">
-                    <div className="row">
-                    <h1>Account</h1>
+                    {/* <div className="row"> */}
+                    <h1 className="carved" title="Account">Account</h1>
                     {account && <>
-                        <h3>Current Account:</h3>
+                        <h2>Current Account:</h2>
                         <Address avatar="left" copyable address={account} size={9} />
                         {/* icon={<i className="bi bi-explicit"></i>} */}
                         <div className="row">
@@ -102,10 +102,10 @@ import ERC20Balance from "components/ERC20Balance";
                             <ERC20Balance />
                         </div>
                     </>}
-                    </div>
+                    {/* </div> */}
                 </Col>
                 <Col xs={24} md={12} className="personas stack">
-                    <h1>Personas</h1>
+                    <h1 className="carved" title="Personas">Personas</h1>
                     {!personaCollection?.hash && <div className="cards">
                         <div className="mintNewPersona NFT">
                             <h2>Why Don't You Mint Yourself a New Persona</h2>
@@ -121,7 +121,8 @@ import ERC20Balance from "components/ERC20Balance";
             
             <Row className="flex">
                 <div className="assets">
-                    <h1>Non-Fungible Assets (Bonfires)</h1>
+                    {/* <h1>Non-Fungible Assets (Bonfires)</h1> */}
+                    <h1 className="carved" title="Non-Fungible Assets">Non-Fungible Assets</h1>
                     <Skeleton loading={!isWeb3Enabled}>
                     {ChainHelper.allChainsData()
                         .filter((chainData) => (chainData.key === chainId || chainData.supported || chainData.live))

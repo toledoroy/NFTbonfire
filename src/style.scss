@@ -108,7 +108,9 @@ body {
 
 /* Page: Home */
 .home {
-    
+    .count_0:after{
+        content:"(None)";
+    }
     h1{
         // text-align: center;
         // border-bottom: 1px solid #999;
@@ -980,7 +982,7 @@ body {
     margin-bottom: 20px; 
     width: 100%;
     .title { 
-        font-size: 1.1rem; 
+        // font-size: 1.1rem; 
         font-weight: bold; 
         /* margin-bottom: 20px;  */
     }
@@ -1032,6 +1034,7 @@ body {
     justify-content: space-between;
     position: relative;
     bottom: 314px;
+    margin-bottom: -200px;
     button {
         border: none;
         opacity: 0.4;

@@ -56,8 +56,33 @@
 h1, h2, h3, h4, h5, h6 {
   color: var(--color);
   font-weight: 500;
-  font-family: Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,apple color emoji,segoe ui emoji,Segoe UI Symbol,noto color emoji,sans-serif;
+  /* font-family: Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,apple color emoji,segoe ui emoji,Segoe UI Symbol,noto color emoji,sans-serif; */
+  font-family: Arial, sans-serif;
 }
+h1{
+  font-size: 2rem;
+  font-weight: 700;
+}
+.carved {
+  display: block;
+  font: bold 3rem Arial, sans-serif;
+  position: relative;
+}
+.carved:before, 
+.carved:after {
+  content: attr(title);
+  position: absolute;
+}
+.carved:before { top: 1px; left: 1px; color: rgba(255,255,255,.5); }
+.carved:after  { top: 2px; left: 2px; color: rgba(255,255,255,.4); }
+
+
+button.arrow{
+  font-size: 1.2rem;
+  line-height: 1.2rem;
+  /* // style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}} */
+}
+
 body{
   height:100vh;
   font-family: "Open Sans", Roboto, sans-serif;
@@ -88,6 +113,7 @@ header, footer { box-shadow: 0 0 8px #bbb;}
 
 /* GLOBAL MODIFIERS */
 .flex {display: flex;}
+.itemsCenter {align-items: center;}
 .clearfloat{  clear: both; width: 100%; display: block; }
 .framed{ padding: var(--padding); max-width: 1200px; margin:0 auto;} 
 .hr { border-top: 1px solid var(--background-color); border-radius: 0 !important;}

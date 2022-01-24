@@ -235,6 +235,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
             {/* {collection.name}  */}
             Private Space
           </h1>
+          {/* <h1 className="carved" title="Private Space">Private Space</h1> */}
           {/* <h4>[Addr:{collection.hash}]</h4> */}
           {/* <span key="typs">Type: {collection.contract_type}</span> */}
           {/* <span key="symbol">Symbol: {collection.symbol}</span> */}
@@ -250,7 +251,6 @@ function SpaceView({hash, collection, NFTpersonas}) {
                 {!curRoomId && 
                 <div className="room_add_container">
                   <Collapse ghost expandIconPosition="right" expandIcon={() => (<i className="main_color bi bi-plus-circle-fill"></i>)} >
-                    {/* <Collapse.Panel header={<span><i className="icon bi bi-plus-circle-fill"></i> Light a new bonfire</span>} key="1"> */}
                     <Collapse.Panel header={<span>&nbsp;</span>} key="1">
                     <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} onSuccess={(post) => {loadRooms(post.id)}}/>
                     </Collapse.Panel>

@@ -132,6 +132,7 @@ function NFTCollections(props) {
     );
   }
   */
+
   return (
     <Skeleton loading={!isWeb3Enabled}>
       
@@ -142,6 +143,7 @@ function NFTCollections(props) {
           <div key="header" className="header">
             {(props?.match?.params?.showBreadcrumbs !== false) && 
               <>
+              
               {false &&              
               <Breadcrumb separator=">">
                 {/* <Breadcrumb.Item key="1">Home</Breadcrumb.Item> */}
@@ -158,6 +160,29 @@ function NFTCollections(props) {
               </Breadcrumb>
               }
 
+
+              {!collectionHash && 
+              <>
+                {accountHash 
+                ? <>
+                  <CarvedHeading heading={2} text={accountHash+"'s NFTs"} />
+                  {/* {accountHash}'s NFTs */}
+                  {/* <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
+                </>
+                : <>
+                  {collectionHash 
+                  ? <CarvedHeading heading={2} text={"Private Space for "+NFTCollections[collectionHash].name} />
+                  : <CarvedHeading heading={1} text={"My NFTs"} />
+                    // ? <>Private Space for {NFTCollections[collectionHash].name}</>
+                    // : <>My NFTs on  {ChainHelper.get(options.chain,'name')}
+                      // {/* <span>{ChainHelper.get(options.chain,'icon')}</span> */}
+                    // </>
+                  }
+                </>}
+              </>
+              }
+              
+
               {!collectionHash && 
               <h2>
                 {accountHash 
@@ -168,7 +193,7 @@ function NFTCollections(props) {
                 : <>
                   {collectionHash 
                     ? <>Private Space for {NFTCollections[collectionHash].name}</>
-                    : <>My NFTs on  {ChainHelper.get(options.chain,'name')}
+                    : <>{ChainHelper.get(options.chain,'name')}
                       {/* <span>{ChainHelper.get(options.chain,'icon')}</span> */}
                       
                     </>
@@ -207,38 +232,45 @@ function NFTCollections(props) {
                   {/* <p>{collection.owned ? 'Owned' : 'Not Owned'}</p> */}
                   <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
                     {!collectionHash && 
-                    <h2 className="title">
+                    <h2 className="title itemsCenter">
                       <Link key={collection.hash+'Link'} to={dest}>
                           Collection: {__.sanitize(collection.name)} ({collection.symbol})
                           
-                          <Button variant="contained" color="primary" className="link"
-                            style={{fontSize: '1em', lineHeight: '1.5em', borderRadius:12, }}
+                          <span className="debug">[{collection.contract_type}]</span>
+
+                          <Button variant="contained" color="primary" className="link arrow"
+                            style={{marginLeft: '1rem'}}
                             // icon={<i className="bi bi-arrow-left"></i>}
-                            title="To Collection Page"
+                            title="Enter Private Space"
                             >
-                              Enter Private Space for 
+                              {/* Enter Private Space for  */}
                               {/* '{__.sanitize(collection.name)}' Collection */}
                               <i className="bi bi-arrow-right"></i>
                           </Button>
-                          <span className="debug">[{collection.contract_type}]</span> 
 
                       </Link> 
                     </h2>
                     }
                     {collectionHash && <>
-                      <h2 className="title">
-                        Collection: {__.sanitize(collection.name)} ({collection.symbol})
-                      </h2>
-                    
+                      
+                      <div className="flex itemsCenter">
+                      
+                      {/* <CarvedHeading heading={2} text={"Collection: "+__.sanitize(collection.name)+" ("+collection.symbol+")"} /> */}
+                      
                         <Link key={collection.hash+'Link'} to={dest}>
-                          <Button variant="contained" color="primary" className="backstep"
-                            style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
-                            icon={<i className="bi bi-arrow-left"></i>}
+                          <Button variant="contained" color="primary" className="backstep link arrow"
+                          style={{marginRight: '1rem'}}
+                            // icon={<i className="bi bi-arrow-left"></i>}
                             // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
                             title="Back To Collections Page"
                             >
+                              <i className="bi bi-arrow-left"></i>
                           </Button>
                         </Link>
+                        <h2 className="title">
+                        Collection: {__.sanitize(collection.name)} ({collection.symbol})
+                      </h2>
+                      </div>
                       </>
                     }
 
@@ -276,3 +308,8 @@ function NFTCollections(props) {
 
 export default NFTCollections;
 
+function CarvedHeading(props){
+  let text = props.text;
+  if(props.heading == 2) return (<h2 className="carved" title={text}>{text}</h2>);
+  else return (<h1 className="carved" title={text}>{text}</h1>);
+}
