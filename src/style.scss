@@ -698,6 +698,7 @@ body {
     .ant-form-item-label > label.ant-form-item-required {padding-left: 2px; height: auto;}
     .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before { content: ''; }
     .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::after { content: ''; }
+    .anticon { font-size: 1.1rem; }
 }
 .comment_add {
     box-shadow: 0 0 9px #ccc;
@@ -725,7 +726,7 @@ body {
         .send {
             // margin: auto 5px 5px 10px;
             margin-top: auto;
-            margin-left: 10px;
+            margin-left: 6px;
         }
     }
     .comment_text:empty:before { content: attr(data-placeholder); }

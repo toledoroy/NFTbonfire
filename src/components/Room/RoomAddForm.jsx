@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 // import { Skeleton, Image} from 'antd';
 import { Form, Input, Button, Comment, Avatar, message } from 'antd';
 import { Collapse } from 'antd';
-import { FireTwoTone } from '@ant-design/icons';
+import { FireTwoTone, SendOutlined } from '@ant-design/icons';
 import { useMoralis } from "react-moralis";
 // import { useHistory } from 'react-router-dom';
 // import { Room } from "objects/objects";
@@ -173,7 +173,8 @@ function RoomAddForm(props) {
               </Form.Item>
 
               {persona &&
-                <Button type="primary" htmlType="submit" className="send" icon={<i className="bi bi-send"></i>}></Button>
+                // <Button type="primary" htmlType="submit" className="send" icon={<i className="bi bi-send"></i>}></Button>
+                <Button type="primary" htmlType="submit" className="send" icon={<SendOutlined />}></Button>
               }
 
               {/*persona &&
