@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 // import { Skeleton, Image} from 'antd';
 import { Form, Input, Button, Comment, Avatar, message } from 'antd';
+import { Collapse } from 'antd';
 import { FireTwoTone } from '@ant-design/icons';
 import { useMoralis } from "react-moralis";
 // import { useHistory } from 'react-router-dom';
@@ -200,7 +201,12 @@ function RoomAddForm(props) {
       let image = PersonaHelper.getImage(persona);
       return(
         <div className={(props.className) ? 'room_add container '+props.className : 'room_add container'}>  
-          <h3>[+] Light a new bonfire</h3>
+{/* 
+          <h3>
+            <i className="bi bi-plus-circle-fill"></i>
+            Light a new bonfire
+          </h3> */}
+         
           <div className="inner room_entrance">
             <div className="image">
               <Avatar src={image} shape="square" style={{ height:'var(--avatarMD)', width:'var(--avatarMD)'}}>

@@ -126,7 +126,7 @@ const App = ({ isServerInfo }) => {
           </div>
         </Header>
         <Content>
-        <div className="mainContent">
+        <div id="mainContent" className="mainContent">
           {/*<Redirect to="/quickstart" />*/}
           {/* <Skeleton loading={!isWeb3Enabled}> */}
             <Switch>

@@ -230,7 +230,11 @@ function SpaceView({hash, collection, NFTpersonas}) {
       <>
       <div id="space" className="space">
         <Skeleton active loading={!space || !isWeb3Enabled}>
-          <h1> Private Space for {collection.name}</h1>
+          {/* <h1> Private Space for {collection.name}</h1> */}
+          <h1>
+            {/* {collection.name}  */}
+            Private Space
+          </h1>
           {/* <h4>[Addr:{collection.hash}]</h4> */}
           {/* <span key="typs">Type: {collection.contract_type}</span> */}
           {/* <span key="symbol">Symbol: {collection.symbol}</span> */}
@@ -243,14 +247,20 @@ function SpaceView({hash, collection, NFTpersonas}) {
             {(rooms && rooms.length>0) ? 
               <div className="allowed">
               
-                {!curRoomId && <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} onSuccess={(post) => {loadRooms(post.id)}}/>} 
+                {!curRoomId && 
+        <Collapse ghost expandIcon={() => (<i className="bi bi-plus-circle-fill"></i>)} >
+          <Collapse.Panel header="Light a new bonfire" key="1">
+          <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} onSuccess={(post) => {loadRooms(post.id)}}/>
+          </Collapse.Panel>
+        </Collapse>
+} 
 
                 <div className={'room_list container'}>
                 <Collapse accordion ghost onChange={(selected) => setCurRoomId(selected)} activeKey={curRoomId} > 
                   {/* collapsible="disabled" */}
                   {rooms.map((room, index) => (
                     <Collapse.Panel header={
-                        <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} />
+                        <RoomEntrance key={room.id} hash={hash} collection={collection} room={room} selected={(curRoomId===room.id)} />
                       } key={room.id} showArrow={false} className={(curRoomId===room.id) ? 'item selected' : 'item'}>
 
                       <ShowComments room={room} />
@@ -322,16 +332,13 @@ function RoomEntrance(props) {
   let className = "room_entrance";
   if(isSelected) className += " selected";
 
-
-
   /**
    * Load Post's Persona When Needed
    */
   const { Moralis } = useMoralis();
   useEffect(() => {
     if(Object.keys(persona.attributes).length===0){
-
-      console.warn("[TEST] RoomEntrance() Loading Missing Persona for Room:"+room.id, room);
+      // console.warn("[TEST] RoomEntrance() Loading Missing Persona for Room:"+room.id, room);
       loadItsPersona(room);
     } 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -346,20 +353,25 @@ function RoomEntrance(props) {
     setPersona(personaFull);
   }
 
-  /* DEPRECATED - No Longer Using the Window.
   useEffect(() => {
     // Scroll to Selected/Unselected Element
-    // console.warn("[DEV] RoomEntrance() Room "+room.id+" Selected:"+isSelected, {room, elTop:document.getElementById(room.id).offsetTop});
-    let options = {top: document.getElementById(room.id).offsetTop + 40 ,  behavior: 'smooth'};
-    // if(isSelected) options.behaviour = 'auto';
-    window.scrollTo(options);
+    let roomEl = document.getElementById(room.id);
+    console.warn("[DEV] RoomEntrance() Room "+room.id+" Selected:"+room.id, {roomEl});
+    if(roomEl){
+      let options = {
+        top: roomEl.offsetTop,// + 40,  
+        behavior: 'smooth',
+      };
+      // if(room.id) options.behaviour = 'auto';
+      // window.scrollTo(options);  //No Longer Using the Window.
+      document.getElementById('mainContent').scrollTo(options);
+    }
   },[isSelected]);
-  */
 
   /*
   console.warn("[TEST] RoomEntrance() For:"+room.id, {
     started:moment(room.get('createdAt')).format('YYYY-MM-DD HH:mm:ss'),
-  letInteraction: moment(room.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss'),
+    letInteraction: moment(room.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss'),
   });
   */
  
@@ -389,12 +401,12 @@ function RoomEntrance(props) {
       </Badge.Ribbon>
       <div className="content">
         {isSelected && <div key="back" className="back link" style={{position:'absolute', right:'15px'}}><ArrowLeftOutlined />Back</div>}
-        <h1>
+        <h2>
           {/* <Link key="link" to={{ pathname: "/room/"+room.id, }} className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</Link> */}
           {/* <a className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</a> */}
           {/* <FireTwoTone twoToneColor="red" /> */}
           {room?.get('name')}
-        </h1>
+        </h2>
         
         {isSelected && <div key="user_info">
           <p>
@@ -468,7 +480,7 @@ function ShowComments({room}) {
       ,{ live: true }   //Seems like it's not really live...
     );
 
-  console.warn("[DEBUG] ShowComments() Loaded "+comments.length+" Comments for Room:"+room.id, {comments});
+  // console.warn("[DEBUG] ShowComments() Loaded "+comments.length+" Comments for Room:"+room.id, {comments});
 
   //Render
   return (

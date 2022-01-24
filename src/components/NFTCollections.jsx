@@ -225,16 +225,21 @@ function NFTCollections(props) {
                       </Link> 
                     </h2>
                     }
-                    {collectionHash && 
-                      <Link key={collection.hash+'Link'} to={dest}>
-                        <Button variant="contained" color="primary" className="backstep"
-                          style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
-                          icon={<i className="bi bi-arrow-left"></i>}
-                          // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
-                          title="Back To Collections Page"
-                          >
-                        </Button>
-                      </Link>
+                    {collectionHash && <>
+                      <h2 className="title">
+                        Collection: {__.sanitize(collection.name)} ({collection.symbol})
+                      </h2>
+                    
+                        <Link key={collection.hash+'Link'} to={dest}>
+                          <Button variant="contained" color="primary" className="backstep"
+                            style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
+                            icon={<i className="bi bi-arrow-left"></i>}
+                            // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
+                            title="Back To Collections Page"
+                            >
+                          </Button>
+                        </Link>
+                      </>
                     }
 
                     <div className="middle">

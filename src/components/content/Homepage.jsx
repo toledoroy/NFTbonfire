@@ -66,16 +66,15 @@ import ERC20Balance from "components/ERC20Balance";
     // console.warn("[TEST] Homepage() Persona NFTs Collection:", {personaCollection, style:__.stackContainerStyle(personaCollection?.items.length)} );
     // console.warn("[TEST] Homepage() Persona NFTs Collection:", {user, account, } );
     
-    if(!account) return (
+    if(isWeb3Enabled && !account) return (
         <Row>
             <PageAuthenticate />
         </Row>
     );
     return (
-
         <div className="framed home">
             
-            <h1 className='floor_mat'>Welcome Home</h1>
+            {/* <h1 className='floor_mat'>Welcome Home</h1> */}
             
             {/*
             {(!account) && <Row>
