@@ -822,6 +822,14 @@ body {
             padding: var(--padding) 5px 10px 5px;
         }        
     }
+    .room_add_container{
+        // justify-content: flex-end;
+        i.bi {
+            font-size: 1.6rem !important;
+            // margin-right: 5px;
+            // color: orange;
+        }
+    }
 }
 .space:nth-child(odd) { animation-duration: 0.6s; /* So they look staggered */ }
 .SpaceEmpty p { margin:10px 0; }

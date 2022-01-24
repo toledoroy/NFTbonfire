@@ -23,7 +23,9 @@
 /*-- CUSTOM STYLES --*/
 
 .ant-comment-avatar {cursor: default;}
-.ant-btn-primary:hover, .ant-btn-primary:focus,
+.main_color { color:rgb(246,115,79);}
+.ant-btn-primary:hover, 
+.ant-btn-primary:focus,
 .ant-btn-primary { 
   /* background-color: #F68B4F; */
   /* #FDE348 */

@@ -211,7 +211,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
  
   //Log
   console.log("SpaceView() For collection:", {collection, rooms});
-  // console.warn("[DEV] Room list Collapse", curRoomId);
+  // console.warn("[DEV] Room list Collapse", curRoomId);user
 
   //Validate
   // if(collection.contract_type!=="ERC1155") return <div>Unsupported Collection Type:'{collection.contract_type}'</div>;   //It's a mess out there, ERC721 0xcc14dd8e6673fee203366115d3f9240b079a4930 Contains Multiple NFTs (All Have amount=1)
@@ -223,7 +223,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
   //  {collection => {console.warn("[TEST] SpaceView() CollectionContext: ", {collection})}} 
   //  </CollectionContext.Consumer> 
     */
-  if(!isAuthenticated) return <PageAuthenticate />;
+  if(!isWeb3Enabled || !isAuthenticated) return <PageAuthenticate />;
   return (
     <CollectionContext.Consumer>
     {collection => (
@@ -241,19 +241,22 @@ function SpaceView({hash, collection, NFTpersonas}) {
           {/* TODO: Add Field: Creator, Total No. of Items, */}
           {/* {console.log("[DEV] SpaceView() in NODE_ENV:"+process?.env?.NODE_ENV)} */}
 
-          {(isAllowed || process?.env?.NODE_ENV==='development') ? <>
+          {(isAllowed/* || process?.env?.NODE_ENV==='development'*/) ? <>
             <div className={(curRoomId) ? 'room_container single' : 'room_container'}>
               {(!isAllowed && process?.env?.NODE_ENV==='development') && <span className="debug" style={{float:'right'}}>[NOT ALLOWED (S)]</span>}
             {(rooms && rooms.length>0) ? 
               <div className="allowed">
               
                 {!curRoomId && 
-        <Collapse ghost expandIcon={() => (<i className="bi bi-plus-circle-fill"></i>)} >
-          <Collapse.Panel header="Light a new bonfire" key="1">
-          <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} onSuccess={(post) => {loadRooms(post.id)}}/>
-          </Collapse.Panel>
-        </Collapse>
-} 
+                <div className="room_add_container">
+                  <Collapse ghost expandIconPosition="right" expandIcon={() => (<i className="main_color bi bi-plus-circle-fill"></i>)} >
+                    {/* <Collapse.Panel header={<span><i className="icon bi bi-plus-circle-fill"></i> Light a new bonfire</span>} key="1"> */}
+                    <Collapse.Panel header={<span>&nbsp;</span>} key="1">
+                    <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} onSuccess={(post) => {loadRooms(post.id)}}/>
+                    </Collapse.Panel>
+                  </Collapse>
+                  </div>
+                } 
 
                 <div className={'room_list container'}>
                 <Collapse accordion ghost onChange={(selected) => setCurRoomId(selected)} activeKey={curRoomId} > 
