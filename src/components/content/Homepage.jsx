@@ -66,6 +66,32 @@ import ERC20Balance from "components/ERC20Balance";
     // console.warn("[TEST] Homepage() Persona NFTs Collection:", {personaCollection, style:__.stackContainerStyle(personaCollection?.items.length)} );
     // console.warn("[TEST] Homepage() Persona NFTs Collection:", {user, account, } );
     
+    useEffect(() => {
+        if(account){
+            console.warn("[TEST] Homepage() LOADED", account);
+            setTimeout(function() {
+                let el = document.getElementById('welcom_mat');
+                /* TODO: Make the element Slowly Shrink Upwards
+                if(el) {
+                        // let pos = el?.offsetTop + el.offsetHeight
+                        let pos = el.offsetHeight + 20;
+                        console.warn("Homepage() Scroll to pos:"+pos);
+                        let options = {top: pos ,  behavior: 'smooth'};
+                    // if(isSelected) options.behaviour = 'auto';
+                    document.getElementById('mainContent').scrollTo(options);
+
+                    setTimeout(function() {
+                        //Remove Mat
+                        el.remove();
+                    }, 300);
+                }
+                else console.warn("Homepage() No Mat Found");
+                */
+            }, 1100);
+                
+        }
+    }, []);
+
     if(!account) return (
         <Row>
             <PageAuthenticate />
@@ -75,8 +101,11 @@ import ERC20Balance from "components/ERC20Balance";
 
         <div className="framed home">
             
-            <h1 className='floor_mat'>Welcome Home</h1>
-            
+            <h1 id="welcom_mat" className='floor_mat'>
+                <img alt="welcom_mat" src="/images/welcome_mat.jpg"/>
+                {/* Welcome Home */}
+            </h1>
+
             {/*
             {(!account) && <Row>
                 <PageAuthenticate />
