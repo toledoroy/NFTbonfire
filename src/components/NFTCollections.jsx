@@ -259,7 +259,7 @@ function NFTCollections(props) {
                       
                         <Link key={collection.hash+'Link'} to={dest}>
                           <Button variant="contained" color="primary" className="backstep link arrow"
-                          style={{marginRight: '1rem'}}
+                            style={{marginRight: '1rem'}}
                             // icon={<i className="bi bi-arrow-left"></i>}
                             // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
                             title="Back To Collections Page"
@@ -267,9 +267,14 @@ function NFTCollections(props) {
                               <i className="bi bi-arrow-left"></i>
                           </Button>
                         </Link>
-                        <h2 className="title">
-                        Collection: {__.sanitize(collection.name)} ({collection.symbol})
-                      </h2>
+                        {/* <CarvedHeading heading={1} text={'$'+collection.symbol} /> */}
+                        <h2 className="title" title={'$'+collection.symbol}>
+                          <span className="symbol">${collection.symbol}</span>
+                          {/* Collection:  */}
+                          <br />
+                          {__.sanitize(collection.name)} 
+                          
+                        </h2>
                       </div>
                       </>
                     }
