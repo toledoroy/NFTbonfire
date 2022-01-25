@@ -199,17 +199,19 @@ const App = ({ isServerInfo }) => {
       </Content>
 
       <Footer className="container">
-        <div className="flex" style={{lineHeight:'60px'}}>
+        {/* <div className="flex" style={{lineHeight:'60px'}}>
           <Logo />
           <span>NFT Bonfire</span>
-        </div>
+        </div> */}
         {/* Built with  */}
         <a target="_blank" rel="noopener noreferrer" href="https://moralis.io?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplat">
           <img src="/moralis/Powered-by-Moralis-Badge-Green.svg" alt="Moralis Power!"/>
         </a>
+        <a href='https://www.freepik.com/'>Cool Art by Freepik.com</a>
         <a href="https://discord.gg/PeDb9MXXa9" target="_blank" rel="noopener noreferrer">
           <i className="bi bi-discord"></i>
         </a>
+        
       </Footer>
 
     </Layout>
