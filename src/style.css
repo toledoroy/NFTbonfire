@@ -68,6 +68,9 @@ h1{
   display: block;
   font: bold 3rem Arial, sans-serif;
   position: relative;
+  color: #0e0a30;
+  text-overflow: nowrap;
+  width: 100%;
 }
 .carved:before, 
 .carved:after {
@@ -144,6 +147,8 @@ header, footer { box-shadow: 0 0 8px #bbb;}
 .collections .middle { 
   display:flex; 
   justify-content: space-between;
+}
+.space .collections .middle { 
   position: sticky;
   top: 0;
 }

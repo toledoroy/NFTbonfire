@@ -525,12 +525,13 @@ body {
 
 /* NFT Item Display */
 
-.NFT{
+.NFT {
     border-radius: 18px;
     .ant-card-actions {
         border-radius: 0 0 18px 18px;
     }
 }
+
 .NFTitems { 
     transition-delay: 5s; 
     transition: all 0.12s ease-in-out; 
@@ -611,7 +612,7 @@ body {
                             max-width: 100%; 
                             overflow: hidden;
                             background: var(--comment-background);
-                            border: 1px solid #ddd;
+                            border: 1px solid #eee;
                             border-radius: 11px 11px 8px 8px;
                             padding: 1px 6px;
                         }
@@ -676,6 +677,10 @@ body {
     }
 }
   
+.persona .collection .NFTitems {
+    margin:0;
+}
+
 /* Stack */
 .stack {
     flex-wrap: nowrap;
