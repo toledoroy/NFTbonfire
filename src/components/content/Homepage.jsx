@@ -74,8 +74,24 @@ import ERC20Balance from "components/ERC20Balance";
     return (
         <div className="framed home">
             
-            {/* <h1 className='floor_mat'>Welcome Home</h1> */}
-            
+            <Row className="welcom_message container debug" style={{margin:'10px 0 30px 0'}}>
+                <Col xs={24} className="framed welcom_message">
+                <h1 className="carved" title="Welcome Home!">Welcome Home!</h1>
+                <p className="" style={{padding:'10px 0', fontSize:'1.3rem', fontWeight:'500', lineHeight:'2rem', color:'var(--color)'}}>
+                    You are a brave astronout and one of the first people to land in this exciting new space.
+                    <br />
+                    At this stage we are running on the Avalanch Testnet. 
+                    <br />
+                    To interact with our services you'd need some Test-AVAX in your wallet.
+                    <br />
+                    If you don't have any, you can get some from the <a href="https://faucet.avax-test.network/" target="_blank" rel="noopener noreferrer">AVAX Faucet</a>. 
+                    <br />
+                    Just type in your wallet address and click the resquest button.
+                    Then, you'd be able to mint your new social persona. For free! and use it to interact with the community.
+                </p>
+                </Col>
+            </Row>
+
             {/*
             {(!account) && <Row>
                 <PageAuthenticate />
