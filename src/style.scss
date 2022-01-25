@@ -856,14 +856,14 @@ body {
 /* Account */
 #account {     
     color: #21bf96;
+    padding: 0 0 0 16px;
     height: 48px;
-    padding: 0 var(--padding);
+    border-radius: 48px;
     display: flex;
     justify-content: center;
     align-items: center;
     width: fit-content;
     border: 2px solid rgb(231, 234, 243);
-    border-radius: 12px;
     background-color: rgba(244, 244, 244, 0.87);
     cursor: pointer;
     .image { 
