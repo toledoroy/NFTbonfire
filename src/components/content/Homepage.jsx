@@ -96,6 +96,7 @@ import ERC20Balance from "components/ERC20Balance";
                     {account && <>
                         <h2>Current Account:</h2>
                         <Address avatar="left" copyable address={account} size={9} />
+                        {/* TODO: Add Current Chain */}
                         {/* icon={<i className="bi bi-explicit"></i>} */}
                         <div className="row">
                             <h2>Fungible Assets</h2>

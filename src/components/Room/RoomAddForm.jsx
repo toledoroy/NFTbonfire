@@ -198,16 +198,16 @@ function RoomAddForm(props) {
       </div>
       );
     }
-    else{
+    else{//New Post (Room)
       let image = PersonaHelper.getImage(persona);
       return(
         <div className={(props.className) ? 'room_add container '+props.className : 'room_add container'}>  
-{/* 
+          {/* 
           <h3>
             <i className="bi bi-plus-circle-fill"></i>
             Light a new bonfire
-          </h3> */}
-         
+          </h3> 
+          */}
           <div className="inner room_entrance">
             <div className="image">
               <Avatar src={image} shape="square" style={{ height:'var(--avatarMD)', width:'var(--avatarMD)'}}>
@@ -242,6 +242,7 @@ function RoomAddForm(props) {
                         // label="Details"
                          placeholder="Tell me more..." 
                         // onKeyUp={onEnterPress}
+                        autoSize={{ minRows: 4, maxRows: 10 }}
                       />
                     </Form.Item>
                     {persona && 

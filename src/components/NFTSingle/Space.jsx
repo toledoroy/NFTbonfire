@@ -404,7 +404,7 @@ function RoomEntrance(props) {
         </div>
       </Badge.Ribbon>
       <div className="content">
-        {isSelected && <div key="back" className="back link" style={{position:'absolute', right:'15px'}}><ArrowLeftOutlined />Back</div>}
+        {/* {isSelected && <div key="back" className="back link" style={{position:'absolute', right:'15px'}}><ArrowLeftOutlined />Back</div>} */}
         <h2>
           {/* <Link key="link" to={{ pathname: "/room/"+room.id, }} className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</Link> */}
           {/* <a className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</a> */}
@@ -412,13 +412,25 @@ function RoomEntrance(props) {
           {room?.get('name')}
         </h2>
         
-        {isSelected && <div key="user_info">
+        
+        <div key="user_info" className="user_info">
+        {isSelected
+        ?   <>
           <p>
             {PersonaHelper.getNameFull(room.get('persona'))}
             {role && ", "+role}
           </p>
           {purpose && <p key="purp" className="purpose" dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(purpose))}}></p>}
-        </div>}
+        </>
+        :   <>
+          <p>
+            {PersonaHelper.getName(room.get('persona'))}
+            {role && ", "+role}
+          </p>
+        </>
+        }
+        
+        </div>
         <div className="info">
           {/* <span key="id">ID: {room.id}</span> */}
           {/* {isSelected && <p key="desc">{room.get('text')}</p>} */}
@@ -430,13 +442,16 @@ function RoomEntrance(props) {
           {/* Single Room Link is Currently Broken...   //TODO: Single Room Needs its own URL
           <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn">Go!</Link> 
           */}
+
+          <div className="actions debug">
+            {(1) 
+              ? <Button variant="contained" size="small" color="primary" onClick={()=>{console.warn("CLICKED JOIN")}} title="Join the group">Join</Button>
+              : <Button variant="contained" size="small" onClick={()=>{console.warn("CLICKED LEAVE")}} style={{background: 'none', border:'none'}} title="Leave the group">Leave</Button>
+            }  
+          </div>
+          
         </div>
-        <div className="actions debug">
-          {(1) 
-            ? <Button variant="contained" size="small" color="primary" onClick={()=>{console.warn("CLICKED JOIN")}} title="Join the group">Join</Button>
-            : <Button variant="contained" size="small" onClick={()=>{console.warn("CLICKED LEAVE")}} style={{background: 'none', border:'none'}} title="Leave the group">Leave</Button>
-          }  
-        </div>
+        
       </div> 
       <div className="vote" onClick={(evt) => {evt.stopPropagation()}}>
         <VotePane post={room}/>
