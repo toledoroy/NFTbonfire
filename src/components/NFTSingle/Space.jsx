@@ -71,13 +71,13 @@ function SpaceView({hash, collection, NFTpersonas}) {
   /**
    * Fetch Current Space
    */
-  useEffect(() => {
+  useEffect(() => async () => {
     if (isWeb3Enabled && isAuthenticated) {
       //Unset Space
       setSpace(null);
       const query = new Moralis.Query(Space);
       query.equalTo("hash", hash);
-      query.first().then(result => {
+      query.first().then(async result =>  {
         if(result) {
           setSpace(result);
           //Log
@@ -91,12 +91,13 @@ function SpaceView({hash, collection, NFTpersonas}) {
           newSpace.set("text", "This is a new space");  //No Need
           // newSpace.set("first_user", Moralis.currentUser.get("objectId"));   //TODO: Get Current User ObjectID, This isn't Really It...
           // newSpace.set("rooms", []); //Other Way...
-          newSpace.save().then(result => {
+          await newSpace.save();//.then(result => {
             //Log
             console.log("(i) Automatically Created new Space for:"+hash);
             //Set
-            setSpace(result);
-          });
+            // setSpace(result);
+          // });
+          setSpace(newSpace);
         }//New Space
       });
     }//Web3 Enabled
