@@ -7,6 +7,7 @@ import { Skeleton, Row, Col, Button } from 'antd';
 // import { Button, Tabs, Card, Image } from "antd";
 // import { PlusOutlined } from '@ant-design/icons';
 // import { PersonaContext } from "common/context";
+import CarvedHeading from "components/common/CarvedHeading";
 import __ from "helpers/__";
 //Components
 import Address from "components/Address/Address";
@@ -80,10 +81,10 @@ import { AvaxLogo } from "components/Chains/Logos";
             
             <Row className="welcom_message container" style={{margin:'10px 0 30px 0'}}>
                 <Col xs={24} className="framed welcom_message">
-                
+                <div className="inner">
                 {chainId == "0xa869" 
                 ?   <>
-                    <h1 className="carved" title="Welcome to NFT Bonfire">Welcome to NFT Bonfire</h1>
+                    <CarvedHeading text="Welcome to NFT Bonfire" />
                     <p className="" style={{padding:'10px 0', fontSize:'1.3rem', fontWeight:'500', lineHeight:'2rem', color:'var(--color)'}}>
                         You are a brave astronout and one of the first people to land in this exciting new space.
                         <br />
@@ -100,8 +101,8 @@ import { AvaxLogo } from "components/Chains/Logos";
                     </>
                 :   <>
 
-                        <div style={{display: 'flex', justifyContent: 'center'}}>
-                            <h1 className="carved" title="Please Change Network">Please Change Network</h1>
+                        <div className="title">
+                            <CarvedHeading text="Please Change Network" />
                         </div>
             
                         <p className="" style={{textAlign:'center', padding:'10px 0', fontSize:'1.3rem', fontWeight:'500', lineHeight:'2rem', color:'var(--color)'}}>
@@ -125,6 +126,7 @@ import { AvaxLogo } from "components/Chains/Logos";
                         </p>
                         </>
                 }   
+                </div>
                 </Col>
             </Row>
 
@@ -145,7 +147,7 @@ import { AvaxLogo } from "components/Chains/Logos";
                 <Col xs={24} md={12} className="account">
                     {/* <div className="row"> */}
                     <div className="title">
-                    <h1 className="carved" title="Account">Account</h1>
+                        <CarvedHeading text="Account" />
                     </div>
                     {account && <>
                         <h2>Current Account:</h2>
@@ -159,7 +161,9 @@ import { AvaxLogo } from "components/Chains/Logos";
                     {/* </div> */}
                 </Col>
                 <Col xs={24} md={12} className="personas stack">
-                    <h1 className="carved" title="Personas">Personas</h1>
+                    <div className="title">
+                        <h1 className="carved" title="Personas">Personas</h1>
+                    </div>
                     {!personaCollection?.hash && <div className="cards">
                         <div className="mintNewPersona NFT">
                             <h2>Why Don't You Mint Yourself a New Persona</h2>
@@ -175,8 +179,10 @@ import { AvaxLogo } from "components/Chains/Logos";
             
             <Row className="flex">
                 <div className="assets">
-                    {/* <h1>Non-Fungible Assets (Bonfires)</h1> */}
-                    <h1 className="carved" title="Non-Fungible Assets">Non-Fungible Assets</h1>
+                    <div className="">
+                        {/* <h1 className="carved" title="Non-Fungible Assets">Non-Fungible Assets</h1> */}
+                        <CarvedHeading text="Non-Fungible Assets" />
+                    </div>
                     <Skeleton loading={!isWeb3Enabled}>
                     {ChainHelper.allChainsData()
                         .filter((chainData) => (chainData.key === chainId || chainData.supported || chainData.live))

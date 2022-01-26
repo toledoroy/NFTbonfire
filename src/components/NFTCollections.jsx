@@ -15,6 +15,7 @@ import Space from "components/NFTSingle/Space";
 import { CollectionContext } from "common/context";
 // import { NFTHelper } from "helpers/NFTHelper";
 import { ChainHelper } from "helpers/ChainHelper";
+import CarvedHeading from "components/common/CarvedHeading";
 import __ from "helpers/__";
 // import { getChainName, getChainLogo } from "helpers/networks";
     
@@ -307,9 +308,3 @@ function NFTCollections(props) {
 }//NFTCollections()
 
 export default NFTCollections;
-
-function CarvedHeading(props){
-  let text = props.text;
-  if(props.heading == 2) return (<h2 className="carved" title={text}>{text}</h2>);
-  else return (<h1 className="carved" title={text}>{text}</h1>);
-}
