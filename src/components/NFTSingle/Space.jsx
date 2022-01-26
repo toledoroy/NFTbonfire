@@ -124,7 +124,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
         console.log("Spcae() Got "+results.length+" Rooms for Space:"+hash);
         if(results && results.length > 0) {
           //Log
-          console.log("[DEBUG] SpaceView() Got "+results.length+" Rooms for Space:"+hash, results); 
+          // console.log("[DEBUG] SpaceView() Got "+results.length+" Rooms for Space:"+hash, results); 
           //Set Rooms
           setRooms(results);
           //Option to Set Current Room
@@ -360,7 +360,7 @@ function RoomEntrance(props) {
   useEffect(() => {
     // Scroll to Selected/Unselected Element
     let roomEl = document.getElementById(room.id);
-    console.warn("[DEV] RoomEntrance() Room "+room.id+" Selected:"+room.id, {roomEl});
+    // console.warn("[DEV] RoomEntrance() Room "+room.id+" Selected:"+room.id, {roomEl});
     if(roomEl){
       let options = {
         top: roomEl.offsetTop,// + 40,  

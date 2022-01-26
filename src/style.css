@@ -116,6 +116,7 @@ header, footer { box-shadow: 0 0 8px #bbb;}
 /* .mainContent { min-height: 64vh;} */
 
 /* GLOBAL MODIFIERS */
+small {font-size: 73%;}
 .flex {display: flex;}
 .itemsCenter {align-items: center;}
 .clearfloat{  clear: both; width: 100%; display: block; }
