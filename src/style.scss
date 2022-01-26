@@ -136,8 +136,8 @@ body {
     }
     .crypto_addr {
         background-color: rgba(255, 255, 255, 0.5);
-        border-radius: var(--borderRadius);
-        padding: 5px ​10p;
+        border-radius: 30px;
+        padding: 5px 6px;
     }
     .stack{
         padding-left:50px;
@@ -515,6 +515,7 @@ body {
     .actions {
         display: flex; 
         // justify-content: space-evenly;
+        a,
         button{
             padding:1px 12px;
             height:28px;
@@ -529,12 +530,13 @@ body {
 
 /* NFT Item Display */
 
-.NFT{
+.NFT {
     border-radius: 18px;
     .ant-card-actions {
         border-radius: 0 0 18px 18px;
     }
 }
+
 .NFTitems { 
     transition-delay: 5s; 
     transition: all 0.12s ease-in-out; 
@@ -615,7 +617,7 @@ body {
                             max-width: 100%; 
                             overflow: hidden;
                             background: var(--comment-background);
-                            border: 1px solid #ddd;
+                            border: 1px solid #eee;
                             border-radius: 11px 11px 8px 8px;
                             padding: 1px 6px;
                         }
@@ -680,6 +682,10 @@ body {
     }
 }
   
+.persona .collection .NFTitems {
+    margin:0;
+}
+
 /* Stack */
 .stack {
     flex-wrap: nowrap;
@@ -716,6 +722,9 @@ body {
     .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before { content: ''; }
     .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::after { content: ''; }
     .anticon { font-size: 1.1rem; }
+    textarea {
+
+    }
 }
 .comment_add {
     box-shadow: 0 0 9px #ccc;
@@ -764,7 +773,7 @@ body {
     }
     .ant-form-item{
         background: #fff;
-        border-radius: 17px;
+        border-radius: 14px;
         display: block;
         label {
         }
@@ -813,6 +822,13 @@ body {
     h1 {
         text-align: center;
     }
+    .info{
+        display: flex;
+        justify-content: space-between;
+    }
+    .user_info {
+        color:#333;
+    }
     .ant-collapse-content-box{
         padding: var(--padding) 0;
     }
@@ -860,14 +876,14 @@ body {
 /* Account */
 #account {     
     color: #21bf96;
+    padding: 0 0 0 16px;
     height: 48px;
-    padding: 0 var(--padding);
+    border-radius: 48px;
     display: flex;
     justify-content: center;
     align-items: center;
     width: fit-content;
     border: 2px solid rgb(231, 234, 243);
-    border-radius: 12px;
     background-color: rgba(244, 244, 244, 0.87);
     cursor: pointer;
     .image { 

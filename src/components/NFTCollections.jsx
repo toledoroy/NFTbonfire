@@ -70,7 +70,7 @@ function NFTCollections(props) {
     else if(isWeb3Enabled && collectionHash && !NFTCollections[collectionHash]) setIsAllowed(false);
     else{
       //Log
-      console.log("(i) NFTCollections() Check if Allowed on Collection:"+collectionHash, NFTCollections, NFTCollections[collectionHash]?.owned, (NFTCollections[collectionHash]?.owned));
+      // console.log("(i) NFTCollections() Check if Allowed on Collection:"+collectionHash, NFTCollections, NFTCollections[collectionHash]?.owned, (NFTCollections[collectionHash]?.owned));
       setIsAllowed((NFTCollections[collectionHash]?.owned));
     }
   },[collectionHash, NFTCollections, isWeb3Enabled]);
@@ -235,9 +235,14 @@ function NFTCollections(props) {
                     {!collectionHash && 
                     <h2 className="title itemsCenter">
                       <Link key={collection.hash+'Link'} to={dest}>
-                          Collection: {__.sanitize(collection.name)} ({collection.symbol})
+                        <span className="">{collection.contract_type}:</span>
+                        {/* Collection:  */}
+                        &nbsp;
+                        {__.sanitize(collection.name)} 
+                        &nbsp;
+                        <small className="small">(${collection.symbol})</small>
                           
-                          <span className="debug">[{collection.contract_type}]</span>
+                        {/* <span className="debug">[{collection.contract_type}]</span> */}
 
                           <Button variant="contained" color="primary" className="link arrow"
                             style={{marginLeft: '1rem'}}
@@ -260,7 +265,7 @@ function NFTCollections(props) {
                       
                         <Link key={collection.hash+'Link'} to={dest}>
                           <Button variant="contained" color="primary" className="backstep link arrow"
-                          style={{marginRight: '1rem'}}
+                            style={{marginRight: '1rem'}}
                             // icon={<i className="bi bi-arrow-left"></i>}
                             // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
                             title="Back To Collections Page"
@@ -268,9 +273,14 @@ function NFTCollections(props) {
                               <i className="bi bi-arrow-left"></i>
                           </Button>
                         </Link>
-                        <h2 className="title">
-                        Collection: {__.sanitize(collection.name)} ({collection.symbol})
-                      </h2>
+
+                        {/* <CarvedHeading heading={1} text={'$'+collection.symbol} /> */}
+                        <h2 className="title" title={'$'+collection.symbol}>
+                          <span className="">{collection.contract_type}:</span>
+                          {/* Collection:  */}
+                          &nbsp;
+                          {__.sanitize(collection.name)} 
+                        </h2>
                       </div>
                       </>
                     }

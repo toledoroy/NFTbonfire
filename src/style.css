@@ -69,6 +69,9 @@ h1{
   font: bold 3rem Arial, sans-serif;
   position: relative;
   white-space: nowrap;
+  color: #0e0a30;
+  text-overflow: nowrap;
+  width: 100%;
 }
 .carved:before, 
 .carved:after {
@@ -115,6 +118,7 @@ header, footer { box-shadow: 0 0 8px #bbb;}
 /* .mainContent { min-height: 64vh;} */
 
 /* GLOBAL MODIFIERS */
+small {font-size: 73%;}
 .flex {display: flex;}
 .itemsCenter {align-items: center;}
 .clearfloat{  clear: both; width: 100%; display: block; }
@@ -146,6 +150,8 @@ header, footer { box-shadow: 0 0 8px #bbb;}
 .collections .middle { 
   display:flex; 
   justify-content: space-between;
+}
+.space .collections .middle { 
   position: sticky;
   top: 0;
 }

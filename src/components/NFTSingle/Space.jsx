@@ -71,13 +71,13 @@ function SpaceView({hash, collection, NFTpersonas}) {
   /**
    * Fetch Current Space
    */
-  useEffect(() => {
+  useEffect(() => async () => {
     if (isWeb3Enabled && isAuthenticated) {
       //Unset Space
       setSpace(null);
       const query = new Moralis.Query(Space);
       query.equalTo("hash", hash);
-      query.first().then(result => {
+      query.first().then(async result =>  {
         if(result) {
           setSpace(result);
           //Log
@@ -91,12 +91,13 @@ function SpaceView({hash, collection, NFTpersonas}) {
           newSpace.set("text", "This is a new space");  //No Need
           // newSpace.set("first_user", Moralis.currentUser.get("objectId"));   //TODO: Get Current User ObjectID, This isn't Really It...
           // newSpace.set("rooms", []); //Other Way...
-          newSpace.save().then(result => {
+          await newSpace.save();//.then(result => {
             //Log
             console.log("(i) Automatically Created new Space for:"+hash);
             //Set
-            setSpace(result);
-          });
+            // setSpace(result);
+          // });
+          setSpace(newSpace);
         }//New Space
       });
     }//Web3 Enabled
@@ -123,7 +124,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
         console.log("Spcae() Got "+results.length+" Rooms for Space:"+hash);
         if(results && results.length > 0) {
           //Log
-          console.log("[DEBUG] SpaceView() Got "+results.length+" Rooms for Space:"+hash, results); 
+          // console.log("[DEBUG] SpaceView() Got "+results.length+" Rooms for Space:"+hash, results); 
           //Set Rooms
           setRooms(results);
           //Option to Set Current Room
@@ -359,7 +360,7 @@ function RoomEntrance(props) {
   useEffect(() => {
     // Scroll to Selected/Unselected Element
     let roomEl = document.getElementById(room.id);
-    console.warn("[DEV] RoomEntrance() Room "+room.id+" Selected:"+room.id, {roomEl});
+    // console.warn("[DEV] RoomEntrance() Room "+room.id+" Selected:"+room.id, {roomEl});
     if(roomEl){
       let options = {
         top: roomEl.offsetTop,// + 40,  
@@ -403,7 +404,7 @@ function RoomEntrance(props) {
         </div>
       </Badge.Ribbon>
       <div className="content">
-        {isSelected && <div key="back" className="back link" style={{position:'absolute', right:'15px'}}><ArrowLeftOutlined />Back</div>}
+        {/* {isSelected && <div key="back" className="back link" style={{position:'absolute', right:'15px'}}><ArrowLeftOutlined />Back</div>} */}
         <h2>
           {/* <Link key="link" to={{ pathname: "/room/"+room.id, }} className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</Link> */}
           {/* <a className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</a> */}
@@ -411,13 +412,25 @@ function RoomEntrance(props) {
           {room?.get('name')}
         </h2>
         
-        {isSelected && <div key="user_info">
+        
+        <div key="user_info" className="user_info">
+        {isSelected
+        ?   <>
           <p>
             {PersonaHelper.getNameFull(room.get('persona'))}
             {role && ", "+role}
           </p>
           {purpose && <p key="purp" className="purpose" dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(purpose))}}></p>}
-        </div>}
+        </>
+        :   <>
+          <p>
+            {PersonaHelper.getName(room.get('persona'))}
+            {role && ", "+role}
+          </p>
+        </>
+        }
+        
+        </div>
         <div className="info">
           {/* <span key="id">ID: {room.id}</span> */}
           {/* {isSelected && <p key="desc">{room.get('text')}</p>} */}
@@ -429,13 +442,16 @@ function RoomEntrance(props) {
           {/* Single Room Link is Currently Broken...   //TODO: Single Room Needs its own URL
           <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn">Go!</Link> 
           */}
+
+          <div className="actions debug">
+            {(1) 
+              ? <Button variant="contained" size="small" color="primary" onClick={()=>{console.warn("CLICKED JOIN")}} title="Join the group">Join</Button>
+              : <Button variant="contained" size="small" onClick={()=>{console.warn("CLICKED LEAVE")}} style={{background: 'none', border:'none'}} title="Leave the group">Leave</Button>
+            }  
+          </div>
+          
         </div>
-        <div className="actions debug">
-          {(1) 
-            ? <Button variant="contained" size="small" color="primary" onClick={()=>{console.warn("CLICKED JOIN")}} title="Join the group">Join</Button>
-            : <Button variant="contained" size="small" onClick={()=>{console.warn("CLICKED LEAVE")}} style={{background: 'none', border:'none'}} title="Leave the group">Leave</Button>
-          }  
-        </div>
+        
       </div> 
       <div className="vote" onClick={(evt) => {evt.stopPropagation()}}>
         <VotePane post={room}/>

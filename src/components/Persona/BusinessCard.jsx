@@ -71,18 +71,15 @@ import { PersonaHelper } from "helpers/PersonaHelper";
                         {metadata?.role && <span className="role"> the {metadata.role}</span>}
                     </p>
                     {metadata?.description && <q key="desc" className="description">{metadata.description}</q>}
-
-                    
-                        {(props.actions!==false) && <div className="actions flex">
-                            {/* <Link key="link" to={{ pathname:link }} className="inner flex">View</Link> */}
-                            <a key="aView" href={link} className="inner flex">
-                                <Button className="button">view</Button>
-                            </a>
-                            <Button className="button lightUp" style={{zIndex:100}} onClick={(event) => { setPersona(persona);}}>use</Button>
-                            {/* event.stopPropagation();  */}
-                            {/* <a key="aUse" onClick={(event) => { event.preventDefault(); setPersona(persona); return false;}} className="inner flex">use</a> */}
-                        </div>}
-
+                    {(props.actions!==false) && <div className="actions flex">
+                        {/* <Button className="button lightUp" style={{zIndex:100}} onClick={(event) => { setPersona(persona);}}>use</Button> */}
+                        <a key="aUse" onClick={(event) => { event.preventDefault(); setPersona(persona); return false;}} className="inner flex">use</a>
+                        <a key="aView" href={link} className="inner flex">
+                            {/* <Button className="button" icon={<i className="bi bi-box-arrow-up-right btn-no"></i>}></Button> */}
+                            <i className="bi bi-box-arrow-up-right btn-no"></i>
+                        </a>
+                        {/* event.stopPropagation();  */}
+                    </div>}
                 </div>
             </div>
             {/* <div className="bottom"></div> */}

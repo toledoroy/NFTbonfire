@@ -107,7 +107,7 @@ export const ChainsData = {
     icon: <AvaxLogo />,
     nId:'',
     live: false,
-    supported: false,
+    supported: true,
   },
 }
 

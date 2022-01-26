@@ -23,6 +23,8 @@ const { Meta } = Card;
     const [isPending, setIsPending] = useState(false); 
     // const [image, setImage] = useState(nft.image); 
 
+    // if(nft.contract_type == 'ERC1155') console.warn("[DEV] NFTDisplaySingle() "+nft.contract_type, {nft});
+
     const handleTransferClick = (nft) => {
         setNftToSend(nft);
         setVisibility(true);

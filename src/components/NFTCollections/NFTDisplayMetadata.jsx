@@ -99,7 +99,7 @@ export default NFTDisplayMetadata;
         console.warn("[UNHANDLED] DisplayMetadataField() "+label+" is an Array", {label, value});
       }//Has Data
     }//Links
-    else{
+    else if(value.length > 0){
       console.warn("[UNHANDLED] DisplayMetadataField() "+label+" is an Array", {label, value});
       return (
         <dd key={label} className="debug">
