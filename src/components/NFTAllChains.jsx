@@ -27,10 +27,10 @@ import NFTDisplayAllChains from "components/NFT/NFTDisplayAllChains";
 function NFTAllChains(props) {
 
     return (
-    <div className="framed">
-        <CarvedHeading heading={1} text={"My NFTs"} />
-        <NFTDisplayAllChains />
-    </div>
+        <div className="framed">
+            <CarvedHeading heading={1} text={"My NFTs"} />
+            <NFTDisplayAllChains />
+        </div>
     );
 }//NFTAllChains()
 

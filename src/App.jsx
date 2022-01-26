@@ -69,7 +69,7 @@ const App = ({ isServerInfo }) => {
   /* Creates an Error */
   useEffect(() => {
     console.warn("[DEV]  App() Process Env:"+process?.env?.NODE_ENV, process?.env);
-  }, [process?.env]);
+  }, []);
   
 
   /**
