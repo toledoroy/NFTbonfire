@@ -378,7 +378,11 @@ function RoomEntrance(props) {
     letInteraction: moment(room.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss'),
   });
   */
- 
+ //Validate
+  if(!room){
+    console.error("RoomEntrance() Room Missing",{room});
+    return <div>ERROR - Room Missing</div>;
+  }
   let purpose = room.get('persona').get('metadata')?.purpose;
   let role = room.get('persona').get('metadata')?.role;
   return (
