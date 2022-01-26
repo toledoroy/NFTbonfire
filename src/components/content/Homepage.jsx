@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useMoralis, useMoralisQuery } from "react-moralis";
-import NFTCollections from "components/NFTCollections";
 import { PersonaHelper } from "helpers/PersonaHelper";
 import { ChainHelper } from "helpers/ChainHelper";
 import { Skeleton, Row, Col, Button } from 'antd';
@@ -13,7 +12,9 @@ import __ from "helpers/__";
 //Components
 import Address from "components/Address/Address";
 // import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
+import NFTCollections from "components/NFTCollections";
 import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
+import NFTDisplayAllChains from "components/NFT/NFTDisplayAllChains";
 import PageAuthenticate from "components/PageAuthenticate";
 import ERC20Balance from "components/ERC20Balance";
 
@@ -154,55 +155,13 @@ import ERC20Balance from "components/ERC20Balance";
                     </div>}
                 </Col>
             </Row>
-            
             <Row className="flex">
-                <div className="assets">
+                <div className="assets" style={{flex:'1 1'}}>
                     <div className="">
                         {/* <h1 className="carved" title="Non-Fungible Assets">Non-Fungible Assets</h1> */}
                         <CarvedHeading text="Non-Fungible Assets" />
                     </div>
-                    <Skeleton loading={!isWeb3Enabled}>
-                    {ChainHelper.allChainsData()
-                        .filter((chainData) => (chainData.key === chainId || chainData.supported || chainData.live))
-                        .map(chainData => (
-                        <div key={chainData.key} className={"chain_"+chainData.key}>
-                            <h3>{chainData.name}</h3>
-                            <div className="NFTs">
-                                <NFTCollections match={{params:{accountHash:account, chain:chainData.key, showBreadcrumbs:false}}} />
-                            </div>
-                        </div>
-                    ))}
-                    {/*  In Tabs
-                    <div className="accounts">
-                        <Tabs      //https://ant.design/components/tabs/
-                            type="card"
-                            // onChange={this.onChange}
-                            // activeKey={activeKey}
-                            // onEdit={handleTabEdit}
-                            hideAdd={true}
-                            >
-                            {ChainHelper.allChains().map(chain => (
-                                <TabPane tab={(
-                                    <span title={ChainHelper.get(chain, 'name')}>
-                                        {ChainHelper.get(chain, 'icon')}
-                                        {ChainHelper.get(chain, 'name')}
-                                    </span>
-                                    )} key={chain+':'+account}   closable={false}  >
-                                    <div className="item framed" key={chain}>
-                                        <div className="flex">
-                                            <div className="chain">
-                                            </div>
-                                        </div>
-                                        <div className="NFTs">
-                                            <NFTCollections match={{params:{accountHash:account, chain:chain, showBreadcrumbs:false}}} />
-                                        </div>
-                                    </div>
-                                </TabPane>
-                            ))}
-                        </Tabs>
-                    </div>
-                    */}
-                </Skeleton>
+                    <NFTDisplayAllChains />
                 </div>
             </Row>
         </div>
