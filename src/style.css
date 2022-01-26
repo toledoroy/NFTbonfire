@@ -70,8 +70,7 @@ h1{
   position: relative;
   white-space: nowrap;
   color: #0e0a30;
-  text-overflow: nowrap;
-  width: 100%;
+  /* width: 100%; */
 }
 .carved:before, 
 .carved:after {

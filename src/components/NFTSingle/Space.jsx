@@ -372,6 +372,8 @@ function RoomEntrance(props) {
     }
   },[isSelected]);
 
+
+  if(room?.get('members')) console.warn("[TEST] RoomEntrance() For:"+room.id, {room, members:room.get('members')});
   /*
   console.warn("[TEST] RoomEntrance() For:"+room.id, {
     started:moment(room.get('createdAt')).format('YYYY-MM-DD HH:mm:ss'),
@@ -441,8 +443,10 @@ function RoomEntrance(props) {
           {/* <p key="created">Created: {room?.createdAt}</p> */}
           {/* <p key="updated">Last Updated: {room?.updatedAt}</p> */}
           {/* <p key="">Total Items: {room.total_items}</p> */}
-          {/* <p key="">Total Users: {room.total_users}</p> */}
-          <p key="commentes">{room.get('childCount') || 0} Comments</p>
+          <p key="comments">{room.get('childCount') || 0} Comments</p>
+
+          {/* <p key="members" className="members">Users: {room.members}</p> */}
+
           {/* Single Room Link is Currently Broken...   //TODO: Single Room Needs its own URL
           <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn">Go!</Link> 
           */}

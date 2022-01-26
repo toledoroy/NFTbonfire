@@ -31,7 +31,7 @@ const VotePane = (props) => {
      */
     async function vote(vote){
         //Validate
-        if(user.get('accounts').includes(String(post.get('account')).toLowerCase())) return message.error("C'mon, this is your post");
+        if(user.get('accounts').includes(String(post.get('account')).toLowerCase())) return message.error("C'mon, that's your post");
         //Log
         // console.log("[DEV] VotePane() Running Moralis Cloud Func 'postVote':", {postId:post.id, vote, voteStatus});
         if(vote === voteStatus) vote = 0;   //Undo Current Vote (Neutral)
