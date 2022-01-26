@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useMoralis, useMoralisQuery } from "react-moralis";
 import { PersonaHelper } from "helpers/PersonaHelper";
-import { ChainHelper } from "helpers/ChainHelper";
-import { Skeleton, Row, Col, Button } from 'antd';
+// import { ChainHelper } from "helpers/ChainHelper";
+import { Row, Col } from 'antd';
 // import { Button, Tabs, Card, Image } from "antd";
 // import { PlusOutlined } from '@ant-design/icons';
 // import { PersonaContext } from "common/context";
@@ -12,7 +12,7 @@ import __ from "helpers/__";
 //Components
 import Address from "components/Address/Address";
 // import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
-import NFTCollections from "components/NFTCollections";
+// import NFTCollections from "components/NFTCollections";
 import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
 import NFTDisplayAllChains from "components/NFT/NFTDisplayAllChains";
 import PageAuthenticate from "components/PageAuthenticate";
