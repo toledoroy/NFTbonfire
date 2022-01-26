@@ -24,7 +24,13 @@ export const Persona = Moralis.Object.extend("Persona",
         //Persona Data
         contractPersona: {
             abi: require('contracts/abi/PERSONA.json'),     //Default ABI
-            "0x4": { address: '0x9E91a8dDF365622771312bD859A2B0063097ad34', },  //Rinkeby
+            "0x4": {
+                address: '0x9E91a8dDF365622771312bD859A2B0063097ad34', 
+            }, //Rinkeby
+            "0xa869": {   
+                address: '0x46e5BAbAd693DBb352002652f660508c65515969', 
+                abi: require('contracts/abi/PERSONA_1.1.json'),
+            }, //Avalanche Testnet
         },
         //Contract Data
         getContractData(chain){ return (chain) ? this.contractPersona[chain] : this.contractPersona; },
