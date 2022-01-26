@@ -92,7 +92,7 @@ import { AvaxLogo } from "components/Chains/Logos";
                         <br />
                         To interact with our services you'd need some Test-AVAX in your wallet.
                         <br />
-                        If you don't have any, you can get some from the <a href="https://faucet.avax-test.network/" target="_blank" rel="noopener noreferrer">AVAX Faucet</a>. 
+                        If you don't have any, you can get some from the <a href="https://faucet.avax-test.network/" target="_blank" rel="noopener noreferrer">AVAX Fuji Testnet Faucet</a>. 
                         <br />
                         Just type in your wallet address and click the resquest button.
                         Then, you'd be able to mint your new social persona. For free! and use it to interact with the community.
@@ -110,10 +110,10 @@ import { AvaxLogo } from "components/Chains/Logos";
                             We currently Support 
                             <br />
                             {/* Switch to Avalanche */}
-                            <button className="btn-no"
+                            <button className="pointer btn-no"
                                 title="Avalanche Testnet"
                                 onClick={() => switchNetwork('0xa869')}>
-                                <svg width="100" height="100" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg width="120" height="120" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path
                                     d="M0 10C0 4.47715 4.47715 0 10 0H20C25.5228 0 30 4.47715 30 10V20C30 25.5228 25.5228 30 20 30H10C4.47715 30 0 25.5228 0 20V10Z"
                                     fill="#E84142"
