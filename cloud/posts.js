@@ -14,8 +14,8 @@ const postChildCount = async (postId) => {
   query.equalTo("parentId", postId);
   const count = await query.count({useMasterKey: true});
   //Log
-  logger.warn("[TEST] postChildCount() entity:'"+postId+"' Count:"+count);
-
+  // logger.warn("[TEST] postChildCount() entity:'"+postId+"' Count:"+count);
+  //Return
   return count;
 };//postChildCount()
 
@@ -28,23 +28,38 @@ const postChildCount = async (postId) => {
   if(request.master) return;
   //Fetch Post Object
   const object = request.object;
-  // logger.warn("[DEV] Post afterSave Hook W/Object: "+JSON.stringify(object));
-  // try{
-    const parentId = object.get('parentId');
-    // logger.warn("[TEST] Post afterSave Hook parentId:"+parentId);
-    if(parentId){
-      const count = await postChildCount(parentId);
-      // logger.warn("[TEST] Post afterSave Hook PostCount:"+count);
-      //Fetch Parent Post
-      let parentPost = await new Moralis.Query('Post').get(parentId, {useMasterKey: true});
-      //Update Parent Post
-      parentPost.save({childCount:count}, {useMasterKey: true});
-    }
+  
+  const parentId = object.get('parentId');
 
-  // }
-  // catch(error){
-  //   logger.error("[CAUGHT] afterSave Hook: "+JSON.stringify(error));
-  // }
+  // logger.warn("[TEST] Post afterSave Hook parentId:"+parentId);
+  if(parentId && !isHash(parentId)){//Comment
+  // if(parentId){
+    /* Child Post Count */
+    const count = await postChildCount(parentId);
+    // logger.warn("[TEST] Post afterSave Hook PostCount:"+count);
+    //Fetch Parent Post
+    let parentPost = await new Moralis.Query('Post').get(parentId, {useMasterKey: true});
+
+    //Append User to Members
+    parentPost.add("members", request.user);
+
+    //Update Parent Post
+    parentPost.save({childCount:count}, {useMasterKey: true});
+  }//Child Post
+  else{//Post
+      try{
+        // logger.warn("[DEV] Post afterSave Hook W/Object: "+JSON.stringify(object));
+        // logger.warn("[TEST] Post afterSave Hook W/user: "+JSON.stringify(request.user));
+        //Append User to Members (on Self)
+        object.add("members", request.user);
+        object.save(null, {useMasterKey: true});
+        logger.warn("[TEST] afterSave Hook Added User to Members for post:"+object.id);
+    }
+    catch(error){
+      logger.error("[CAUGHT] 2nd part of afterSave Hook: "+JSON.stringify(error));
+    }
+  }//Root Post
+
 });
 
 //-- DEV
