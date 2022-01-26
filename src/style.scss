@@ -85,15 +85,24 @@ body {
     }
     >header{
         border-radius: 12px 12px 0 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        .inner{
+            max-width: var(--pageWidth);
+            margin:0 auto;
+        }
     }
     >footer{
-        height: var(--footer-height);
-        display: flex;
-        justify-content: space-around;
-        padding: 10px 50px 10px 50px;
         // background: var(--comment-background);
         z-index: 100;
         border-radius: 0 0 12px 12px ;
+        padding: 10px 50px 10px 50px;
+        height: var(--footer-height);
+        .inner{
+            margin:0 auto;
+            justify-content: space-around;
+            display: flex;
+            max-width: var(--pageWidth);
+        }
         .bi-discord{
             font-size: 32px;
             color: #5865F2;

@@ -1,6 +1,6 @@
 
 /**
- * Big Title Manipulation
+ * Component: Big Title Manipulation
  * @param {*} props 
  * @returns 
  */

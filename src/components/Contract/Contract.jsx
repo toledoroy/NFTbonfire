@@ -33,8 +33,9 @@ export default function Contract() {
 
   //Set Contract Wrapper
   const setContract = (contract) => {
+    console.warn("[DEV] setContract() Setting Contract:", contract);
     //Resolve ABI
-    if(typeof contract.abi == 'string') contract.abi = JSON.parse(contract.abi);
+    if(typeof contract?.abi === 'string') contract.abi = JSON.parse(contract.abi);
     setContractActual(contract);
   }
 
@@ -45,10 +46,10 @@ export default function Contract() {
       query.equalTo("chain", chainId);
       // query.equalTo("address", address);
       query.find().then(results =>{
-        setAllContracts(results);
-        console.error('Contract() All Contracts:', {results})
-        //Default to First
-        if(results.length){
+        console.error("Contract() Found "+results.length+" Contracts:", {results})
+        if(results.length>0){
+          setAllContracts(results);
+          //Default to First
           setContract({...results[0].attributes});
         } 
         else setContract(null); //Unset Current Contract

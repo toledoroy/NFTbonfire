@@ -257,25 +257,6 @@ function PagePersona(props) {
             console.error("PagePersona.initNewPersona() Failed Initiating w/New Persona ", {error, params});
         }
     };//initNewPersona
-    
-    /** DEPRECATED
-     * 
-     * @returns Load Default Metadata
-     * /
-     const loadDefaultMetadata = () => {
-        console.warn("[TEST] PagePersona.loadDefaultMetadata() Add Default Accounts:", {user, persona, metadata});
-        let defaultMetadata = Persona.getDefaultMetadata();
-        if(!defaultMetadata.accounts) defaultMetadata.accounts = [];    //Init
-        if(defaultMetadata.accounts.length===0){
-            //Default Accounts (Current User Accounts)
-            for(let address of user.get('accounts')) defaultMetadata.accounts.push({address, chain:chainId});
-            console.warn("[TEST] PagePersona.loadDefaultMetadata() Added Default Accounts:", {user, persona, metadata});
-        }
-        //Set
-        updateMetadata(defaultMetadata);
-        console.log("PagePersona.loadDefaultMetadata() Loaded Default Metadata",  {defaultMetadata, metadata, params});
-        return defaultMetadata;
-    };
 
     /**
      * Create a Fresh (Empty) Metadata Object
@@ -284,7 +265,7 @@ function PagePersona(props) {
         let metadata = {type:'persona', social:{}, accounts:[], links:[],};
         //Default Accounts (Current User Accounts)
         // for(let address of user.get('accounts')) metadata.accounts.push({address, chain:chainId});
-        metadata.accounts.push({account, chain:chainId});   //Current Address only
+        metadata.accounts.push({address:account, chain:chainId});   //Current Address only
         return metadata;
     }//freshMetadata()
 
@@ -1111,7 +1092,7 @@ export default PagePersona;
             // console.warn("[TEST] metadataSanitize() Action:'"+action+"' Account:"+i, {accounts:metadata.accounts, account:metadata.accounts[i], i});
             if(!metadata.accounts[i].address || !metadata.accounts[i].chain){
                 //Log
-                console.warn("[TEST] metadataSanitize() Removing Invalid Account ", {account:metadata.accounts[i]});   
+                console.warn("[TEST] metadataSanitize() Removing Invalid Account ", {account:metadata.accounts[i], });   
                 metadata.accounts.splice(i, 1);
                 break;
             }
@@ -1272,7 +1253,7 @@ export default PagePersona;
                         */
                     }//Links
                     else if(field.type === 'object'){
-                        console.log("[UNHANDLED] PersonaEdit() object field:", {field, fieldData:metadata?.[field.name]});
+                        console.log("[UNHANDLED] PersonaEdit() object field:"+field.name, {field, fieldData:metadata?.[field.name]});
                     }//object
                     else if(field.type === 'items'){
                         //Log
@@ -1341,7 +1322,7 @@ export default PagePersona;
                                         <div className="tooltip">
                                             <ul>
                                                 <li>When saving data on the blockchain you will be charged a network fee (gas).</li>
-                                                <li>You own your data and you can take it with you to other websites, if you want.</li>
+                                                <li>You own your data and you can take it with you to other websites, if you wish.</li>
                                                 <li>Keep in mind that everything you save on the blockchain will always be accessible in some way.</li>
                                             </ul>
                                         </div>

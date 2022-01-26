@@ -14,9 +14,9 @@ import "./style.scss";
 
 //Pages
 // import TokenPrice from "components/TokenPrice";
-import ERC20Balance from "components/ERC20Balance";
 // import ERC20Transfers from "components/ERC20Transfers";
 // import InchDex from "components/InchDex";
+import ERC20Balance from "components/ERC20Balance";
 import NFTBalance from "components/NFTBalance";
 import Wallet from "components/Wallet";
 import NativeBalance from "components/NativeBalance";
@@ -24,30 +24,22 @@ import Contract from "components/Contract/Contract";
 import Ramper from "components/Ramper";
 import NFTSingle from "components/NFTSingle";
 import NFTCollections from "components/NFTCollections";
-// import RoomPage from "components/RoomPage";
 import PagePersona from "components/PagePersona";
 import PersonaNew from "components/PersonaNew";
+// import RoomPage from "components/RoomPage";
 // import PageAuthenticate from "components/PageAuthenticate";
 // import Page404 from "components/Page404";
 // import { Menu, Layout, Button, Skeleton } from "antd";
 import { PersonaContext } from "common/context";
 
-// lessc "./style.less"
-
 const { Header, Footer, Content } = Layout;
 const styles = {
   header: {
-    // position: "fixed",
-    // width: "100%",
-    // background: "rgb(255, 255, 255, 0.7)",
     zIndex: 100,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     fontFamily: "Roboto, sans-serif",
-    borderBottom: "2px solid rgba(0, 0, 0, 0.06)",
-    padding: "0 10px",
-    boxShadow: "0 1px 10px rgb(151 164 175 / 10%)",
   },
   headerRight: {
     display: "flex",
@@ -72,11 +64,11 @@ const App = ({ isServerInfo }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, isWeb3Enabled]);
 
-  /* Creates an Error
+  /* Creates an Error */
   useEffect(() => {
-    console.warn("[DEV]  App() Process Env:"+process.env);
+    console.warn("[DEV]  App() Process Env:"+process?.env?.NODE_ENV, process?.env);
   }, [process?.env]);
-  */
+  
 
   /**
    * Set Persona Wrapper (Full Procedure)
@@ -111,17 +103,19 @@ const App = ({ isServerInfo }) => {
       {/* <script src="https://kit.fontawesome.com/62e94cb93f.js" crossorigin="anonymous"></script> */}
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
       
-        <Header style={styles.header} width={'1500'}>
-        <div>
-          <a href="/" style={{ display: "flex" }}>
-            <Logo />
-          </a>
-        </div>
-		      <MenuItems />
-          <div style={styles.headerRight}>
-            {account && <Chains />}
-            <NativeBalance />
-            <Account />
+        <Header>
+          <div className="inner" style={styles.header}>
+            <div>
+              <a href="/" style={{ display: "flex" }}>
+                <Logo />
+              </a>
+            </div>
+            <MenuItems />
+            <div style={styles.headerRight}>
+              {account && <Chains />}
+              <NativeBalance />
+              <Account />
+            </div>
           </div>
         </Header>
         <Content>
@@ -198,19 +192,20 @@ const App = ({ isServerInfo }) => {
       </Content>
 
       <Footer className="container">
-        {/* <div className="flex" style={{lineHeight:'60px'}}>
-          <Logo />
-          <span>NFT Bonfire</span>
-        </div> */}
-        {/* Built with  */}
-        <a target="_blank" rel="noopener noreferrer" href="https://moralis.io?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplat">
-          <img src="/moralis/Powered-by-Moralis-Badge-Green.svg" alt="Moralis Power!"/>
-        </a>
-        <a href='https://www.freepik.com/'>Cool Art by Freepik.com</a>
-        <a href="https://discord.gg/PeDb9MXXa9" target="_blank" rel="noopener noreferrer">
-          <i className="bi bi-discord"></i>
-        </a>
-        
+        <div className="inner">
+          {/* <div className="flex" style={{lineHeight:'60px'}}>
+            <Logo />
+            <span>NFT Bonfire</span>
+          </div> */}
+          {/* Built with  */}
+          <a target="_blank" rel="noopener noreferrer" href="https://moralis.io?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplat">
+            <img src="/moralis/Powered-by-Moralis-Badge-Green.svg" alt="Moralis Power!"/>
+          </a>
+          <a href='https://www.freepik.com/'>Cool Art by Freepik.com</a>
+          <a href="https://discord.gg/PeDb9MXXa9" target="_blank" rel="noopener noreferrer">
+            <i className="bi bi-discord"></i>
+          </a>
+        </div>
       </Footer>
 
     </Layout>
