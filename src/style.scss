@@ -951,12 +951,17 @@ body {
     .ant-collapse-content{
         padding-bottom: 60px;   //Comment Add
     }
-    .ant-collapse > .ant-collapse-item { border:none; position:relative; }
+    .ant-collapse > .ant-collapse-item { 
+        border:none; 
+        position:relative; 
+        padding-bottom: 3px;
+    }
 }
 .room_entrance{
     display: flex;
     justify-content: space-between;
-    padding: 10px 0;
+    // padding: 10px 0;
+    padding: 3px 10px 0 0;  //Compensate for Ant header
     /* margin: 10px 0; */
     /* border: 1px solid #9ecaed; */
     /* border-radius: 20px; */
