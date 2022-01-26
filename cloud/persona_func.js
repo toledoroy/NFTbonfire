@@ -112,7 +112,7 @@ const getTokenOwner = async (chain, contract, tokenId) => {
   //Validate
   if(!res) throw new Error("getTokenURI() Failed to Fetch Persona res("+res+") from Chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"'");
   //Log
-  logger.warn("[DEBUG] getTokenURI() Request Params: chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"' Ret URI:" + JSON.stringify(res) );  //V
+  // logger.warn("[DEBUG] getTokenURI() Request Params: chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"' Ret URI:" + JSON.stringify(res) );  //V
   return res;
 };
 
