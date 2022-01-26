@@ -328,9 +328,9 @@ export default SpaceView;
  */
 function RoomEntrance(props) {
   const { room, selected:isSelected } = props;  //hash, collection, 
-  const [ persona, setPersona ] = useState(room.get('persona'));
+  const [ persona, setPersona ] = useState(room?.get('persona'));
 
-  // let image = PersonaHelper.getImage(room.get('persona'));
+  // let image = PersonaHelper.getImage(room?.get('persona'));
   let image = PersonaHelper.getImage(persona);
   // console.warn("[TEST] RoomEntrance() Room (Persona) Image:"+image, props);
   let className = "room_entrance";
@@ -351,8 +351,8 @@ function RoomEntrance(props) {
   const loadItsPersona = async (parseObj) => {
     // let personaFull = await parseObj.relation('persona').query().find();   //Called relation() on non-relation field persona
     const PersonaQuery = new Moralis.Query(Persona);
-    let personaId = parseObj.get('persona').id;
-    let personaFull = await PersonaQuery.get(personaId);
+    let personaId = parseObj?.get('persona').id;
+    let personaFull = await PersonaQuery?.get(personaId);
     // console.warn("Space() Persona", personaFull?.attributes,  personaFull);
     setPersona(personaFull);
   }
@@ -373,11 +373,11 @@ function RoomEntrance(props) {
   },[isSelected]);
 
 
-  if(room?.get('members')) console.warn("[TEST] RoomEntrance() For:"+room.id, {room, members:room.get('members')});
+  if(room?.get('members')) console.warn("[TEST] RoomEntrance() For:"+room.id, {room, members:room?.get('members')});
   /*
   console.warn("[TEST] RoomEntrance() For:"+room.id, {
-    started:moment(room.get('createdAt')).format('YYYY-MM-DD HH:mm:ss'),
-    letInteraction: moment(room.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss'),
+    started:moment(room?.get('createdAt')).format('YYYY-MM-DD HH:mm:ss'),
+    letInteraction: moment(room?.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss'),
   });
   */
  //Validate
@@ -385,14 +385,14 @@ function RoomEntrance(props) {
     console.error("RoomEntrance() Room Missing",{room});
     return <div>ERROR - Room Missing</div>;
   }
-  let purpose = room.get('persona').get('metadata')?.purpose;
-  let role = room.get('persona').get('metadata')?.role;
+  let purpose = room?.get('persona')?.get('metadata')?.purpose;
+  let role = room?.get('persona')?.get('metadata')?.role;
   return (
     <div className="room_single">
     <div className={className} id={room.id}>
       <Badge.Ribbon placement="start" 
-        // text={room.get('persona').get('owner')} 
-        text={<Address address={room.get('persona')?.get('owner')} size={6} size2={2} />} 
+        // text={room?.get('persona')?.get('owner')} 
+        text={<Address address={room?.get('persona')?.get('owner')} size={6} size2={2} />} 
         // onHover={console.warn("[TEST] HOVERING ABOVE THE RIBBON")}
         title="Owner"
         >
@@ -423,14 +423,14 @@ function RoomEntrance(props) {
         {isSelected
         ?   <>
           <p>
-            {PersonaHelper.getNameFull(room.get('persona'))}
+            {PersonaHelper.getNameFull(room?.get('persona'))}
             {role && ", "+role}
           </p>
           {purpose && <p key="purp" className="purpose" dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(purpose))}}></p>}
         </>
         :   <>
           <p>
-            {PersonaHelper.getName(room.get('persona'))}
+            {PersonaHelper.getName(room?.get('persona'))}
             {role && ", "+role}
           </p>
         </>
@@ -439,11 +439,11 @@ function RoomEntrance(props) {
         </div>
         <div className="info">
           {/* <span key="id">ID: {room.id}</span> */}
-          {/* {isSelected && <p key="desc">{room.get('text')}</p>} */}
+          {/* {isSelected && <p key="desc">{room?.get('text')}</p>} */}
           {/* <p key="created">Created: {room?.createdAt}</p> */}
           {/* <p key="updated">Last Updated: {room?.updatedAt}</p> */}
           {/* <p key="">Total Items: {room.total_items}</p> */}
-          <p key="comments">{room.get('childCount') || 0} Comments</p>
+          <p key="comments">{room?.get('childCount') || 0} Comments</p>
 
           {/* <p key="members" className="members">Users: {room.members}</p> */}
 
@@ -466,7 +466,7 @@ function RoomEntrance(props) {
       </div>
     </div>
     {isSelected &&
-      <p className="text" dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(room.get('text')))}}></p>
+      <p className="text" dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(room?.get('text')))}}></p>
     }
     </div>
   );
@@ -534,17 +534,17 @@ function ShowComments({room}) {
                 <Comment
                   // actions={[<span key="comment-nested-reply-to">Reply</span>]}
                   // author={<a>Han Solo</a>}
-                  author={comment.get('persona')?.get('metadata')?.name}
+                  author={comment?.get('persona')?.get('metadata')?.name}
                   avatar={
-                    <Link to={{pathname: PersonaHelper.getLink(comment.get('persona'))}}>
-                      <Avatar src={PersonaHelper.getImage(comment.get('persona'))} alt={PersonaHelper.getName(comment.get('persona'))} />
+                    <Link to={{pathname: PersonaHelper.getLink(comment?.get('persona'))}}>
+                      <Avatar src={PersonaHelper.getImage(comment?.get('persona'))} alt={PersonaHelper.getName(comment?.get('persona'))} />
                     </Link> 
                   }
                   content={
                     <div className="inner">
                       <div className="content">
-                        <h3>{comment.get('name')}</h3>
-                        <p>{comment.get('text')}</p>
+                        <h3>{comment?.get('name')}</h3>
+                        <p>{comment?.get('text')}</p>
                       </div>
                       <div className="vote" onClick={(evt) => {evt.stopPropagation()}}>
                         <VotePane post={comment}/>
@@ -552,8 +552,8 @@ function ShowComments({room}) {
                     </div>
                   }
                   datetime={
-                    <Tooltip title={moment(comment.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss')}>
-                      <span>{moment(comment.get('updatedAt')).fromNow()}</span>
+                    <Tooltip title={moment(comment?.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss')}>
+                      <span>{moment(comment?.get('updatedAt')).fromNow()}</span>
                     </Tooltip>
                   }
                 />
