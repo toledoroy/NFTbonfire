@@ -26,6 +26,8 @@ import NFTSingle from "components/NFTSingle";
 import NFTCollections from "components/NFTCollections";
 import PagePersona from "components/PagePersona";
 import PersonaNew from "components/PersonaNew";
+// import NFTDisplayAllChains from "components/NFT/NFTDisplayAllChains";
+import NFTAllChains from "components/NFTAllChains";
 // import RoomPage from "components/RoomPage";
 // import PageAuthenticate from "components/PageAuthenticate";
 // import Page404 from "components/Page404";
@@ -162,6 +164,8 @@ const App = ({ isServerInfo }) => {
               <Route path="/nftCollections/:accountHash/:collectionHash/:roomId" component={NFTCollections} />
               <Route path="/nftCollections/:accountHash/:collectionHash" component={NFTCollections} />
               <Route path="/nftCollections/:accountHash" component={NFTCollections} />
+              
+              
               <Route path="/nftSingle/:hash" component={NFTSingle} />
               {/* <Route path="/nftSingle/:selected" component={NFTCollections} /> */}
               <Route path="/personatoken/:chain/:contract/:token_id" component={PagePersona} />
@@ -178,6 +182,8 @@ const App = ({ isServerInfo }) => {
               {/* pages below this point require authentication (CANCELLED) */}
 
               <Route path="/nftCollections" component={NFTCollections} />
+              <Route path="/nftAll/" component={NFTAllChains} />
+
               <Route path="/nftBalance"><NFTBalance /></Route>
               <Route path="/contract"><Contract /></Route>
               <Route exact path="/:handle/" component={PagePersona} />{/* CatchAll */}

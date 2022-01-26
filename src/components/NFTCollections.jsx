@@ -161,7 +161,6 @@ function NFTCollections(props) {
               </Breadcrumb>
               }
 
-
               {!collectionHash && 
               <>
                 {accountHash 
@@ -174,10 +173,6 @@ function NFTCollections(props) {
                   {collectionHash 
                   ? <CarvedHeading heading={2} text={"Private Space for "+NFTCollections[collectionHash].name} />
                   : <CarvedHeading heading={1} text={"My NFTs"} />
-                    // ? <>Private Space for {NFTCollections[collectionHash].name}</>
-                    // : <>My NFTs on  {ChainHelper.get(options.chain,'name')}
-                      // {/* <span>{ChainHelper.get(options.chain,'icon')}</span> */}
-                    // </>
                   }
                 </>}
               </>
@@ -193,11 +188,10 @@ function NFTCollections(props) {
                 </>
                 : <>
                   {collectionHash 
-                    ? <>Private Space for {NFTCollections[collectionHash].name}</>
-                    : <>{ChainHelper.get(options.chain,'name')}
-                      {/* <span>{ChainHelper.get(options.chain,'icon')}</span> */}
-                      
-                    </>
+                    ? <> Private Space for {NFTCollections[collectionHash].name}</>
+                    : <>  {ChainHelper.get(options.chain,'name')}
+                          {/* <span>{ChainHelper.get(options.chain,'icon')}</span> */}
+                      </>
                   }
                 </>}
               </h2>
