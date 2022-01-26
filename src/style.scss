@@ -874,9 +874,10 @@ body {
 }
 
 /* Account */
+
 #account {     
     color: #21bf96;
-    padding: 0 0 0 16px;
+    padding: 0 16px;
     height: 48px;
     border-radius: 48px;
     display: flex;
@@ -905,6 +906,7 @@ body {
         font-weight: 400;
     }*/
 }
+#account.in { padding: 0 0 0 16px;}
 .lightUp{
     transition: all 0.2s ease-in-out;
 }
