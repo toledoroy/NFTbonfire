@@ -68,11 +68,13 @@ h1{
   display: block;
   font: bold 3rem Arial, sans-serif;
   position: relative;
+  white-space: nowrap;
 }
 .carved:before, 
 .carved:after {
   content: attr(title);
   position: absolute;
+  white-space: nowrap;
 }
 .carved:before { top: 1px; left: 1px; color: rgba(255,255,255,.5); }
 .carved:after  { top: 2px; left: 2px; color: rgba(255,255,255,.4); }
@@ -97,12 +99,12 @@ body{
 
 }
 .container {
-  background-color: rgba(240, 240, 240, 0.87);
+  background-color: rgba(240, 240, 240, 0.9);
   /* background: var(--comment-background); */
   border-radius: var(--borderRadius);
 }
 .wrapper_main .mainContent{
-  background-color: rgba(240, 240, 240, 0.87);
+  background-color: rgba(240, 240, 240, 0.9);
 }
 
 dt { text-transform: capitalize; }
@@ -186,7 +188,10 @@ button:active {
   font-size: 16px;
   font-weight: 500;
 }
-
+.btn-no, .btn-no:hover, .btn-no:active, .btn-no:focus {
+  border: none;
+  background: none;
+}
 /* Address */
 .crypto_addr { }
 

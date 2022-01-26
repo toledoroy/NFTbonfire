@@ -3,7 +3,7 @@ import { useMoralis, useMoralisQuery } from "react-moralis";
 import NFTCollections from "components/NFTCollections";
 import { PersonaHelper } from "helpers/PersonaHelper";
 import { ChainHelper } from "helpers/ChainHelper";
-import { Skeleton, Row, Col } from 'antd';
+import { Skeleton, Row, Col, Button } from 'antd';
 // import { Button, Tabs, Card, Image } from "antd";
 // import { PlusOutlined } from '@ant-design/icons';
 // import { PersonaContext } from "common/context";
@@ -15,6 +15,9 @@ import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
 import PageAuthenticate from "components/PageAuthenticate";
 import ERC20Balance from "components/ERC20Balance";
 
+import { useChain } from "react-moralis";
+import { AvaxLogo } from "components/Chains/Logos";
+
 // const { TabPane } = Tabs;
 
 
@@ -22,10 +25,11 @@ import ERC20Balance from "components/ERC20Balance";
  * Component: Home Page
  */
  function Homepage(props) {
-    const { account, isWeb3Enabled, chainId } = useMoralis();     //, Moralis, user, chainId, isUserUpdating
+    const { account, isWeb3Enabled, chainId } = useMoralis();     //, Moralis, user, isUserUpdating
     // const { persona, contract } = props;
     // const { persona, contract } = props;
-      
+    const { switchNetwork } = useChain();   //chain
+    
     const [ personaCollection, setPersonaCollection ] = useState();
 
     //Fetch Personas -- Live Query (This isn't actually live the way you'd expect. DB changes aren't being detected)
@@ -74,21 +78,53 @@ import ERC20Balance from "components/ERC20Balance";
     return (
         <div className="framed home">
             
-            <Row className="welcom_message container debug" style={{margin:'10px 0 30px 0'}}>
+            <Row className="welcom_message container" style={{margin:'10px 0 30px 0'}}>
                 <Col xs={24} className="framed welcom_message">
-                <h1 className="carved" title="Welcome Home!">Welcome Home!</h1>
-                <p className="" style={{padding:'10px 0', fontSize:'1.3rem', fontWeight:'500', lineHeight:'2rem', color:'var(--color)'}}>
-                    You are a brave astronout and one of the first people to land in this exciting new space.
-                    <br />
-                    At this stage we are running on the Avalanch Testnet. 
-                    <br />
-                    To interact with our services you'd need some Test-AVAX in your wallet.
-                    <br />
-                    If you don't have any, you can get some from the <a href="https://faucet.avax-test.network/" target="_blank" rel="noopener noreferrer">AVAX Faucet</a>. 
-                    <br />
-                    Just type in your wallet address and click the resquest button.
-                    Then, you'd be able to mint your new social persona. For free! and use it to interact with the community.
-                </p>
+                
+                {chainId == "0xa869" 
+                ?   <>
+                    <h1 className="carved" title="Welcome to NFT Bonfire">Welcome to NFT Bonfire</h1>
+                    <p className="" style={{padding:'10px 0', fontSize:'1.3rem', fontWeight:'500', lineHeight:'2rem', color:'var(--color)'}}>
+                        You are a brave astronout and one of the first people to land in this exciting new space.
+                        <br />
+                        At this stage we are running on the Avalanch Testnet. 
+                        <br />
+                        To interact with our services you'd need some Test-AVAX in your wallet.
+                        <br />
+                        If you don't have any, you can get some from the <a href="https://faucet.avax-test.network/" target="_blank" rel="noopener noreferrer">AVAX Faucet</a>. 
+                        <br />
+                        Just type in your wallet address and click the resquest button.
+                        Then, you'd be able to mint your new social persona. For free! and use it to interact with the community.
+
+                    </p>
+                    </>
+                :   <>
+
+                        <div style={{display: 'flex', justifyContent: 'center'}}>
+                            <h1 className="carved" title="Please Change Network">Please Change Network</h1>
+                        </div>
+            
+                        <p className="" style={{textAlign:'center', padding:'10px 0', fontSize:'1.3rem', fontWeight:'500', lineHeight:'2rem', color:'var(--color)'}}>
+                        {/* <p className="change_network_message"> */}
+                            We currently Support 
+                            <br />
+                            {/* Switch to Avalanche */}
+                            <button className="btn-no"
+                                title="Avalanche Testnet"
+                                onClick={() => switchNetwork('0xa869')}>
+                                <svg width="100" height="100" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                    d="M0 10C0 4.47715 4.47715 0 10 0H20C25.5228 0 30 4.47715 30 10V20C30 25.5228 25.5228 30 20 30H10C4.47715 30 0 25.5228 0 20V10Z"
+                                    fill="#E84142"
+                                    />
+                                    <path d="M20.2914 15.3898C20.8111 14.4921 21.6497 14.4921 22.1693 15.3898L25.4056 21.0709C25.9252 21.9685 25.5 22.7008 24.4607 22.7008H17.941C16.9134 22.7008 16.4882 21.9685 16.9961 21.0709L20.2914 15.3898ZM14.0315 4.45277C14.5512 3.55513 15.378 3.55513 15.8977 4.45277L16.6182 5.75198L18.3189 8.74017C18.7323 9.59056 18.7323 10.5945 18.3189 11.4449L12.6142 21.3307C12.0945 22.1339 11.2323 22.6417 10.2756 22.7008H5.53942C4.50005 22.7008 4.07485 21.9803 4.59454 21.0709L14.0315 4.45277Z" fill="white" />
+                                </svg>
+                                <br />
+                                Avalanche Testnet
+                            </button>
+                        </p>
+                        </>
+                }   
                 </Col>
             </Row>
 
@@ -108,7 +144,9 @@ import ERC20Balance from "components/ERC20Balance";
             <Row className="flex">
                 <Col xs={24} md={12} className="account">
                     {/* <div className="row"> */}
+                    <div className="title">
                     <h1 className="carved" title="Account">Account</h1>
+                    </div>
                     {account && <>
                         <h2>Current Account:</h2>
                         <Address avatar="left" copyable address={account} size={9} />
