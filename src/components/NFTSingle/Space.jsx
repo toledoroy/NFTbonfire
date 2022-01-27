@@ -16,6 +16,7 @@ import __ from "helpers/__";
 import moment from 'moment';
 import { Space, Room, Comment as CommentObj } from "objects/objects";
 import { Persona } from "objects/Persona";
+import { ChainHelper } from "helpers/ChainHelper";
 //Components
 import Address from "components/Address/Address";
 import PageAuthenticate from "components/PageAuthenticate";
@@ -233,6 +234,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
         <Skeleton active loading={!space || !isWeb3Enabled}>
           {/* <h1> Private Space for {collection.name}</h1> */}
           <h1>
+            <span className="chain_icon debug" style={{marginRight:'15px'}} title={ChainHelper.get(collection.chain,'name')}>{ChainHelper.get(collection.chain,'icon')}</span>
             {/* {collection.name}  */}
             Private Space
           </h1>
@@ -242,6 +244,8 @@ function SpaceView({hash, collection, NFTpersonas}) {
           {/* <span key="symbol">Symbol: {collection.symbol}</span> */}
           {/* TODO: Add Field: Creator, Total No. of Items, */}
           {/* {console.log("[DEV] SpaceView() in REACT_APP_ENV:"+process?.env?.REACT_APP_ENV)} */}
+
+          
 
           {(isAllowed/* || process?.env?.REACT_APP_ENV==='development'*/) ? <>
             <div className={(curRoomId) ? 'room_container single' : 'room_container'}>

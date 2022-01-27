@@ -86,6 +86,7 @@ body {
     >header{
         border-radius: 12px 12px 0 0;
         border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        padding: 0 var(--padding);
         .inner{
             max-width: var(--pageWidth);
             margin:0 auto;
@@ -1121,7 +1122,7 @@ body {
     opacity: 0.4;
     color: blueviolet;
 }
-/* ENV Specific         //DISABLED TEMPORARILY
+/* ENV Specific */
 .debug{ 
     display: none;
     opacity: 0.5  ;
@@ -1132,7 +1133,7 @@ body {
 .env_production{
     .debug{ display: none; }
 }
-*/
+
 /* FIX THAT WEIRD IFRAME THAT HIDES EVERYTHING AFTER Hot Page Reload */
 body>iframe{
     display:none;

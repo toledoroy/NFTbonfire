@@ -277,6 +277,8 @@ function NFTCollections(props) {
                           {/* Collection:  */}
                           &nbsp;
                           {__.sanitize(collection.name)} 
+                          
+                          {/* &nbsp; on  <span title={ChainHelper.get(options.chain,'name')}>{ChainHelper.get(options.chain,'icon')}</span> */}
                         </h2>
                       </div>
                       </>

@@ -8,7 +8,7 @@ import { ChainHelper } from "helpers/ChainHelper";
 import { Persona } from "objects/Persona";
 import { IPFS } from "helpers/IPFS";
 import { usePersona } from "hooks/usePersona";
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 //Components
 import Address from "components/Address/Address";
 import NFTCollections from "components/NFTCollections";
@@ -43,7 +43,7 @@ function PagePersona(props) {
     const { params } = props.match;
     // const { handle } = props.match.params;
     const { handle, chain, contract, token_id } = params;
-    const { Moralis, isWeb3Enabled, isAuthenticated, userError, user, chainId, account } = useMoralis();     //isUserUpdating
+    const { Moralis, isWeb3Enabled, isAuthenticated, userError, chainId, account } = useMoralis();     //isUserUpdating
     // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMode ] = useState(false);
     const [ isOwned, setIsOwned ] = useState(false);
