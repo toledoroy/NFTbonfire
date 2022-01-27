@@ -83,7 +83,7 @@ function Account() {
    */
   const updatePersonas = async () => {
     //-- Validate
-    // console.warn("[TEST] Account() Match NFT Personas", {NFTpersonas, NFTCollections, personas});
+    console.warn("[DEBUG] Account() Match NFT Personas", {NFTpersonas, personas});
 
     //Match Personas
     for(let persona of NFTpersonas){
@@ -115,6 +115,9 @@ function Account() {
               });
             // console.log("[TEST] Account() personaUpdate Update Result:", {result, params});
           }//Needs Update
+
+          // else console.warn("[TEST] Account() Personas Match:", {DBpersona, persona});
+
           exist = true;
           break;
         }//Matched Persona
@@ -190,7 +193,7 @@ function Account() {
     return (
       <>
         <div id="account" className="out lightUp" onClick={() => authenticate({ signingMessage: "Sign in [Free]" })}>
-          <p className="text">Authenticate</p>
+          <span className="text">Authenticate</span>
         </div>
         <Modal
           visible={isAuthModalVisible}
@@ -277,7 +280,7 @@ function Account() {
       )} placement="bottomRight">
       {/* <a href="#" className="ant-dropdown-link" onClick={e => e.preventDefault()}> */}
         <div id="account" className="account in lightUp" onClick={e => e.preventDefault()}>
-          <p className="hash">{getEllipsisTxt(account, 4)}</p>
+          <span className="hash">{getEllipsisTxt(account, 4)}</span>
           {/* <Blockie currentWallet scale={3} /> */}
           <Avatar className='image' src={
             PersonaHelper.getImage(curPersona, <Blockie currentWallet scale={3} size={32} />)

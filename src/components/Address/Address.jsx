@@ -57,7 +57,7 @@ function Address(props) {
     <div className="crypto_addr" style={{ ...styles.address, ...props.style }}>
       {props.icon && props.icon}
       {props.avatar === "left" && <Blockie address={address} size={7} />}
-      <p>{props.size ? getEllipsisTxt(address, props.size, props.size2) : address}</p>
+      <span>{props.size ? getEllipsisTxt(address, props.size, props.size2) : address}</span>
       {props.avatar === "right" && <Blockie address={address} size={7} />}
       {props.copyable && (isClicked ? <Check /> : <Copy />)}
     </div>

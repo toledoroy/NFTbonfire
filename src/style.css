@@ -111,11 +111,12 @@ body{
 }
 
 dt { text-transform: capitalize; }
-.ant-layout-content { margin-top: var(--headerHeight); }
-/* .mainContent{ margin-top: var(--headerHeight); } */
 footer { margin-top: 40px; }
 header, footer { box-shadow: 0 0 8px #bbb;}
-/* .mainContent { min-height: 64vh;} */
+
+/* ANT Design Overrides */
+.ant-layout-content { margin-top: var(--headerHeight); }
+
 
 /* GLOBAL MODIFIERS */
 small {font-size: 73%;}
