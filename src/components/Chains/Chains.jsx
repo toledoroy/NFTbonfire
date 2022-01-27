@@ -32,7 +32,7 @@ function Chains() {
   const { switchNetwork, chainId } = useChain();   //chain
   const [selected, setSelected] = useState({});
   //Filter
-  // const menuItems = allChains.filter((chainData) => (chainData.key == chainId || chainData.supported && (chainData.live || process?.env?.NODE_ENV==='development')));
+  // const menuItems = allChains.filter((chainData) => (chainData.key == chainId || chainData.supported && (chainData.live || process?.env?.REACT_APP_ENV==='development')));
   const menuItems = allChains.filter((chainData) => (chainData.key === chainId || chainData.supported));   //This Allows Test Networks on Production
 
   // console.log("chain", chain);
