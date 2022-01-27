@@ -120,7 +120,7 @@ function NFTCollections(props) {
   }//testFunc()
   // testFunc();
 
-  // (process?.env?.NODE_ENV==='development')
+  // (process?.env?.REACT_APP_ENV==='development')
 
   // console.warn("[TEST] NFTCollections() Collection:", {NFTCollections, collectionHash, thiscollection:NFTCollections[collectionHash] });
   //style={styles.NFTs}
@@ -137,7 +137,7 @@ function NFTCollections(props) {
   return (
     <Skeleton loading={!isWeb3Enabled}>
       
-      {(!isAllowed && process?.env?.NODE_ENV==='development') && <p className="debug" style={{float:'right'}}>[NOT ALLOWED (C)]</p>}
+      {(!isAllowed && process?.env?.REACT_APP_ENV==='development') && <p className="debug" style={{float:'right'}}>[NOT ALLOWED (C)]</p>}
 
       <div key="collections" className={"collections framed count_"+Object.keys(NFTCollections).length}>
         

@@ -241,11 +241,11 @@ function SpaceView({hash, collection, NFTpersonas}) {
           {/* <span key="typs">Type: {collection.contract_type}</span> */}
           {/* <span key="symbol">Symbol: {collection.symbol}</span> */}
           {/* TODO: Add Field: Creator, Total No. of Items, */}
-          {/* {console.log("[DEV] SpaceView() in NODE_ENV:"+process?.env?.NODE_ENV)} */}
+          {/* {console.log("[DEV] SpaceView() in REACT_APP_ENV:"+process?.env?.REACT_APP_ENV)} */}
 
-          {(isAllowed/* || process?.env?.NODE_ENV==='development'*/) ? <>
+          {(isAllowed/* || process?.env?.REACT_APP_ENV==='development'*/) ? <>
             <div className={(curRoomId) ? 'room_container single' : 'room_container'}>
-              {(!isAllowed && process?.env?.NODE_ENV==='development') && <span className="debug" style={{float:'right'}}>[NOT ALLOWED (S)]</span>}
+              {(!isAllowed && process?.env?.REACT_APP_ENV==='development') && <span className="debug" style={{float:'right'}}>[NOT ALLOWED (S)]</span>}
             {(rooms && rooms.length>0) ? 
               <div className="allowed">
               
