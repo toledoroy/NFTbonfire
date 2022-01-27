@@ -47,7 +47,6 @@ function PagePersona(props) {
     // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMode ] = useState(false);
     const [ isOwned, setIsOwned ] = useState(false);
-    
     const [ persona, setPersonaActual ] = useState( new Persona() );
     // const [ persona, setPersonaActual ] = useState();
 
@@ -111,8 +110,12 @@ function PagePersona(props) {
 
     // useEffect(() => async () => {
     useEffect(() => {
-            //Disable EditMode on Logout
+        //Disable EditMode on Logout
         if(isEditMode && !account) setIsEditMode(false);
+
+        console.warn("[TODO] Check if Persona is on Current Chain", {persona, chainId});
+        // message.error("Current Chain () is not yet supported. Please change to a supported chain", 60);    
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [account]);
 
@@ -196,18 +199,15 @@ function PagePersona(props) {
             //Validate Authenticated User
             if(isAuthenticated){
 
-
-
                 //Validate Chain
                 let valid = validateChain(chainId);
-                console.warn("Persona.loadPersona() Valid Chain:"+chainId+" - "+valid);                
                 if(!valid){
                     console.warn("Persona.loadPersona() Invalid Chain:"+chainId+" - "+valid);                
                     message.error("Current Chain () is not yet supported. Please change to a supported chain", 60);    
                     //TODO: Display Something Else Does Not Support Minting Chain is Not Supported    
                     // <ChainUnsupported />
                 }
-                else console.warn("Persona.loadPersona() Valid Chain:"+chainId+" - "+valid);                
+                // else console.warn("Persona.loadPersona() Valid Chain:"+chainId+" - "+valid);                
 
 
 
@@ -251,7 +251,7 @@ function PagePersona(props) {
             // updateMetadata( loadDefaultMetadata() ); //Default Metadata
             // console.log("PagePersona.initNewPersona() New Persona w/Default Metadata",  {persona, user, metadata, params, props});
             updateMetadata( freshMetadata() );          //Empty Metadata
-            console.log("PagePersona.initNewPersona() New Persona w/Empty Metadata",  {persona, user, metadata, params, props});
+            // console.log("PagePersona.initNewPersona() New Persona w/Empty Metadata",  {persona, user, metadata, params, props});
         }
         catch(error){
             console.error("PagePersona.initNewPersona() Failed Initiating w/New Persona ", {error, params});
@@ -1206,7 +1206,8 @@ export default PagePersona;
                 {Object.values(personaFields).map((field) => { if(field.element) return field.element; else{
                     //Extract Placeholder
                     let placeholder = Array.isArray(field.placeholder) ? field.placeholder[Math.floor(Math.random()*field.placeholder.length)] : field.placeholder;
-                    if(field.name === 'links'){
+                    if(field.name === 'social'){ /* Handled Elsewhere */ }
+                    else if(field.name === 'links'){
                         return null;    //MOVED
                         /* MOVED
                         return( 

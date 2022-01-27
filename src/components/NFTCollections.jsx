@@ -230,7 +230,7 @@ function NFTCollections(props) {
                     <h2 className="">
                       <Link key={collection.hash+'Link'} to={dest}>
                         {collection.contract_type && <span className="" 
-                          title={`${collection.contract_type} is a ${collection.contract_type==='ERC721' ? 'Non-Fungible Token Contract. There can be only a single owner for each item' : collection.contract_type==='ERC1155' ? ' Semi-Fungible Token Contract. There can be many owners for each item' : ''}`}>
+                          title={`${collection.contract_type} is a ${collection.contract_type==='ERC721' ? 'Non-Fungible Token Contract. There can be only a single owner for each item.' : collection.contract_type==='ERC1155' ? ' Semi-Fungible Token Contract. There can be many owners for each item.' : ''}`}>
                           {collection.contract_type}:
                         </span>}
                         {/* Collection:  */}

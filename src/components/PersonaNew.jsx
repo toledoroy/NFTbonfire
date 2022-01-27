@@ -2,13 +2,15 @@ import React from "react";
 import { useMoralis } from "react-moralis";
 import PagePersona from "components/PagePersona";
 // import PageAuthenticate from "components/PageAuthenticate";
+import { Skeleton } from 'antd';
 
 /**
  * Component - New Persona Controller (for Validation)
  */
 function PersonaNew(props) {
-    const { isAuthenticated } = useMoralis();
+    const { isWeb3Enabled, isAuthenticated } = useMoralis();
 
+    if(!isWeb3Enabled) return (<Skeleton active loading={true}></Skeleton>)
     if(isAuthenticated) return <PagePersona {...props} />;
     else{
         return (

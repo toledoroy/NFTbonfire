@@ -42,9 +42,7 @@ const { Meta } = Card;
           contractAddress: nft.token_address,
         };
     
-        if (options.type === "erc1155") {
-          options.amount = amount;
-        }
+        if (options.type?.toLowerCase() === "erc1155")  options.amount = amount;
     
         setIsPending(true);
         await Moralis.transfer(options)
