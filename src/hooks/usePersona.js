@@ -221,6 +221,8 @@ export const usePersona = () => {
                     retValues:  data?.events?.Transfer?.returnValues,
                     tokenId:    data?.events?.Transfer?.returnValues?.tokenId,
                 });
+                //Trigger Metadata Update on Moralis
+                callMoralisMetadataUpdate(options.contractAddress, data?.events?.Transfer?.returnValues?.tokenId);
                 //Return Transaction Data
                 return data;
             },
@@ -232,7 +234,7 @@ export const usePersona = () => {
     }//mint()
 
     /**
-     * Update NFT URI
+     * Update NFT URI (From Contract)
      * @param string uri 
      */
     async function update(persona, uri){
@@ -243,14 +245,16 @@ export const usePersona = () => {
             functionName: 'update',
             params: { tokenId: persona.get('token_id'), uri },
         };
-        //Update Contract
+        //Fetch Data From Contract
         return await contractProcessor.fetch({
             params: options,
             onSuccess: (data) => {
                 try{
-                    console.log("usePersona.update() Success Updating Persona:"+persona.id, {data, uri, persona, options});
-                    //Update Persona's Metadata (& URI)
+                    console.log("usePersona.update() Success Updating Persona:"+persona.id, {data, uri});
+                    //Call a Server Update for Persona's Metadata (& URI)
                     Moralis.Cloud.run("personaUpdate", {personaId:persona.id});
+                    //Trigger Metadata Update on Moralis
+                    callMoralisMetadataUpdate(options.contractAddress, options?.params?.tokenId);
                     //Return Transaction Data
                     return data;
                 }
@@ -265,10 +269,27 @@ export const usePersona = () => {
         });
     }//update()
 
-    
+    /**
+     * Check if chain is Supported (Has a Persona Contract)
+     * @param {*} chainId 
+     * @returns 
+     */
     function validateChain(chainId){
         return (Persona.getContractAddress(chainId));
-    }
+    }//validateChain()
+
+    /**
+     * Trigger Moralis Metadata Update When Needed
+     */
+    function callMoralisMetadataUpdate(hash, tokenId){
+        console.error("[TODO] Run Moralis Metadata Update Call for:"+hash+"/"+tokenId);
+        if(hash && tokenId){
+            let uri = `https://deep-index.moralis.io/api/v2/nft/${hash}/${tokenId}/metadata/resync?chain=0xa869&flag=uri`;
+            // let headers = {'x-api-key': "17Hehy28h5JsgsBVOtUccIDWj012R2mby6uvbsvyFL6PTPUnq9HCPlzrXnV95Uwo"};
+            // fetch(uri)
+            // response_0 = requests.request('GET', uri, headers);
+        }
+    }//callMoralisMetadataUpdate()
 
     
     return { validateChain, loadMetadata, updateToken, fetchMetadata, mint, update };
