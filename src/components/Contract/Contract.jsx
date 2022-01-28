@@ -9,20 +9,6 @@ import { useEffect } from "react";
 
 const { Text } = Typography;
 
-
-// import contractInfo from "contracts/contractInfo.json";
-//Persona ABI
-// import personaABI from "contracts/abi/PERSONA.json";
-// const personaABI = require('contracts/abi/PERSONA.json');
-//Flat Instance
-// const personaContract = { 
-//   address: '0x9E91a8dDF365622771312bD859A2B0063097ad34', 
-//   chain:4,
-//   abi: personaABI,
-//   name:'PERSONA',
-// };
-
-
 export default function Contract() {
   const { Moralis, chainId, isWeb3Enabled } = useMoralis();
   const [responses, setResponses] = useState({});
