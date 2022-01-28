@@ -181,15 +181,16 @@ export const usePersona = () => {
             console.error("[CAUGHT] usePersona.updateToken() Error", {error, token_uri});
         }
     }//fetchMetadata()
-    
+
     /**
      * Mint New NFT
      * @param string uri 
      */
-     async function mint(persona, uri){
+    async function mint(persona, uri){
         //Validate
+        if(!persona || !persona.get) throw new Error("usePersona.update() Persona Missing", {persona});
         if(persona.get('token_id')) throw new Error("Can't Mint New Persona -- Persona Already Has TokenId:'"+persona.get('token_id')+"'");
-
+        if(!validateChain(chainId)) throw new Error("Can't Mint New Persona -- Chain:'"+chainId+"' Not Supported");
         const options = {
             // contractAddress: contractPersona.address,
             contractAddress: persona.get('address'),
@@ -198,7 +199,7 @@ export const usePersona = () => {
             params: { tokenURI:uri },
         };
 
-        console.warn("[TEST] usePersona.mint() Will Register New Token", {options, uri, persona});
+        // console.warn("[TEST] usePersona.mint() Will Register New Token", {options, uri, persona});
 
         //Mint New NFT
         await contractProcessor.fetch({
@@ -239,6 +240,10 @@ export const usePersona = () => {
      * @param string uri 
      */
     async function update(persona, uri){
+        //Validate Persona
+        if(!persona || !persona.get) throw new Error("usePersona.update() Persona Missing", {persona});
+        //Validate Chain
+        if(persona?.get('chain') !== chainId) throw new Error("usePersona.update() Failed - Current Chain:'"+chainId+"' Change to:'"+persona?.get('chain')+"'");
         const options = {
             // contractAddress: contractPersona.address,
             contractAddress: persona.get('address'),
@@ -246,7 +251,7 @@ export const usePersona = () => {
             functionName: 'update',
             params: { tokenId: persona.get('token_id'), uri },
         };
-        //Fetch Data From Contract
+        //Call Contract Method
         return await contractProcessor.fetch({
             params: options,
             onSuccess: (data) => {
@@ -270,6 +275,46 @@ export const usePersona = () => {
             },
         });
     }//update()
+
+    /** [TEST]
+     * Burn a Persona
+     */
+     async function burn(persona){
+        //Validate Persona
+        if(!persona || !persona.get) throw new Error("usePersona.burn() Persona Missing", {persona});
+
+        const options = {
+            contractAddress: persona.get('address'),
+            abi: Persona.getABI(),  //contractPersona.abi,
+            functionName: 'burn',
+            params: { tokenId: persona.get('token_id') },
+        };
+        console.warn("[TEST] usePersona.burn() Will Register New Token", {options, persona});
+
+        //burn New NFT
+        await contractProcessor.fetch({
+            params: options,
+            onSuccess: (data) => {  //TX Data
+                try{
+                    console.log("usePersona.burn() Success Burning Persona:"+persona.id, {data});
+                    //Call a Server Update for Persona
+                    Moralis.Cloud.run("personaUpdate", {personaId:persona.id});
+                    //Trigger Metadata Update on Moralis
+                    callMoralisMetadataUpdate(options.contractAddress, options?.params?.tokenId);
+                    //Return Transaction Data
+                    return data;
+                }
+                catch(error){
+                    console.error("usePersona.burn() Error While Burning Persona:"+persona.id, {error, persona, options});
+                }
+            },
+            onError: (error) => {
+                if(error.code === 4001) console.warn("usePersona.burn() Failed -- User Rejection", {error, options})
+                else console.error("usePersona.burn() Failed", {error, persona, options});
+                throw new Error("usePersona.burn() Failed  "+error);
+            },
+        });
+    }//burn()
 
     /**
      * Check if chain is Supported (Has a Persona Contract)
