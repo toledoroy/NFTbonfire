@@ -26,6 +26,7 @@ export const Persona = Moralis.Object.extend("Persona",
             abi: require('contracts/abi/PERSONA_1.0.json'),     //Default ABI
             "0x4": {
                 address: '0x9E91a8dDF365622771312bD859A2B0063097ad34', 
+                abi: require('contracts/abi/PERSONA_1.0.json'),
             }, //Rinkeby
             "0xa869": {   
                 address: '0x46e5BAbAd693DBb352002652f660508c65515969', 
