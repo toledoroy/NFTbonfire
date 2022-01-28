@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
-import { FireTwoTone, ArrowLeftOutlined } from '@ant-design/icons';
+// import { FireTwoTone, ArrowLeftOutlined } from '@ant-design/icons';
 // import { Image, Form, Input, Button, Checkbox } from "antd";
 import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Button } from 'antd';
 import { useMoralisQuery } from "react-moralis";
@@ -237,6 +237,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
             <span className="chain_icon debug" style={{marginRight:'15px'}} title={ChainHelper.get(collection.chain,'name')}>{ChainHelper.get(collection.chain,'icon')}</span>
             {/* {collection.name}  */}
             Private Space
+            <span className="debug">&nbsp; for {collection.name}</span>
           </h1>
           {/* <h1 className="carved" title="Private Space">Private Space</h1> */}
           {/* <h4>[Addr:{collection.hash}]</h4> */}

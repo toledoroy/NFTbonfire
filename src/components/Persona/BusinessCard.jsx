@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 // import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import { PersonaContext } from "common/context";
 
 // import { Link } from "react-router-dom";
-// import { Image, Form, Input, Select, InputNumber } from 'antd';
-import { Avatar, Button } from 'antd';
+// import { Button, Image, Form, Input, Select, InputNumber } from 'antd';
+import { Avatar } from 'antd';
 // import { Row, Col } from 'antd';
 // import { LoadingOutlined, PlusOutlined, PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 // import { Space, Cascader } from 'antd';
@@ -23,7 +23,7 @@ import { PersonaHelper } from "helpers/PersonaHelper";
     // const [ metadata, setMetadata ] = useState(props?.metadata);
     // const { Moralis, setUserData, userError, isUserUpdating, user } = useMoralis();
     const metadata = receivedMeta ? receivedMeta : persona.get('metadata');
-    const history = useHistory();
+    // const history = useHistory();
 
     
     let image = PersonaHelper.getImage(persona);

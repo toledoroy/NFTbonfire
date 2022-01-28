@@ -592,7 +592,7 @@ function PagePersona(props) {
                                 :   <>
                                     <span>
                                         to edit, switch to
-                                        <br/> 
+                                        <br /> 
                                         <span className="link" onClick={() => switchNetwork(persona?.get('chain'))}>
                                         {ChainHelper.get(persona?.get('chain'), 'name')}
                                         </span>
