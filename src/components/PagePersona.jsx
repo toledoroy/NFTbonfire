@@ -8,6 +8,7 @@ import { ChainHelper } from "helpers/ChainHelper";
 import { Persona } from "objects/Persona";
 import { IPFS } from "helpers/IPFS";
 import { usePersona } from "hooks/usePersona";
+import { useChain } from "react-moralis";
 // import { useHistory } from 'react-router-dom';
 //Components
 import Address from "components/Address/Address";
@@ -60,7 +61,7 @@ function PagePersona(props) {
     const [ imageUrl, setImageUrl ] = useState(metadata?.image);
     // const [ imageLoading, setImageLoading ] = useState(false);
     // const history = useHistory();
-
+    const { switchNetwork } = useChain();   //chain
     //https://github.com/MoralisWeb3/react-moralis#usemoralisweb3api
     
     //Cloud Function Examples
@@ -112,10 +113,6 @@ function PagePersona(props) {
     useEffect(() => {
         //Disable EditMode on Logout
         if(isEditMode && !account) setIsEditMode(false);
-
-        console.warn("[TODO] Check if Persona is on Current Chain", {persona, chainId});
-        // message.error("Current Chain () is not yet supported. Please change to a supported chain", 60);    
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [account]);
 
@@ -203,13 +200,13 @@ function PagePersona(props) {
                 let valid = validateChain(chainId);
                 if(!valid){
                     console.warn("Persona.loadPersona() Invalid Chain:"+chainId+" - "+valid);                
-                    message.error("Current Chain () is not yet supported. Please change to a supported chain", 60);    
+                    message.error("Current Chain ("+ChainHelper.get(chainId, 'name')+") is not yet supported. Please change to a supported chain", 30);    
+
                     //TODO: Display Something Else Does Not Support Minting Chain is Not Supported    
                     // <ChainUnsupported />
+
                 }
                 // else console.warn("Persona.loadPersona() Valid Chain:"+chainId+" - "+valid);                
-
-
 
                 //Log
                 console.warn("PagePersona() New Persona -- Init in Edit Mode", {params}); 
@@ -301,7 +298,23 @@ function PagePersona(props) {
         return true;
     }
     */
-    
+    /**
+     * Check if Persona Can Curretly Be Edited
+     * @returns 
+     */
+    const canEdit = () => {
+        // console.warn("[TEST] ", {pChain:persona?.get('chain'), chainId, isEditMode});
+        // if(!persona?.get('chain') || persona.get('chain')!==chainId) return false;
+        return (isSameChain && isAuthenticated && isOwned);
+    }
+    /**
+     * Check if persona matches the current chain
+     * @returns 
+     */
+    const isSameChain = () => {
+        return (!persona?.get('chain') || persona.get('chain')===chainId);
+    }
+
     /**
      * Tab Close/Add (Add/Remove Account)
      * @param string targetKey 
@@ -569,11 +582,23 @@ function PagePersona(props) {
                             <>{isOwned &&
                             <div className="button">
                                 {/* {isEditMode && <Button className="debug" onClick={()=>{ console.warn("[TODO] PagePersona() Save Changes"); }} >[Save]</Button>} */}
-                                {!isEditMode && 
-                                    <Button variant="contained" color="primary" onClick={()=>{setIsEditMode(isEditMode===false);}}
-                                        icon={<i className="bi bi-pencil-fill"></i>}>Edit
-                                    </Button>}
+                                {isSameChain()
+                                ? <>
+                                    {!isEditMode && 
+                                        <Button variant="contained" color="primary" onClick={()=>{setIsEditMode(isEditMode===false);}}
+                                            icon={<i className="bi bi-pencil-fill"></i>}>Edit
+                                        </Button>}
+                                    </>
+                                :   <>
+                                    <span>
+                                        to edit, switch to
+                                        <br/> 
+                                        <span className="link" onClick={() => switchNetwork(persona?.get('chain'))}>
+                                        {ChainHelper.get(persona?.get('chain'), 'name')}
+                                        </span>
+                                    </span>
 
+                                </>}
                                 {(isEditMode && !PersonaHelper.isNew(persona)) && <Button variant="contained" color="primary" className="backstep" onClick={()=>{ reloadmetadata(); setIsEditMode(isEditMode===false);}}
                                     style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
                                     icon={<i className="bi bi-arrow-left"></i>}
@@ -601,7 +626,7 @@ function PagePersona(props) {
 
                     {isEditMode && 
                     <div className="edit">
-                        <PersonaEdit persona={persona} metadata={metadata} isLoading={isLoading} form={form} setIsEditMode={setIsEditMode} reloadmetadata={reloadmetadata}/>
+                        <PersonaEdit persona={persona} metadata={metadata} isLoading={isLoading} form={form} setIsEditMode={setIsEditMode} reloadmetadata={reloadmetadata} canEdit={canEdit}/>
                     </div>
                     }
 
@@ -893,7 +918,7 @@ export default PagePersona;
                     //Done Loading
                     setImageLoading(false);
                     //Log
-                    console.log("[TEST] handleChangeFile() Cover Image File Upload - IPFS Hash:", url, metadata);
+                    console.warn("[DEBUG] handleChangeFile() Cover Image File Upload - IPFS Hash:", {url, metadata});
                 });
             }//Manual Upload
             else if (info.file.status === 'error') {
@@ -1055,7 +1080,7 @@ export default PagePersona;
  */
  function PersonaEdit(props) {
     // const { persona, contract } = props;
-    const { persona, contract, isLoading, setIsEditMode, form, reloadmetadata } = props;
+    const { persona, contract, isLoading, setIsEditMode, form, reloadmetadata, canEdit } = props;
     // const tokenId = persona.get('token_id');
     const [ isSaving, setIsSaving ] = useState(false);
     const [ stage, setStage ] = useState(null);
@@ -1065,7 +1090,7 @@ export default PagePersona;
 
     // const { verifyMetadata, updateToken } = useVerifyMetadata();
     // const { Moralis, setUserData, user, isAuthenticated } = useMoralis();
-    const { Moralis, user, isAuthenticated } = useMoralis();
+    const { Moralis, user, isAuthenticated, chainId } = useMoralis();
     // const contractProcessor = useWeb3ExecuteFunction();
 
     //Contract Data
@@ -1164,7 +1189,15 @@ export default PagePersona;
      * @ret void
      */
      const onFinish = async (values) => {
-        // console.warn("[TEST] PersonaEdit.onFinish() Updated Values ", {values});
+        
+        console.warn("[TEST] PersonaEdit.onFinish() Updated Values ", {chainId, persona});
+
+        //Validate Chain
+        if(persona?.get('chain') && persona.get('chain')!==chainId){
+            //User Error
+            message.error("Current Chain () is not yet supported. Please change to:"+ChainHelper.get(persona?.get('chain'), 'name')+" chain", 60);    
+            throw new Error("[TEST] PersonaEdit.onFinish() Validate Chain");
+        }
 
         //Update Metadata
         let newMetadata = {...metadata, ...values};
@@ -1312,7 +1345,7 @@ export default PagePersona;
                         <span>Please confirm the update request on your web3 wallet</span>
                         <Spin style={{display:'block'}} />
                     </div>}
-                    {(stage===null) && 
+                    {(stage===null || stage==='FAILED') && 
                         <Form.Item 
                             wrapperCol={{ offset: 6 }}
                             // wrapperCol={{ offset: 1, span: 10 }}
@@ -1334,7 +1367,7 @@ export default PagePersona;
                                     >
                                     <Button type="primary">Mint New Persona</Button>
                                 </Popconfirm>
-                            : <Button type="primary" htmlType="submit">Save</Button>
+                            : <Button type="primary" htmlType="submit" disabled={!canEdit()}>Save</Button>
                             }
                             {/* <Button onClick={formReset} style={{marginLeft:'20px' }}>Reset</Button> REMOVED */}
                             <Button variant="contained" color="primary" onClick={()=>{ reloadmetadata(); setIsEditMode(false)}}>Cancel</Button>

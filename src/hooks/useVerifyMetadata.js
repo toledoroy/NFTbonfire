@@ -24,7 +24,7 @@ export const useVerifyMetadata = () => {
     function updateToken(NFT){
 
         /* Multichain Now Supported
-        //Should Use contractCall() From userPersona()
+        //Should Use contractCall() From usePersona()
         //Validate
         if(NFT.chain && NFT.chain !== chainId){
             throw new Exception ("useVerifyMetadata.updateToken() '"+chainId+"' is the Wrong Chain. Token is from:'"+NFT.chain+"'")

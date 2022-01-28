@@ -128,7 +128,7 @@ export const usePersona = () => {
                 }//Different URI
                 else{
                     //Log
-                    console.log("[TEST] usePersona.updateToken() Metadata URI is Up to Date -- Return Saved Metadata", {parseObj});
+                    // console.log("[TEST] usePersona.updateToken() Metadata URI is Up to Date -- Return Saved Metadata", {parseObj});  //V
                     //Same URI - No Change
                     return parseObj.get('metadata');
                 } 
@@ -198,7 +198,7 @@ export const usePersona = () => {
             params: { tokenURI:uri },
         };
 
-        console.warn("[TEST] userPersona.mint() Will Register New Token", {options, uri, persona});
+        console.warn("[TEST] usePersona.mint() Will Register New Token", {options, uri, persona});
 
         //Mint New NFT
         await contractProcessor.fetch({
@@ -211,10 +211,10 @@ export const usePersona = () => {
                     token_id: data?.events?.Transfer?.returnValues?.tokenId,
                 };
                 //Log                
-                console.log("userPersona.mint() Success -- Trigger New Token Register for:"+tokenData.token_id, {tokenData, data, uri, persona, options});
+                console.log("usePersona.mint() Success -- Trigger New Token Register for:"+tokenData.token_id, {tokenData, data, uri, persona, options});
                 //Validate & Trigger Server Update
                 if(tokenData.token_id) Moralis.Cloud.run("personaRegister", tokenData);
-                else console.error("userPersona.mint() Success, but Failed to Extract Token ID", {   
+                else console.error("usePersona.mint() Success, but Failed to Extract Token ID", {   
                     data,
                     events:     data?.events,
                     transfer:   data?.events?.Transfer,
@@ -227,8 +227,9 @@ export const usePersona = () => {
                 return data;
             },
             onError: (error) => {
-                if(error.code === 4001) console.warn("userPersona.mint() Failed -- User Rejection", {error, uri, options})
-                else console.error("userPersona.mint() Failed", {error, uri, persona, options})
+                if(error.code === 4001) console.warn("usePersona.mint() Failed -- User Rejection", {error, uri, options})
+                else console.error("usePersona.mint() Failed", {error, uri, persona, options});
+                throw new Error("usePersona.mint() Failed  "+error);
             },
         });
     }//mint()
@@ -264,7 +265,8 @@ export const usePersona = () => {
             },
             onError: (error) => {
                 if(error.code === 4001) console.warn("usePersona.update() Failed -- User Rejection", {error, uri, options})
-                else console.error("usePersona.update() Failed", {error, uri, persona, options})
+                else console.error("usePersona.update() Failed", {error, uri, persona, options});
+                throw new Error("usePersona.update() Failed  "+error);
             },
         });
     }//update()
@@ -281,17 +283,27 @@ export const usePersona = () => {
     /**
      * Trigger Moralis Metadata Update When Needed
      */
-    function callMoralisMetadataUpdate(hash, tokenId){
-        console.error("[TODO] Run Moralis Metadata Update Call for:"+hash+"/"+tokenId);
-        if(hash && tokenId){
-            let uri = `https://deep-index.moralis.io/api/v2/nft/${hash}/${tokenId}/metadata/resync?chain=0xa869&flag=uri`;
-            // let headers = {'x-api-key': "17Hehy28h5JsgsBVOtUccIDWj012R2mby6uvbsvyFL6PTPUnq9HCPlzrXnV95Uwo"};
-            // fetch(uri)
-            // response_0 = requests.request('GET', uri, headers);
+    function callMoralisMetadataUpdate(hash, tokenId, chain){
+        let apiKey = process?.env?.REACT_APP_MORALIS_API_KEY;
+        if(apiKey){
+            if(hash && tokenId && chain){
+                let uri = `https://deep-index.moralis.io/api/v2/nft/${hash}/${tokenId}/metadata/resync?chain=${chain}&flag=uri`;
+                // let headers = {'x-api-key': "17Hehy28h5JsgsBVOtUccIDWj012R2mby6uvbsvyFL6PTPUnq9HCPlzrXnV95Uwo"};
+                let headers = {'x-api-key': apiKey};
+                try{
+                    // response_0 = requests.request('GET', uri, headers);
+                    fetch(uri, {headers}).then(response => console.warn("Moralis API Response:", response));
+                }
+                catch(error){
+                    console.error("[CAUGHT] usePersona.callMoralisMetadataUpdate() Error", {error, uri, params:{hash, tokenId, chain}});
+                }
+            }
+            else console.error("usePersona.callMoralisMetadataUpdate() Missing Parameters", {hash, tokenId, chain});
         }
+        else console.error("usePersona.callMoralisMetadataUpdate() Can't Run. API Key Missing in ENV");
     }//callMoralisMetadataUpdate()
 
     
-    return { validateChain, loadMetadata, updateToken, fetchMetadata, mint, update };
+    return { validateChain, loadMetadata, updateToken, fetchMetadata, mint, update, callMoralisMetadataUpdate };
  
 }//usePersona()

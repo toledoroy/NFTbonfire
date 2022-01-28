@@ -125,7 +125,7 @@ small {font-size: 73%;}
 .clearfloat{  clear: both; width: 100%; display: block; }
 .framed{ padding: var(--padding); max-width: var(--pageWidth); margin:0 auto;} 
 .hr { border-top: 1px solid var(--background-color); border-radius: 0 !important;}
-.link {color:var(--colorLink);}
+.link {color:var(--colorLink); cursor: pointer;}
 .glass { background-color: rgba(255, 255, 255, 0.5);}
 .pointer { cursor: pointer; } 
 

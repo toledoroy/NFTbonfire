@@ -14,6 +14,7 @@ import __ from "helpers/__";
 // import { Link } from "react-router-dom";
 import { PersonaContext } from "common/context";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
+import { usePersona } from "hooks/usePersona";
 
 import Text from "antd/lib/typography/Text";
 import { connectors } from "./config";
@@ -59,6 +60,7 @@ const styles = {
  */
 function Account() {
   const { Moralis, authenticate, isAuthenticated, account, user, chainId, logout } = useMoralis();
+  const { callMoralisMetadataUpdate } = usePersona();
   // const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);
   const [lastAccount, setLastAccount] = useState(account);  //Remember Last Account
@@ -97,11 +99,15 @@ function Account() {
             ){
             //Mismatch - Might need an update
             console.error("[FYI] Account() Data Mismatch -- NFT Needs an Update:"+DBpersona.id+"", {
-              DBpersona, persona,
-              DBOwner:DBpersona.get('owner'), owner: persona.owner_of, 
-              DBURI: DBpersona.get('token_uri') , tokenURI: persona.token_uri,
-              matchURI:__.matchURI(DBpersona.get('token_uri'), persona.token_uri)
+              // DBpersona, persona,
+              // DBOwner:DBpersona.get('owner'), owner: persona.owner_of, 
+              // DBURI: DBpersona.get('token_uri') , tokenURI: persona.token_uri,
+              // matchURI:__.matchURI(DBpersona.get('token_uri'), persona.token_uri)
+              params:[persona.token_address, persona.token_id, persona.chain],
             });
+            callMoralisMetadataUpdate(persona.token_address, persona.token_id, persona.chain);
+
+
             let params = {personaId:DBpersona.id};
             // const result = 
             await Moralis.Cloud.run("personaUpdate", params)  //Update
