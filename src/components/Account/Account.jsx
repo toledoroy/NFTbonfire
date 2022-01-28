@@ -198,7 +198,7 @@ function Account() {
   if (!isAuthenticated || !account) {
     return (
       <>
-        <div id="account" className="out lightUp" onClick={() => authenticate({ signingMessage: "Sign in [Free]" })}>
+        <div id="account" className="out lightUp" onClick={() => authenticate({ signingMessage: "Sign in to NFT Bonfire [Free]" })}>
           <span className="text">Authenticate</span>
         </div>
         <Modal
