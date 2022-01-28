@@ -33,7 +33,7 @@ const styles = {
     cursor: "pointer",
   },
   text: {
-    color: "#21BF96",
+    color: "var(--colorAccent2)",
   },
   connector: {
     alignItems: "center",
