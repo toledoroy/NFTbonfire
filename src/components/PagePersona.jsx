@@ -1074,7 +1074,7 @@ export default PagePersona;
 
 
 /**
- * Component: Persoan Edit Form
+ * Component: Persona Edit Form
  * (Creaeted this component as a miniscule attempt to reduce the clutter in this endless spaghetti page)
  * 
  */
@@ -1149,38 +1149,48 @@ export default PagePersona;
         setStage('SavingToIPFS');
         //Save Metadata to IPFS
         // saveJSONToIPFS(metadata).then(uri => {
-        // IPFS.saveJSONToIPFS(Moralis, metadata).then(async uri => {
         IPFS.saveJSONToIPFS(Moralis, metadata).then(async uri => {
-            //Log
-            console.warn("PersonaEdit.saveMetadata() Saving Persoa to Contract:", {metadata, uri});
-            if(persona.get('token_id')){
-                setStage('UpdateToken');
-                //Update Contract
-                // let res = await updateNFT(uri);   //Promise
-                let res = await update(persona, uri);   //Promise
+            try{
                 //Log
-                console.warn("[TEST] PersonaEdit.saveMetadata() After Update:", {res, metadata, uri});
-            }else{
-                setStage('MintToken')
-                //Mint New NFT
-                // let res = await mintNFT(uri);
-                let res = await mint(persona, uri);
-                //Log
-                console.warn("[TEST] PersonaEdit.saveMetadata() After Mint:", {res, metadata, uri});
+                console.warn("PersonaEdit.saveMetadata() Saving Persona to Contract:", {metadata, uri});
+                if(persona.get('token_id')){
+                    setStage('UpdateToken');
+                    //Update Contract
+                    // let res = await updateNFT(uri);   //Promise
+                    let res = await update(persona, uri);   //Promise
+                    //Log
+                    console.warn("[TEST] PersonaEdit.saveMetadata() After Update:", {res, metadata, uri});
+                }else{
+                    setStage('MintToken')
+                    //Mint New NFT
+                    // let res = await mintNFT(uri);
+                    let res = await mint(persona, uri);
+                    //Log
+                    console.warn("[TEST] PersonaEdit.saveMetadata() After Mint:", {res, metadata, uri});
+                }
+                //Done Saving
+                // setIsSaving(false);
+                setStage("SUCCESS");
+                //Done Editing
+                setIsEditMode(false);
             }
-            //Done Saving
-            setIsSaving(false);
-            setStage("SUCCESS");
-            //Done Editing
-            setIsEditMode(false);
+            catch(error){
+                //Log
+                console.error("PersonaEdit.saveMetadata() Error Saving Persona to Contract:", {error, metadata, uri, persona});
+                //Done Saving
+                // setIsSaving(false);
+                setStage("FAILED");
+            }
         })
         .catch(function(error) {
             message.error('Failed to save file to IPFS. '+error);
             console.error("[CAUGHT] PersonaEdit.saveMetadata() IPFS Call Failed:", {error, metadata, isAuthenticated, user, persona}); 
             //Done Saving
-            setIsSaving(false);
+            // setIsSaving(false);
             setStage("FAILED");
         });
+        //Done Saving
+        setIsSaving(false);
     }//saveMetadata()
 
     /**
@@ -1189,8 +1199,7 @@ export default PagePersona;
      * @ret void
      */
      const onFinish = async (values) => {
-        
-        console.warn("[TEST] PersonaEdit.onFinish() Updated Values ", {chainId, persona});
+        // console.warn("[TEST] PersonaEdit.onFinish() Updated Values ", {chainId, persona});
 
         //Validate Chain
         if(persona?.get('chain') && persona.get('chain')!==chainId){
@@ -1345,7 +1354,7 @@ export default PagePersona;
                         <span>Please confirm the update request on your web3 wallet</span>
                         <Spin style={{display:'block'}} />
                     </div>}
-                    {(stage===null || stage==='FAILED') && 
+                    {(stage===null || stage==="FAILED") && 
                         <Form.Item 
                             wrapperCol={{ offset: 6 }}
                             // wrapperCol={{ offset: 1, span: 10 }}
