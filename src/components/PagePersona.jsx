@@ -597,16 +597,16 @@ function PagePersona(props) {
                                         {ChainHelper.get(persona?.get('chain'), 'name')}
                                         </span>
                                     </span>
-
                                 </>}
-                                {(isEditMode && !PersonaHelper.isNew(persona)) && <Button variant="contained" color="primary" className="backstep" onClick={()=>{ reloadmetadata(); setIsEditMode(isEditMode===false);}}
-                                    style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
-                                    icon={<i className="bi bi-arrow-left"></i>}
-                                    // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
-                                    >
-                                        
-                                    {/* Cancel */}
-                                </Button>}
+                                {(isEditMode && !PersonaHelper.isNew(persona)) && 
+                                    <Button variant="contained" color="primary" className="backstep link arrow" 
+                                        onClick={()=>{ reloadmetadata(); setIsEditMode(isEditMode===false);}}
+                                        // style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
+                                        // icon={<i className="bi bi-arrow-left"></i>}
+                                        >
+                                        <i className="bi bi-arrow-left"></i>
+                                        {/* Cancel */}
+                                    </Button>}
                             </div>}
                             {!isOwned && <>
                                 {/* <Button variant="contained" color="primary" onClick={()=>{ console.warn("SEND BUTTON PRESSED");}}
@@ -1143,7 +1143,7 @@ export default PagePersona;
         persona.set('metadata', metadata);
 
         //Log
-        console.warn("[TEST] PersonaEdit.saveMetadata() Updated Values to Metadata", {persona, metadata});
+        // console.warn("[DEBUG] PersonaEdit.saveMetadata() Updated Values to Metadata", {persona, metadata});
 
         setIsSaving(true);
         setStage('SavingToIPFS');
