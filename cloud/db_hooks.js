@@ -1,5 +1,9 @@
 /* DB Hooks */
 
+//Restricting File Uploads
+Moralis.Cloud.beforeSaveFile((request) => {
+  throw "Not Allowed";
+});
 
 //-- TESTING
 
