@@ -16,6 +16,7 @@ import { CollectionContext } from "common/context";
 // import { NFTHelper } from "helpers/NFTHelper";
 import { ChainHelper } from "helpers/ChainHelper";
 import CarvedHeading from "components/common/CarvedHeading";
+import PageAuthenticate from "components/PageAuthenticate";
 import __ from "helpers/__";
 // import { getChainName, getChainLogo } from "helpers/networks";
     
@@ -50,7 +51,7 @@ import __ from "helpers/__";
 function NFTCollections(props) {
   //Extract Props
   let { accountHash, collectionHash } = props.match.params;
-  const { Moralis, isWeb3Enabled , chainId, account  } = useMoralis();
+  const { Moralis, isWeb3Enabled , chainId, account, isAuthenticated } = useMoralis();
   const [isAllowed, setIsAllowed] = useState(null);
   // const { isAllowed } = useIsAllowed({hash:collectionHash, chain:props?.match?.params?.chain || chainId});
   // console.warn("[TEST] NFTCollections() Ran useIsAllowed:"+isAllowed, {hash:collectionHash, chain:props?.match?.params?.chain || chainId, props});
@@ -133,7 +134,9 @@ function NFTCollections(props) {
     );
   }
   */
+  // console.warn("[TEST] AUTH", {isWeb3Enabled, isAuthenticated});
 
+  if(!isWeb3Enabled || !isAuthenticated) return <PageAuthenticate />;
   return (
     <Skeleton loading={!isWeb3Enabled}>
       
