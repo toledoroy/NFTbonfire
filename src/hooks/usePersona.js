@@ -214,7 +214,7 @@ export const usePersona = () => {
                 //Log                
                 console.log("usePersona.mint() Success -- Trigger New Token Register for:"+tokenData.token_id, {tokenData, data, uri, persona, options});
                 //Validate & Trigger Server Update
-                if(tokenData.token_id) Moralis.Cloud.run("personaRegister", tokenData);
+                if(tokenData.token_id) Moralis.Cloud.run("personaRegisterHandle", tokenData);
                 else console.error("usePersona.mint() Success, but Failed to Extract Token ID", {   
                     data,
                     events:     data?.events,
