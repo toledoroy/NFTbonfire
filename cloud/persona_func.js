@@ -373,6 +373,9 @@ const personaGetOrMake = async (chain, contract, token_id) => {
   query.equalTo("chain", chain);
   query.equalTo("address", contract, 'i');
   query.equalTo("token_id", token_id);
+
+
+  /* UPDATED VERSION BELOW
   const results = await query.limit(1).find();
   //Extract Persona From Result or Make New
   const personaGet = async (results) => {
@@ -384,6 +387,10 @@ const personaGetOrMake = async (chain, contract, token_id) => {
   // let persona = await personaGet(results);
   // return persona;
   return await personaGet(results); //Promise
+  */
+
+  const result = await query.first();
+  return (result) ? result : await cachePersona(chain, contract, token_id);
 };
 
 /**
