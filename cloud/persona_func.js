@@ -51,10 +51,12 @@ const resolveLink = (url) => (!url || !url.includes("ipfs://")) ? url : url.repl
   const query = new Moralis.Query(Contract);
   query.equalTo("chain", chain);
   query.equalTo("address", String(address).toLowerCase(), 'i'); //Supposed to be Case Insensitive
-  const results = await query.limit(1).find();
-  // logger.warn("[TEST] getABI() Found "+results.length+" Results for Contract:"+address+" Chain:"+chain+"");  //V
-  if(results.length === 0) return null;
-  else return results[0].get('abi');
+  // const results = await query.limit(1).find();
+  const result = await query.first();
+  // logger.warn("[TEST] getABI() Result for Contract:"+address+" Chain:"+chain+" -- "+JSON.stringify(result));  //V
+  // if(results.length === 0) return null;
+  // else return results[0].get('abi');
+  return result ? result?.get('abi') : null;
 };//getABI()
   
 /**
@@ -67,7 +69,7 @@ const getTokenOwner = async (chain, contract, tokenId) => {
   //Fetch ABI for Contract
   let abi = await getABI(chain, contract);
   //Validate
-  if(!abi) throw new Error("Missing ABI for Contract:"+contract+" on Chain:"+chain);
+  if(!abi) throw new Error("getTokenOwner() Missing ABI for Contract:"+contract+" on Chain:"+chain);
   let options = {
     abi: JSON.parse(abi),
     address: contract,
@@ -144,14 +146,55 @@ const getTokenOwner = async (chain, contract, tokenId) => {
 };//fetchMetadata
 
 /**
- * Fetch Persona from Chain & Save to DB (Lasy Sync)
+ * Fetch Persona from DB or Chain (if Missing)
+ * @param {*} chain 
+ * @param {*} contract 
+ * @param {*} token_id 
+ * @returns ParseObject Persona
+ */
+ const personaGetOrMake = async (chain, contract, token_id, force=false) => {
+  //Get / Add Persona
+  const query = new Moralis.Query(Persona);
+  query.equalTo("chain", chain);
+  query.equalTo("address", contract, 'i');
+  query.equalTo("token_id", token_id);
+  const persona = await query.first();
+
+  /* UPDATED VERSION BELOW
+  const results = await query.limit(1).find();
+  //Extract Persona From Result or Make New
+  const personaGet = async (results) => {
+    if(results.length) return results[0];
+    // logger.info("personaGetOrMake() Register Token to DB chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"'");
+    return await personaAddToDB(chain, contract, token_id);
+  }
+  //Fetch Persona (Get or Make New)
+  // let persona = await personaGet(results);
+  // return persona;
+  return await personaGet(results); //Promise
+  */
+  
+  if(!persona) logger.warn("[TEST] personaGetOrMake() Register New Persona Token to DB -- chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"'  "+JSON.stringify(persona));
+  else logger.warn("[TEST] personaGetOrMake() Requested Persona Exists -- chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' force:'"+force+"'  "+JSON.stringify(persona));
+  
+  //Full Procedure - Add & Update
+  if(!persona) return personaAddToDB(chain, contract, token_id); 
+  //Update Only
+  if(force) personaSync(chain, contract, token_id, persona);
+  //Return Persona
+  return persona;
+};
+
+/**
+ * Register New Persona to DB
+ *  Fetch On-Chain Data & Save to DB
  *  Sould only be called when persona is not yet in DB
  * @param {*} chain 
  * @param {*} contract 
  * @param {*} tokenId 
  * @returns ParseObject
  */
-const cachePersona = async (chain, contract, tokenId) => {
+const personaAddToDB = async (chain, contract, tokenId) => {
   //Validate
   if(!chain || !contract || !tokenId) throw new Error("Missing Parameters -- Contract:"+contract+" Chain:"+chain+" TokenId:"+tokenId);
   //Register & return ParseObject
@@ -163,36 +206,51 @@ const cachePersona = async (chain, contract, tokenId) => {
     token_id: tokenId.toString(),
   };
   await persona.save(params, {useMasterKey: true});//.then(async (res) => {
-    
+  //Fetch On-Chain Data  
+  personaSync(chain, contract, tokenId, persona);
+  logger.warn(" [FYI] personaAddToDB() Cached New Persona: chain:'"+chain+"' tokenId:'"+tokenId+"'");
+  //Return new Persona Object
+  return persona;
+};
+
+/**
+ * Sync DB Persona W/Chain Data
+ * @param {*} chain 
+ * @param {*} contract 
+ * @param {*} tokenId 
+ * @param {*} persona 
+ */
+const personaSync = async (chain, contract, tokenId, persona) => {
+  //Validate
+  if(!chain || !contract || !tokenId || !persona) throw new Error("Missing Parameters -- Contract:"+contract+" Chain:"+chain+" TokenId:"+tokenId+" Persona:"+persona.id);
+  
   //Fetch Token Owner
   getTokenOwner(chain, contract, tokenId).then((owner) => {
     persona.save({owner: owner.toLowerCase()}, {useMasterKey: true});
   }).catch((err) => {
-    logger.error("cachePersona() Failed to Fetch Persona Owner from Chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"'");
+    logger.error("personaSync() Error: "+err+" Failed to Fetch Persona Owner from Chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"'  err:"+err);
   });
 
   //Fetch Token URI
   const token_uri = await getTokenURI(chain, contract, tokenId).catch((err) => {
-    logger.error("cachePersona() Failed to Fetch Persona token_uri from Chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"'");
+    logger.error("personaSync() Error: "+err+" Failed to Fetch Persona token_uri from Chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"'");
   });
   
   if(token_uri){
     //Save URI
     persona.save({token_uri}, {useMasterKey: true}).catch(async (err) => {
-      logger.error("cachePersona() Error: "+err+"  Failed to Save Persona: "+JSON.stringify(persona));
+      logger.error("personaSync() Error: "+err+"  Failed to Save Persona: "+JSON.stringify(persona));
     });
     //Fetch Metadata
     const metadata = await fetchMetadata(resolveLink(token_uri)).catch((err) => {
-      logger.error("cachePersona() Failed to Fetch Persona metadata from Chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"'");
+      logger.error("personaSync() Error: "+err+" Failed to Fetch Persona metadata from Chain:'"+chain+"' tokenId:'"+tokenId+"' contract:'"+contract+"'");
     });
     //Save Metadata
     await persona.save({metadata}, {useMasterKey: true});
   }//Has URI
   
-  logger.warn(" [FYI] cachePersona() Cached New Persona: chain:'"+chain+"' tokenId:'"+tokenId+"'");
-  //Return new Persona Object
-  return persona;
 };
+
 
 /**
  * Check if User is The Owner of a Persona
@@ -257,13 +315,26 @@ Moralis.Cloud.define("personaRegisterById", async (request) => {
 });//personaRegisterById()
 
 /**
+ * Register Persona to DB 
+ *  & Force Data Update from Chain
+ */
+
+Moralis.Cloud.define("personaRegister", async (request) => {
+  const { contract, token_id, chain } = request.params;
+  //Validate Parameters
+  if(!contract || !token_id || !chain) throw new Error("Missing Parameters (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' handle:'"+handle+"')");
+  //Run Procedure
+  return personaGetOrMake(chain, contract, token_id, true);
+});//personaRegister()
+
+/**
  * Register Persona to Network, Register Handle to Persona, or Both
  * @param {*} chain
  * @param {*} contract
  * @param {*} token_id
  * @param {*} handle
  */
- Moralis.Cloud.define("personaRegister", async (request) => {
+Moralis.Cloud.define("personaRegisterHandle", async (request) => {
   const { contract, token_id, chain } = request.params;
   let { handle } = request.params;
   //Normalize Handle
@@ -292,6 +363,7 @@ Moralis.Cloud.define("personaRegisterById", async (request) => {
     }//Different Handle
     else logger.info("personaRegister() Persona:'"+persona.id+"' Already Owns Handle:'"+handle+"'");
   }//Has Handle
+  else logger.error("[DEPRECATED] personaRegister() Was Called Wihout a Handle -- Persona:'"+persona.id+"'");
   return true;
 });//personaRegister()
 
@@ -331,7 +403,7 @@ Moralis.Cloud.define("personaUpdate", async (request) => {
   //Fetch Token URI
   let token_uri = await getTokenURI(chain, contract, tokenId)
     .catch(err => { 
-      if(err.code == 141){
+      if(err.code === 141){
         // throw new Error("personaUpdate() Failed to Fetch Token Owner:'"+personaId+"' Error:'"+err+"'");   
       }
       throw new Error("personaUpdate() Failed to Fetch Token Owner:'"+personaId+"' Error:'"+err+"'"); 
@@ -360,38 +432,6 @@ Moralis.Cloud.define("personaUpdate", async (request) => {
 
 //-- TESTING
 
-/**
- * Fetch Persona from DB or Chain (if Missing)
- * @param {*} chain 
- * @param {*} contract 
- * @param {*} token_id 
- * @returns ParseObject Persona
- */
-const personaGetOrMake = async (chain, contract, token_id) => {
-  //Get / Add Persona
-  const query = new Moralis.Query(Persona);
-  query.equalTo("chain", chain);
-  query.equalTo("address", contract, 'i');
-  query.equalTo("token_id", token_id);
-
-
-  /* UPDATED VERSION BELOW
-  const results = await query.limit(1).find();
-  //Extract Persona From Result or Make New
-  const personaGet = async (results) => {
-    if(results.length) return results[0];
-    // logger.info("personaRegister() Register Token to DB chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"'");
-    return await cachePersona(chain, contract, token_id);
-  }
-  //Fetch Persona (Get or Make New)
-  // let persona = await personaGet(results);
-  // return persona;
-  return await personaGet(results); //Promise
-  */
-
-  const result = await query.first();
-  return (result) ? result : await cachePersona(chain, contract, token_id);
-};
 
 /**
  * Get Persona (from DB or Chain)
@@ -420,7 +460,7 @@ const personaGetOrMake = async (chain, contract, token_id) => {
 /**
  * Un-Register Persona from Network
  */
-Moralis.Cloud.define("personaUnregister", async (request) => { 
+Moralis.Cloud.define("personaUnregisterHandle", async (request) => { 
     
   const handle = request?.params?.handle;
     if(!handle) throw new Error("Missing Handle");

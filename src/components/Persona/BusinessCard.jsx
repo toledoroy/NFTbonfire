@@ -73,7 +73,7 @@ import { PersonaHelper } from "helpers/PersonaHelper";
                     {metadata?.description && <q key="desc" className="description">{metadata.description}</q>}
                     {(props.actions!==false) && <div className="actions flex">
                         {/* <Button className="button lightUp" style={{zIndex:100}} onClick={(event) => { setPersona(persona);}}>use</Button> */}
-                        <a key="aUse" onClick={(event) => { event.preventDefault(); setPersona(persona); return false;}} className="inner flex">use</a>
+                        <a key="aUse" onClick={(event) => { event.preventDefault(); setPersona(persona); return false;}} className="inner flex">be</a>
                         <a key="aView" href={link} className="inner flex">
                             {/* <Button className="button" icon={<i className="bi bi-box-arrow-up-right btn-no"></i>}></Button> */}
                             <i className="bi bi-box-arrow-up-right btn-no"></i>

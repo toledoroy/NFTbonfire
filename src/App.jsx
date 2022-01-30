@@ -91,7 +91,7 @@ const App = ({ isServerInfo }) => {
       }
       // else console.warn("App() Clear Persona");
     }
-    else console.error("App() Change Persona -- No User");
+    else console.error("[TEST] App() Change Persona Called, but No User", {persona, user});
     setPersonaActual(persona); 
   }//setPersona
 

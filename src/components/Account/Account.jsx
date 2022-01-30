@@ -85,7 +85,7 @@ function Account() {
    */
   const updatePersonas = async () => {
     //-- Validate
-    console.warn("[DEBUG] Account() Match NFT Personas", {NFTpersonas, personas});
+    // console.warn("[DEBUG] Account() Match NFT Personas", {NFTpersonas, personas});
 
     //Match Personas
     for(let persona of NFTpersonas){
@@ -138,7 +138,7 @@ function Account() {
         //Register New Persona
         const result = await Moralis.Cloud.run("personaRegister", params)  //Add
           .catch(error => { console.error("[TEST] Account() personaRegister Error:", {params, error}); });
-        console.log("[TEST] Account() personaRegister Result:", {result, params});
+        console.warn("!![TEST] Account() personaRegister Result:", {result, params, persona});
       }//Register New Persona
     }//Each Persona
   };//updatePersonas()

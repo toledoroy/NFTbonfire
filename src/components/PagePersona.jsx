@@ -699,7 +699,7 @@ function PagePersona(props) {
                     handle:'toledoroy2',
                 };
                 try{
-                    const result = await Moralis.Cloud.run("personaRegister", params);
+                    const result = await Moralis.Cloud.run("personaRegisterHandle", params);
                     console.log("[TEST] personaRegister Result:", result);
                 }catch(e){ console.error("[TEST] personaRegister Error:", e); }
             }}>[TEST] personaRegister</button>
