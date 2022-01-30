@@ -240,7 +240,7 @@ function NFTCollections(props) {
                         &nbsp;
                         {__.sanitize(collection.name)} 
                         &nbsp;
-                        <small className="small">(${collection.symbol})</small>
+                        {collection.symbol && <small className="small">(${collection.symbol})</small>}
                           
                         {/* <span className="debug">[{collection.contract_type}]</span> */}
 

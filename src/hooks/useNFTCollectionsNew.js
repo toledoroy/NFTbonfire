@@ -41,30 +41,51 @@ export const useNFTCollections = (options) => {
           NFT = personaUpdateFromDB(NFT);
           //Append Persona
           personas.push(NFT);
+
+          //If Has Persona, Still Show a Placeholder for Simple Onboarding (Only One)
+          if(!collections[NFT.token_address]) collections[NFT.token_address] = {
+            items:[], 
+            hash:NFT.token_address, 
+            symbol:'', 
+            name:'NFT Bonfire', 
+            contract_type:NFT.contract_type, 
+            chain,
+            owned:(NFT.owner_of === account), 
+            items: [{
+              ...NFT, 
+              //Override
+              name:'NFT Bonfire', 
+              image: "https://ipfs.moralis.io:2053/ipfs/QmUZci2fwc6wjTMQPy7AwCQKyPdb6aSt24t1eVbtyPY2hz",
+              metadata: {name: 'General Member', description: null, external_link: null, image: 'https://ipfs.moralis.io:2053/ipfs/QmUZci2fwc6wjTMQPy7AwCQKyPdb6aSt24t1eVbtyPY2hz',}
+            }],
+          };
+
         }
         catch(error){
           console.error("[CAUGHT] collect() Exception while updating token", {NFT, error});
         }
       }//Persona
+      else{
+        //Verify Metadata (Moralis sometimes gives outdated metadata)
+        NFT = verifyMetadata(NFT);
+        //Init Collection Slot
+        if(!collections[NFT.token_address]) collections[NFT.token_address] = {
+          items:[], 
+          hash:NFT.token_address, 
+          symbol:NFT.symbol, 
+          name:NFT.name, 
+          contract_type:NFT.contract_type, 
+          chain,        //For OWnership Verification
+          owned:false, 
+        };
+        //Add NFT to Collection
+        collections[NFT.token_address].items.push(NFT);
+        //ANY - Ownes Something in This Collection
+        if(NFT.owner_of === account) collections[NFT.token_address].owned = true;
+        // else console.warn("No Match", NFT.owner_of, account);  //V
+        // if(collections[NFT.token_address]?.est === undefined || collections[NFT.token_address].est > NFT.est) collections[NFT.token_address].est = NFT.est;   //Should be: Time sicne last TX
+      }//Non-Persona (Regular NFT)
 
-      //Verify Metadata (Moralis sometimes gives outdated metadata)
-      NFT = verifyMetadata(NFT);
-      //Init Collection Slot
-      if(!collections[NFT.token_address]) collections[NFT.token_address] = {
-        items:[], 
-        hash:NFT.token_address, 
-        symbol:NFT.symbol, 
-        name:NFT.name, 
-        contract_type:NFT.contract_type, 
-        chain,        //For OWnership Verification
-        owned:false, 
-      };
-      //Add NFT to Collection
-      collections[NFT.token_address].items.push(NFT);
-      //ANY - Ownes Something in This Collection
-      if(NFT.owner_of === account) collections[NFT.token_address].owned = true;
-      // else console.warn("No Match", NFT.owner_of, account);  //V
-      // if(collections[NFT.token_address]?.est === undefined || collections[NFT.token_address].est > NFT.est) collections[NFT.token_address].est = NFT.est;   //Should be: Time sicne last TX
     }//Each NFT
 
     // return collections;
