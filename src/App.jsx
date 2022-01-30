@@ -210,8 +210,8 @@ const App = ({ isServerInfo }) => {
             <img src="/moralis/Powered-by-Moralis-Badge-Green.svg" alt="Moralis Power!"/>
           </a>
           <a href='https://www.freepik.com/'>Cool Art by Freepik.com</a>
-          <a href="https://discord.gg/PeDb9MXXa9" target="_blank" rel="noopener noreferrer">
-            <i className="bi bi-discord"></i>
+          <a href="https://discord.gg/PeDb9MXXa9" target="_blank" rel="noopener noreferrer" style={{display:'flex', alignItems:'center'}}>
+            <i className="bi bi-discord"></i> <span style={{margin:'0 5px'}}>For Support</span>
           </a>
         </div>
       </Footer>

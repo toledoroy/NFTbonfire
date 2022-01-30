@@ -100,9 +100,10 @@ body {
         height: var(--footer-height);
         .inner{
             margin:0 auto;
-            justify-content: space-around;
-            display: flex;
             max-width: var(--pageWidth);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
         }
         .bi-discord{
             font-size: 32px;
