@@ -2,6 +2,7 @@ import { useMoralis } from "react-moralis";
 import { ChainHelper } from "helpers/ChainHelper";
 import { Skeleton } from 'antd';
 import NFTCollections from "components/NFTCollections";
+// import PageAuthenticate from "components/PageAuthenticate";
 
 /**
  * Component: NFTs from All (Supported) Chains
@@ -9,10 +10,11 @@ import NFTCollections from "components/NFTCollections";
  * @returns 
  */
  function NFTDisplayAllChains(props){
-    const { account, isWeb3Enabled, chainId } = useMoralis();     //, Moralis, user, isUserUpdating
+    const { account, isWeb3Enabled, isAuthenticated, chainId } = useMoralis();
 
+    // if(!isWeb3Enabled || !isAuthenticated) return <PageAuthenticate />;
     return (
-        <Skeleton loading={!isWeb3Enabled}>
+        <Skeleton loading={!isWeb3Enabled || !isAuthenticated}>
             {ChainHelper.allChainsData()
                 .filter((chainData) => (chainData.key === chainId || chainData.supported || chainData.live))
                 .map(chainData => (
