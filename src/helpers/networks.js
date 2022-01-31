@@ -104,4 +104,12 @@ export const networkConfigs = {
     blockExplorerUrl: "https://mumbai.polygonscan.com/",
     icon: <PolygonLogo />,
   },
+  "0xa869": {
+    name: "Avalanche Testnet",
+    chainName: "Avalanche Testnet",
+    currencyName: "AVAX(T)",
+    currencySymbol: "AVAX(T)",
+    blockExplorerUrl: "https://testnet.snowtrace.io/",
+    icon: <AvaxLogo />,
+  },
 };

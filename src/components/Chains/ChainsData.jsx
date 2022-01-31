@@ -64,6 +64,7 @@ export const ChainsData = {
     nId:'ND-2H0BSCMainNet',
     live: true,
     supported: false,
+    blockExplorerUrl: "https://testnet.bscscan.com/",
   },
   "0x61":{
     key: "0x61",
@@ -82,6 +83,7 @@ export const ChainsData = {
     nId:'ND-2H0MaticMainNet',
     live: true,
     supported: false,
+    blockExplorerUrl: "https://explorer-mainnet.maticvigil.com/",
   },
   "0x13881":{
     key: "0x13881",
@@ -91,6 +93,7 @@ export const ChainsData = {
     nId:'',
     live: false,
     supported: false,
+    blockExplorerUrl: "https://mumbai.polygonscan.com/",
   },
   "0xa86a":{
     key: "0xa86a",
@@ -108,6 +111,7 @@ export const ChainsData = {
     nId:'',
     live: false,
     supported: true,
+    blockExplorerUrl: "https://testnet.snowtrace.io/",
   },
 }
 
