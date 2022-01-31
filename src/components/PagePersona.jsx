@@ -1165,7 +1165,6 @@ export default PagePersona;
                 }else{
                     setStage('MintToken')
                     //Mint New NFT
-                    // let res = await mintNFT(uri);
                     let res = await mint(persona, uri);
                     //Log
                     console.warn("[TEST] PersonaEdit.saveMetadata() After Mint:", {res, metadata, uri});

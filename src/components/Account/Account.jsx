@@ -127,7 +127,6 @@ function Account() {
         }//Matched Persona
       }//Loop DB Personas
 
-      console.warn("[TEST] Account() Persona:", {persona});
       // if(!exist){
       if(!exist && persona && persona.owner === account){  //Double Check. Sometimes goes crazy on account change.
         //Set Params
