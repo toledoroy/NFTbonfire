@@ -1137,7 +1137,7 @@ export default PagePersona;
         //Sanitize
         metadata = metadataSanitize(metadata);
         //Add generator tag to metadata 
-        metadata.generator = 'bonfire.space';
+        metadata.generator = 'nftbonfire.space';
         //Update Metadata
         // setMetadata({...metadata, ...values});
         setMetadata(metadata);
