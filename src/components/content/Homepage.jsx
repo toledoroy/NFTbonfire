@@ -17,6 +17,7 @@ import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
 import NFTDisplayAllChains from "components/NFT/NFTDisplayAllChains";
 import PageAuthenticate from "components/PageAuthenticate";
 import ERC20Balance from "components/ERC20Balance";
+import FullscreenMessage from "components/common/FullscreenMessage";
 
 // const { TabPane } = Tabs;
 
@@ -25,7 +26,7 @@ import ERC20Balance from "components/ERC20Balance";
  * Component: Home Page
  */
  function Homepage(props) {
-    const { account, isWeb3Enabled, chainId } = useMoralis();     //, Moralis, user, isUserUpdating
+    const { account, isWeb3Enabled, isAuthenticated, chainId } = useMoralis();     //, Moralis, user, isUserUpdating
     // const { persona, contract } = props;
     // const { persona, contract } = props;
     
@@ -68,15 +69,20 @@ import ERC20Balance from "components/ERC20Balance";
 
     // console.warn("[TEST] Homepage() Persona NFTs Collection:", {personaCollection, style:__.stackContainerStyle(personaCollection?.items.length)} );
     // console.warn("[TEST] Homepage() Persona NFTs Collection:", {user, account, } );
-    
-    if(isWeb3Enabled && !account) return (
-        <Row>
-            <PageAuthenticate />
-        </Row>
-    );
+    // FullscreenMessage
+
+    // if(isWeb3Enabled && (!isAuthenticated || !account)) return (
+    // // if(!isAuthenticated || !account) return (
+    //     <Row>
+    //         <PageAuthenticate />
+    //     </Row>
+    // );
+    // else console.warn("[TEST] Homepage() isAuthenticated:", {isAuthenticated, account ,isWeb3Enabled} );
     return (
         <div className="framed home">
-            
+
+            {!isAuthenticated && <FullscreenMessage><PageAuthenticate /></FullscreenMessage>}
+
             <Row className="welcom_message container" style={{margin:'10px 0 30px 0'}}>
                 <Col xs={24} className="framed welcom_message">
                 <div className="inner">
