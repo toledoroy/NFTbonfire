@@ -173,7 +173,7 @@ function Account() {
   }, [NFTpersonas, personas, user]);  //,curPersona NOT! 
 
   useEffect(() => { 
-    console.warn("Account() Check if Account Changed "+(account !== lastAccount), {account, lastAccount, curPersona});
+    // console.warn("Account() Check if Account Changed "+(account !== lastAccount), {account, lastAccount, curPersona});
       
     /* Make sure to change User when account changes */
     if(account !== lastAccount){
