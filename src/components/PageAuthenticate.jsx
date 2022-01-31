@@ -8,8 +8,7 @@ import CarvedHeading from "components/common/CarvedHeading";
 function PageAuthenticate(props) {
     // const { params } = props?.match;
     // const { handle, chain, contract, token_id } = params;
-    const { isWeb3Enabled, authenticate } = useMoralis();
-    const { isAuthenticated } = useMoralis();
+    const { isWeb3Enabled, isAuthenticated, authenticate } = useMoralis();
 
     if(isAuthenticated){
         console.error("[DEV] PageAuthenticate() Should Not Be Here -- Authenticated:"+isAuthenticated);
