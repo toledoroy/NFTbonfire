@@ -81,7 +81,8 @@ function Account() {
 
   /**
    * Update Persona
-   *  Match Persona DB to Chain
+   *  - Match Persona DB to Chain (Provider's NFT DB)
+   *  - Trigger Server Update if Any Mismatches Found
    */
   const updatePersonas = async () => {
     //-- Validate
@@ -97,14 +98,17 @@ function Account() {
           if(!__.matchAddr(persona.owner_of, DBpersona?.get('owner')) 
             || !__.matchURI(DBpersona.get('token_uri'), persona.token_uri)
             ){
+
             //Mismatch - Might need an update
+            if(process?.env?.REACT_APP_ENV==='development')
             console.error("[FYI] Account() Data Mismatch -- NFT Needs an Update:"+DBpersona.id+"", {
               // DBpersona, persona,
-              // DBOwner:DBpersona.get('owner'), owner: persona.owner_of, 
-              // DBURI: DBpersona.get('token_uri') , tokenURI: persona.token_uri,
-              // matchURI:__.matchURI(DBpersona.get('token_uri'), persona.token_uri)
+              DBOwner:DBpersona.get('owner'), owner: persona.owner_of, 
+              DBURI: DBpersona.get('token_uri') , tokenURI: persona.token_uri,
+              matchURI:__.matchURI(DBpersona.get('token_uri'), persona.token_uri),
               params:[persona.token_address, persona.token_id, persona.chain],
             });
+
             //Trigger Morails Metadata Update
             callMoralisMetadataUpdate(persona.token_address, persona.token_id, persona.chain);
             //Trigger DB Persona Update
@@ -127,19 +131,29 @@ function Account() {
         }//Matched Persona
       }//Loop DB Personas
 
-      // if(!exist){
-      if(!exist && persona && persona.owner === account){  //Double Check. Sometimes goes crazy on account change.
-        //Set Params
-        let params = {
-          chain: persona.chain,
-          contract: persona.token_address,
-          token_id: persona.token_id,
-        };
-        //Register New Persona
-        const result = await Moralis.Cloud.run("personaRegister", params)  //Add
-          .catch(error => { console.error("Account() personaRegister Error:", {params, error}); });
-        console.warn("!![TEST] Account() personaRegister Result:", {result, params, persona});
-      }//Register New Persona
+      if(!exist){
+        //Validate
+        if(persona && persona.owner_of === account){  //Double Check. Sometimes goes crazy on account change.
+          //Set Params
+          let params = {
+            chain: persona.chain,
+            contract: persona.token_address,
+            token_id: persona.token_id,
+          };
+          //Register New Persona
+          const result = await Moralis.Cloud.run("personaRegister", params)  //Add
+            .catch(error => { 
+              if(error.code === 141){
+                console.error("[CAUGHT] Account() Moralis Rate Limit Hit While Calling Cloud.personaRegister()", {error, params}); 
+                //User Message
+                message.error("Woah, slow down. Our moralis hosting plan is overflowing! Please wait a bit and try again", 30);    
+              }
+              else console.error("[CAUGHT] Account() Account() Error W/Cloud Func:'personaRegister':", {error, params}); 
+            });
+          console.warn("!![TEST] Account() personaRegister Result:", {result, params, persona});
+        }//Register New Persona
+        else console.error("Account.updatePersonas() Running on NFT That's Not Owned:", {NFT: persona, owner:persona.owner_of, account});
+      }//Doesn't Exist in DB
     }//Each Persona
   };//updatePersonas()
 
@@ -153,21 +167,30 @@ function Account() {
       if(!curPersona){
         // let curPersonaId = user.get('curPersona');
         let curPersonaId = user?.get('last_persona')?.global;
+        let foundPersona = null;
         //Recuperate Last Persona
         if(curPersonaId){
           for(let personaObj of personas){
             if(personaObj.id === curPersonaId){
               console.warn("[TEST] Account() Setting Last Selected Persona:"+curPersonaId, {user, account, curPersona, personas}); 
-              setPersona(personaObj);
+              // setPersona(personaObj);
+              foundPersona = personaObj;
               break;
             } 
           }
         }
-        else{
-          // console.warn("Account() Default to first Persona:"+personas[0].id);  //V
-          //Default to First Persona
-          setPersona(personas[0]);
-        }
+        // else{
+        //   // console.warn("Account() Default to first Persona:"+personas[0].id);  //V
+        //   //Default to First Persona
+        //   setPersona(personas[0]);
+        // }
+
+        //Default to First Persona
+        if(!foundPersona) foundPersona = personas[0];
+        //Set
+        if(foundPersona) setPersona(personas[0]);
+        else console.error("[TEST] Account() Failed to Set Persona User:"+user.id, {user, account, curPersona, personas, NFTpersonas});
+
       } 
     }//Has Personas 
     // eslint-disable-next-line react-hooks/exhaustive-deps
