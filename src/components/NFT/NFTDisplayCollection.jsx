@@ -27,7 +27,7 @@ import { RightOutlined, LeftOutlined } from '@ant-design/icons';
         {/* <Link key={collection.hash+'Link'} to={dest}>   MOVED OUTSIDE */}
             <div key={collection.symbol+'items'} className="NFTitems" id={"NFTitems"+collection.hash} style={props.style}> 
                 {collection && collection.items.map((nft, index) => (
-                    <NFTDisplaySingle key={nft.token_address+nft.token_id} nft={nft} />
+                    <NFTDisplaySingle key={nft.token_address+':'+nft.token_id} nft={nft} />
                 ))}
             </div>
         {/* </Link> */}

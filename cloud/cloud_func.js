@@ -70,7 +70,7 @@ const hashByPostId = async (parentId) => {
       // let parentPost = await query.get(ret);
       let parentPost = await query.select("parentId").get(ret, {useMasterKey: true});
       // logger.warn("hashByPostId() Parent Post for id:'"+ret+"' -- "+JSON.stringify(parentPost)); 
-      logger.warn("hashByPostId() Climb from:"+ret+" to "+parentPost.get('parentId')); 
+      // logger.warn("hashByPostId() Climb from:"+ret+" to "+parentPost.get('parentId'));   //V
       //Get its Parent
       ret = parentPost.get('parentId');
       //Depth Check

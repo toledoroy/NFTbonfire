@@ -1,12 +1,11 @@
 import React, { useContext, useEffect } from "react";
 // import { Skeleton, Image} from 'antd';
 import { Form, Input, Button, Comment, Avatar, message } from 'antd';
-import { Collapse } from 'antd';
+// import { Collapse } from 'antd';
 import { FireTwoTone, SendOutlined } from '@ant-design/icons';
 import { useMoralis } from "react-moralis";
 // import { useHistory } from 'react-router-dom';
-// import { Room } from "objects/objects";
-// import { Post } from "objects/objects";  //This is in the wrong Context...
+// import { Post } from "objects/objects";    //Try to Use this & Test
 import { PersonaHelper } from "helpers/PersonaHelper";
 import { PersonaContext } from "common/context";
 
@@ -98,7 +97,6 @@ function RoomAddForm(props) {
         const post = new Post(values); 
         // const post = new Post();
         // post.set("userId", request.user?.id);
-
         // post.set('parent', parent);   //TESTING   
         // post.set("userId", request.user?.id);
         // console.warn("[TEST] post() User: ", Moralis.User.current());
@@ -107,12 +105,12 @@ function RoomAddForm(props) {
         const acl = new Moralis.ACL(user);
         acl.setPublicReadAccess(true);
         post.setACL(acl);
-        // acl.setPublicReadAccess(true);
         //Log
-        console.warn("[TEST] RoomAddForm() ACL: "+JSON.stringify(acl), {isWeb3Enabled, acl, post});
+        console.warn("[TEST] RoomAddForm() ACL: "+JSON.stringify(acl), {isWeb3Enabled, acl, post, values});
         //Save
         // return post.save();
-        let newPost = await post.save(values);
+        // let newPost = await post.save(values);
+        let newPost = await post.save();
         // console.log("RoomAddForm() Created new Post:", {values, newPost});
 
         //Reset Form
