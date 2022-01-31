@@ -152,7 +152,7 @@ function PagePersona(props) {
             };
             //Fetch Token (from DB or Chain)
             let result = await Moralis.Cloud.run("getPersona", params);
-            console.warn("[TEST] PagePersona() Manually Fetch Persona:", {personaData, props, params, perosna:result});
+            // console.warn("[TEST] PagePersona() Manually Fetched Persona:", {personaData, props, params, perosna:result});
             //Set
             setPersona(result);
             // updateMetadata(result.get('metadata'));      //Now, Included in setPersona()
@@ -419,6 +419,7 @@ function PagePersona(props) {
                             </Skeleton>
                         </div>
                         
+                        {false &&
                         <div className="links">
                             <Skeleton loading={isLoading} active>
                                 <Collapse accordion>
@@ -437,6 +438,8 @@ function PagePersona(props) {
                                 </Collapse>
                             </Skeleton>
                         </div>
+                        }
+
                     </div>
                     <div className="edit" style={{display:isEditMode?'block':'none'}}>
                         <div className="social">    
@@ -484,7 +487,7 @@ function PagePersona(props) {
                             </div>
                         </div>
 
-                        {true && 
+                        {false && 
                         <div className="links">
                             <div className="links_wrapper">
                                 <h2>
@@ -498,17 +501,39 @@ function PagePersona(props) {
                                             // E.G. {type: 'blog', title: 'BayonEI', url: 'http://bayonei.com'}
                                             // console.log("[DEV] link to:"+link.type+" Title:'"+link.title+"'", link.url);
                                             return (
+
                                             // <Col xs={24} lg={12} key={link.title+index}>
-                                                <Input.Group key={index+link.url} compact className="item" style={{display: 'flex', }} 
-                                                    onChange={(evt) => { console.warn("[TEST] Link CHnaged", evt.target.value); }}
-                                                >
+                                                <Input.Group key={index+link.url} compact className="item" style={{display: 'flex', }}>
                                                     <Input name="URL" defaultValue={link.url} placeholder="URL" 
-                                                        addonBefore={<Select defaultValue={link.type} style={{minWidth:'99px'}} className="select-before">
+                                                        // onChange={(evt) => { 
+                                                        //     let value = evt?.target?.value;
+                                                        //     let links = [...metadata.links];    //Clone
+                                                        //     console.warn("[TEST] New Link 1", {value, evt, index, links});
+                                                        //     //Change Current
+                                                        //     links[index].url = value;
+                                                        //     //Update
+                                                        //     setMetadata({...metadata, links});
+                                                        // }}
+                                                        addonBefore={<Select defaultValue={link.type} style={{minWidth:'99px'}} className="select-before"
+                                                            onChange={(value) => { 
+                                                                let links = [...metadata.links];    //Clone
+                                                                //Change Current
+                                                                links[index].type = value;
+                                                                //Update
+                                                                setMetadata({...metadata, links});
+                                                            }}
+                                                            >
                                                             <Select.Option value="website">Website</Select.Option>
                                                             <Select.Option value="blog">Blog</Select.Option>
                                                         </Select>}
                                                     />
-                                                    <Input name="name" placeholder="Title" defaultValue={link.title} style={{flexShrink:'2'}}/>
+                                                    <Input name="name" placeholder="Title" defaultValue={link.title} style={{flexShrink:'2'}}
+                                                        // onChange={(evt) => { 
+                                                        //     let value = evt?.target?.value;
+                                                        //     let links = [...metadata.links];    //Clone
+                                                        //     console.warn("[TEST] New Link 2", {value, evt, index, links});
+                                                        // }}
+                                                    />
                                                     {/* Remove Item */ }
                                                     <Button type="danger" shape="circle" icon={<DeleteOutlined />} onClick={() => {
                                                         // let links = metadata.links;
@@ -1158,7 +1183,6 @@ export default PagePersona;
                 if(persona.get('token_id')){
                     setStage('UpdateToken');
                     //Update Contract
-                    // let res = await updateNFT(uri);   //Promise
                     let res = await update(persona, uri);   //Promise
                     //Log
                     console.warn("[TEST] PersonaEdit.saveMetadata() After Update:", {res, metadata, uri});
