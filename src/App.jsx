@@ -61,7 +61,7 @@ const App = ({ isServerInfo }) => {
       console.log("(i) App() Running enableWeb3()", {isInitialized, isWeb3Enabled, isWeb3EnableLoading, isAuthenticated})
       enableWeb3();
     } 
-    else console.log("(i) App() Not Running enableWeb3()", {isInitialized, isWeb3Enabled, isWeb3EnableLoading, isAuthenticated})
+    // else console.log("(i) App() Not Running enableWeb3()", {isInitialized, isWeb3Enabled, isWeb3EnableLoading, isAuthenticated})
     // if (!isWeb3Enabled && !isWeb3EnableLoading) enableWeb3();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, isWeb3Enabled]);
@@ -78,21 +78,43 @@ const App = ({ isServerInfo }) => {
    * @param ParseObject persona 
    */
    const setPersona = (persona) => { 
+    if(persona===null){
+      //Unset Persona
+      return setPersonaActual(null);
+    }
+    
     //Remember
     if(user){
-      if(persona){
-        let record = user.get('last_persona');
-        if(!record) record = {};  //Initiate
-        record.global = persona.id;
-        // user.set('curPersona', persona.id);
-        user.set('last_persona', record);
-        user.save();
-        // console.warn("[TEST] App() Remeber Persona", user);
-      }
+      // if(persona){
+        //Validate
+        if(account === persona?.get('owner')){
+          try{
+            //Fetch Last Persona
+            let record = user.get('last_persona');
+            if(!record) record = {};  //Initiate
+            record.global = persona.id;
+            // user.set('curPersona', persona.id);
+            // user.set('last_persona', record).save();
+            user.save({last_persona: record}).catch(error => {
+              console.error("[CAUGHT] App() Error Saving Last Used Persona to User", {error, user, persona, account});
+            });
+            // console.warn("[TEST] App() Remeber Persona", user);
+          }catch(error){
+            console.error("[CAUGHT] App() Error Saving Last Used Persona to User", {error, user, persona, account});
+          }
+          //Set Persona
+          return setPersonaActual(persona);
+        }
+        else console.error("[ERROR] App() setPersona() Persona Not Owned By Account", {persona, account, owner:persona?.get('owner')});
+      // }//Has Persona
       // else console.warn("App() Clear Persona");
     }
     else console.error("[TEST] App() Change Persona Called, but No User", {persona, user});
-    setPersonaActual(persona); 
+
+    console.error("[TEST] App() Setting Persona Failed -- Clear Persona", {persona, user});
+    //Failed -- Clear Persona
+    setPersonaActual(null);
+
   }//setPersona
 
   //quickstart
