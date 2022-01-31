@@ -840,8 +840,10 @@ export default PagePersona;
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) message.error('Image must smaller than 2MB!');
         // return isJpgOrPng && isLt2M;
-        //Set Loading
-        setImageLoading(true);
+        if(isJpgOrPng && isLt2M){
+            //Set Loading
+            setImageLoading(true);
+        }
         //Always False - Manual Upload Via handleChangeFile()
         return false;
     }
@@ -923,9 +925,10 @@ export default PagePersona;
         if (!isJpgOrPng) message.error('Sorry, only JPG/PNG/GIF files are currently supported');
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) message.error('Image must smaller than 2MB!');
-        // return isJpgOrPng && isLt2M;
-        //Set Loading
-        setImageLoading(true);
+        if(isJpgOrPng && isLt2M){
+            //Set Loading
+            setImageLoading(true);
+        }
         //Always False - Manual Upload Via handleChangeFile()
         return false;
     }
