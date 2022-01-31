@@ -56,7 +56,7 @@ export const useNFTCollections = (options) => {
               //Override
               name:'NFT Bonfire', 
               image: "https://ipfs.moralis.io:2053/ipfs/QmUZci2fwc6wjTMQPy7AwCQKyPdb6aSt24t1eVbtyPY2hz",
-              metadata: {name: 'General Member', description: null, external_link: null, image: 'https://ipfs.moralis.io:2053/ipfs/QmUZci2fwc6wjTMQPy7AwCQKyPdb6aSt24t1eVbtyPY2hz',}
+              metadata: {name: 'Early Adopter', description: null, external_link: null, image: 'https://ipfs.moralis.io:2053/ipfs/QmUZci2fwc6wjTMQPy7AwCQKyPdb6aSt24t1eVbtyPY2hz',}
             }],
           };
 

@@ -943,7 +943,7 @@ export default PagePersona;
                 onChange={handleChangeFile}
                 >
                 {imageLoading 
-                ?   <div className="in_progress" style={{textAlign:'center'}}>
+                ?   <div className=" container in_progress" style={{textAlign:'center'}}>
                         <LoadingOutlined /> 
                         <div className="explanation">Uploading Image to IPFS</div>
                     </div>
@@ -1344,14 +1344,17 @@ export default PagePersona;
                 <div className="buttons">
                     {(stage==='SavingToIPFS') && <div className="saving">
                         <span>Please wait while saving the metadata to IPFS</span>
+                        <br />
                         <Spin style={{display:'block'}} />
                     </div>}
                     {(stage==='MintToken') && <div className="saving">
                         <span>Please confirm minting request on your web3 wallet</span>
+                        <br />
                         <Spin style={{display:'block'}} />
                     </div>}
                     {(stage==='UpdateToken') && <div className="saving">
                         <span>Please confirm the update request on your web3 wallet</span>
+                        <br />
                         <Spin style={{display:'block'}} />
                     </div>}
                     {(stage===null || stage==="FAILED") && 
