@@ -499,7 +499,9 @@ function PagePersona(props) {
                                             // console.log("[DEV] link to:"+link.type+" Title:'"+link.title+"'", link.url);
                                             return (
                                             // <Col xs={24} lg={12} key={link.title+index}>
-                                                <Input.Group key={index+link.url} compact className="item" style={{display: 'flex', }} >
+                                                <Input.Group key={index+link.url} compact className="item" style={{display: 'flex', }} 
+                                                    onChange={(evt) => { console.warn("[TEST] Link CHnaged", evt.target.value); }}
+                                                >
                                                     <Input name="URL" defaultValue={link.url} placeholder="URL" 
                                                         addonBefore={<Select defaultValue={link.type} style={{minWidth:'99px'}} className="select-before">
                                                             <Select.Option value="website">Website</Select.Option>
@@ -526,7 +528,7 @@ function PagePersona(props) {
                                     <div className="link_add">
                                         {/* Add Item */ }
                                         <Button type="primary" shape="circle" icon={<PlusCircleOutlined />} onClick={() => {
-                                            console.log("[TEST] Metadtaa Links", metadata, metadata.links); 
+                                            console.log("[TEST] Metadtaa: Add Link Links", metadata, metadata.links); 
                                             let links = metadata.links ? [...metadata.links] : [];    //Clone
                                             // links.splice(index, 1);
                                             links.push({type:'website', title:'', url:''});
