@@ -51,7 +51,7 @@ import __ from "helpers/__";
 function NFTCollections(props) {
   //Extract Props
   let { accountHash, collectionHash } = props.match.params;
-  const { Moralis, isWeb3Enabled , chainId, account, isAuthenticated } = useMoralis();
+  const { isWeb3Enabled , chainId, account, isInitialized } = useMoralis();
   const [isAllowed, setIsAllowed] = useState(null);
   // const { isAllowed } = useIsAllowed({hash:collectionHash, chain:props?.match?.params?.chain || chainId});
   // console.warn("[TEST] NFTCollections() Ran useIsAllowed:"+isAllowed, {hash:collectionHash, chain:props?.match?.params?.chain || chainId, props});
@@ -78,67 +78,15 @@ function NFTCollections(props) {
 
   // React.useEffect(() => {
   //   //Log
-  //   console.log("(i) NFTCollecAnonymoustions() Loading Collections: ", {NFTCollections, collectionHash, accountHash, options, params:props.match.params });
+  //   console.log("(i) NFTCollections() Loading Collections: "+isInitialized, {NFTCollections, collectionHash, accountHash, options, params:props.match.params });
   // },[]);
 
-  async function testFunc() {
-    try {
-      if(isWeb3Enabled) {
-        //Cloud Functions
-        const msg = await Moralis.Cloud.run("sayHi");
-        const posts = await Moralis.Cloud.run("getPosts");
-        const rooms = await Moralis.Cloud.run("getRooms");
-        console.warn("Moralis Cloud Func:", {msg, posts, rooms});
-
-        //Objects
-        // const Post = Moralis.Object.extend("Post");
-        
-        /* Create a new instance of that class. */
-        const post1 = new Post();
-        post1.set("text", "My Second post");
-        post1.set("id", 'POST1');
-        post1.set("roomId", 'ROOM1');
-        // post1.set("user", Moralis.currentUser.get("objectId"));    //TODO: Get Current User ObjectID, This isn't Really It...
-        // await post1.save(); //Save to DB
-        console.warn("Moralis Objects: New Post:", post1);
-        
-        //Object Queries
-        const queryPosts = new Moralis.Query(Post); //Query the Object
-        // query.equalTo("roomId", "?"); //Filter      
-        queryPosts.limit(20); 
-        // query.skip(10); 
-        // query.withCount(); //Add Count
-        const allPosts = await queryPosts.find();
-        // const object = await query.first();
-        console.warn("Moralis Object Queries:", {allPosts});
-      }//Web3Enabled
-      // else console.warn("NFTCollection() WAIT for Moralis Cloud");  
-    }
-    catch (error) {
-      //Log
-      console.log("[CAUGHT] NFTCollection() Exception", {error});
-    }//SANDBOX
-  }//testFunc()
-  // testFunc();
-
-  // (process?.env?.REACT_APP_ENV==='development')
-
-  // console.warn("[TEST] NFTCollections() Collection:", {NFTCollections, collectionHash, thiscollection:NFTCollections[collectionHash] });
-  //style={styles.NFTs}
-  /* MOVED TO isAllowed()
-  //Validate
-  if(isWeb3Enabled && collectionHash && !NFTCollections[collectionHash]){
-    console.error("NFTCollections() Requested Collection Not Found:", {NFTCollections, collectionHash, thisCollection:NFTCollections[collectionHash] });
-    return (
-      <div className="framed error 404">Error: Failed to Find Requested Contract '{collectionHash}' on {ChainHelper.get(options.chain,'name')}</div>
-    );
-  }
-  */
   // console.warn("[TEST] AUTH", {isWeb3Enabled, isAuthenticated});
-
-  if(!isWeb3Enabled || !isAuthenticated) return <PageAuthenticate />;
+  // if(!isWeb3Enabled || !isAuthenticated) return <PageAuthenticate />;  //Authentication Not Really Required
+  // if(!options.address && isInitialized) return <PageAuthenticate />; //Ideally...
+  if(!isWeb3Enabled) return <PageAuthenticate />;   //Moralis getNFT Func only runs in Web3 is Enabled
   return (
-    <Skeleton loading={!isWeb3Enabled}>
+    <Skeleton loading={!isInitialized}>
       
       {(!isAllowed && process?.env?.REACT_APP_ENV==='development') && <p className="debug" style={{float:'right'}}>[NOT ALLOWED (C)]</p>}
 
@@ -225,7 +173,7 @@ function NFTCollections(props) {
               let style = collectionHash ? __.stackContainerStyle(collection.items.length) : {};
               let title = collectionHash ? "Go Back" : "Pick '"+__.sanitize(collection.name)+"' Collection";
               return (
-                <CollectionContext.Provider key={collection.hash+'Prov'} value={collection}>
+                <CollectionContext.Provider value={collection}>
                   <div className="center_wrapper">
                   {/* <p>{collection.owned ? 'Owned' : 'Not Owned'}</p> */}
                   <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
