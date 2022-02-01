@@ -7,4 +7,4 @@ Based on Moralis [ethereum-boilerplate](https://ethereum-boilerplate.github.io/e
 
 Live app here [NFTBonfire](https://nftbonfire.space/)
 
-Contributions are welcome. Check issues and wiki.
+Contributions are welcome. Check issues and [https://github.com/toledoroy/NFTbonfire/wiki](wiki).
