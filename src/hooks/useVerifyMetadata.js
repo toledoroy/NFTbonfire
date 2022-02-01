@@ -153,7 +153,7 @@ export const useVerifyMetadata = () => {
     }//setMetadata()
     
     
-    /**
+    /** [DEV] CANCELLED
      * Update Persona from DB to save a Web3 Call
      */
     function personaUpdateFromDB(NFT){
