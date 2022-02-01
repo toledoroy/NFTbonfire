@@ -604,7 +604,7 @@ function PagePersona(props) {
                             {!isEditMode && 
                             <Skeleton loading={isLoading} active >
                                 {metadata?.name && <h1 className="name">{metadata.name}</h1>}
-                                {!PersonaHelper.isNew(persona) && <Handle persona={persona} isEditMode={isEditMode} />}
+                                {!PersonaHelper.isNew(persona) && <Handle persona={persona} isEditMode={isEditMode} isOwned={isOwned} />}
                                 {metadata?.location &&
                                 <div className="flex" style={{marginBottom:5}}>
                                     <div className="location">
@@ -632,7 +632,7 @@ function PagePersona(props) {
                                 {/* {isEditMode && <Button className="debug" onClick={()=>{ console.warn("[TODO] PagePersona() Save Changes"); }} >[Save]</Button>} */}
                                 {isSameChain()
                                 ? <>
-                                    {!isEditMode && 
+                                    {(isOwned && !isEditMode) && 
                                         <Button variant="contained" color="primary" onClick={()=>{setIsEditMode(isEditMode===false);}}
                                             icon={<i className="bi bi-pencil-fill"></i>}>Edit
                                         </Button>}
@@ -1065,19 +1065,19 @@ export default PagePersona;
                 // .then(() => { setIsSaving(false); });
         }
     }//saveHandle()
-    //is Current User Owner of Persona
-    const isOwned = (user && user.get('accounts').includes(persona.get('owner').toLowerCase()));
+
     return (
         <div className="handle">
             {(!isEditMode) && <>
                 {persona.get('handle') && <span> @ {persona.get('handle')}</span>}
-                {isOwned && 
-                    isNew() 
+                {props.isOwned && <>
+                    {isNew() 
                     ? <Button variant="contained" size="small" color="primary" onClick={()=>{setIsEditMode(true)}}>Claim Handle</Button>
                     : <Button variant="contained" size="small" onClick={()=>{setIsEditMode(true)}} style={{background: 'none', border:'none'}} title="Edit handle"><i className="bi bi-pencil-fill"></i></Button>
-                }
+                    }
+                </>}
             </>}
-            {(isOwned && isEditMode) && <>
+            {(props.isOwned && isEditMode) && <>
             <Form name="handleChange" className="flex" onFinish={(values) => saveHandle(values.handle)} size="small">
                 <Form.Item
                     hasFeedback
