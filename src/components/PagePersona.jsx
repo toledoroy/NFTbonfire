@@ -44,7 +44,7 @@ function PagePersona(props) {
     const { params } = props.match;
     // const { handle } = props.match.params;
     const { handle, chain, contract, token_id } = params;
-    const { Moralis, isWeb3Enabled, isAuthenticated, userError, chainId, account } = useMoralis();     //isUserUpdating
+    const { Moralis, isWeb3Enabled, isInitialized, isAuthenticated, userError, chainId, account } = useMoralis();     //isUserUpdating
     // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMode ] = useState(false);
     const [ isOwned, setIsOwned ] = useState(false);
@@ -146,7 +146,7 @@ function PagePersona(props) {
 
     //(Re)load Persona on Parameter Change & when Web3 comes Online
     useEffect(() => async () => {
-        if(isWeb3Enabled){
+        if(isInitialized){
             //Load Persona
             loadPersona(params);
             //Log
@@ -154,7 +154,7 @@ function PagePersona(props) {
         }
     // },[params]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[params, isWeb3Enabled]);
+    },[params, isInitialized]);
 
     /**
      * Load Persona Procedure
@@ -162,11 +162,14 @@ function PagePersona(props) {
     const loadPersona = async (params) => {
         //Start Loading
         setIsLoading(true);
-        if(!isWeb3Enabled){ 
+        // if(!isWeb3Enabled){ 
+        if(!isInitialized){
             //This is usually a temprorary state 
-            //console.error("Waiting for W3");
+            // console.error("Waiting for W3");
+            console.error("Waiting for Init");
         }
-        else if(params.chain && params.contract && params.token_id) {//By Token Address
+        else 
+        if(params.chain && params.contract && params.token_id) {//By Token Address
             let personaData = {
                 chainId: chain,
                 address: contract,
