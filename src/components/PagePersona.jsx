@@ -64,6 +64,7 @@ function PagePersona(props) {
     const { switchNetwork } = useChain();   //chain
     //https://github.com/MoralisWeb3/react-moralis#usemoralisweb3api
     
+
     //Cloud Function Examples
     // const { data, error, isLoading } = useMoralisCloudFunction("topScores", { limit, });
     // const { fetch, data, error, isLoading } = useMoralisCloudFunction("topScores", {limit}, { autoFetch: false } );  //Trigger Manually (via fetch func.)
@@ -85,6 +86,26 @@ function PagePersona(props) {
        else console.warn("PagePersona() Persona Has no Metadata", {persona});
     }//setPersona()
    
+    /**
+     * Update Metadata Field (Prefer This)
+     * @param {*} field 
+     * @param {*} value 
+     */
+    function updateMetadataField(field, value){
+        // console.warn("[TEST] updateMetadataField()", {field, value, metadata});
+        setMetadata(prevState => {
+            console.warn("[TEST] updateMetadataField() Prev Metadata:", {prevState});
+            // Object.assign would also work
+            // return {...prevState, ...{ [field]: value }};
+            return {...prevState, [field]: value };
+        });
+        console.warn("[TEST] updateMetadataField() metadata Again", {field, value, metadata});
+        //Set Derivitives (Image)       //Deprecate?
+        setImageUrl(metadata?.image); 
+        //Done Loading
+        setIsLoading(false);
+    }//updateMetadataField()
+
     /**
      * Full Metadata Update Procedure
      * @param {*} metadata 
@@ -361,7 +382,6 @@ function PagePersona(props) {
         return (<Page404 />);
     }
 
-    
     // console.warn("Persona ID:"+persona.id, {persona, isLoading, metadata});
     return (
         <div className="persona framed">
@@ -373,7 +393,7 @@ function PagePersona(props) {
                 ? <div className="cover" style={{background:"url("+coverImage+") center center / cover no-repeat"}}></div>
                 : <div className="cover"></div>
                 }
-                {isEditMode && <CoverUpload metadata={metadata} setMetadata={updateMetadata} imageUrl={coverImage} />}
+                {isEditMode && <CoverUpload metadata={metadata} imageUrl={coverImage} updateMetadataField={updateMetadataField} />}
                 </div>
             </div>
             <div className="main" style={{marginTop:0}}>
@@ -574,7 +594,7 @@ function PagePersona(props) {
                         <div className="image">
                             {isLoading ? <Skeleton.Avatar active size={size} shape='circle' />
                             : isEditMode 
-                            ? <AvatarChangable metadata={metadata} setMetadata={updateMetadata} imageUrl={imageUrl} size={size} />
+                            ? <AvatarChangable metadata={metadata} updateMetadataField={updateMetadataField} imageUrl={imageUrl} size={size} />
                             : <Avatar size={size} src={IPFS.resolveLink(image)} />
                             }
                         </div>
@@ -653,7 +673,7 @@ function PagePersona(props) {
 
                     {isEditMode && 
                     <div className="edit">
-                        <PersonaEdit persona={persona} metadata={metadata} isLoading={isLoading} form={form} setIsEditMode={setIsEditMode} reloadmetadata={reloadmetadata} canEdit={canEdit}/>
+                        <PersonaEdit persona={persona} metadata={metadata} isLoading={isLoading} form={form} setIsEditMode={setIsEditMode} reloadmetadata={reloadmetadata} canEdit={canEdit} />
                     </div>
                     }
 
@@ -818,17 +838,16 @@ export default PagePersona;
             </Button>
             </>
         </Modal>
-    )
+    );
 }//AccountAddModal()
 
 /**
  * Component: Avatar Changable Upload
  */
  function AvatarChangable(props){
-    const { metadata, setMetadata, imageUrl, size } = props;
+    const { metadata, updateMetadataField, imageUrl, size } = props;
     const { Moralis } = useMoralis();
     const [ imageLoading, setImageLoading ] = useState(false);
-    const updateMetadata = setMetadata;
 
     /**
      * File Upload Validation
@@ -852,7 +871,7 @@ export default PagePersona;
      * File Upload 
      */
      const handleChangeFile = info => {
-        // console.log("[TEST] File Upload handleChangeFile() Status:"+info?.file?.status, info);
+        console.log("[TEST] AvatarChangable.handleChangeFile() File Upload - Status:"+info?.file?.status, {info, metadata});
         try{
             if (info.file.status === undefined) {
                 // saveImageToIPFS(info.file).then(result => {
@@ -860,7 +879,7 @@ export default PagePersona;
                 IPFS.saveImageToIPFS(Moralis, info.file).then(url => {
                     console.log("[TEST] File Upload handleChangeFile() IPFS Hash:", url);
                     //Set to Metadata
-                    updateMetadata({...metadata, image:url});
+                    updateMetadataField('image', url);
                     //Done Loading
                     setImageLoading(false);
                 });
@@ -899,7 +918,7 @@ export default PagePersona;
                     <CameraFilled />
                 </div>
             </Upload>
-                {/* </ImgCrop> */}
+            {/* </ImgCrop> */}
             
             {/* <div className="clearfloat"></div> */}
         </div>
@@ -911,10 +930,9 @@ export default PagePersona;
  * Component: Avatar Changable Upload
  */
  function CoverUpload(props){
-    const { metadata, setMetadata } = props;
+    const { metadata, updateMetadataField } = props;
     const { Moralis } = useMoralis();
     const [ imageLoading, setImageLoading ] = useState(false);
-    const updateMetadata = setMetadata;
 
     /**
      * File Upload Validation
@@ -937,14 +955,14 @@ export default PagePersona;
      * File Upload 
      */
      const handleChangeFile = info => {
-        // console.log("[TEST] handleChangeFile() File Upload Status:"+info?.file?.status, info);
+        console.log("[TEST] CoverUpload.handleChangeFile() File Upload - Status:"+info?.file?.status, {info, metadata});
         try{
             if (info.file.status === undefined) {
                 // saveImageToIPFS(info.file).then(result => {
                 // IPFS.saveImageToIPFS(Moralis, info.file).then(result => {
                 IPFS.saveImageToIPFS(Moralis, info.file).then(url => {
                     //Set to Metadata
-                    updateMetadata({...metadata, cover:url});
+                    updateMetadataField('cover', url);
                     //Done Loading
                     setImageLoading(false);
                     //Log
@@ -1106,6 +1124,7 @@ export default PagePersona;
 /**
  * Component: Persona Edit Form
  * (Creaeted this component as a miniscule attempt to reduce the clutter in this endless spaghetti page)
+ * This component get's updated with the any metadata changes and saves them to the blockchain when ready
  * 
  */
  function PersonaEdit(props) {
@@ -1117,8 +1136,6 @@ export default PagePersona;
     // const [ formSocial, setFormSocial ] = useState({});
     const [ metadata, setMetadata ] = useState(props.metadata);    //From Parent
     const { mint, update } = usePersona(); 
-
-    // const { verifyMetadata, updateToken } = useVerifyMetadata();
     // const { Moralis, setUserData, user, isAuthenticated } = useMoralis();
     const { Moralis, user, isAuthenticated, chainId } = useMoralis();
     // const contractProcessor = useWeb3ExecuteFunction();
@@ -1173,7 +1190,7 @@ export default PagePersona;
         persona.set('metadata', metadata);
 
         //Log
-        // console.warn("[DEBUG] PersonaEdit.saveMetadata() Updated Values to Metadata", {persona, metadata});
+        console.warn("[DEBUG] PersonaEdit.saveMetadata() Updated Values to Metadata", {persona, metadata});
 
         setIsSaving(true);
         setStage('SavingToIPFS');
