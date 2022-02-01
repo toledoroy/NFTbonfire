@@ -184,7 +184,8 @@ function PagePersona(props) {
             setIsLoading(false);
         }//Requested: Specific Token
         else if(params.handle){ //By Registered Handle
-            console.warn("[DEBUG] PagePersona() Get persona By Handle:'"+handle+"'", { params, isWeb3Enabled } ); 
+            // console.warn("[DEBUG] PagePersona() Get Persona By Handle:'"+handle+"'", { params, isWeb3Enabled } ); 
+            console.log("Get Persona By Handle:'"+handle+"'"); 
             //Start Loading
             setIsLoading(true);
             //Query
@@ -195,8 +196,7 @@ function PagePersona(props) {
                     //Reload Metadata
                     if(persona.get('metadata')){
                         setPersona(persona);
-                        // updateMetadata( persona.get('metadata') );      //Now, Included in setPersona()
-                        console.warn("[DEV] PagePersona() Updated Persona", {persona});    //V
+                        // console.warn("[DEV] PagePersona() Updated Persona from DB", {persona});    //V
                     }
                     else{
                         console.warn("[DEV] PagePersona() Persona Missing Metadata - Handle:"+params.handle, {persona});
