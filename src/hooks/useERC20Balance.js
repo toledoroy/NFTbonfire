@@ -8,7 +8,7 @@ export const useERC20Balance = (params) => {
   const [assets, setAssets] = useState();
 
   useEffect(() => {
-    if (isInitialized) {
+    if (isInitialized && walletAddress) {
       fetchERC20Balance().then((balance) => setAssets(balance));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
