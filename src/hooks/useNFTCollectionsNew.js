@@ -9,7 +9,7 @@ import __ from "helpers/__";
  * @returns 
  */
 export const useNFTCollections = (options) => {
-  const { account, chainId, isWeb3Enabled } = useMoralis();
+  const { account, chainId, isWeb3Enabled, isInitialized } = useMoralis();
   const [ NFTCollections, setNFTCollections ] = useState({});
   const [ NFTpersonas, setPersonas ] = useState([]);
   const { verifyMetadata, personaUpdateFromDB, updateToken } = useVerifyMetadata();  //updateToken
@@ -38,7 +38,7 @@ export const useNFTCollections = (options) => {
           //Force Full Metadata Update (Moralis sometimes gives outdated token_uri)
           NFT = updateToken(NFT);
           */
-          NFT = personaUpdateFromDB(NFT);
+          // NFT = personaUpdateFromDB(NFT);  //Could Potentially Update Persona tokens Cached on DB
           //Append Persona
           personas.push(NFT);
 
@@ -95,8 +95,9 @@ export const useNFTCollections = (options) => {
   //Get NFTs for Account
   const { data: NFTBalances, isLoading, error } = useNFTBalances(options);   
   useEffect(() => {
-    // console.log("[TEST] useNFTCollections() NFTBalances", NFTBalances, options);
-    if (isWeb3Enabled && NFTBalances?.result) {
+    // console.log("[TEST] useNFTCollections() TRIGGERED", {NFTBalances, options, isInitialized, isLoading, error});
+    // if (isWeb3Enabled && NFTBalances?.result) {
+    if (isInitialized && NFTBalances?.result) {
       const chain = options?.chain || chainId;
       const NFTs = NFTBalances.result;
       for (let NFT of NFTs) {
@@ -109,13 +110,13 @@ export const useNFTCollections = (options) => {
       // let collections = collect(NFTs);
       let { collections, personas } = collect(NFTs, chain);
       //Log
-      console.log("(i) useNFTCollections() collections:", {options, NFTs, collections, personas});
+      console.warn("(i) useNFTCollections() collections:", {options, NFTs, collections, personas});
       //Set
       setNFTCollections( collections );
       setPersonas( personas );
     }//Has Results
     // eslint-disable-next-line
-  }, [NFTBalances, isWeb3Enabled]);
+  }, [NFTBalances, isWeb3Enabled, isInitialized]);
 // }, [NFTBalances, isWeb3Enabled, options]);
 
   return { NFTCollections, NFTpersonas, error, isLoading };
