@@ -36,12 +36,9 @@ import FullscreenMessage from "components/common/FullscreenMessage";
     const { data : personas } = useMoralisQuery('Persona', query => query.equalTo("owner", String(account).toLowerCase()), [account], { 
         live: true,
         /* For Some Mysterious Reason This Query is only Reflect DB Changes if these arguments are (and are wrong, playerName does not exist...)  */    //Maybe onLiveCreate
-        onCreate: data => console.warn(`${data.attributes.playerName} was just Created`),
-        onDelete: data => console.warn(`${data.attributes.playerName} was just Deleted`),
-        onUpdate: data => console.warn(`${data.attributes.playerName} was just Updated`),
-        // onLiveCreate: data => console.warn(`${data.attributes.token_id} was just Created`),  //Nope
-        // onLiveDelete: data => console.warn(`${data.attributes.token_id} was just Deleted`),  //Nope
-        // onLiveUpdate: data => console.warn(`${data.attributes.token_id} was just Updated`),  //Nope
+        // onCreate: data => console.warn(`${data.attributes.playerName} was just Created`),
+        // onDelete: data => console.warn(`${data.attributes.playerName} was just Deleted`),
+        // onUpdate: data => console.warn(`${data.attributes.playerName} was just Updated`),
     });
 
     //Create a Faux NFT Collection from Personas Data
