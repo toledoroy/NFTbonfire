@@ -173,10 +173,10 @@ function NFTCollections(props) {
               let style = collectionHash ? __.stackContainerStyle(collection.items.length) : {};
               let title = collectionHash ? "Go Back" : "Pick '"+__.sanitize(collection.name)+"' Collection";
               return (
-                <CollectionContext.Provider value={collection}>
+                <CollectionContext.Provider key={collection.hash+':ctx'} value={collection}>
                   <div className="center_wrapper">
                   {/* <p>{collection.owned ? 'Owned' : 'Not Owned'}</p> */}
-                  <div key={collection.hash+'cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
+                  <div key={collection.hash+':cards'} className={`collection ${collectionHash ? "stack" : ""}`}> 
                     {!collectionHash && 
                     <h2 className="">
                       <Link key={collection.hash+'Link'} to={dest}>
