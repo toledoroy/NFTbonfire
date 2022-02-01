@@ -183,11 +183,15 @@ const App = ({ isServerInfo }) => {
               
               {/* <Route path="/room/:id" component={RoomPage} /> */}
               
-              {/* THIS SHOULD HAVE DEFINED CHAIN, NOT NECESSARILY ACCOUNT... */}
-              <Route path="/nftCollections/:accountHash/:collectionHash/:roomId/:postId" component={NFTCollections} />
+              {/* DEPRECATE THIS SHOULD HAVE DEFINED CHAIN, NOT NECESSARILY ACCOUNT... */}
+              {/* <Route path="/nftCollections/:accountHash/:collectionHash/:roomId/:postId" component={NFTCollections} />
               <Route path="/nftCollections/:accountHash/:collectionHash/:roomId" component={NFTCollections} />
-              <Route path="/nftCollections/:accountHash/:collectionHash" component={NFTCollections} />
+              <Route path="/nftCollections/:accountHash/:collectionHash" component={NFTCollections} /> */}
+
+              <Route path="/nftCollection/:collectionHash/:chain" component={NFTCollections} /> {/* Maybe? */}
+
               <Route path="/nftCollections/:accountHash" component={NFTCollections} />
+              <Route path="/collections/:accountHash/:chain" component={NFTCollections} />
               
               
               <Route path="/nftSingle/:hash" component={NFTSingle} />
