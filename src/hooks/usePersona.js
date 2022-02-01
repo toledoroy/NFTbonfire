@@ -223,7 +223,7 @@ export const usePersona = () => {
                     tokenId:    data?.events?.Transfer?.returnValues?.tokenId,
                 });
                 //Trigger Metadata Update on Moralis
-                callMoralisMetadataUpdate(options.contractAddress, data?.events?.Transfer?.returnValues?.tokenId);
+                callMoralisMetadataUpdate(options.contractAddress, data?.events?.Transfer?.returnValues?.tokenId, chainId);
                 //Return Transaction Data
                 return data;
             },
@@ -260,7 +260,7 @@ export const usePersona = () => {
                     //Call a Server Update for Persona's Metadata (& URI)
                     Moralis.Cloud.run("personaUpdate", {personaId:persona.id});
                     //Trigger Metadata Update on Moralis
-                    callMoralisMetadataUpdate(options.contractAddress, options?.params?.tokenId);
+                    callMoralisMetadataUpdate(options.contractAddress, options?.params?.tokenId, chainId);
                     //Return Transaction Data
                     return data;
                 }
@@ -328,7 +328,7 @@ export const usePersona = () => {
     /**
      * Trigger Moralis Metadata Update When Needed
      */
-    function callMoralisMetadataUpdate(hash, tokenId, chain){
+    function callMoralisMetadataUpdate(hash, tokenId, chain=chainId){
         let apiKey = process?.env?.REACT_APP_MORALIS_API_KEY;
         if(apiKey){
             if(hash && tokenId && chain){

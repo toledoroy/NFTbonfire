@@ -100,8 +100,9 @@ function PagePersona(props) {
             return {...prevState, [field]: value };
         });
         console.warn("[TEST] updateMetadataField() metadata Again", {field, value, metadata});
+        if(field === 'image') setImageUrl(value);
         //Set Derivitives (Image)       //Deprecate?
-        setImageUrl(metadata?.image); 
+        // setImageUrl(metadata?.image); 
         //Done Loading
         setIsLoading(false);
     }//updateMetadataField()
@@ -1418,7 +1419,8 @@ export default PagePersona;
                                             </ul>
                                         </div>
                                     }
-                                    onConfirm={() => onFinish({}) }
+                                    // onConfirm={() => onFinish({}) }
+                                    onConfirm={() => form.submit() }
                                     icon=""
                                     //   onVisibleChange={() => console.log('visible change')}
                                     >
