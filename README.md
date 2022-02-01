@@ -1,7 +1,7 @@
 # `NFT Bonfire`
 
 
-Built for the Moralis Avalanche Hackathon
+Built for the [Moralis Avalanche Hackathon](https://moralis.io/avalanche-hackathon/)
 
 Based on Moralis [ethereum-boilerplate](https://ethereum-boilerplate.github.io/ethereum-boilerplate)
 
