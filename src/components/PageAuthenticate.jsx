@@ -22,8 +22,8 @@ function PageAuthenticate(props) {
             {/* <h3>This page requires you to connect your web3 wallet</h3> */}
             {/* <h2>Please Connect your web3 wallet using the "<span style={{color:'var(--colorAccent2)'}}>Authenticate</span>" button on the top right corner</h2> */}
             {isWeb3Enabled 
-            ?   <h2>To access thie website, please connect your web3 wallet and <span style={{color:'var(--colorAccent2)'}} className="link" onClick={() => authenticate({ signingMessage: "Sign in to NFT Bonfire [Free]" })}>Authenticate</span></h2>
-            :   <h2>To access thie website, you'd need a web3 wallet, such as <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">Metamask</a></h2>}
+            ?   <h2>To access this website's full functionality please connect your web3 wallet and <span style={{color:'var(--colorAccent2)'}} className="link" onClick={() => authenticate({ signingMessage: "Sign in to NFT Bonfire [Free]" })}>Authenticate</span></h2>
+            :   <h2>To access this website's full functionality you'd need a web3 wallet such as <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">Metamask</a></h2>}
         </div>
     );
 }//PageAuthenticate()
