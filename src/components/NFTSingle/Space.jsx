@@ -14,7 +14,7 @@ import PersonaHelper from "helpers/PersonaHelper";
 import { CollectionContext } from "common/context";
 import __ from "helpers/__";
 import moment from 'moment';
-import { Space, Room, Comment as CommentObj } from "objects/objects";
+import { Room, Comment as CommentObj } from "objects/objects";  //These Run in the Wrong Context
 import { Persona } from "objects/Persona";
 import { ChainHelper } from "helpers/ChainHelper";
 //Components
@@ -30,7 +30,7 @@ import PageAuthenticate from "components/PageAuthenticate";
  *  - FB Messenger
  */
 function SpaceView({hash, collection, NFTpersonas}) {
-  const { Moralis, isWeb3Enabled, isAuthenticated, user } = useMoralis();
+  const { Moralis, isWeb3Enabled, isInitialized, isAuthenticated, user } = useMoralis();
   const [ space, setSpace ] = useState({});
   const [ rooms, setRooms ] = useState([]);
   const [ curRoomId, setCurRoomId ] = useState();
@@ -47,26 +47,32 @@ function SpaceView({hash, collection, NFTpersonas}) {
 
   },[collection]);
   
-
   /**
-   * [DEV] Insert Rooms
+   * Insert Rooms
    */
   function initRooms(hash){
-    let roomsInit = [
-      new Room().set("name", 'Introduction').set("text", 'Say Hi! and introduce yourself'),
-      new Room().set("name", 'News').set("text", 'Things people like you should know about'),
-      new Room().set("name", 'Events').set("text", 'Virtual Meta-Events or IRL, all private NFT events can be posete here'),
-      new Room({test:1}).set("name", 'Chat').set("text", 'Just talk about whatever'),
-    ];
-    for(let room of roomsInit){ 
-      // room.set("space", space.id);    //Seems Unecessary. Spaces are 1-1 with Contract Hashes
-      room.set("parentId", hash);       //Link Directly to Space (By Hash)
-      room.save().then(result => {
-        console.log("[TEST] Created Room for:"+hash, result);
-      });
-    }//Insert Each Room
-    //Return
-    return roomsInit;
+    try{
+      let roomsInit = [
+        new Room().set("name", 'Introduction').set("text", 'Say Hi! and introduce yourself'),
+        // new Room().set("name", 'News').set("text", 'Things people like you should know about'),
+        // new Room().set("name", 'Events').set("text", 'Virtual Meta-Events or IRL, all private NFT events can be posete here'),
+      ];
+      for(let room of roomsInit){ 
+        // room.set("space", space.id);    //Seems Unecessary. Spaces are 1-1 with Contract Hashes
+        room.set("parentId", hash);       //Link Directly to Space (By Hash)
+        room.save().then(result => {
+          console.log("initRooms() Created Default Room for:"+hash, result);
+        });
+      }//Insert Each Room
+
+      //Set Rooms
+      // setRooms(roomsInit); //Try Without... Also Use Live Query
+      //Log
+      // console.log("[TEST] SpaceView() No Rooms Found for Space:"+hash+" --> Init Rooms", roomsInit);
+
+      //Return
+      // return roomsInit;
+    }catch(error){ console.error("[CAUGHT] SpaceView() Init Rooms Error", {error, hash}); }
   }//initRooms()
   
   /**
@@ -76,31 +82,40 @@ function SpaceView({hash, collection, NFTpersonas}) {
     if (isWeb3Enabled && isAuthenticated) {
       //Unset Space
       setSpace(null);
-      const query = new Moralis.Query(Space);
-      query.equalTo("hash", hash);
-      query.first().then(async result =>  {
-        if(result) {
-          setSpace(result);
-          //Log
-          // console.log("[TEST] Got Space for Hash:'"+hash+"'", result); 
-        }//Existing Space
-        else{
-          //Create a new Space
-          const newSpace = new Space();
-          newSpace.set("hash", hash);
-          newSpace.set("name", "New Space"); //No Need
-          newSpace.set("text", "This is a new space");  //No Need
-          // newSpace.set("first_user", Moralis.currentUser.get("objectId"));   //TODO: Get Current User ObjectID, This isn't Really It...
-          // newSpace.set("rooms", []); //Other Way...
-          await newSpace.save();//.then(result => {
+      try{
+        const Space = Moralis.Object.extend("Space");
+        const query = new Moralis.Query(Space);
+        
+        query.equalTo("hash", hash);
+        query.first().then(async result =>  {
+          if(result) {
+            setSpace(result);
             //Log
-            console.log("(i) Automatically Created new Space for:"+hash);
-            //Set
-            // setSpace(result);
-          // });
-          setSpace(newSpace);
-        }//New Space
-      });
+            // console.log("[TEST] Got Space for Hash:'"+hash+"'", result); 
+          }//Existing Space
+          else{
+            //Create a new Space
+            const newSpace = new Space();
+            newSpace.set("hash", hash);
+            newSpace.set("name", "New Space"); //No Need
+            newSpace.set("text", "This is a new space");  //No Need
+            // newSpace.set("first_user", Moralis.currentUser.get("objectId"));   //TODO: Get Current User ObjectID, This isn't Really It...
+            // newSpace.set("rooms", []); //Other Way...
+            await newSpace.save()//.then(result => {
+              .catch(error => {
+                console.error("[CAUGHT] SpaceView() Error wile saving New Space", {error, hash, newSpace, isInitialized, isWeb3Enabled, isAuthenticated});
+              });
+              //Log
+              console.log("(i) Automatically Created new Space for:"+hash);
+              //Set
+              // setSpace(result);
+            // });
+            setSpace(newSpace);
+          }//New Space
+        });
+      }catch(error){
+        console.error("[CAUGHT] Error in SpaceView.jsx", {error, isInitialized, isWeb3Enabled, isAuthenticated});
+      }
     }//Web3 Enabled
     else console.log("SpaceView() Waiting for Web3...");
   }, [isWeb3Enabled, isAuthenticated, hash, Moralis.Query]);
@@ -183,16 +198,11 @@ function SpaceView({hash, collection, NFTpersonas}) {
           //Set Rooms
           setRooms(results);
         }//Found Rooms
-        /* Cancelled - Allow for No Rooms
         else {
           //Init Rooms
-          let roomsInit = initRooms(hash); 
-          //Set Rooms
-          // setRooms(roomsInit); //Try Without... Also Use Live Query
-          //Log
-          // console.log("[TEST] SpaceView() No Rooms Found for Space:"+hash+" --> Init Rooms", roomsInit);
+          initRooms(hash); 
         }//No Rooms
-        */
+        
         //Log
         // console.log("Moralis Query Object for Current Room: ", {hash, curRoomId});
       }
