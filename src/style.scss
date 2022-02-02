@@ -98,6 +98,12 @@ body {
         border-radius: 0 0 12px 12px ;
         padding: 10px 50px 10px 50px;
         height: var(--footer-height);
+        margin: 0;
+        font-weight: 500;
+        font-size: 1.2em;
+        a, a:visited{
+            color:#555;
+        }
         .inner{
             margin:0 auto;
             max-width: var(--pageWidth);

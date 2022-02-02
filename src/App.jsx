@@ -237,7 +237,10 @@ const App = ({ isServerInfo }) => {
           </a>
           <a href='https://www.freepik.com/'>Cool Art by Freepik.com</a>
           <a href="https://discord.gg/PeDb9MXXa9" target="_blank" rel="noopener noreferrer" style={{display:'flex', alignItems:'center'}}>
-            <i className="bi bi-discord"></i> <span style={{margin:'0 5px'}}>For Support</span>
+            <i className="bi bi-discord"></i> <span style={{margin:'0 5px'}}>Support</span>
+          </a>
+          <a href="https://github.com/toledoroy/NFTbonfire/wiki" target="_blank" rel="noopener noreferrer" style={{display:'flex', alignItems:'center'}}>
+            <i className="bi bi-github"></i> <span style={{margin:'0 5px'}}>WIKI</span>
           </a>
         </div>
       </Footer>
