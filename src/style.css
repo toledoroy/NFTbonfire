@@ -152,8 +152,8 @@ small {font-size: 73%;}
 .ant-card-body:empty {display: none;} /* AntD Card */
 
 .collections .middle { 
-  display:flex; 
-  justify-content: space-between;
+  /* display:flex;  */
+  /* justify-content: space-between; */
 }
 .space .collections .middle { 
   position: sticky;
