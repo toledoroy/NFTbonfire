@@ -106,7 +106,7 @@ function RoomAddForm(props) {
         acl.setPublicReadAccess(true);
         post.setACL(acl);
         //Log
-        console.warn("[TEST] RoomAddForm() ACL: "+JSON.stringify(acl), {isWeb3Enabled, acl, post, values});
+        // console.warn("[TEST] RoomAddForm() ACL: "+JSON.stringify(acl), {isWeb3Enabled, acl, post, values});
         //Save
         // return post.save();
         // let newPost = await post.save(values);
