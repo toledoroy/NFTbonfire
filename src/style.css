@@ -118,7 +118,7 @@ header, footer { box-shadow: 0 0 8px #bbb;}
 
 /* ANT Design Overrides */
 .ant-layout-content { margin-top: var(--headerHeight); }
-
+.ant-table-tbody > tr > td {min-width: 60px;}
 
 /* GLOBAL MODIFIERS */
 small {font-size: 73%;}
