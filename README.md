@@ -5,7 +5,8 @@
 
 What does it do?
 * Instant Communities – NFT bonfire turns every NFT collection into a community of like-minded people. Automatically creating private spaces for owners of NFT collections, filled with meta-bonfires to sit around and chat.  
-* Social Persoa - Mint your social profile as an NFT & take it with you wherever you go
+* Social Persoa - Mint your social profile as an NFT. Free!
+
 
 
 Built for the [Moralis Avalanche Hackathon](https://moralis.io/avalanche-hackathon/)
