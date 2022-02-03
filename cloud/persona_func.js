@@ -137,7 +137,7 @@ const getTokenOwner = async (chain, contract, tokenId) => {
     metadata = JSON.parse(metadata);  //JSON As Object
     // logger.warn("[DEBUG] fetchMetadata() Found metadata type:" + typeof metadata);
     // logger.warn("[DEBUG] fetchMetadata() Found metadata: " + metadata);
-    logger.warn("[DEBUG] fetchMetadata() Found metadata Obj: " + JSON.stringify(metadata));
+    // logger.warn("[DEBUG] fetchMetadata() Found metadata Obj: " + JSON.stringify(metadata));
     //Return
     return metadata;
   }catch(err){
@@ -175,7 +175,7 @@ const getTokenOwner = async (chain, contract, tokenId) => {
   */
   
   if(!persona) logger.warn("[TEST] personaGetOrMake() Register New Persona Token to DB -- chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"'  "+JSON.stringify(persona));
-  else logger.warn("[TEST] personaGetOrMake() Requested Persona Exists -- chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' force:'"+force+"'  "+JSON.stringify(persona));
+  else logger.warn("[TEST] personaGetOrMake() Requested Persona Exists -- chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' force:'"+force+"'");
   
   //Full Procedure - Add & Update
   if(!persona) return personaAddToDB(chain, contract, token_id); 

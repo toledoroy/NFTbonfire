@@ -641,7 +641,7 @@ function PagePersona(props) {
                                         </Button>}
                                     </>
                                 :   <>
-                                    <span>
+                                    <span className="switch">
                                         to edit, switch to
                                         <br /> 
                                         <span className="link" onClick={() => switchNetwork(persona?.get('chain'))}>

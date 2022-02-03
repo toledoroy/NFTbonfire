@@ -3,7 +3,7 @@
 //Restricting File Uploads
 Moralis.Cloud.beforeSaveFile((request) => {
   // throw "Not Allowed";   //This Breaks IPFS as well...
-  logger.warn("[FYI] beforeSaveFile()"+JSON.stringify(request.params));
+  logger.warn("[FYI] beforeSaveFile() "+JSON.stringify(request));
 });
 
 //-- TESTING
@@ -19,7 +19,7 @@ Moralis.Cloud.beforeSave('Post', async request => {
     if(request.master) return;
     //Fetch Post Object
     const object = request.object;
-    // logger.warn("Post Object: "+JSON.stringify(object)); //V
+    // logger.warn("Post Object: "+JSON.stringify(object)); //V 
     // logger.warn("Post User: "+JSON.stringify(request.user)); //V
     // logger.warn("Post User Accout: "+request.user?.get('ethAddress')); //V
     // logger.warn("Post User Accounts: "+JSON.stringify(request.user?.get('accounts'))); //V
