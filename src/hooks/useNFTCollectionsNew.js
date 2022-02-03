@@ -66,10 +66,19 @@ export const useNFTCollections = (options) => {
         }
       }//Persona
       else{
+
+        if(NFT.contract_type == "ERC1155"){ //Item of an NFT Collection
+          console.warn("[DEV] This is an ERC1155 Collection", NFT);
+        }
+
+        //Support ERC1155
+        const collectionId = (NFT.contract_type == "ERC1155") ? NFT.token_address+':'+NFT.token_id : NFT.token_address;
+        
         //Verify Metadata (Moralis sometimes gives outdated metadata)
         NFT = verifyMetadata(NFT);
+
         //Init Collection Slot
-        if(!collections[NFT.token_address]) collections[NFT.token_address] = {
+        if(!collections[collectionId]) collections[collectionId] = {
           items:[], 
           hash:NFT.token_address, 
           symbol:NFT.symbol, 
@@ -79,11 +88,11 @@ export const useNFTCollections = (options) => {
           owned:false, 
         };
         //Add NFT to Collection
-        collections[NFT.token_address].items.push(NFT);
+        collections[collectionId].items.push(NFT);
         //ANY - Ownes Something in This Collection
-        if(NFT.owner_of === account) collections[NFT.token_address].owned = true;
+        if(NFT.owner_of === account) collections[collectionId].owned = true;
         // else console.warn("No Match", NFT.owner_of, account);  //V
-        // if(collections[NFT.token_address]?.est === undefined || collections[NFT.token_address].est > NFT.est) collections[NFT.token_address].est = NFT.est;   //Should be: Time sicne last TX
+        // if(collections[collectionId]?.est === undefined || collections[collectionId].est > NFT.est) collections[collectionId].est = NFT.est;   //Should be: Time sicne last TX
       }//Non-Persona (Regular NFT)
 
     }//Each NFT
@@ -110,7 +119,7 @@ export const useNFTCollections = (options) => {
       // let collections = collect(NFTs);
       let { collections, personas } = collect(NFTs, chain);
       //Log
-      console.warn("(i) useNFTCollections() collections:", {options, NFTs, collections, personas});
+      // console.warn("(i) useNFTCollections() collections:", {options, NFTs, collections, personas});
       //Set
       setNFTCollections( collections );
       setPersonas( personas );

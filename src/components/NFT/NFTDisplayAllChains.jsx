@@ -20,7 +20,7 @@ import NFTCollections from "components/NFTCollections";
                 .map(chainData => (
                 <div key={chainData.key} className={"chain_"+chainData.key}>
                     <h3>{chainData.name}</h3>
-                    <div className="NFTs">
+                    <div key="NFTs" className="NFTs">
                         <NFTCollections match={{params:{accountHash:account, chain:chainData.key, showBreadcrumbs:false}}} />
                     </div>
                 </div>
