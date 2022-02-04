@@ -9,7 +9,7 @@
         "label": "Name",
         "name": "name",
         "placeholder": "What should we call you?",
-        "rules": [{ "required": true, "message": "Seems you forgot to fil in your name" }]
+        "rules": [{ "required": true, "message": "Seems you forgot to fill in your name" }]
     },
     "location":{
         "label": "Location",
