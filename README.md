@@ -15,4 +15,4 @@ Based on Moralis [ethereum-boilerplate](https://ethereum-boilerplate.github.io/e
 
 Live app here [NFTBonfire](https://nftbonfire.space/)
 
-Contributions are welcome. Check Issues and [Wiki](https://github.com/toledoroy/NFTbonfire/wiki).
+Contributions are welcome. Check Issues and the [WhiteWiki](https://github.com/toledoroy/NFTbonfire/wiki).
