@@ -33,7 +33,8 @@ function Chains() {
   const [selected, setSelected] = useState({});
   //Filter
   // const menuItems = allChains.filter((chainData) => (chainData.key == chainId || chainData.supported && (chainData.live || process?.env?.REACT_APP_ENV==='development')));
-  const menuItems = allChains.filter((chainData) => (chainData.key === chainId || chainData.supported));   //This Allows Test Networks on Production
+  // const menuItems = allChains.filter((chainData) => (chainData.key === chainId || chainData.supported));   //This Allows Test Networks on Production
+  const menuItems = allChains.filter((chainData) => (chainData.key === chainId || chainData.key === '0xa869'));   //Avax Testnet Only
 
   // console.log("chain", chain);
 
