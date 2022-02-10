@@ -431,6 +431,7 @@ function PagePersona(props) {
                                         ? <>
                                             {(isOwned && !isEditMode) && 
                                                 <Button size="small"
+                                                style={{padding:'0px 12px 23px 8px'}}
                                                     onClick={()=>{setIsEditMode(isEditMode===false);}}
                                                     icon={<i className="bi bi-pencil-fill"></i>}> Edit
                                                 </Button>}
