@@ -1,10 +1,9 @@
 # `NFT Bonfire`
 
-### NFT bonfire is a private space for NFT owners to come together, chat, and collaborate. 
-
+### NFT bonfire is the beginning of a new social architecture.
 
 What does it do?
-* Instant Communities – NFT bonfire turns every NFT collection into a community of like-minded people. Automatically creating private spaces for owners of NFT collections, filled with meta-bonfires to sit around and chat.  
+* Instant Communities – NFT bonfire turns every NFT collection into a community of like-minded people. Automatically creating private spaces for owners of NFT collections, filled with meta-bonfires to sit around and chat and collaborate.  
 * Social Persoa - Mint your social profile as an NFT. Free!
 
 
