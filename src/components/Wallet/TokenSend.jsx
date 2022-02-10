@@ -119,13 +119,15 @@ function TokenSend(props) {
   }
 
   return (
-    <div className="token_send" style={styles.card}>
+    <div className="token_send container framed" style={styles.card}>
       <div style={styles.tranfer}>
-        {/*
+        
         <div className="title" style={styles.header}>
-          <h3>Send</h3>
+          <h3>Send Tokens</h3>
+          {/* <h3>{name ? <>Pay {name}</> : <>Send Tokens</>} </h3> */}
+          {/* <h3>Send {name && <>{name} Some </>}Tokens</h3> */}
         </div>
-        */}
+        
         {/*!receiver &&
         <div style={styles.select}>
           <div style={styles.textWrapper}>
@@ -135,18 +137,15 @@ function TokenSend(props) {
         </div>
         */}
         <div style={styles.select}>
-          <div style={styles.textWrapper}>
-            <Text strong>Asset:</Text>
-          </div>
-          <AssetSelector setAsset={setAsset} style={{ width: "100%", borderRadius:'12px' }} className="inputEl" />
+          {/* <div style={styles.textWrapper}><Text strong>Asset:</Text></div> */}
+          <AssetSelector placeholder="Asset" setAsset={setAsset} style={{ width: "100%", borderRadius:'12px' }} className="inputEl" />
         </div>
         <div style={styles.select}>
-          <div style={styles.textWrapper}>
-            <Text strong>Amount:</Text>
-          </div>
+          {/* <div style={styles.textWrapper}><Text strong>Amount:</Text></div> */}
           <Input
             size="large"
             className="inputEl"
+            placeholder="Amount"
             prefix={<CreditCardOutlined />}
             onChange={(e) => {setAmount(`${e.target.value}`)}}
           />

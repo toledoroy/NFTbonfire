@@ -35,6 +35,12 @@
   /* border-color: #F68B4F; */
   border: none;
 }
+.ant-btn i {
+  padding-right:3px;
+}
+.ant-btn-sm i{
+  font-size: 0.82em;
+}
 :root {
   --background-color: #f0f2f5;
   --headerHeight:64px;
@@ -227,6 +233,9 @@ button:active {
 }
 
 /* Responsivity */
+
+
+
 /* @media only screen and (max-width: 920px) {
   .collections .center_wrapper{ flex-direction: column; }
 } */

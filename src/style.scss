@@ -230,11 +230,29 @@ body {
                 color: #666;
             }
         }
+
+
+    }
+    
+    .image{ 
+        position: relative;
+        // top: -6rem;
+        margin: -7rem auto auto 17px;
+        // background: var(--background-color);
+        // background: #fff;
+        background: var(--cardBG);
+        border-radius: 50%;
+        padding: 7px;
+        display: inline-block;
+    }
+    .below_image {
+        width:235px;
     }
     .details {
         display: flex; 
         margin-top: 10px;
         margin-bottom: 40px;
+        
         .actions {
             margin-left:auto;
             .button {
@@ -253,6 +271,13 @@ body {
             border-radius: 50%;
             padding: 7px;
         }
+        .info-additional{
+            padding-left: var(--padding);
+            flex: 1 1;
+            h3{
+                margin-top: 15px;;
+            }
+        }
     }
     .handle{
         margin-bottom: 5px;
@@ -264,7 +289,7 @@ body {
         i { margin-right: 3px; }
     }
     .info{ 
-        margin-left: var(--padding);
+        padding-left: var(--padding);
         flex: 1 1;
         h3 {
             text-transform: capitalize;
@@ -275,7 +300,8 @@ body {
     }
     .main {
         display: flex;
-        flex-direction: row-reverse;
+        // flex-direction: row-reverse;
+        flex-direction: column;
         justify-content: space-between;
     }
     .primary { 
@@ -283,20 +309,23 @@ body {
         flex-grow: 1; 
     }  
     .social { 
-        .item {
-            // border-radius: 17px;
+        
+        >div{
+            display: flex;
         }
     }
     .secondary{
         padding-right: 0;
-        max-width: 360px;
+        margin-right: -5px; //Compensate
+        // max-width: 360px;
+        flex: 1 1;
         .item {
             border:1px solid #d9d9d9; 
-            
             background-color: #fafafa; 
-            margin-bottom:5px; 
             position: relative; 
-            
+            margin: 10px 5px 0px 0;
+            width: 120px;
+            display: inline-block;
             i { 
                 padding-right: 10px; font-size: 1.8em; vertical-align: middle; 
                 transition: .32s ease-in; z-index: 3; 
@@ -309,8 +338,12 @@ body {
             // .ant-collapse-header:hover .textSwitch .network { top:-60px; }
             .ant-collapse-header:hover .inner  { bottom: 3rem; }
     
-            .ant-collapse { border:none; background: transparent; }
-            
+            .ant-collapse { 
+                border:none; 
+                background: transparent; 
+                flex-wrap: wrap;
+                flex-direction: row-reverse;
+            }
         
             .item {
                 border-radius: 17px;
@@ -552,6 +585,9 @@ body {
 
 .NFT {
     border-radius: 18px;
+    img{
+        max-width: 100%;
+    }
     .ant-card-actions {
         border-radius: 0 0 18px 18px;
     }
@@ -1053,6 +1089,8 @@ body {
 
 /* Token Send Widget */
 .token_send {
+    // border: 1px solid #d9d9d9;
+    background-color: var(--monochrome);;
     .inputEl{
         border-radius: 12px;
     }
@@ -1165,3 +1203,24 @@ body>iframe{
         padding: 100px 25px 140px;
     }
 }
+
+
+
+
+
+
+/* Persona */
+
+@media only screen and (max-width: 900px) {
+    .persona {
+        .top{
+        flex-direction: column;
+        }
+        .secondary .view .ant-collapse{
+        flex-direction: row;
+        }
+        .token_send {
+            // padding-top:0;
+        }
+    }
+  }

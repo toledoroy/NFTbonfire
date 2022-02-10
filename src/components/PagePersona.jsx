@@ -26,6 +26,7 @@ import { Form, Input, Select } from 'antd';
 import { Card, Dropdown, Menu, Upload, message } from 'antd';
 import { Popconfirm, Spin, Col } from 'antd';
 import __ from "helpers/__";
+import CarvedHeading from "components/common/CarvedHeading";
 
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
@@ -400,222 +401,284 @@ function PagePersona(props) {
                 {isEditMode && <CoverUpload metadata={metadata} imageUrl={coverImage} updateMetadataField={updateMetadataField} />}
                 </div>
             </div>
+
+            <div className="main_content">
+            
             <div className="main" style={{marginTop:0}}>
-            {/* <div className="persona-body"> */}
-                <div className="secondary framed">
-                    <div className="view" style={{display:!isEditMode?'block':'none'}}>
-                        <div className="social">
+                <div className="top flex">
 
-                            {isLoading && <Skeleton.Input style={{ width: '100%' }} active size={'100%'} />}
+                <div className="helper flex">
+                    <div className="image">
+                        {isLoading ? <Skeleton.Avatar active size={size} shape='circle' />
+                        : isEditMode 
+                        ? <AvatarChangable metadata={metadata} updateMetadataField={updateMetadataField} imageUrl={imageUrl} size={size} />
+                        : <Avatar size={size} src={IPFS.resolveLink(image)} />
+                        }
+                    </div>
 
-                            <Skeleton loading={isLoading} active style={{minWidth:'160px'}}>
-                                <Collapse accordion>
-                                {metadata?.social && Object.keys(metadata.social).map((network) => {
-                                    let handle = metadata.social[network];
-                                    if(handle){
-                                        //Label (Icon/Name)
-                                        let label = personaFields.social.network[network].label ? personaFields.social.network[network].label : (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
-                                        let link = personaFields.social.network[network].url ? personaFields.social.network[network].url + handle : '#';
-                                        // let label = (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
-                                        let headerContent = (
-                                            <>
-                                            <a href={link} target="_blank" rel="noopener noreferrer" key={network} className="social-handle" data-network={network}>
-                                                {label} 
-                                                <div className="textSwitch">
-                                                    <div className="inner">
-                                                        <div className="text network">{network}</div>
-                                                        <div className="text handle">{handle}</div>
-                                                    </div>
-                                                </div>
-                                            </a>
+                    <div className="info">
+                        <Skeleton loading={isLoading} active >
+                            {metadata?.name && <h1 className="name">{metadata.name}</h1>}
+
+                            {isOwned &&
+                            <div className="actions">
+                                {isLoading 
+                                ?   <Skeleton.Button active />
+                                :   <>
+                                    <div className="button">
+                                        {/* {isEditMode && <Button className="debug" onClick={()=>{ console.warn("[TODO] PagePersona() Save Changes"); }} >[Save]</Button>} */}
+                                        {isSameChain()
+                                        ? <>
+                                            {(isOwned && !isEditMode) && 
+                                                <Button size="small"
+                                                    onClick={()=>{setIsEditMode(isEditMode===false);}}
+                                                    icon={<i className="bi bi-pencil-fill"></i>}> Edit
+                                                </Button>}
                                             </>
-                                            );
-                                            //collapsible="disabled" showArrow={false}
-                                        return (
-                                            <Panel header={headerContent} key={network} collapsible="disabled" showArrow={false} className="item lightUp">
-                                                <p>[Content]</p>
-                                            </Panel>
-                                        );
-                                    }
-                                    else return null;
-                                })}
-                                </Collapse>
-                            </Skeleton>
-                        </div>
-                        
-                        {false &&
-                        <div className="links">
-                            <Skeleton loading={isLoading} active>
-                                <Collapse accordion>
-                                {metadata?.links?.map((link, index) => (   
-                                    <Panel header={
-                                        <>
-                                            {/* {link.type} */}
-                                            <a href={link.url} key={index} target="_blank" rel="noopener noreferrer"> 
-                                                <i className="bi bi-link"></i>
-                                                <span className="handle">{link.title}</span>
-                                            </a>
-                                        </>
-                                    } key={index} collapsible="disabled" showArrow={false}  className="item lightUp">
-                                    </Panel>
-                                ))}
-                                </Collapse>
-                            </Skeleton>
-                        </div>
-                        }
-
-                    </div>
-                    <div className="edit" style={{display:isEditMode?'block':'none'}}>
-                        <div className="social">    
-                            <div className="social_wrapper">
-                                <h2>
-                                    {/* <i className="bi bi-emoji-sunglasses"></i>  */}
-                                    Social Accounts
-                                </h2>
-                                <div className="items">
-                                <Skeleton loading={isLoading} active>
-                                {Object.values(personaFields.social.network).map((network) => { 
-                                    let label = network.label ? network.label : (<i className={"bi bi-"+network.name}></i>);    //Default Label (Icon)
-                                    return ( 
-                                        <Input 
-                                            key={network.name} 
-                                            className="item" 
-                                            onChange={(evt) => {
-                                                // let change = {[evt.target.name]: evt.target.value.trim()};
-                                                let value = evt.target.value.trim();
-                                                //Validate
-                                                if(value.includes("://")){
-                                                    //Extract Username By URL Pattern
-                                                    let pattern = personaFields.social.network[network.name].url;
-                                                    //Remove URL Pattern        //TODO: Maybe Use Regular Expressions? 
-                                                    value = value.replace(pattern, '');
-                                                    // console.warn("[TEST] Extract Handle from Link", {value, name:evt.target.name, pattern, value);
-                                                }
-                                                let change = {[evt.target.name]: value};
-                                                //Set
-                                                setMetadata({...metadata, social:{ ...metadata.social, ...change }});
-                                                //Log
-                                                console.log("[DEV] formSocialOnChange() Modified Metadata ", {metadata, social:metadata.social, change});
-                                                // return true;
-                                            }} 
-                                            size="large"
-                                            placeholder={network.name} 
-                                            addonBefore={label} 
-                                            // defaultValue={metadata?.social?.[network.name]}
-                                            value={metadata?.social?.[network.name]}
-                                            name={network.name} />
-                                    );
-                                })}
-                                </Skeleton>
-                                </div>
-                            </div>
-                        </div>
-
-                        {false && 
-                        <div className="links">
-                            <div className="links_wrapper">
-                                <h2>
-                                    {/* <i className="bi bi-link"></i>  */}
-                                    Links
-                                </h2>
-                                <div className="items">
-                                    
-                                    <Skeleton loading={isLoading} active>
-                                        {metadata?.links?.map((link, index) => {
-                                            // E.G. {type: 'blog', title: 'BayonEI', url: 'http://bayonei.com'}
-                                            // console.log("[DEV] link to:"+link.type+" Title:'"+link.title+"'", link.url);
-                                            return (
-
-                                            // <Col xs={24} lg={12} key={link.title+index}>
-                                                <Input.Group key={index+link.url} compact className="item" style={{display: 'flex', }}>
-                                                    <Input name="URL" defaultValue={link.url} placeholder="URL" 
-                                                        // onChange={(evt) => { 
-                                                        //     let value = evt?.target?.value;
-                                                        //     let links = [...metadata.links];    //Clone
-                                                        //     console.warn("[TEST] New Link 1", {value, evt, index, links});
-                                                        //     //Change Current
-                                                        //     links[index].url = value;
-                                                        //     //Update
-                                                        //     setMetadata({...metadata, links});
-                                                        // }}
-                                                        addonBefore={<Select defaultValue={link.type} style={{minWidth:'99px'}} className="select-before"
-                                                            onChange={(value) => { 
-                                                                let links = [...metadata.links];    //Clone
-                                                                //Change Current
-                                                                links[index].type = value;
-                                                                //Update
-                                                                setMetadata({...metadata, links});
-                                                            }}
-                                                            >
-                                                            <Select.Option value="website">Website</Select.Option>
-                                                            <Select.Option value="blog">Blog</Select.Option>
-                                                        </Select>}
-                                                    />
-                                                    <Input name="name" placeholder="Title" defaultValue={link.title} style={{flexShrink:'2'}}
-                                                        // onChange={(evt) => { 
-                                                        //     let value = evt?.target?.value;
-                                                        //     let links = [...metadata.links];    //Clone
-                                                        //     console.warn("[TEST] New Link 2", {value, evt, index, links});
-                                                        // }}
-                                                    />
-                                                    {/* Remove Item */ }
-                                                    <Button type="danger" shape="circle" icon={<DeleteOutlined />} onClick={() => {
-                                                        // let links = metadata.links;
-                                                        let links = [...metadata.links];    //Clone
-                                                        // console.warn("[TEST] Remove Link:"+index, {links:[...links], res:links.splice(index, 1)});
-                                                        //Remove Current
-                                                        links.splice(index, 1);
-                                                        //Update
-                                                        setMetadata({...metadata, links});
-                                                    }}/>
-                                                </Input.Group>
-                                            // </Col>
-                                            );
-                                        })//Each Link
-                                        }
-                                    </Skeleton>
-                                    <div className="link_add">
-                                        {/* Add Item */ }
-                                        <Button type="primary" shape="circle" icon={<PlusCircleOutlined />} onClick={() => {
-                                            console.log("[TEST] Metadtaa: Add Link Links", metadata, metadata.links); 
-                                            let links = metadata.links ? [...metadata.links] : [];    //Clone
-                                            // links.splice(index, 1);
-                                            links.push({type:'website', title:'', url:''});
-                                            setMetadata({...metadata, links});
-                                        }}/>
+                                        :   <>
+                                            <span className="switch">
+                                                to edit, switch to
+                                                <br /> 
+                                                <span className="link" onClick={() => switchNetwork(persona?.get('chain'))}>
+                                                {ChainHelper.get(persona?.get('chain'), 'name')}
+                                                </span>
+                                            </span>
+                                        </>}
+                                        {(isEditMode && !PersonaHelper.isNew(persona)) && 
+                                            <Button variant="contained" color="primary" className="backstep link arrow" 
+                                                onClick={()=>{ reloadmetadata(); setIsEditMode(isEditMode===false);}}
+                                                // style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
+                                                // icon={<i className="bi bi-arrow-left"></i>}
+                                                >
+                                                <i className="bi bi-arrow-left"></i>
+                                                {/* Cancel */}
+                                            </Button>}
                                     </div>
-                                    <div className="clearfloat"></div>
+                                    </>
+                                }
+                            </div>
+                            }
+
+                            {!PersonaHelper.isNew(persona) && <Handle persona={persona} isEditMode={isEditMode} isOwned={isOwned} />}
+                            {metadata?.location &&
+                            <div className="flex" style={{marginBottom:5}}>
+                                <div className="location">
+                                    <i className="bi bi-geo-alt"></i>
+                                    {metadata.location}
+                                </div>
+                            </div>
+                            }
+                        </Skeleton>
+                            
+                            
+                    </div> 
+                </div>
+
+                    <div className="secondary">
+                        <div className="view" style={{display:!isEditMode?'block':'none'}}>
+                            <div className="social">
+
+                                {isLoading && <Skeleton.Input style={{ width: '100%' }} active size={'100%'} />}
+
+                                <Skeleton loading={isLoading} active style={{minWidth:'160px'}}>
+                                    <Collapse accordion>
+                                    {metadata?.social && Object.keys(metadata.social).map((network) => {
+                                        let handle = metadata.social[network];
+                                        if(handle){
+                                            //Label (Icon/Name)
+                                            let label = personaFields.social.network[network].label ? personaFields.social.network[network].label : (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
+                                            let link = personaFields.social.network[network].url ? personaFields.social.network[network].url + handle : '#';
+                                            // let label = (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
+                                            let headerContent = (
+                                                <>
+                                                <a href={link} target="_blank" rel="noopener noreferrer" key={network} className="social-handle" data-network={network}>
+                                                    {label} 
+                                                    <div className="textSwitch">
+                                                        <div className="inner">
+                                                            <div className="text network">{network}</div>
+                                                            <div className="text handle">{handle}</div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                </>
+                                                );
+                                                //collapsible="disabled" showArrow={false}
+                                            return (
+                                                <Panel header={headerContent} key={network} collapsible="disabled" showArrow={false} className="item lightUp">
+                                                    <p>[Content]</p>
+                                                </Panel>
+                                            );
+                                        }
+                                        else return null;
+                                    })}
+                                    </Collapse>
+                                </Skeleton>
+                            </div>
+                            
+                            {false &&
+                            <div className="links">
+                                <Skeleton loading={isLoading} active>
+                                    <Collapse accordion>
+                                    {metadata?.links?.map((link, index) => (   
+                                        <Panel header={
+                                            <>
+                                                {/* {link.type} */}
+                                                <a href={link.url} key={index} target="_blank" rel="noopener noreferrer"> 
+                                                    <i className="bi bi-link"></i>
+                                                    <span className="handle">{link.title}</span>
+                                                </a>
+                                            </>
+                                        } key={index} collapsible="disabled" showArrow={false}  className="item lightUp">
+                                        </Panel>
+                                    ))}
+                                    </Collapse>
+                                </Skeleton>
+                            </div>
+                            }
+
+                        </div>
+                        <div className="edit" style={{display:isEditMode?'block':'none'}}>
+                            <div className="social">    
+                                <div className="social_wrapper">
+                                    <h2>
+                                        {/* <i className="bi bi-emoji-sunglasses"></i>  */}
+                                        Social Accounts
+                                    </h2>
+                                    <div className="items">
+                                    <Skeleton loading={isLoading} active>
+                                    {Object.values(personaFields.social.network).map((network) => { 
+                                        let label = network.label ? network.label : (<i className={"bi bi-"+network.name}></i>);    //Default Label (Icon)
+                                        return ( 
+                                            <Input 
+                                                key={network.name} 
+                                                className="item" 
+                                                onChange={(evt) => {
+                                                    // let change = {[evt.target.name]: evt.target.value.trim()};
+                                                    let value = evt.target.value.trim();
+                                                    //Validate
+                                                    if(value.includes("://")){
+                                                        //Extract Username By URL Pattern
+                                                        let pattern = personaFields.social.network[network.name].url;
+                                                        //Remove URL Pattern        //TODO: Maybe Use Regular Expressions? 
+                                                        value = value.replace(pattern, '');
+                                                        // console.warn("[TEST] Extract Handle from Link", {value, name:evt.target.name, pattern, value);
+                                                    }
+                                                    let change = {[evt.target.name]: value};
+                                                    //Set
+                                                    setMetadata({...metadata, social:{ ...metadata.social, ...change }});
+                                                    //Log
+                                                    console.log("[DEV] formSocialOnChange() Modified Metadata ", {metadata, social:metadata.social, change});
+                                                    // return true;
+                                                }} 
+                                                size="large"
+                                                placeholder={network.name} 
+                                                addonBefore={label} 
+                                                // defaultValue={metadata?.social?.[network.name]}
+                                                value={metadata?.social?.[network.name]}
+                                                name={network.name} />
+                                        );
+                                    })}
+                                    </Skeleton>
+                                    </div>
                                 </div>
                             </div>
 
-                        </div>
-                        }
-                    </div>
-                </div>
-                <div className="primary framed">
-                    
-                    <div className="details">
-                        <div className="image">
-                            {isLoading ? <Skeleton.Avatar active size={size} shape='circle' />
-                            : isEditMode 
-                            ? <AvatarChangable metadata={metadata} updateMetadataField={updateMetadataField} imageUrl={imageUrl} size={size} />
-                            : <Avatar size={size} src={IPFS.resolveLink(image)} />
+                            {false && 
+                            <div className="links">
+                                <div className="links_wrapper">
+                                    <h2>
+                                        {/* <i className="bi bi-link"></i>  */}
+                                        Links
+                                    </h2>
+                                    <div className="items">
+                                        
+                                        <Skeleton loading={isLoading} active>
+                                            {metadata?.links?.map((link, index) => {
+                                                // E.G. {type: 'blog', title: 'BayonEI', url: 'http://bayonei.com'}
+                                                // console.log("[DEV] link to:"+link.type+" Title:'"+link.title+"'", link.url);
+                                                return (
+
+                                                // <Col xs={24} lg={12} key={link.title+index}>
+                                                    <Input.Group key={index+link.url} compact className="item" style={{display: 'flex', }}>
+                                                        <Input name="URL" defaultValue={link.url} placeholder="URL" 
+                                                            // onChange={(evt) => { 
+                                                            //     let value = evt?.target?.value;
+                                                            //     let links = [...metadata.links];    //Clone
+                                                            //     console.warn("[TEST] New Link 1", {value, evt, index, links});
+                                                            //     //Change Current
+                                                            //     links[index].url = value;
+                                                            //     //Update
+                                                            //     setMetadata({...metadata, links});
+                                                            // }}
+                                                            addonBefore={<Select defaultValue={link.type} style={{minWidth:'99px'}} className="select-before"
+                                                                onChange={(value) => { 
+                                                                    let links = [...metadata.links];    //Clone
+                                                                    //Change Current
+                                                                    links[index].type = value;
+                                                                    //Update
+                                                                    setMetadata({...metadata, links});
+                                                                }}
+                                                                >
+                                                                <Select.Option value="website">Website</Select.Option>
+                                                                <Select.Option value="blog">Blog</Select.Option>
+                                                            </Select>}
+                                                        />
+                                                        <Input name="name" placeholder="Title" defaultValue={link.title} style={{flexShrink:'2'}}
+                                                            // onChange={(evt) => { 
+                                                            //     let value = evt?.target?.value;
+                                                            //     let links = [...metadata.links];    //Clone
+                                                            //     console.warn("[TEST] New Link 2", {value, evt, index, links});
+                                                            // }}
+                                                        />
+                                                        {/* Remove Item */ }
+                                                        <Button type="danger" shape="circle" icon={<DeleteOutlined />} onClick={() => {
+                                                            // let links = metadata.links;
+                                                            let links = [...metadata.links];    //Clone
+                                                            // console.warn("[TEST] Remove Link:"+index, {links:[...links], res:links.splice(index, 1)});
+                                                            //Remove Current
+                                                            links.splice(index, 1);
+                                                            //Update
+                                                            setMetadata({...metadata, links});
+                                                        }}/>
+                                                    </Input.Group>
+                                                // </Col>
+                                                );
+                                            })//Each Link
+                                            }
+                                        </Skeleton>  
+                                        <div className="link_add">
+                                            {/* Add Item */ }
+                                            <Button type="primary" shape="circle" icon={<PlusCircleOutlined />} onClick={() => {
+                                                console.log("[TEST] Metadtaa: Add Link Links", metadata, metadata.links); 
+                                                let links = metadata.links ? [...metadata.links] : [];    //Clone
+                                                // links.splice(index, 1);
+                                                links.push({type:'website', title:'', url:''});
+                                                setMetadata({...metadata, links});
+                                            }}/>
+                                        </div>
+                                        <div className="clearfloat"></div>
+                                    </div>
+                                </div>
+
+                            </div>
                             }
                         </div>
-                        
-                        <div className="info">
-                            {!isEditMode && 
+                    </div>
+                    
+                </div>
+
+                <div className="primary">
+                    
+                    <div className="details">
+                        {!isOwned &&
+                        <div className="below_image">
+                            {(!isLoading && !isOwned && !isEditMode && metadata) && <TokenSend address={persona?.get('owner')} name={PersonaHelper.getName(persona)} />}
+                        </div>
+                        }
+
+                        <div className="info-additional">
+                            {!isEditMode && <>
                             <Skeleton loading={isLoading} active >
-                                {metadata?.name && <h1 className="name">{metadata.name}</h1>}
-                                {!PersonaHelper.isNew(persona) && <Handle persona={persona} isEditMode={isEditMode} isOwned={isOwned} />}
-                                {metadata?.location &&
-                                <div className="flex" style={{marginBottom:5}}>
-                                    <div className="location">
-                                        <i className="bi bi-geo-alt"></i>
-                                        {metadata.location}
-                                    </div>
-                                </div>
-                                }
                                 {metadata?.description && <p className="description">
                                     <span dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(metadata.description))}}></span>
                                 </p>}
@@ -624,55 +687,10 @@ function PagePersona(props) {
                                     <p dangerouslySetInnerHTML={{__html:__.nl2br(__.stripHTML(metadata.purpose))}}></p>
                                 </div>}
                             </Skeleton>
-                            }
+                            </>}
                         </div>
                     
-                        <div className="actions">
-                            {isLoading ? <Skeleton.Button active />
-                            :
-                            <>{isOwned &&
-                            <div className="button">
-                                {/* {isEditMode && <Button className="debug" onClick={()=>{ console.warn("[TODO] PagePersona() Save Changes"); }} >[Save]</Button>} */}
-                                {isSameChain()
-                                ? <>
-                                    {(isOwned && !isEditMode) && 
-                                        <Button variant="contained" color="primary" onClick={()=>{setIsEditMode(isEditMode===false);}}
-                                            icon={<i className="bi bi-pencil-fill"></i>}>Edit
-                                        </Button>}
-                                    </>
-                                :   <>
-                                    <span className="switch">
-                                        to edit, switch to
-                                        <br /> 
-                                        <span className="link" onClick={() => switchNetwork(persona?.get('chain'))}>
-                                        {ChainHelper.get(persona?.get('chain'), 'name')}
-                                        </span>
-                                    </span>
-                                </>}
-                                {(isEditMode && !PersonaHelper.isNew(persona)) && 
-                                    <Button variant="contained" color="primary" className="backstep link arrow" 
-                                        onClick={()=>{ reloadmetadata(); setIsEditMode(isEditMode===false);}}
-                                        // style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
-                                        // icon={<i className="bi bi-arrow-left"></i>}
-                                        >
-                                        <i className="bi bi-arrow-left"></i>
-                                        {/* Cancel */}
-                                    </Button>}
-                            </div>}
-                            {!isOwned && <>
-                                {/* <Button variant="contained" color="primary" onClick={()=>{ console.warn("SEND BUTTON PRESSED");}}
-                                    style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
-                                    icon={<i className="bi bi-send"></i>}
-                                    // icon={<i className="bi bi-arrow-left-circle-fill"></i>}
-                                    >
-                                    Send
-                                </Button> */}
-                                {(!isEditMode && metadata) && <TokenSend address={persona?.get('owner')} name={PersonaHelper.getName(persona)} />}
-                            </>
-                            }
-                            </>
-                            }
-                        </div>
+                        
                     </div>
 
                     {isEditMode && 
@@ -681,7 +699,14 @@ function PagePersona(props) {
                     </div>
                     }
 
-                    <div className="accounts">
+                    
+                </div>
+
+                {/* <div className="persona-body"> */}
+                
+                
+                <div className="accounts">
+                    {/* <CarvedHeading text="Assets" /> */}
                         <Tabs      //https://ant.design/components/tabs/
                             type="editable-card"
                             // onChange={this.onChange}
@@ -723,9 +748,11 @@ function PagePersona(props) {
                         </Tabs>
                         <AccountAddModal visible={isAddAccModalVisible} setVisible={setIsAddAccModalVisible} metadata={metadata} setMetadata={setMetadata} />
                     </div>
-                </div>
+                
             </div>
 
+            
+        </div>
             <div className="persona-footer">
             
             </div>
