@@ -389,7 +389,7 @@ function PagePersona(props) {
 
     // console.warn("Persona ID:"+persona.id, {persona, isLoading, metadata});
     return (
-        <div className="persona framed">
+        <div className={"persona framed" + `${isEditMode ? ' edit_mode' : '' }`}>
             {/* <Skeleton loading={!isWeb3Enabled}></Skeleton> */}
             <div className="header">
                 <div className={coverImage ? "cover_wrapper" : "cover_wrapper noCover"}>
@@ -431,7 +431,7 @@ function PagePersona(props) {
                                         ? <>
                                             {(isOwned && !isEditMode) && 
                                                 <Button size="small"
-                                                style={{padding:'0px 12px 23px 8px'}}
+                                                    style={{padding:'0px 12px 23px 8px'}}
                                                     onClick={()=>{setIsEditMode(isEditMode===false);}}
                                                     icon={<i className="bi bi-pencil-fill"></i>}> Edit
                                                 </Button>}
