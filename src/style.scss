@@ -196,6 +196,11 @@ body {
 .persona {
     background: var(--background-color);
     // padding-top: 0px;
+    .backstep{
+        float: right;
+    top: -73px;
+    position: relative;
+    }
     >.header{
         border-radius: 20px 20px 0 0;
         overflow: hidden;
@@ -309,9 +314,8 @@ body {
         flex-grow: 1; 
     }  
     .social { 
-        
         >div{
-            display: flex;
+            // display: flex;
         }
     }
     .secondary{
@@ -380,7 +384,7 @@ body {
             .item:hover i:before { transform: rotate(-180deg); }      
         }
         .edit {
-            max-width: 420px; 
+            // max-width: 420px; 
             .ant-input-group-addon,
             .ant-input:hover,
             .ant-input:focus,
@@ -390,7 +394,7 @@ body {
                 border-radius: 14px;
                 overflow: hidden;
                 input {
-                    padding: 10px 10px;
+                    padding: 6px 10px;
                 }
                 button { height: 42px; width: 48px; }
             }
