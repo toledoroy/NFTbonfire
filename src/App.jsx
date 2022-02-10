@@ -133,7 +133,7 @@ const App = ({ isServerInfo }) => {
             <div>
               <a href="/" style={{ display: "flex" }}>
                 <Logo />
-                <img src="/images/beta.png" alt="beta" style={{ height: "20px", margin: "26px 10px 0 2px" }} />
+                {/* <img src="/images/beta.png" alt="beta" style={{ height: "20px", margin: "26px 10px 0 2px" }} /> */}
               </a>
             </div>
             <MenuItems />
@@ -210,7 +210,7 @@ const App = ({ isServerInfo }) => {
               {/* pages below this point require authentication (CANCELLED) */}
 
               <Route path="/nftCollections" component={NFTCollections} />
-              <Route path="/nftAll/" component={NFTAllChains} />
+              <Route path="/nftAll" component={NFTAllChains} />
 
               <Route path="/nftBalance"><NFTBalance /></Route>
               <Route path="/contract"><Contract /></Route>

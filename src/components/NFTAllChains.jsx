@@ -28,7 +28,7 @@ function NFTAllChains(props) {
 
     return (
         <div className="framed">
-            <CarvedHeading heading={1} text={"My NFTs"} />
+            <CarvedHeading heading={1} text={"Spaces You Can Access"} />
             <NFTDisplayAllChains />
         </div>
     );
