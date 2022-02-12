@@ -246,7 +246,7 @@ function SpaceView({hash, collection, NFTpersonas}) {
           <h1>
             <span className="chain_icon debug" style={{marginRight:'15px'}} title={ChainHelper.get(collection.chain,'name')}>{ChainHelper.get(collection.chain,'icon')}</span>
             {/* {collection.name}  */}
-            Private Space
+            Bonfires
             <span className="debug">&nbsp; for {collection.name}</span>
           </h1>
           {/* <h1 className="carved" title="Private Space">Private Space</h1> */}
@@ -254,9 +254,8 @@ function SpaceView({hash, collection, NFTpersonas}) {
           {/* <span key="typs">Type: {collection.contract_type}</span> */}
           {/* <span key="symbol">Symbol: {collection.symbol}</span> */}
           {/* TODO: Add Field: Creator, Total No. of Items, */}
+          {/* TODO: 1155 - Add Field: Total No. of Items, */}
           {/* {console.log("[DEV] SpaceView() in REACT_APP_ENV:"+process?.env?.REACT_APP_ENV)} */}
-
-          
 
           {(isAllowed/* || process?.env?.REACT_APP_ENV==='development'*/) ? <>
             <div className={(curRoomId) ? 'room_container single' : 'room_container'}>
