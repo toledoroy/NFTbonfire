@@ -24,7 +24,11 @@ function PageAuthenticate(props) {
             <div style={{textAlign:'center'}}>
             {isWeb3Enabled 
             ?   <h2>To access this website's full functionality please connect your web3 wallet and <span style={{color:'var(--colorAccent2)'}} className="link" onClick={() => authenticate({ signingMessage: "Sign in to NFT Bonfire [Free]" })}>Authenticate</span></h2>
-            :   <h2>To access this website's full functionality you'd need a web3 wallet such as <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">Metamask</a></h2>}
+            :   <h2>
+                    To access this website's full functionality you'd need a web3 wallet such as 
+                    <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer" alt="Metamask"><img src="/images/metamask-logo.svg" style={{margin:'14px auto 0 '}}/></a>
+                </h2>
+            }
             </div>
         </div>
     );
