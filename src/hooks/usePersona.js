@@ -258,7 +258,7 @@ export const usePersona = () => {
                 try{
                     console.log("usePersona.update() Success Updating Persona:"+persona.id, {data, uri});
                     //Call a Server Update for Persona's Metadata (& URI)
-                    await Moralis.Cloud.run("personaUpdate", {personaId:persona.id});   //Wait to reduce server load
+                    Moralis.Cloud.run("personaUpdate", {personaId:persona.id});   //Wait to reduce server load
                     //Trigger Metadata Update on Moralis
                     callMoralisMetadataUpdate(options.contractAddress, options?.params?.tokenId, chainId);
                     //Return Transaction Data
@@ -328,7 +328,7 @@ export const usePersona = () => {
     /**
      * Trigger Moralis Metadata Update When Needed
      */
-    function callMoralisMetadataUpdate(hash, tokenId, chain=chainId){
+    async function callMoralisMetadataUpdate(hash, tokenId, chain=chainId){
         /* TODO: Use SDK
         try{
             Moralis.Web3API.token.reSyncMetadata(options);
@@ -344,8 +344,7 @@ export const usePersona = () => {
                 // let headers = {'x-api-key': "17Hehy28h5JsgsBVOtUccIDWj012R2mby6uvbsvyFL6PTPUnq9HCPlzrXnV95Uwo"};
                 let headers = {'x-api-key': apiKey};
                 try{
-                    // response_0 = requests.request('GET', uri, headers);
-                    fetch(uri, {headers}).then(response => console.warn("Moralis API Response:", response));
+                    return fetch(uri, {headers}).then(response => console.warn("Moralis API Response:", response));
                 }
                 catch(error){
                     console.error("[CAUGHT] usePersona.callMoralisMetadataUpdate() Error", {error, uri, params:{hash, tokenId, chain}});
@@ -355,7 +354,6 @@ export const usePersona = () => {
         }
         else console.error("usePersona.callMoralisMetadataUpdate() Can't Run. API Key Missing in ENV");
     }//callMoralisMetadataUpdate()
-
     
     return { validateChain, loadMetadata, updateToken, fetchMetadata, mint, update, callMoralisMetadataUpdate };
  
