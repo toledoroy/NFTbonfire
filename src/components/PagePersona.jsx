@@ -389,7 +389,7 @@ function PagePersona(props) {
 
     // console.warn("Persona ID:"+persona.id, {persona, isLoading, metadata});
     return (
-        <div className="persona framed">
+        <div className={"persona framed" + `${isEditMode ? ' edit_mode' : '' }`}>
             {/* <Skeleton loading={!isWeb3Enabled}></Skeleton> */}
             <div className="header">
                 <div className={coverImage ? "cover_wrapper" : "cover_wrapper noCover"}>
@@ -411,8 +411,8 @@ function PagePersona(props) {
                     <div className="image">
                         {isLoading ? <Skeleton.Avatar active size={size} shape='circle' />
                         : isEditMode 
-                        ? <AvatarChangable metadata={metadata} updateMetadataField={updateMetadataField} imageUrl={imageUrl} size={size} />
-                        : <Avatar size={size} src={IPFS.resolveLink(image)} />
+                        ?   <AvatarChangable metadata={metadata} updateMetadataField={updateMetadataField} imageUrl={imageUrl} size={size} />
+                        :   <Avatar size={size} src={IPFS.resolveLink(image)} />
                         }
                     </div>
 
@@ -431,7 +431,7 @@ function PagePersona(props) {
                                         ? <>
                                             {(isOwned && !isEditMode) && 
                                                 <Button size="small"
-                                                style={{padding:'0px 12px 23px 8px'}}
+                                                    style={{padding:'0px 12px 23px 8px'}}
                                                     onClick={()=>{setIsEditMode(isEditMode===false);}}
                                                     icon={<i className="bi bi-pencil-fill"></i>}> Edit
                                                 </Button>}
@@ -446,13 +446,9 @@ function PagePersona(props) {
                                             </span>
                                         </>}
                                         {(isEditMode && !PersonaHelper.isNew(persona)) && 
-                                            <Button variant="contained" color="primary" className="backstep link arrow" 
-                                                onClick={()=>{ reloadmetadata(); setIsEditMode(isEditMode===false);}}
-                                                // style={{fontSize: '1.6em', lineHeight: '1em', borderRadius:22}}
-                                                // icon={<i className="bi bi-arrow-left"></i>}
-                                                >
+                                            <Button variant="contained" color="primary" className="backstep link arrow" onClick={()=>{ reloadmetadata(); setIsEditMode(isEditMode===false);}}>
                                                 <i className="bi bi-arrow-left"></i>
-                                                {/* Cancel */}
+                                                {/* Cancel / Back */}
                                             </Button>}
                                     </div>
                                     </>
@@ -460,9 +456,10 @@ function PagePersona(props) {
                             </div>
                             }
 
-                            {!PersonaHelper.isNew(persona) && <Handle persona={persona} isEditMode={isEditMode} isOwned={isOwned} />}
-                            {metadata?.location &&
-                            <div className="flex" style={{marginBottom:5}}>
+                            {(!isEditMode && !PersonaHelper.isNew(persona)) && <Handle persona={persona} isEditMode={isEditMode} isOwned={isOwned} />}
+
+                            {(metadata?.location && !isEditMode) &&
+                            <div className="flex view" style={{marginBottom:5}}>
                                 <div className="location">
                                     <i className="bi bi-geo-alt"></i>
                                     {metadata.location}
@@ -470,7 +467,6 @@ function PagePersona(props) {
                             </div>
                             }
                         </Skeleton>
-                            
                             
                     </div> 
                 </div>
@@ -541,10 +537,7 @@ function PagePersona(props) {
                         <div className="edit" style={{display:isEditMode?'block':'none'}}>
                             <div className="social">    
                                 <div className="social_wrapper">
-                                    <h2>
-                                        {/* <i className="bi bi-emoji-sunglasses"></i>  */}
-                                        Social Accounts
-                                    </h2>
+                                    {/* <h2>Social Accounts</h2> */}
                                     <div className="items">
                                     <Skeleton loading={isLoading} active>
                                     {Object.values(personaFields.social.network).map((network) => { 
@@ -1110,9 +1103,7 @@ export default PagePersona;
             </>}
             {(props.isOwned && isEditMode) && <>
             <Form name="handleChange" className="flex" onFinish={(values) => saveHandle(values.handle)} size="small">
-                <Form.Item
-                    hasFeedback
-                    name="handle"
+                <Form.Item name="handle" hasFeedback
                     // label="Handle"
                     rules={[
                         { validator: isHandleFree, message: 'Sorry, handle is already Taken',},
@@ -1314,7 +1305,7 @@ export default PagePersona;
                 id="personaEditForm"
                 onFinish={onFinish}
                 onFinishFailed={console.error}
-                labelCol={{ span: 6, }}
+                labelCol={{ span: 4, }}
                 wrapperCol={{ span: 18, }}
                 initialValues={metadata}
                 // initialValues={{ remember: true, }}

@@ -196,6 +196,11 @@ body {
 .persona {
     background: var(--background-color);
     // padding-top: 0px;
+    .backstep{
+        float: right;
+        top: -73px;
+        position: relative;
+    }
     >.header{
         border-radius: 20px 20px 0 0;
         overflow: hidden;
@@ -280,6 +285,7 @@ body {
         }
     }
     .handle{
+        margin-top: 3px;
         margin-bottom: 5px;
         // .ant-form-item-children-icon { margin-right: 82px; margin-top: -8px; }
         .ant-row { margin-bottom: 5px; }
@@ -309,9 +315,8 @@ body {
         flex-grow: 1; 
     }  
     .social { 
-        
         >div{
-            display: flex;
+            // display: flex;
         }
     }
     .secondary{
@@ -341,6 +346,7 @@ body {
             .ant-collapse { 
                 border:none; 
                 background: transparent; 
+                display: flex;
                 flex-wrap: wrap;
                 flex-direction: row-reverse;
             }
@@ -380,7 +386,7 @@ body {
             .item:hover i:before { transform: rotate(-180deg); }      
         }
         .edit {
-            max-width: 420px; 
+            // max-width: 420px; 
             .ant-input-group-addon,
             .ant-input:hover,
             .ant-input:focus,
@@ -390,7 +396,7 @@ body {
                 border-radius: 14px;
                 overflow: hidden;
                 input {
-                    padding: 10px 10px;
+                    padding: 6px 10px;
                 }
                 button { height: 42px; width: 48px; }
             }
@@ -437,8 +443,19 @@ body {
         .ant-tabs-content-holder { background: var(--monochrome); border-radius: 0 20px 20px 20px; }
         .ant-tabs-nav {margin:0; }
     }    
-    
+     
 }//.persona
+// Persona in Edit More
+.persona.edit_mode {
+    .view { display: none; }
+    .top{
+        flex-direction: column;
+    }
+    .social_wrapper{
+        max-width: 975px;
+        margin: 0 auto;
+    }
+}
 // .personaEdit{
 .upload_container{ 
     position: relative;
@@ -505,7 +522,7 @@ body {
         }
     }
     .social_wrapper{
-        margin-top: 20px; 
+        // margin-top: 20px; 
     }
     .links_wrapper { 
         margin-top: 20px; 
@@ -519,9 +536,12 @@ body {
         }
     }
     .items{ 
-        margin-top: 8px;
+        // margin-top: 8px;
+        // flex-direction: row-reverse;
+        display: flex;
+        flex-wrap: wrap;
         .item { 
-            min-width: 200px; 
+            min-width: 190px; 
             margin-bottom: 7px; 
         }
     }
