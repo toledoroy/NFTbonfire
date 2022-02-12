@@ -1,53 +1,6 @@
-:root {
-    --headerHeight:64px;
-    --footer-height:63px;
-    --cardWidth: 260px;
-    --cardHeight: 365px;
-    --avatarMD:120px;
-    --borderRadius: 12px;
-    --padding: 15px;
-    --pageWidth: 1200px;
 
-    --monochrome: #fff;
-    --background-color: #f0f2f5;
-    // --colorHeader:#444;
-    --colorHeader:#e2e2e2;
-    --colorFooter:#e2e2e2;
-    --color:#262626;
-    --cardBG: #fff;
-    --comment-background: #f5f5f5;
-    /* --colorLink:#1890ff; */
-    --colorLink: blueviolet;
-    /* --color:rgb(4, 24, 54); */
-    /* --invert: black; */
-    --colorAccent: #F68B4F;
-    --colorAccent2: #21bf96;
-}
-.light_theme {
-    .wrapper_main {
-        /* background-image: url("images/bg_purple.png"); */
-        background-image: url("images/bg_x1200.jpg");  
-        background-color: rebeccapurple;
-        background-size: cover;
-        .mainContent{
-            background-color: rgba(240, 240, 240, 0.9);
-        }
-    }
-    // .ant-layout-header{
-    //     background: rgb(255, 255, 255, 0.85);
-    // }
-}
-.dark_theme {
-    --monochrome: #000;
-    --background-color: #414141;
-    --colorHeader:#2d2d2d;
-    --colorFooter:#2d2d2d;
-    --color: #fdfdfd;
-    --cardBG: #f1f1f1;
-    --comment-background: #f1f1f1;
-    .ant-layout{
-        background-color: var(--background-color);
-    }
+.ant-layout{
+    background-color: var(--background-color);
 }
   
 .ant-popover-message-title .tooltip { margin-top: 20px; }
@@ -1010,19 +963,20 @@ body {
 
 #account {     
     color: #21bf96;
-    padding: 0 16px;
+    padding: 2px 18px;
     height: 48px;
     border-radius: 48px;
     display: flex;
     justify-content: center;
     align-items: center;
     width: fit-content;
-    border: 2px solid rgb(231, 234, 243);
-    background-color: rgba(244, 244, 244, 0.87);
+    // border: 2px solid rgb(231, 234, 243);
+    // background-color: rgba(244, 244, 244, 0.87);
+    background-color: var(--faintBG);
     cursor: pointer;
     .image { 
-        height: 38px; 
-        width: 38px;
+        height: 40px; 
+        width: 40px;
     }
     p.text {
         font-size:1.1em;
@@ -1039,7 +993,7 @@ body {
         font-weight: 400;
     }*/
 }
-#account.in { padding: 0 0 0 16px;}
+#account.in { padding: 0px 4px 0px 18px;}
 .lightUp{
     transition: all 0.2s ease-in-out;
 }

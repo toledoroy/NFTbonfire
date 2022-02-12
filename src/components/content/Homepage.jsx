@@ -26,7 +26,7 @@ import FullscreenMessage from "components/common/FullscreenMessage";
  * Component: Home Page
  */
  function Homepage(props) {
-    const { account, isWeb3Enabled, isAuthenticated, chainId } = useMoralis();     //, Moralis, user, isUserUpdating
+    const { account, isAuthenticated, chainId } = useMoralis();     //, Moralis, user, isUserUpdating
     // const { persona, contract } = props;
     // const { persona, contract } = props;
     

@@ -1,0 +1,58 @@
+:root {
+    --headerHeight:64px;
+    --footer-height:63px;
+    --cardWidth: 260px;
+    --cardHeight: 365px;
+    --avatarMD:120px;
+    --borderRadius: 12px;
+    --padding: 15px;
+    --pageWidth: 1200px;
+    --faintBG: rgba(244, 244, 244, 0.6);
+
+    --monochrome: #fff;
+    --background-color: #f0f2f5;
+    // --colorHeader:#444;
+    --colorHeader:#e2e2e2;
+    --colorFooter:#e2e2e2;
+    --color:#262626;
+    --cardBG: #fff;
+    --comment-background: #f5f5f5;
+    /* --colorLink:#1890ff; */
+    --colorLink: blueviolet;
+    /* --color:rgb(4, 24, 54); */
+    /* --invert: black; */
+    --colorAccent: #F68B4F;
+    --colorAccent2: #21bf96;
+
+
+    --ant-primary-color: rgb(246,115,79);
+
+}
+
+.light_theme {
+    .wrapper_main {
+        /* background-image: url("images/bg_purple.png"); */
+        background-image: url("/images/bg_x1200.jpg");
+        background-color: rebeccapurple;
+        background-size: cover;
+        .mainContent{
+            background-color: rgba(240, 240, 240, 0.9);
+        }
+    }
+    // .ant-layout-header{
+    //     background: rgb(255, 255, 255, 0.85);
+    // }
+}
+.dark_theme {
+    --monochrome: #000;
+    --background-color: #414141;
+    --colorHeader:#2d2d2d;
+    --colorFooter:#2d2d2d;
+    --color: #fdfdfd;
+    --cardBG: #f1f1f1;
+    --comment-background: #f1f1f1;
+    
+    
+    // --faintBG: rgba(244, 244, 244, 0.6);
+    --faintBG: rgba(0,0,0, 0.8);
+}

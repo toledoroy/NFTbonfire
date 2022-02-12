@@ -1,6 +1,6 @@
 import { CreditCardOutlined } from "@ant-design/icons";
 import { Button, Input, message } from "antd";  //, notification
-import Text from "antd/lib/typography/Text";
+// import Text from "antd/lib/typography/Text";
 import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
 // import AddressInput from "components/AddressInput";

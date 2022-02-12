@@ -183,14 +183,17 @@ button:active {
 .chainSelect{
   display: flex;
   align-items: center;
-  height: 42px;
   font-weight: 500;
   font-family: "Roboto", sans-serif;
   font-size: 14px;
-  padding: 22px 10px;
+  padding: 21px 16px;
+  height: 42px;
+  border-radius: 42px;
   border: 2px solid rgb(231, 234, 243);
-  border-radius: 12px;
   background-color: rgba(244, 244, 244, 0.87);
+  /* background-color: var(--faintBG);  */
+  /* border: 2px solid var(--faintBG); */
+  /* border: none; */
 }
 
 /* Misc. */
@@ -208,28 +211,4 @@ button:active {
 } */
 @media only screen and (max-width: 1100px) {
   .collections .stack {display: none;}
-}
-
-/* Animations */
-@keyframes slideIn {
-  to { transform: translateX(0); }
-}
-@keyframes fadeIn {
-  from { opacity:0; }
-  to { opacity:1; }
-}
-@-moz-keyframes fadeIn {
-  /* Firefox */
-  from { opacity:0; }
-  to { opacity:1; }
-}
-@-webkit-keyframes fadeIn {
-  /* Safari and Chrome */
-  from { opacity:0; }
-  to { opacity:1; }
-}
-@-o-keyframes fadeIn {
-  /* Opera */
-  from { opacity:0; }
-  to { opacity:1; }
 }

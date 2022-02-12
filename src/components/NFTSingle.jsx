@@ -12,7 +12,7 @@ import { CollectionContext } from "common/context";
  */
 function NFTSingle(props) {
   const { NFTCollections, isLoading } = useNFTCollections();
-  const { Moralis, isWeb3Enabled } = useMoralis();
+  // const { Moralis, isWeb3Enabled } = useMoralis();
   const { hash } = props.match.params;
 
   function isValid(hash){ 
@@ -23,7 +23,7 @@ function NFTSingle(props) {
   console.warn('NFTSingle() ID: '+props.match.params.hash, {props, hash, valid:isValid(hash), NFTCollections});
   // console.log("NFTSingle() props.NFT:", props.nft); 
   
-  const options = { token_address: hash };
+  // const options = { token_address: hash };
   // const options = { chain: 'matic', address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1', /*token_address: '0x...'*/ };
   // const options = { address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1', token_address: hash, };    //[DEV]
   // options.address = '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1';    //[DEV]

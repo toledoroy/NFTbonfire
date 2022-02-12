@@ -5,10 +5,12 @@ import Account from "components/Account/Account";
 import Chains from "components/Chains";
 import Homepage from "components/content/Homepage";
 import MenuItems from "components/MenuItems";
-import { Layout } from "antd";
+import { Layout, ConfigProvider } from "antd";
 import "antd/dist/antd.css";
 import "./style.css";
 import "./style.scss";
+import "style/theme.scss";
+import "style/effects.scss";
 // import QuickStart from "components/QuickStart";
 // import Text from "antd/lib/typography/Text";
 
@@ -33,6 +35,19 @@ import NFTAllChains from "components/NFTAllChains";
 // import Page404 from "components/Page404";
 // import { Menu, Layout, Button, Skeleton } from "antd";
 import { PersonaContext } from "common/context";
+
+  
+// Theme Config
+  ConfigProvider.config({
+    theme: {
+      primaryColor: 'red',
+      errorColor: 'green',
+      warningColor: 'blue',
+      successColor: 'yellow',
+      infoColor: '#1890ff',
+    }
+  });
+
 
 const { Header, Footer, Content } = Layout;
 const styles = {
