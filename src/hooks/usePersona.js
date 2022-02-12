@@ -258,7 +258,7 @@ export const usePersona = () => {
                 try{
                     console.log("usePersona.update() Success Updating Persona:"+persona.id, {data, uri});
                     //Call a Server Update for Persona's Metadata (& URI)
-                    Moralis.Cloud.run("personaUpdate", {personaId:persona.id});
+                    await Moralis.Cloud.run("personaUpdate", {personaId:persona.id});   //Wait to reduce server load
                     //Trigger Metadata Update on Moralis
                     callMoralisMetadataUpdate(options.contractAddress, options?.params?.tokenId, chainId);
                     //Return Transaction Data
@@ -329,6 +329,14 @@ export const usePersona = () => {
      * Trigger Moralis Metadata Update When Needed
      */
     function callMoralisMetadataUpdate(hash, tokenId, chain=chainId){
+        /* TODO: Use SDK
+        try{
+            Moralis.Web3API.token.reSyncMetadata(options);
+        }
+        catch(error){
+
+        }
+        */
         let apiKey = process?.env?.REACT_APP_MORALIS_API_KEY;
         if(apiKey){
             if(hash && tokenId && chain){

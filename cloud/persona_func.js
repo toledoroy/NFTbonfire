@@ -389,7 +389,7 @@ Moralis.Cloud.define("personaUpdate", async (request) => {
   if(!persona.get('owner')){
     // logger.warn("[TEST] personaUpdate() Fetch Owner for Persona:"+persona.id );  //V
     //Fetch Token Owner
-    getTokenOwner(chain, contract, tokenId).then(owner => {
+    await getTokenOwner(chain, contract, tokenId).then(owner => {   //Wating for this just to reduce server load
       //Update Owner
       if(owner) persona.save({owner: owner}, {useMasterKey: true});
       else logger.error("personaUpdate() Found no Owner for Persona:"+persona.id+" (Owner:'"+owner+"')"); 
