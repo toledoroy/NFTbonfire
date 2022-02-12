@@ -225,7 +225,7 @@ const App = ({ isServerInfo }) => {
       
       </Content>
 
-      <Footer className="container">
+      <Footer className="">
         <div className="inner">
           {/* <div className="flex" style={{lineHeight:'60px'}}>
             <Logo />

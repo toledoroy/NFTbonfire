@@ -41,28 +41,6 @@
 .ant-btn-sm i{
   font-size: 0.82em;
 }
-:root {
-  --background-color: #f0f2f5;
-  --headerHeight:64px;
-  --footer-height:63px;
-  --cardWidth: 260px;
-  --cardHeight: 365px;
-  --cardBG: #fff;
-  --avatarMD:120px;
-  --comment-background: #f5f5f5;
-  --color:#262626;
-  --colorHeader:#444;
-  /* --colorLink:#1890ff; */
-  --colorLink: blueviolet;
-  /* --color:rgb(4, 24, 54); */
-  /* --invert: black; */
-  --monochrome: #fff;
-  --borderRadius: 12px;
-  --padding: 15px;
-  --pageWidth: 1200px;
-  --colorAccent: #F68B4F;
-  --colorAccent2: #21bf96;
-}
 h1, h2, h3, h4, h5, h6 {
   color: var(--colorHeader);
   font-weight: 600;
@@ -101,21 +79,10 @@ body{
   font-family: "Open Sans", Roboto, sans-serif;
   color: var(--color);
 }
-
-.wrapper_main {
-  /* background-image: url("images/bg_purple.png"); */
-  background-image: url("images/bg_x1200.jpg");  
-  background-color: rebeccapurple;
-  background-size: cover;
-
-}
 .container {
   background-color: rgba(240, 240, 240, 0.9);
   /* background: var(--comment-background); */
   border-radius: var(--borderRadius);
-}
-.wrapper_main .mainContent{
-  background-color: rgba(240, 240, 240, 0.9);
 }
 
 dt { text-transform: capitalize; }

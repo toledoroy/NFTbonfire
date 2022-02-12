@@ -1,3 +1,54 @@
+:root {
+    --headerHeight:64px;
+    --footer-height:63px;
+    --cardWidth: 260px;
+    --cardHeight: 365px;
+    --avatarMD:120px;
+    --borderRadius: 12px;
+    --padding: 15px;
+    --pageWidth: 1200px;
+
+    --monochrome: #fff;
+    --background-color: #f0f2f5;
+    // --colorHeader:#444;
+    --colorHeader:#e2e2e2;
+    --colorFooter:#e2e2e2;
+    --color:#262626;
+    
+    --cardBG: #fff;
+    --comment-background: #f5f5f5;
+    /* --colorLink:#1890ff; */
+    --colorLink: blueviolet;
+    /* --color:rgb(4, 24, 54); */
+    /* --invert: black; */
+    --colorAccent: #F68B4F;
+    --colorAccent2: #21bf96;
+}
+.light_theme {
+    .wrapper_main {
+        /* background-image: url("images/bg_purple.png"); */
+        background-image: url("images/bg_x1200.jpg");  
+        background-color: rebeccapurple;
+        background-size: cover;
+        .mainContent{
+            background-color: rgba(240, 240, 240, 0.9);
+        }
+    }
+    // .ant-layout-header{
+    //     background: rgb(255, 255, 255, 0.85);
+    // }
+}
+.dark_theme {
+    --monochrome: #000;
+    --background-color: #414141;
+    --colorHeader:#2d2d2d;
+    --colorFooter:#2d2d2d;
+    --color: #fdfdfd;
+    .ant-layout{
+        background-color: var(--background-color);
+    }
+}
+  
 .ant-popover-message-title .tooltip { margin-top: 20px; }
 .tooltip {
     line-height: 1.7em;
@@ -12,7 +63,7 @@
     position: fixed;
     z-index: 100;
     width: 100%;
-    background: rgb(255, 255, 255, 0.85);
+    background-color: var(--colorHeader);
     .ant-menu { 
         background: transparent; 
         border: none; 
@@ -98,11 +149,14 @@ body {
         border-radius: 0 0 12px 12px ;
         padding: 10px 50px 10px 50px;
         height: var(--footer-height);
+        background-color: var(--colorFooter);
+        color: var(--color);
         margin: 0;
         font-weight: 500;
         font-size: 1.2em;
         a, a:visited{
-            color:#555;
+            // color:#555;
+            color: var(--color);
         }
         .inner{
             margin:0 auto;
@@ -194,6 +248,7 @@ body {
 
 /* Page:Persona */
 .persona {
+    background: var(--background-color);
     background: var(--background-color);
     // padding-top: 0px;
     .backstep{
