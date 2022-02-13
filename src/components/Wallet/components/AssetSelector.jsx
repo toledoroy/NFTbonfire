@@ -11,13 +11,14 @@ export default function AssetSelector(props) {
 
   const fullBalance = useMemo(() => {
     if (!assets || !nativeBalance) return null;
+    // console.warn("[TEST] AssetSelector", { assets, nativeToken });
     return [
       ...assets,
       {
         balance: nativeBalance.balance,
-        decimals: nativeToken.decimals,
-        name: nativeToken.name,
-        symbol: nativeToken.symbol,
+        decimals: nativeToken?.decimals,
+        name: nativeToken?.name,
+        symbol: nativeToken?.symbol,
         token_address: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
       },
     ];
