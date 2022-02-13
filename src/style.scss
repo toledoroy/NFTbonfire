@@ -92,6 +92,7 @@ body {
         // border-radius: 12px 12px 0 0;
         border-bottom: 1px solid rgba(0, 0, 0, 0.06);
         padding: 0 var(--padding);
+        box-shadow: 0 0 8px var(--shadowColor);
         .inner{
             max-width: var(--pageWidth);
             margin:0 auto;
@@ -105,6 +106,7 @@ body {
         padding: 10px 50px 10px 50px;
         height: var(--footer-height);
         background-color: var(--footerBG);
+        box-shadow: 0 0 8px var(--shadowColor);
         color: var(--color);
         margin: 0;
         font-weight: 500;

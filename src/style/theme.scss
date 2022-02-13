@@ -8,7 +8,8 @@
     --padding: 15px;
     --pageWidth: 1200px;
     --faintBG: rgba(244, 244, 244, 0.6);
-
+    --shadowColor:#bbb;
+    
     --monochrome: #fff;
     --background-color: #f0f2f5;
     --colorHeading:#444;
@@ -40,7 +41,8 @@
     // .ant-layout-header{
     //     background: rgb(255, 255, 255, 0.85);
     // }
-    .wrapper_main>header, .wrapper_main>footer { box-shadow: 0 0 8px #bbb;}
+    // .wrapper_main>header, .wrapper_main>footer { box-shadow: 0 0 8px #bbb;}
+
 }
 .dark_theme {
     --monochrome: #000;
@@ -51,8 +53,10 @@
     --cardBG: #f1f1f1;
     --comment-background: #f1f1f1;
     --colorHeading: #f1f1f1;
-    --shadowColor: 0 0 8px #333;
+    --shadowColor:#333;
     // --faintBG: rgba(244, 244, 244, 0.6);
     --faintBG: rgba(0,0,0, 0.8);
-    .wrapper_main>header, .wrapper_main>footer { box-shadow: var(--shadowColor);}
+    
 }
+
+// .wrapper_main>header, .wrapper_main>footer { box-shadow: 0 0 8px var(--shadowColor);}

@@ -93,12 +93,13 @@ dt { text-transform: capitalize; }
 .ant-popover-inner { 
   border-radius: 15px; 
   background-color: var(--background-color);
-  box-shadow: var(--shadowColor);
+  box-shadow: 0 0 8px var(--shadowColor);
 }
 .ant-popover-arrow-content {
   background-color: var(--background-color);
   width: 9px;
   height: 9px;
+  box-shadow: 0 0 8px var(--shadowColor);
 }
 .ant-popover-message {
   color: var(--color);
