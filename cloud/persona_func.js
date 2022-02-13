@@ -285,7 +285,7 @@ Moralis.Cloud.define("isHandleFree", async (request) => {
 Moralis.Cloud.define("personaRegisterById", async (request) => {
   let { handle, personaId } = request.params;
   //Validate Parameters
-  if(!personaId) throw new Error("personaRegisterById() Missing Parameters for handle:'"+handle+"' (chain:'"+chain+"' token_id:'"+token_id+"' contract:'"+contract+"' personaId:'"+personaId+"')");
+  if(!personaId) throw new Error("personaRegisterById() Missing Parameters for handle:'"+handle+"' (personaId:'"+personaId+"')");
   //Normalize Handle
   if(handle!==undefined && handle!==null) handle = String(handle).trim().toLowerCase();
   // if(handle==='') handle = null;

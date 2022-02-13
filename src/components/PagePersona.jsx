@@ -1069,7 +1069,7 @@ export default PagePersona;
             setStatus('saving');
 
             //Handle Register Handle
-            let params = {personaId: persona.id, handle};
+            let params = {personaId:persona.id, handle};
             Moralis.Cloud.run("personaRegisterById", params).then(result => {
                     console.log("[TEST] Handle() personaRegister Result:", result);
                     setStatus('success');
@@ -1081,7 +1081,7 @@ export default PagePersona;
                     setIsEditMode(false);
                     //TODO: Redirect to New URL ?
                 }).catch(error => {
-                    console.error("Handle() personaRegister Error:", {error, params, user}); 
+                    console.error("Handle() personaRegister Error:", {error, params}); 
                     setStatus('failure');
                     //User Message
                     message.error("Failed to Save Handle");
