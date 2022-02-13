@@ -26,7 +26,7 @@ import { Form, Input, Select } from 'antd';
 import { Card, Dropdown, Menu, Upload, message } from 'antd';
 import { Popconfirm, Spin, Col } from 'antd';
 import __ from "helpers/__";
-import CarvedHeading from "components/common/CarvedHeading";
+// import CarvedHeading from "components/common/CarvedHeading";
 
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
@@ -45,7 +45,7 @@ function PagePersona(props) {
     const { params } = props.match;
     // const { handle } = props.match.params;
     const { handle, chain, contract, token_id } = params;
-    const { Moralis, isWeb3Enabled, isInitialized, isAuthenticated, userError, chainId, account } = useMoralis();     //isUserUpdating
+    const { Moralis, isInitialized, isAuthenticated, userError, chainId, account } = useMoralis();     //isUserUpdating
     // const [ collection, setCollection ] = useState(null);
     const [ isEditMode, setIsEditMode ] = useState(false);
     const [ isOwned, setIsOwned ] = useState(false);
@@ -171,14 +171,8 @@ function PagePersona(props) {
         }
         else 
         if(params.chain && params.contract && params.token_id) {//By Token Address
-            let personaData = {
-                chainId: chain,
-                address: contract,
-                tokenId: token_id,
-            };
             //Fetch Token (from DB or Chain)
             let result = await Moralis.Cloud.run("getPersona", params);
-            // console.warn("[TEST] PagePersona() Manually Fetched Persona:", {personaData, props, params, perosna:result});
             //Set
             setPersona(result);
             // updateMetadata(result.get('metadata'));      //Now, Included in setPersona()
