@@ -890,7 +890,7 @@ export default PagePersona;
         }
         //Always False - Manual Upload Via handleChangeFile()
         return false;
-    }
+    }//beforeUpload()
 
     /**
      * File Upload 
@@ -1057,7 +1057,7 @@ export default PagePersona;
     }//isHandleFree()
 
     /**
-     * Save Handle
+     * Update Handle
      * @param {*} handle 
      */
     const saveHandle = (handle) => {
@@ -1079,7 +1079,9 @@ export default PagePersona;
                     message.success("Handle Saved Successfully");
                     //Done with Edit Mode
                     setIsEditMode(false);
-                    //TODO: Redirect to New URL ?
+
+                    //TODO: Redirect to New URL
+                    
                 }).catch(error => {
                     console.error("Handle() personaRegister Error:", {error, params}); 
                     setStatus('failure');
@@ -1097,7 +1099,7 @@ export default PagePersona;
                 {props.isOwned && <>
                     {isNew() 
                     ? <Button variant="contained" size="small" color="primary" onClick={()=>{setIsEditMode(true)}}>Claim Handle</Button>
-                    : <Button variant="contained" size="small" onClick={()=>{setIsEditMode(true)}} style={{background: 'none', border:'none'}} title="Edit handle"><i className="bi bi-pencil-fill"></i></Button>
+                    : <Button variant="contained" size="small" onClick={()=>{setIsEditMode(true)}} style={{background: 'none', border:'none'}} title="Edit handle"><i className="bi bi-pencil-fill" style={{color:'var(--color)'}}></i></Button>
                     }
                 </>}
             </>}
@@ -1158,7 +1160,7 @@ export default PagePersona;
     const [ stage, setStage ] = useState(null);
     // const [ formSocial, setFormSocial ] = useState({});
     const [ metadata, setMetadata ] = useState(props.metadata);    //From Parent
-    const { mint, update } = usePersona(); 
+    const { mint, update, burn } = usePersona(); 
     // const { Moralis, setUserData, user, isAuthenticated } = useMoralis();
     const { Moralis, user, isAuthenticated, chainId } = useMoralis();
     // const contractProcessor = useWeb3ExecuteFunction();
@@ -1448,10 +1450,32 @@ export default PagePersona;
                                     >
                                     <Button type="primary">Mint New Persona</Button>
                                 </Popconfirm>
-                            : <Button type="primary" htmlType="submit" disabled={!canEdit()}>Save</Button>
+                            :   <Button type="primary" htmlType="submit" disabled={!canEdit()}>Save</Button>
                             }
                             {/* <Button onClick={formReset} style={{marginLeft:'20px' }}>Reset</Button> REMOVED */}
                             <Button variant="contained" color="primary" onClick={()=>{ reloadmetadata(); setIsEditMode(false)}}>Cancel</Button>
+                            
+                            {PersonaHelper.isNew(persona) || 
+                                <Popconfirm
+                                    title={
+                                        <div className="tooltip">
+                                            <h3>You are about to burn your asset</h3>
+                                            <ul>
+                                                <li>You will cede control over the token.</li>
+                                                <li>The data will still be visible on the chain's history.</li>
+                                                <li>This operation is non-reversible.</li>
+                                            </ul>
+                                        </div>
+                                    }
+                                    // onConfirm={() => onFinish({}) }
+                                    onConfirm={() => burn(persona) }
+                                    icon=""
+                                    //   onVisibleChange={() => console.log('visible change')}
+                                    >
+                                    <Button type="danger" disabled={!canEdit()}>Burn</Button>
+                                </Popconfirm>
+                            }
+
                         </Form.Item>
                     }
                 </div>

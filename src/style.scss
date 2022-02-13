@@ -17,7 +17,7 @@
     position: fixed;
     z-index: 100;
     width: 100%;
-    background-color: var(--colorHeader);
+    background-color: var(--headerBG);
     .ant-menu { 
         background: transparent; 
         border: none; 
@@ -89,7 +89,7 @@ body {
         margin: 0;
     }
     >header{
-        border-radius: 12px 12px 0 0;
+        // border-radius: 12px 12px 0 0;
         border-bottom: 1px solid rgba(0, 0, 0, 0.06);
         padding: 0 var(--padding);
         .inner{
@@ -98,12 +98,13 @@ body {
         }
     }
     >footer{
+        margin-top: 40px;
         // background: var(--comment-background);
         z-index: 100;
-        border-radius: 0 0 12px 12px ;
+        // border-radius: 0 0 12px 12px ;
         padding: 10px 50px 10px 50px;
         height: var(--footer-height);
-        background-color: var(--colorFooter);
+        background-color: var(--footerBG);
         color: var(--color);
         margin: 0;
         font-weight: 500;
@@ -645,7 +646,6 @@ body {
             perspective: 1000px;
             margin: auto;
             .flip-card-inner {
-  
                 /*
                 background: var(--cardBG);
                 box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);

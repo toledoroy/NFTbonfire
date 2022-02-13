@@ -42,7 +42,7 @@
   font-size: 0.82em;
 }
 h1, h2, h3, h4, h5, h6 {
-  color: var(--colorHeader);
+  color: var(--colorHeading);
   font-weight: 600;
   /* font-family: Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,apple color emoji,segoe ui emoji,Segoe UI Symbol,noto color emoji,sans-serif; */
   font-family: Arial, sans-serif;
@@ -86,12 +86,23 @@ body{
 }
 
 dt { text-transform: capitalize; }
-footer { margin-top: 40px; }
-header, footer { box-shadow: 0 0 8px #bbb;}
 
 /* ANT Design Overrides */
 .ant-layout-content { margin-top: var(--headerHeight); }
 .ant-table-tbody > tr > td {min-width: 60px;}
+.ant-popover-inner { 
+  border-radius: 15px; 
+  background-color: var(--background-color);
+  box-shadow: var(--shadowColor);
+}
+.ant-popover-arrow-content {
+  background-color: var(--background-color);
+  width: 9px;
+  height: 9px;
+}
+.ant-popover-message {
+  color: var(--color);
+}
 
 /* GLOBAL MODIFIERS */
 small {font-size: 73%;}

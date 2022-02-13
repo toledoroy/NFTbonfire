@@ -355,6 +355,10 @@ export const usePersona = () => {
         else console.error("usePersona.callMoralisMetadataUpdate() Can't Run. API Key Missing in ENV");
     }//callMoralisMetadataUpdate()
     
-    return { validateChain, loadMetadata, updateToken, fetchMetadata, mint, update, callMoralisMetadataUpdate };
+    return { 
+        validateChain, loadMetadata, updateToken, fetchMetadata, 
+        mint, update, burn, 
+        callMoralisMetadataUpdate ,
+    };
  
 }//usePersona()

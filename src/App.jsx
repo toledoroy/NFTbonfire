@@ -124,12 +124,10 @@ const App = ({ isServerInfo }) => {
       // }//Has Persona
       // else console.warn("App() Clear Persona");
     }
-    else console.error("[TEST] App() Change Persona Called, but No User", {persona, user});
-
-    console.error("[TEST] App() Setting Persona Failed -- Clear Persona", {persona, user});
+    // else console.error("[TEST] App() Change Persona Called, but No User -- Clear Persona", {persona, user});
+    // console.error("[TEST] App() Setting Persona Failed -- Clear Persona", {persona, user});
     //Failed -- Clear Persona
-    setPersonaActual(null);
-
+    if(persona!==null) setPersonaActual(null);
   }//setPersona
 
   //quickstart
