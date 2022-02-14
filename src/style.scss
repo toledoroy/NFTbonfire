@@ -298,7 +298,7 @@ body {
     }
     .handle{
         margin-top: 3px;
-        margin-bottom: 5px;
+        margin-bottom: 2px;
         // .ant-form-item-children-icon { margin-right: 82px; margin-top: -8px; }
         .ant-row { margin-bottom: 5px; }
         .ant-form button {margin-left: 4px;}
@@ -354,7 +354,6 @@ body {
             // .ant-collapse-header:hover .textSwitch .handle { top:-20px; }
             // .ant-collapse-header:hover .textSwitch .network { top:-60px; }
             .ant-collapse-header:hover .inner  { bottom: 3rem; }
-    
             .ant-collapse { 
                 border:none; 
                 background: transparent; 
@@ -362,12 +361,18 @@ body {
                 flex-wrap: wrap;
                 flex-direction: row-reverse;
             }
-        
             .item {
                 border-radius: 17px;
                 overflow: hidden;
                 i:before { transition: transform 0.5s ease-in; }
-                a { display:flex; color:var(--color); min-width: 120px; white-space: nowrap; align-items: center; text-overflow: ellipsis; }
+                a {
+                    display:flex; 
+                    color:var(--color); 
+                    min-width: 120px; 
+                    white-space: nowrap; 
+                    align-items: center; 
+                    text-overflow: ellipsis; 
+                }
                 a:after {
                     content: "";
                     position: absolute;

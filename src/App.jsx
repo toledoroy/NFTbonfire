@@ -255,7 +255,7 @@ const App = ({ isServerInfo }) => {
             <i className="bi bi-discord"></i> <span style={{margin:'0 5px'}}>Support</span>
           </a>
           <a href="https://github.com/toledoroy/NFTbonfire/wiki" target="_blank" rel="noopener noreferrer" style={{display:'flex', alignItems:'center'}}>
-            <i className="bi bi-github"></i> <span style={{margin:'0 5px'}}>WIKI</span>
+            <i className="bi bi-github"></i> <span style={{margin:'0 5px'}}>WHITEWIKI</span>
           </a>
         </div>
       </Footer>

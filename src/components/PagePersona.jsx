@@ -304,20 +304,6 @@ function PagePersona(props) {
         }
     }//reloadmetadata()
    
-    /** REMOVED - MADE EXPLICIT
-     * on Social Account Update
-     
-     const formSocialOnChange = (e) => {
-        let change = {[e.target.name]: e.target.value.trim()};
-        //Log
-        // console.log("[DEV] formSocialOnChange() ", {e, change});
-        //Set
-        setMetadata({...metadata, social:{ ...metadata.social, ...change }});
-        //Log
-        console.log("[DEV] formSocialOnChange() Modified Metadata ", {metadata, social:metadata.social, change});
-        return true;
-    }
-    */
     /**
      * Check if Persona Can Curretly Be Edited
      * @returns 
@@ -482,7 +468,6 @@ function PagePersona(props) {
                                             // let label = (<i className={"bi bi-"+network}></i>);    //Default Label (Icon)
                                             let headerContent = (
                                                 <>
-                                                <a href={link} target="_blank" rel="noopener noreferrer" key={network} className="social-handle" data-network={network}>
                                                     {label} 
                                                     <div className="textSwitch">
                                                         <div className="inner">
@@ -490,9 +475,16 @@ function PagePersona(props) {
                                                             <div className="text handle">{handle}</div>
                                                         </div>
                                                     </div>
-                                                </a>
                                                 </>
                                                 );
+                                                if(link !== '#') headerContent = (<a href={link} target="_blank" rel="noopener noreferrer" key={network} className="social-handle" data-network={network}>{headerContent}</a>);
+                                                else headerContent = (
+                                                    <a href={link} target="_blank" rel="noopener noreferrer" key={network} className="social-handle" data-network={network} 
+                                                        title="Copy"
+                                                        onClick={(evt) => { navigator.clipboard.writeText(handle); evt.preventDefault(); }}
+                                                    >{headerContent}</a>
+                                                );
+
                                                 //collapsible="disabled" showArrow={false}
                                             return (
                                                 <Panel header={headerContent} key={network} collapsible="disabled" showArrow={false} className="item lightUp">
@@ -1195,7 +1187,7 @@ export default PagePersona;
     }//metadataSanitize
     
     /**
-     * 
+     * Save Persona
      */
     function savePersona(metadata){
         //Sanitize
