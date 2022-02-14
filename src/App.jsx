@@ -28,6 +28,7 @@ import NFTSingle from "components/NFTSingle";
 import NFTCollections from "components/NFTCollections";
 import PagePersona from "components/PagePersona";
 import PersonaNew from "components/PersonaNew";
+import Personas from "components/Personas";
 // import NFTDisplayAllChains from "components/NFT/NFTDisplayAllChains";
 import NFTAllChains from "components/NFTAllChains";
 // import RoomPage from "components/RoomPage";
@@ -218,6 +219,7 @@ const App = ({ isServerInfo }) => {
               
               {/* <Route path="/personatoken/" component={PagePersona} />  */} {/* New Persona */}
               <Route path="/persona" component={PersonaNew} /> {/* New Persona */}
+              <Route path="/personas" component={Personas} /> {/* All Personas */}
 
               {/* {!isAuthenticated && <Route path="*" component={PageAuthenticate} />}  */}
               {/* pages below this point require authentication (CANCELLED) */}

@@ -10,7 +10,7 @@ import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
 // import { useNFTCollections } from "hooks/useNFTCollections";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 // import { useIsAllowed } from "hooks/useIsAllowed";
-import { Post } from "objects/objects";
+// import { Post } from "objects/objects";
 import Space from "components/NFTSingle/Space";
 import { CollectionContext } from "common/context";
 // import { NFTHelper } from "helpers/NFTHelper";
@@ -247,8 +247,8 @@ function NFTCollections(props) {
                         <Space hash={collectionHash} collection={collection} NFTpersonas={NFTpersonas}/>
                       </div>
                       } */}
-                      
                     </div>
+
                   </div>
 
                   {collectionHash && 
