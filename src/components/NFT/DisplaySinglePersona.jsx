@@ -89,7 +89,7 @@ const { Meta } = Card;
                 // <Tooltip title="Sell On OpenSea"><ShoppingCartOutlined onClick={(event) => { event.preventDefault(); alert("OPENSEA INTEGRATION COMING!");}} /></Tooltip>,
                 <Tooltip title="View Persona">
                     <Link key={nft.token_address+'L'+nft.token_id} to={{pathname:"/personatoken/"+nft.chain+"/"+nft.token_address+"/"+nft.token_id}}>
-                        <EyeOutlined onClick={(event) => { event.preventDefault(); }} />
+                        <EyeOutlined />
                     </Link>
                 </Tooltip>,
                 <Tooltip title="Private Group">
