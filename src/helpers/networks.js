@@ -33,14 +33,14 @@ export const networkConfigs = {
   "0x4": {
     name: "Rinkeby Testnet",
     currencySymbol: "ETH",
-    blockExplorerUrl: "https://kovan.etherscan.io/",
+    blockExplorerUrl: "https://rinkeby.etherscan.io/",
     icon: <ETHLogo />,
     openSeaUrl: "https://testnets.opensea.io/assets/",
   },
   "0x2a": {
     name: "Kovan Testnet",
     currencySymbol: "ETH",
-    blockExplorerUrl: "https://rinkeby.etherscan.io/",
+    blockExplorerUrl: "https://kovan.etherscan.io/",
     icon: <ETHLogo />,
   },
   "0x5": {
