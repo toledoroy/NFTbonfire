@@ -3,7 +3,7 @@
         "label": "Role",
         "name": "role",
         "placeholder": "Persona, developer, hacker, designer, writer, or maybe a community manager?",
-        "rules": [{ "required": true, "message": "What is your main use of this persona" }]
+        "rules": [{ "required": false, "message": "What is your main use of this persona" }]
     },
     "name":{
         "label": "Name",
