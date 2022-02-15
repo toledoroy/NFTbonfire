@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FileSearchOutlined, SendOutlined, FireTwoTone } from "@ant-design/icons";  //, ShoppingCartOutlined
 import { Card, Image, Tooltip, Modal, Input } from "antd";
 import { useMoralis } from "react-moralis";
-import { getExplorer } from "helpers/networks";
+import { getExplorer, getOpenSea } from "helpers/networks";
 import AddressInput from "components/AddressInput";
 import NFTDisplayMetadata from "components/NFTCollections/NFTDisplayMetadata";
 import { Link } from "react-router-dom";
@@ -82,7 +82,12 @@ const { Meta } = Card;
                 </div>
             }
             actions={[
-                <Tooltip title="View On Blockexplorer"><FileSearchOutlined onClick={(event) => {event.preventDefault();  window.open(`${getExplorer(chainId)}address/${nft.token_address}`, "_blank");}} /></Tooltip>,
+                <>
+                {getOpenSea(chainId) 
+                ?   <Tooltip title="View On Opensea"><FileSearchOutlined onClick={(event) => {window.open(`${getOpenSea(chainId)}/${nft.token_address}/${nft.token_id}`, "_blank");}} /></Tooltip>
+                :   <Tooltip title="View On Blockexplorer"><FileSearchOutlined onClick={(event) => {window.open(`${getExplorer(chainId)}address/${nft.token_address}`, "_blank");}} /></Tooltip>
+                }
+                </>,
                 <Tooltip title="Transfer NFT">
                     <SendOutlined onClick={(event) => { event.preventDefault(); event.stopPropagation(); handleTransferClick(nft); }} />
                 </Tooltip>,
