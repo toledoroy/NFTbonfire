@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-// import { Link } from "react-router-dom";
 import { FileSearchOutlined, SendOutlined, FireTwoTone } from "@ant-design/icons";  //, ShoppingCartOutlined
 import { Card, Image, Tooltip, Modal, Input } from "antd";
 import { useMoralis } from "react-moralis";
 import { getExplorer } from "helpers/networks";
 import AddressInput from "components/AddressInput";
 import NFTDisplayMetadata from "components/NFTCollections/NFTDisplayMetadata";
+import { Link } from "react-router-dom";
 // import { IPFS } from "helpers/IPFS";
 import __ from "helpers/__";
 
@@ -59,7 +59,7 @@ const { Meta } = Card;
 
     return (
       <>
-        <Card size="small" className="item NFT lightUp" hoverable key={nft.token_id} style={{ width: 'var(--cardWidth)', border: "2px solid #e7eaf3", overflow:'hidden'}}
+        <Card size="small" className="item NFT" key={nft.token_id} style={{ width: 'var(--cardWidth)', border: "2px solid #e7eaf3", overflow:'hidden'}}
             cover={
                 <div className="flip-card" onClick={() => { console.warn("Selected Collection of", nft); }}>
                     <div className="flip-card-inner">
@@ -83,18 +83,21 @@ const { Meta } = Card;
             }
             actions={[
                 <Tooltip title="View On Blockexplorer"><FileSearchOutlined onClick={(event) => {event.preventDefault();  window.open(`${getExplorer(chainId)}address/${nft.token_address}`, "_blank");}} /></Tooltip>,
-                <Tooltip title="Transfer NFT"><SendOutlined onClick={(event) => { event.preventDefault(); handleTransferClick(nft); }} /></Tooltip>,
+                <Tooltip title="Transfer NFT">
+                    <SendOutlined onClick={(event) => { event.preventDefault(); event.stopPropagation(); handleTransferClick(nft); }} />
+                </Tooltip>,
                 // <Tooltip title="Sell On OpenSea"><ShoppingCartOutlined onClick={(event) => { event.preventDefault(); alert("OPENSEA INTEGRATION COMING!");}} /></Tooltip>,
-                <Tooltip title="Bonfire">
-                    {/* <Link to={{pathname:'/space/'+nft.chain+'/'+nft.token_address}}> */}
+                <Tooltip title="Private Space">
+                    <Link to={{pathname:'/space/'+nft.chain+'/'+nft.token_address}}>
                         <FireTwoTone twoToneColor="red" />
-                    {/* </Link> */}
+                    </Link>
                 </Tooltip>,
             ]}
             >
         </Card>
     
         <Modal
+        onClick={(event) => { event.preventDefault(); event.stopPropagation(); }} 
             title={`Transfer ${nftToSend?.name || "NFT"}`}
             visible={visible}
             onCancel={() => setVisibility(false)}

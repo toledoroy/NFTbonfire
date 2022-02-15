@@ -237,10 +237,10 @@ function NFTCollections(props) {
 
                     <div className="middle">
                       <div key="cards" className="cards" title={title}>
-                        <Link key={collection.hash+'Link'} to={dest}>
+                        {/* <Link key={collection.hash+'Link'} to={dest}>
                           <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} style={style}/>
-                        </Link>
-                        {/* <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} dest={dest} /> */}
+                        </Link> */}
+                        <NFTDisplayCollection key={collection.hash+'Collection'} collection={collection} dest={dest} />
                       </div>
                       {/* {collectionHash && 
                       <div key="space" className="space_container">
