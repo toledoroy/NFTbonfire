@@ -29,6 +29,7 @@ export const useContractTokens = (props) => {
      */
     const setNFTs = (NFTs) => {
         for (let NFT of NFTs) {
+            NFT.chain = props.chain;
             if (NFT?.metadata) {
                 //Parse JSON
                 if (typeof NFT.metadata == 'string') NFT.metadata = JSON.parse(NFT.metadata);
