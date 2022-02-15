@@ -12,12 +12,15 @@ import __ from "helpers/__";
 //Components
 import Address from "components/Address/Address";
 // import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
+import NFTDisplaySingle from "components/NFT/DisplaySinglePersona";
+
 // import NFTCollections from "components/NFTCollections";
 import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
 import NFTDisplayAllChains from "components/NFT/NFTDisplayAllChains";
 import PageAuthenticate from "components/PageAuthenticate";
 import ERC20Balance from "components/ERC20Balance";
 import FullscreenMessage from "components/common/FullscreenMessage";
+import FlipButtons from "components/NFT/FlipButtons";
 
 // const { TabPane } = Tabs;
 
@@ -52,6 +55,7 @@ import FullscreenMessage from "components/common/FullscreenMessage";
                 token_address: persona.get('address'),
                 token_id: persona.get('token_id'),
                 metadata: persona.get('metadata'),
+                chain: persona.get('chain'),
             };
         });
         const collection = {
@@ -154,7 +158,13 @@ import FullscreenMessage from "components/common/FullscreenMessage";
                     </div>}
                     {personaCollection?.hash && 
                     <div className="cards">
-                        <NFTDisplayCollection key={personaCollection.hash+'Collection'} collection={personaCollection} flip style={__.stackContainerStyle(personaCollection?.items.length)} />
+                        {/* <NFTDisplayCollection key={personaCollection.hash+'Collection'} collection={personaCollection} flip style={__.stackContainerStyle(personaCollection?.items.length)} /> */}
+                        <div key={personaCollection.symbol+'items'} className="NFTitems" id={"NFTitems"+personaCollection.hash} style={__.stackContainerStyle(personaCollection?.items.length)}> 
+                            {personaCollection && personaCollection.items.map((nft, index) => (
+                                <NFTDisplaySingle key={nft.token_address+':'+nft.token_id} nft={nft} />
+                            ))}
+                        </div>
+                        {(personaCollection.items.length) && <FlipButtons id={"NFTitems"+personaCollection.hash}/>}
                     </div>}
                 </Col>
             </Row>
