@@ -8,9 +8,6 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";		//https://eips.ethere
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";  //Individual Metadata URI Storage Functions
 import "@openzeppelin/contracts/access/Ownable.sol";
-// Add ERC721Burnable   token/ERC721/extensions/ERC721Burnable.sol
-// import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";    //Adds the Burn Func.    //Unnecessary
-
 
 /**
  * Persona as NFT [2022-02-17]
