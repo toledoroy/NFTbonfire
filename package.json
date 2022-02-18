@@ -1,6 +1,7 @@
 {
   "name": "NFTBonfire",
   "version": "1.1.0",
+  "license": "MIT",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@testing-library/jest-dom": "^5.11.4",
