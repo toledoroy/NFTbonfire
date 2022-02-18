@@ -1,10 +1,12 @@
-import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 import { useEffect, useState } from "react";
-import { useMoralisWeb3Api, useMoralisWeb3ApiCall } from "react-moralis";
+import { useMoralis, useMoralisWeb3Api, useMoralisWeb3ApiCall } from "react-moralis";
 
+/**
+ * DEPRECATED
+ */
 export const useNFTTransfers = (options) => {
   const { account } = useMoralisWeb3Api();
-  const { chainId } = useMoralisDapp();
+  const { chainId } = useMoralis();
   const [NFTTransfers, setNFTTransfers] = useState([]);
   const {
     fetch: getNFTTransfers,

@@ -1,31 +1,30 @@
-import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 import { useEffect, useState } from "react";
-import { useMoralisWeb3Api, useMoralisWeb3ApiCall } from "react-moralis";
+import { useMoralis, useMoralisWeb3Api, useMoralisWeb3ApiCall } from "react-moralis";
 import { useIPFS } from "./useIPFS";
 
 export const useNFTCollections = (options) => {
   const { account } = useMoralisWeb3Api();
-  const { chainId } = useMoralisDapp();
+  const { chainId } = useMoralis();
   const { resolveLink } = useIPFS();
   const [NFTCollections, setNFTCollections] = useState([]);
-  
+
   /**
    * Arrange User's NFTs by Collection (Using Web3 Call)
    * @param array NFTs 
    * @ret object
    */
-  function collect(NFTs){
+  function collect(NFTs) {
     //Init Return
     let collections = {};
-    for(let NFT of NFTs){
+    for (let NFT of NFTs) {
       // if(NFT.contract_type == "ERC1155"){ //Item of an NFT Collection
-        //Init Collection Slot
-        if(!collections[NFT.token_address]) collections[NFT.token_address] = {owned:false, items:[], hash:NFT.token_address, symbol:NFT.symbol, name:NFT.name, contract_type:NFT.contract_type,};
-        //Add NFT to Collection
-        collections[NFT.token_address].items.push(NFT);
-        //ANY - Ownes Something in This Collection
-        if(NFT.owned) collections[NFT.token_address].owned = true;
-        // if(collections[NFT.token_address]?.est === undefined || collections[NFT.token_address].est > NFT.est) collections[NFT.token_address].est = NFT.est;   //Should be: Time sicne last TX
+      //Init Collection Slot
+      if (!collections[NFT.token_address]) collections[NFT.token_address] = { owned: false, items: [], hash: NFT.token_address, symbol: NFT.symbol, name: NFT.name, contract_type: NFT.contract_type, };
+      //Add NFT to Collection
+      collections[NFT.token_address].items.push(NFT);
+      //ANY - Ownes Something in This Collection
+      if (NFT.owned) collections[NFT.token_address].owned = true;
+      // if(collections[NFT.token_address]?.est === undefined || collections[NFT.token_address].est > NFT.est) collections[NFT.token_address].est = NFT.est;   //Should be: Time sicne last TX
       // }
       // else console.warn("collect() NFT Is Not a Collection (ERC1155) but "+NFT.contract_type, {NFT});
     }//Each NFT
@@ -44,15 +43,15 @@ export const useNFTCollections = (options) => {
     console.log("data", data);
     if (data?.result) {
       const NFTs = data.result;
-      
+
       for (let NFT of NFTs) {
-        
+
         //Overload Object
         if (NFT?.metadata && typeof NFT?.metadata === "string") {
           // metadata is a string type
           NFT.metadata = JSON.parse(NFT.metadata);
           //Image Might Be an IPFS ID
-          if(NFT.metadata?.image) NFT.image = resolveLink(NFT.metadata?.image);
+          if (NFT.metadata?.image) NFT.image = resolveLink(NFT.metadata?.image);
           //Check if Owned By Current User
           NFT.owned = (NFT.owner_of === account);
         }
@@ -71,13 +70,13 @@ export const useNFTCollections = (options) => {
       //Organize Into Collections
       let collections = collect(NFTs);
       //Log
-      console.log("useNFTCollections() collections:", {options, NFTs, collections});
+      console.log("useNFTCollections() collections:", { options, NFTs, collections });
       //Set
-      setNFTCollections( collections );
+      setNFTCollections(collections);
     }//Has Results
-    else console.log("useNFTCollections() NO RESULT", data , account, account.getNFTs());
+    else console.log("useNFTCollections() NO RESULT", data, account, account.getNFTs());
   }, [data]);
-  
+
 
   return { getNFTBalance, NFTCollections, error, isLoading };
 };//useNFTCollections
