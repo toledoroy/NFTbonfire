@@ -17,7 +17,7 @@ export const useContractTokens = (props) => {
 
     useEffect(() => {
         //Log
-        console.warn("[TEST] useContractTokens() Run on Prop change", props);
+        // console.warn("[TEST] useContractTokens() Run on Prop change", props);
         //Load Tokens
         // if (props.address && props.chain) getContractTokens(props.address, props.chain);
         if (isInitialized && props.address && props.chain) getContractTokens(props);
