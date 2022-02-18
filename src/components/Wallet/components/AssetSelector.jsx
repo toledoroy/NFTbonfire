@@ -57,9 +57,10 @@ export default function AssetSelector(props) {
                   width: "90%",
                 }}
               >
+                {/* {console.warn("[TEST] AssetSelector Balance:" + item.balance, { item })} */}
                 <p>{item.symbol}</p>
                 <p style={{ alignSelf: "right" }}>
-                  ({parseFloat(Number(Moralis.Units.FromWei(item.balance, item.decimals)).toFixed(6))})
+                  ({parseFloat(Number(Moralis?.Units?.FromWei(item.balance, item.decimals)).toFixed(6))})
                 </p>
               </div>
             </div>

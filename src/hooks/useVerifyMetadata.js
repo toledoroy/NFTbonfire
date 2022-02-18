@@ -9,7 +9,7 @@ import __ from "helpers/__";
  * This is a hook that loads the NFT metadata in case it doesn't alreay exist
  * If metadata is missing, the object is replaced with a reactive object that updatees when the data becomes available
  * The hook will retry until request is successful (with OpenSea, for now)
- */ 
+ */
 export const useVerifyMetadata = () => {
     const { resolveLink } = useIPFS();
     const [results, setResults] = useState({});
@@ -21,7 +21,7 @@ export const useVerifyMetadata = () => {
      * Use this to feth Manually
      * @param object NFT 
      */
-    function updateToken(NFT){
+    function updateToken(NFT) {
 
         /* Multichain Now Supported
         //Should Use contractCall() From usePersona()
@@ -55,14 +55,14 @@ export const useVerifyMetadata = () => {
         let options = {
             contractAddress: NFT.token_address,
             functionName: "tokenURI",
-            params: { tokenId:NFT.token_id },
+            params: { tokenId: NFT.token_id },
             abi,
             chain: NFT.chain
         };
         contractCall(options).then((uri) => {
-        // Moralis.executeFunction(options).then((uri) => {
+            // Moralis.executeFunction(options).then((uri) => {
             //Compare & Update Metadata if Needed
-            if(!__.matchURI(NFT.token_uri, uri)) {
+            if (!__.matchURI(NFT.token_uri, uri)) {
                 //LuseVerifyMetadataog
                 // console.log("[TEST] useVerifyMetadata.updateToken() Toekn of:'"+NFT.name+"' Has Different URI on Chain -- Run Update", {NFT, options, uri, token_uri:NFT.token_uri});    //V
                 //Update NFT
@@ -71,17 +71,17 @@ export const useVerifyMetadata = () => {
                 getMetadata(NFT);
             }//Wrong URI
         })
-        .catch((err) => {
-            if(err?.code===141){ //Morlis Server Error
-                //Log
-                console.error("useVerifyMetadata.updateToken() Moralis rate-limite reached -- Token:"+NFT?.symbol+" "+NFT.token_id, err);
-                message.error("Whoa, slow down. Our hosting plan is overflowing! Please wait a bit and try again", 30);    
-            }
-            else console.error("useVerifyMetadata.updateToken() Error Caught", {err, NFT, isWeb3Enabled, options});
+            .catch((err) => {
+                if (err?.code === 141) { //Morlis Server Error
+                    //Log
+                    console.error("useVerifyMetadata.updateToken() Moralis rate-limite reached -- Token:" + NFT?.symbol + " " + NFT.token_id, err);
+                    message.error("Whoa, slow down. Our hosting plan is overflowing! Please wait a bit and try again", 30);
+                }
+                else console.error("useVerifyMetadata.updateToken() Error Caught", { err, NFT, isWeb3Enabled, options });
 
-        });
+            });
         //Return Hooked NFT Object
-        return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT ;
+        return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT;
     }//updateToken()
 
     /**
@@ -89,13 +89,13 @@ export const useVerifyMetadata = () => {
      * @param {object} NFT 
      * @returns NFT
      */
-    function verifyMetadata(NFT){
+    function verifyMetadata(NFT) {
         //Pass Through if Metadata already present
-        if(NFT.metadata) return NFT;
+        if (NFT.metadata) return NFT;
         //Get the Metadata
         getMetadata(NFT);
         //Return Hooked NFT Object
-        return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT ;
+        return results?.[NFT.token_uri] ? results?.[NFT.token_uri] : NFT;
     }//verifyMetadata()
 
     /**
@@ -104,10 +104,10 @@ export const useVerifyMetadata = () => {
      * @param {object} NFT 
      * @returns void
      */
-    async function getMetadata(NFT){
+    async function getMetadata(NFT) {
         //Validate URI
-        if(!NFT.token_uri || !NFT.token_uri.includes('://')){
-            console.error('getMetadata() Invalid URI', {URI: NFT.token_uri, NFT});
+        if (!NFT.token_uri || !NFT.token_uri.includes('://')) {
+            if (NFT.token_uri) console.error('getMetadata() Invalid URI', { URI: NFT.token_uri, NFT });
             return;
         }
         //Get Metadata
@@ -115,18 +115,18 @@ export const useVerifyMetadata = () => {
         fetch(uri)
             .then(res => res.json())
             .then(metadata => {
-                if(!metadata){
+                if (!metadata) {
                     //Log
-                    console.error("useVerifyMetadata.getMetadata() No Metadata found on URI:", {uri, NFT});
+                    console.error("useVerifyMetadata.getMetadata() No Metadata found on URI:", { uri, NFT });
                 }
                 //Handle Setbacks
-                else if(metadata?.detail && metadata.detail.includes("Request was throttled")){
+                else if (metadata?.detail && metadata.detail.includes("Request was throttled")) {
                     //Log
-                    console.warn("useVerifyMetadata.getMetadata() Bad Result for:"+NFT.token_uri+"  Will retry later", {results, metadata});
+                    console.warn("useVerifyMetadata.getMetadata() Bad Result for:" + NFT.token_uri + "  Will retry later", { results, metadata });
                     //Retry That Again after 1s
-                    setTimeout(function() { getMetadata(NFT); }, 1000);
+                    setTimeout(function () { getMetadata(NFT); }, 1000);
                 }//Handle Opensea's {detail: "Request was throttled. Expected available in 1 second."}
-                else{//No Errors
+                else {//No Errors
                     //Set
                     setMetadata(NFT, metadata);
                     //Log
@@ -134,7 +134,7 @@ export const useVerifyMetadata = () => {
                 }//Valid Result
             })
             .catch(err => {
-                console.error("useVerifyMetadata.getMetadata() Error Caught:", {err, NFT, uri});
+                console.error("useVerifyMetadata.getMetadata() Error Caught:", { err, NFT, uri });
             });
     }//getMetadata()
 
@@ -143,21 +143,21 @@ export const useVerifyMetadata = () => {
      * @param {object} NFT 
      * @param {object} metadata 
      */
-    function setMetadata(NFT, metadata){
+    function setMetadata(NFT, metadata) {
         //Add Metadata
         NFT.metadata = metadata;
         //Set Image     //Resolve IPFS & Save Externally to Metadata
-        if(metadata?.image) NFT.image = resolveLink(metadata.image); 
+        if (metadata?.image) NFT.image = resolveLink(metadata.image);
         //Set to State
-        if(metadata && !results[NFT.token_uri]) setResults({...results, [NFT.token_uri]: NFT});
+        if (metadata && !results[NFT.token_uri]) setResults({ ...results, [NFT.token_uri]: NFT });
     }//setMetadata()
-    
-    
+
+
     /** [DEV] CANCELLED
      * Update Persona from DB to save a Web3 Call
      */
-    function personaUpdateFromDB(NFT){
-        console.warn("[TODO] personaUpdateFromDB()", {NFT});
+    function personaUpdateFromDB(NFT) {
+        console.warn("[TODO] personaUpdateFromDB()", { NFT });
 
         // Persona.
         return NFT;
