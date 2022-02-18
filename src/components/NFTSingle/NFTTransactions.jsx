@@ -18,7 +18,7 @@ function NFTTransactions(props) {
   const { assets } = useERC20Balance(props);        //Make This into Current NFT Balance
   const { Moralis } = useMoralis();
 
-  console.warn("[TEST] NFTTransactions() props.NFT:", props.nft); 
+  console.warn("[TEST] NFTTransactions() props.NFT:", props.nft);
 
   const columns = [
     {
@@ -51,7 +51,7 @@ function NFTTransactions(props) {
       dataIndex: "balance",
       key: "balance",
       render: (value, item) =>
-        parseFloat(Moralis.Units.FromWei(value, item.decimals).toFixed(6)),
+        parseFloat(Number(Moralis.Units.FromWei(value, item.decimals)).toFixed(6)),
     },
     {
       title: "Address",

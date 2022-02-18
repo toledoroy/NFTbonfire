@@ -34,8 +34,8 @@ function NativeTransactions() {
       dataIndex: 'value',
       key: 'value',
       render: value => (
-          // missing second argument in FromWei, decimals
-        parseFloat(Moralis.Units.FromWei(value).toFixed(6))
+        // missing second argument in FromWei, decimals
+        parseFloat(Number(Moralis.Units.FromWei(value)).toFixed(6))
       )
     },
     {
@@ -43,12 +43,12 @@ function NativeTransactions() {
       dataIndex: 'hash',
       key: 'hash',
       render: hash => (
-        <a 
+        <a
           href={
             chainId === "0x1" ? `https://etherscan.io/tx/${hash}` :
-            chainId === "0x38" ? `https://bscscan.com/tx/${hash}` :
-            chainId === "0x89" ? `https://polygonscan.com/tx/${hash}` :
-            `https://explorer.avax.network/search?query=${hash}`
+              chainId === "0x38" ? `https://bscscan.com/tx/${hash}` :
+                chainId === "0x89" ? `https://polygonscan.com/tx/${hash}` :
+                  `https://explorer.avax.network/search?query=${hash}`
           }
           target="_blank"
           rel="noreferrer"

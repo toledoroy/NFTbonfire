@@ -232,7 +232,7 @@ function DEX({ chain, customTokens = {} }) {
                 placeholder="0.00"
                 style={styles.input}
                 readOnly
-                value={quote ? Moralis.Units.FromWei(quote?.toTokenAmount, quote?.toToken?.decimals).toFixed(6) : ""}
+                value={quote ? Number(Moralis.Units.FromWei(quote?.toTokenAmount, quote?.toToken?.decimals)).toFixed(6) : ""}
               />
               <Text style={{ fontWeight: "600", color: "#434343" }}>{toTokenAmountUsd}</Text>
             </div>
