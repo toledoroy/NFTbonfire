@@ -14,24 +14,18 @@ import Address from "components/Address/Address";
 // import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
 import NFTDisplaySingle from "components/Persona/DisplaySinglePersona";
 // import NFTCollections from "components/NFTCollections";
-import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
+// import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
 import NFTDisplayAllChains from "components/NFT/NFTDisplayAllChains";
 import PageAuthenticate from "components/PageAuthenticate";
 import ERC20Balance from "components/ERC20Balance";
 import FullscreenMessage from "components/common/FullscreenMessage";
 import FlipButtons from "components/NFT/FlipButtons";
 
-// const { TabPane } = Tabs;
-
-
 /**
- * Component: Home Page
+ * Component: Home Page (Dashboard)
  */
 function Homepage(props) {
     const { account, isAuthenticated, chainId } = useMoralis();     //, Moralis, user, isUserUpdating
-    // const { persona, contract } = props;
-    // const { persona, contract } = props;
-
     const [personaCollection, setPersonaCollection] = useState();
 
     //Fetch Personas -- Live Query (This isn't actually live the way you'd expect. DB changes aren't being detected)
