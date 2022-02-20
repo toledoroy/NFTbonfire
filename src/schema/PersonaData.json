@@ -1,67 +1,135 @@
 {
-    "role":{
-        "label": "Role",
+    "role": {
+        "label": "Main Role",
         "name": "role",
         "placeholder": "Persona, developer, hacker, designer, writer, or maybe a community manager?",
-        "rules": [{ "required": false, "message": "What is your main use of this persona" }]
+        "rules": [
+            {
+                "required": false,
+                "message": "What is your main use of this persona"
+            }
+        ]
     },
-    "name":{
+    "name": {
         "label": "Name",
         "name": "name",
         "placeholder": "What should we call you?",
-        "rules": [{ "required": true, "message": "Seems you forgot to fill in your name" }]
+        "rules": [
+            {
+                "required": true,
+                "message": "Seems you forgot to fill in your name"
+            }
+        ]
     },
-    "location":{
+    "location": {
         "label": "Location",
         "name": "location",
         "placeholder": "Where are you, usually."
     },
-    "description":{
-        "type": "textarea",
+    "description": {
         "label": "Backstory",
         "name": "description",
-        "placeholder": "A little bit about yourself.",
-        "rules": [{ "required": true, "message": "Tell us something about yourself. Please." }]
-    },
-    "purpose":{
         "type": "textarea",
+        "placeholder": "A little bit about yourself.",
+        "rules": [
+            {
+                "required": true,
+                "message": "Tell us something about yourself. Please."
+            }
+        ]
+    },
+    "purpose": {
         "label": "Purpose",
         "name": "purpose",
+        "type": "textarea",
         "placeholder": "What do you live for?"
     },
-    "accounts":{
+    "accounts": {
         "label": "Crypto Accounts",
         "name": "accounts",
         "type": "items"
     },
-    "social":{
+    "social": {
         "label": "Social",
         "name": "social",
         "type": "object",
-        "network":{
-            "twitter": {"name":"twitter", "url":"https://twitter.com/"},
-            "facebook": {"name":"facebook", "url":"https://www.facebook.com/"},
-            "github": {"name":"github", "url":"https://github.com/"},
-            "linkedin": {"name":"linkedin", "url":"https://linkedin.com/in/"},
-            "telegram": {"name":"telegram", "url":"https://telegram.com/"},
-            "instagram": {"name":"instagram", "url":"https://instagram.com/"},
-            "youtube": {"name":"youtube", "url":"https://youtube.com/c/"},
-            "tiktok": {"name":"tiktok", "url":"https://www.tiktok.com/@"},
-            "twitch": {"name":"twitch", "url":"https://twitch.tv/"},
-            "reddit": {"name":"reddit", "url":"https://reddit.com/user/"},
-            "medium": {"name":"medium", "url":"https://medium.com/@"},
-            "discord": {"name":"discord"},
-            "pinterest": {"name":"pinterest", "url":"https://pinterest.com/"},
-            "vimeo": {"name":"vimeo", "url":"https://vimeo.com/"},
-            "dribbble": {"name":"dribbble", "url":"https://dribbble.com/"},
-            "quora": {"name":"quora", "url":"https://www.quora.com/profile/"},
-            "spotify": {"name":"spotify", "url":"https://open.spotify.com/user/"}
+        "network": {
+            "twitter": {
+                "name": "twitter",
+                "url": "https://twitter.com/"
+            },
+            "facebook": {
+                "name": "facebook",
+                "url": "https://www.facebook.com/"
+            },
+            "github": {
+                "name": "github",
+                "url": "https://github.com/"
+            },
+            "linkedin": {
+                "name": "linkedin",
+                "url": "https://linkedin.com/in/"
+            },
+            "telegram": {
+                "name": "telegram",
+                "url": "https://telegram.com/"
+            },
+            "instagram": {
+                "name": "instagram",
+                "url": "https://instagram.com/"
+            },
+            "youtube": {
+                "name": "youtube",
+                "url": "https://youtube.com/c/"
+            },
+            "tiktok": {
+                "name": "tiktok",
+                "url": "https://www.tiktok.com/@"
+            },
+            "twitch": {
+                "name": "twitch",
+                "url": "https://twitch.tv/"
+            },
+            "reddit": {
+                "name": "reddit",
+                "url": "https://reddit.com/user/"
+            },
+            "medium": {
+                "name": "medium",
+                "url": "https://medium.com/@"
+            },
+            "discord": {
+                "name": "discord"
+            },
+            "pinterest": {
+                "name": "pinterest",
+                "url": "https://pinterest.com/"
+            },
+            "vimeo": {
+                "name": "vimeo",
+                "url": "https://vimeo.com/"
+            },
+            "dribbble": {
+                "name": "dribbble",
+                "url": "https://dribbble.com/"
+            },
+            "quora": {
+                "name": "quora",
+                "url": "https://www.quora.com/profile/"
+            },
+            "spotify": {
+                "name": "spotify",
+                "url": "https://open.spotify.com/user/"
+            }
         }
     },
-    "links":{
+    "links": {
         "label": "Links",
         "name": "links",
         "type": "items",
-        "types":[ "website", "blog" ]
+        "types": [
+            "website",
+            "blog"
+        ]
     }
 }
