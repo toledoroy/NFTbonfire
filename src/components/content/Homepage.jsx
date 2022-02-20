@@ -12,8 +12,7 @@ import __ from "helpers/__";
 //Components
 import Address from "components/Address/Address";
 // import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
-import NFTDisplaySingle from "components/NFT/DisplaySinglePersona";
-
+import NFTDisplaySingle from "components/Persona/DisplaySinglePersona";
 // import NFTCollections from "components/NFTCollections";
 import NFTDisplayCollection from "components/NFT/NFTDisplayCollection";
 import NFTDisplayAllChains from "components/NFT/NFTDisplayAllChains";
@@ -28,15 +27,15 @@ import FlipButtons from "components/NFT/FlipButtons";
 /**
  * Component: Home Page
  */
- function Homepage(props) {
+function Homepage(props) {
     const { account, isAuthenticated, chainId } = useMoralis();     //, Moralis, user, isUserUpdating
     // const { persona, contract } = props;
     // const { persona, contract } = props;
-    
-    const [ personaCollection, setPersonaCollection ] = useState();
+
+    const [personaCollection, setPersonaCollection] = useState();
 
     //Fetch Personas -- Live Query (This isn't actually live the way you'd expect. DB changes aren't being detected)
-    const { data : personas } = useMoralisQuery('Persona', query => query.equalTo("owner", String(account).toLowerCase()), [account], { 
+    const { data: personas } = useMoralisQuery('Persona', query => query.equalTo("owner", String(account).toLowerCase()), [account], {
         live: true,
         /* For Some Mysterious Reason This Query is only Reflect DB Changes if these arguments are (and are wrong, playerName does not exist...)  */    //Maybe onLiveCreate
         // onCreate: data => console.warn(`${data.attributes.playerName} was just Created`),
@@ -64,7 +63,7 @@ import FlipButtons from "components/NFT/FlipButtons";
             symbol: 'PERSONA',
             items,
         }
-        console.warn("[TEST] Homepage() Persona NFTs Collection:", {collection, items} );
+        console.warn("[TEST] Homepage() Persona NFTs Collection:", { collection, items });
         setPersonaCollection(collection);
     }, [personas]);
 
@@ -84,34 +83,34 @@ import FlipButtons from "components/NFT/FlipButtons";
 
             {!isAuthenticated && <FullscreenMessage><PageAuthenticate /></FullscreenMessage>}
 
-            <Row className="welcom_message container" style={{margin:'10px 0 30px 0'}}>
+            <Row className="welcom_message container" style={{ margin: '10px 0 30px 0' }}>
                 <Col xs={24} className="framed welcom_message">
-                <div className="inner">
-                {chainId === "0xa869" 
-                ?   <>
-                    <CarvedHeading text="Welcome to NFT Bonfire" />
-                    <p className="" style={{padding:'10px 0', fontSize:'1.3rem', fontWeight:'500', lineHeight:'2rem', color:'var(--color)'}}>
-                        You are a brave astronout and one of the first people to land in this exciting new space.
-                        <br />
-                        At this stage we are running on the Avalanch Testnet. 
-                        <br />
-                        To interact with our services you'd need some Test-AVAX in your wallet.
-                        <br />
-                        If you don't have any, you can get some from the <a href="https://faucet.avax-test.network/" target="_blank" rel="noopener noreferrer">AVAX Fuji Testnet Faucet</a>. 
-                        <br />
-                        Just type in your wallet address and click the resquest button.
-                        Then, you'd be able to mint your new social persona. For free! and use it to interact with the community.
+                    <div className="inner">
+                        {chainId === "0xa869"
+                            ? <>
+                                <CarvedHeading text="Welcome to NFT Bonfire" />
+                                <p className="" style={{ padding: '10px 0', fontSize: '1.3rem', fontWeight: '500', lineHeight: '2rem', color: 'var(--color)' }}>
+                                    You are a brave astronout and one of the first people to land in this exciting new space.
+                                    <br />
+                                    At this stage we are running on the Avalanch Testnet.
+                                    <br />
+                                    To interact with our services you'd need some Test-AVAX in your wallet.
+                                    <br />
+                                    If you don't have any, you can get some from the <a href="https://faucet.avax-test.network/" target="_blank" rel="noopener noreferrer">AVAX Fuji Testnet Faucet</a>.
+                                    <br />
+                                    Just type in your wallet address and click the resquest button.
+                                    Then, you'd be able to mint your new social persona. For free! and use it to interact with the community.
 
-                    </p>
-                    </>
-                :   <>
-                        <div className="title">
-                            <CarvedHeading text="Please Change Network" />
-                        </div>
-                        <ChainChange />
-                    </>
-                }   
-                </div>
+                                </p>
+                            </>
+                            : <>
+                                <div className="title">
+                                    <CarvedHeading text="Please Change Network" />
+                                </div>
+                                <ChainChange />
+                            </>
+                        }
+                    </div>
                 </Col>
             </Row>
 
@@ -127,7 +126,7 @@ import FlipButtons from "components/NFT/FlipButtons";
             </div>
             } 
             */}
-            
+
             <Row className="flex">
                 <Col xs={24} md={12} className="account">
                     {/* <div className="row"> */}
@@ -156,20 +155,20 @@ import FlipButtons from "components/NFT/FlipButtons";
                             <a href="/persona"><i className="bi bi-plus"></i></a>
                         </div>
                     </div>}
-                    {personaCollection?.hash && 
-                    <div className="cards">
-                        {/* <NFTDisplayCollection key={personaCollection.hash+'Collection'} collection={personaCollection} flip style={__.stackContainerStyle(personaCollection?.items.length)} /> */}
-                        <div key={personaCollection.symbol+'items'} className="NFTitems" id={"NFTitems"+personaCollection.hash} style={__.stackContainerStyle(personaCollection?.items.length)}> 
-                            {personaCollection && personaCollection.items.map((nft, index) => (
-                                <NFTDisplaySingle key={nft.token_address+':'+nft.token_id} nft={nft} />
-                            ))}
-                        </div>
-                        {(personaCollection.items.length) && <FlipButtons id={"NFTitems"+personaCollection.hash}/>}
-                    </div>}
+                    {personaCollection?.hash &&
+                        <div className="cards">
+                            {/* <NFTDisplayCollection key={personaCollection.hash+'Collection'} collection={personaCollection} flip style={__.stackContainerStyle(personaCollection?.items.length)} /> */}
+                            <div key={personaCollection.symbol + 'items'} className="NFTitems" id={"NFTitems" + personaCollection.hash} style={__.stackContainerStyle(personaCollection?.items.length)}>
+                                {personaCollection && personaCollection.items.map((nft, index) => (
+                                    <NFTDisplaySingle key={nft.token_address + ':' + nft.token_id} nft={nft} />
+                                ))}
+                            </div>
+                            {(personaCollection.items.length) && <FlipButtons id={"NFTitems" + personaCollection.hash} />}
+                        </div>}
                 </Col>
             </Row>
             <Row className="flex">
-                <div className="assets" style={{flex:'1 1'}}>
+                <div className="assets" style={{ flex: '1 1' }}>
                     <div className="">
                         {/* <h1 className="carved" title="Non-Fungible Assets">Non-Fungible Assets</h1> */}
                         <CarvedHeading text="Non-Fungible Assets" />
