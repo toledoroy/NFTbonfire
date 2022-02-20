@@ -1,0 +1,22 @@
+.chat{
+    display: flex;
+    .left{
+        .room-list{
+            li{ 
+                a{
+                    padding: 12px 12px;
+                    display: block;
+                }
+                
+            }
+            .rooms{
+                padding: 12px 12px;
+                display: block;
+            }
+        }
+    }
+
+    .middle{
+        flex: 1 1;
+    }
+}
