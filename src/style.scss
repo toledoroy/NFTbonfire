@@ -964,8 +964,66 @@ body {
     flex: 1 1;
     overflow: hidden;
     .ant-collapse-content { background: none;}
+        
+    .room_entrance{
+        display: flex;
+        justify-content: space-between;
+        padding: 3px 5px 0 0;  //Compensate for Ant header
+        /* margin: 10px 0; */
+        /* border: 1px solid #9ecaed; */
+        /* border-radius: 20px; */
+        /* border-top: 1px solid #9ecaed; */
+        .content { 
+            padding:0 10px; 
+            flex: 1 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+        .anticon{ margin-right: 5px; }
+    }
+    
 }
-
+ 
+.room_entrance{
+    display: flex;
+    justify-content: space-between;
+    // padding: 10px 0;
+    padding: 3px 5px 0 0;  //Compensate for Ant header
+    /* margin: 10px 0; */
+    /* border: 1px solid #9ecaed; */
+    /* border-radius: 20px; */
+    /* border-top: 1px solid #9ecaed; */
+    .image { 
+        flex: 0 0;
+        img {
+            border-radius: 6px;
+            border-bottom-left-radius: 0px;
+        }
+    }
+    .content { 
+        padding:0 10px; 
+        flex: 1 1; 
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+    }
+    .anticon{ margin-right: 5px; }
+    .vote { 
+        margin: auto 0 auto auto ; 
+        .inner {
+            text-align: right;
+            padding-right: 8px;
+        }
+        .side_pane {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+}
 /* Account */
 
 #account {     
@@ -1054,43 +1112,7 @@ body {
         padding-bottom: 3px;
     }
 }
-.room_entrance{
-    display: flex;
-    justify-content: space-between;
-    // padding: 10px 0;
-    padding: 3px 5px 0 0;  //Compensate for Ant header
-    /* margin: 10px 0; */
-    /* border: 1px solid #9ecaed; */
-    /* border-radius: 20px; */
-    /* border-top: 1px solid #9ecaed; */
-    .image { flex: 0 0;
-        img {
-            border-radius: 6px;
-            border-bottom-left-radius: 0px;
-        }
-    }
-    .content { 
-        padding:0 10px; 
-        flex: 1 1; 
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        overflow: hidden;
-    }
-    .anticon{ margin-right: 5px; }
-    .vote { 
-        margin: auto 0 auto auto ; 
-        .inner {
-            text-align: right;
-            padding-right: 8px;
-        }
-        .side_pane {
-            display: flex;
-            flex-direction: column;
-            text-align: center;
-        }
-    }
-}
+
 /* Component: Cards (NFT List) */
 .cards {
     .ant-card-meta-detail {
