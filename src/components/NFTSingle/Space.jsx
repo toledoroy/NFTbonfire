@@ -177,45 +177,47 @@ function SpaceView({ hash, collection, NFTpersonas }) {
   //   else setRooms([]);
   // }
 
+  /* UNUSED
   const loadRoomsAsync = async () => {
-    if (isAuthenticated) {
-      try {
-        //Log
-        // console.log("[TEST] SpaceView() RUNNUING W/Hash:"+hash);
-        //Get Rooms for Space (by Space's hash)
-        const RoomQuery = new Moralis.Query(Room);
-        RoomQuery.equalTo("parentId", hash);  //By Hash
-        const PersonaQuery = new Moralis.Query('Persona');
-        RoomQuery.matchesKeyInQuery("persona", "objectId", PersonaQuery);
-
-        const results = await RoomQuery
-          // .addDescending("updatedAt")
-          .addDescending("score")    //Best First
-          .limit(limit)
-          .find();
-        //Log
-        console.log("Spcae() Got " + results.length + " Rooms for Space:" + hash);
-        if (results && results.length > 0) {
-          //Log
-          console.log("[DEBUG] SpaceView() Got " + results.length + " Rooms for Space:" + hash, results);
-          //Set Rooms
-          setRooms(results);
-        }//Found Rooms
-        else {
-          //Init Rooms
-          initRooms(hash);
-        }//No Rooms
-
-        //Log
-        // console.log("Moralis Query Object for Current Room: ", {hash, curRoomId});
-      }
-      catch (error) {
-        console.error("[TEST] Error Fetching Rooms for Space:" + hash, error);
-      }
-
-    }//Authenticated
-    else setRooms([]);
+     if (isAuthenticated) {
+       try {
+         //Log
+         // console.log("[TEST] SpaceView() RUNNUING W/Hash:"+hash);
+         //Get Rooms for Space (by Space's hash)
+         const RoomQuery = new Moralis.Query(Room);
+         RoomQuery.equalTo("parentId", hash);  //By Hash
+         const PersonaQuery = new Moralis.Query('Persona');
+         RoomQuery.matchesKeyInQuery("persona", "objectId", PersonaQuery);
+ 
+         const results = await RoomQuery
+           // .addDescending("updatedAt")
+           .addDescending("score")    //Best First
+           .limit(limit)
+           .find();
+         //Log
+         console.log("Spcae() Got " + results.length + " Rooms for Space:" + hash);
+         if (results && results.length > 0) {
+           //Log
+           console.log("[DEBUG] SpaceView() Got " + results.length + " Rooms for Space:" + hash, results);
+           //Set Rooms
+           setRooms(results);
+         }//Found Rooms
+         else {
+           //Init Rooms
+           initRooms(hash);
+         }//No Rooms
+         //Log
+         // console.log("Moralis Query Object for Current Room: ", {hash, curRoomId});
+       }
+       catch (error) {
+         console.error("[TEST] Error Fetching Rooms for Space:" + hash, error);
+       }
+ 
+     }//Authenticated
+     else setRooms([]);
   }
+  */
+
   /**
    * Fetch Rooms for Current Space
    */
@@ -223,6 +225,7 @@ function SpaceView({ hash, collection, NFTpersonas }) {
   //   loadRooms();
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [hash, limit, isAuthenticated]);
+
 
   //Log
   console.log("SpaceView() For collection:", { collection, rooms });
@@ -237,7 +240,7 @@ function SpaceView({ hash, collection, NFTpersonas }) {
   // <CollectionContext.Consumer>
   //  {collection => {console.warn("[TEST] SpaceView() CollectionContext: ", {collection})}} 
   //  </CollectionContext.Consumer> 
-    */
+  */
   if (!isWeb3Enabled || !isAuthenticated) return <PageAuthenticate />;
   return (
     <CollectionContext.Consumer>

@@ -94,7 +94,6 @@ function Homepage(props) {
                                     <br />
                                     Just type in your wallet address and click the resquest button.
                                     Then, you'd be able to mint your new social persona. For free! and use it to interact with the community.
-
                                 </p>
                             </>
                             : <>
