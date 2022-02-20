@@ -333,7 +333,7 @@ function SpaceEmpty({ collection }) {
   return (
     <div className="SpaceEmpty">
       {/* <div>Loading Rooms...</div> */}
-      <p key="R1">Congratulations! You're the first person in this Space</p>
+      <p key="R1">Welcome, cryptonout! You're the first person in this Space</p>
       <p key="R2">Why don't you go ahead and light up a new bonfire for your {__.sanitize(collection.name)} NFT buddies</p>
       <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} />
     </div>
