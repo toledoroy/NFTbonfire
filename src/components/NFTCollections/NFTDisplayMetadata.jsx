@@ -7,16 +7,16 @@ import __ from "helpers/__";
  * Component: Display NFT's Metadata
  * //https://docs.opensea.io/docs/metadata-standards
  */
-function NFTDisplayMetadata({nft}) {
+function NFTDisplayMetadata({ nft }) {
   //Excluded Keys
-  const excludedKeys = ['image','background_color'];    //TODO: Should Apply 'background_color' as actual background color
+  const excludedKeys = ['image', 'background_color', 'generator'];    //TODO: Should Apply 'background_color' as actual background color
   //Determine if Should Show Metadata
   const shouldShow = (key, value) => (!excludedKeys.includes(key));
 
   //<a href={nft.token_uri} target="_blank" rel="noreferrer"><h3>{nft.name}: {nft?.metadata?.name}</h3></a>
   return (
-    <> 
-      <div className={nft.amount>1 ? 'metadata many' : 'metadata single'}>
+    <>
+      <div className={nft.amount > 1 ? 'metadata many' : 'metadata single'}>
         <div className="inner">
           {/* <h3>{nft.name}: {nft?.metadata?.name}</h3> */}
           {/* <p>Type: {nft.contract_type}</p> */}
@@ -33,7 +33,7 @@ function NFTDisplayMetadata({nft}) {
           {/* <p>Token Addr:{nft.token_address}</p> */}
         </div>
       </div>
-  </>
+    </>
   );
 }//NFTDisplayMetadata()
 
@@ -43,28 +43,28 @@ export default NFTDisplayMetadata;
 /**
  * Component: Single Metadata ITem
  */
- function DisplayMetadataField(props){
-   let { label, value } = props;
+function DisplayMetadataField(props) {
+  let { label, value } = props;
   // console.log("DisplayMetadataField() Start W/", {label, value})
   // const { Moralis } = useMoralis();
   const exclusions = ['compiler'];
-  if(!label || exclusions.includes(label)) return '';
+  if (!label || exclusions.includes(label)) return '';
 
-  if(typeof value == 'string' || typeof value == 'number'){
-    if(label === 'date'){
+  if (typeof value == 'string' || typeof value == 'number') {
+    if (label === 'date') {
       //Process Date
       value = new Date(value).toString();
     }
     return (
       <dd key={label}>
-        <label>{__.sanitize(label)}</label> 
+        <label>{__.sanitize(label)}</label>
         <span key="spacer" className="spacer"> – </span>
         <span key="value" className="value" title={value}>{__.sanitize(value)}</span>
       </dd>
     );
   }//string/number
-  else if(Array.isArray(value)){
-    if(label === 'attributes'){
+  else if (Array.isArray(value)) {
+    if (label === 'attributes') {
       /* E.G.
         0: {trait_type: 'bg_light_blue', value: 'bg_light_blue'}
         1: {trait_type: 'Shadow', value: 'floor_shadow'}
@@ -74,10 +74,10 @@ export default NFTDisplayMetadata;
       */
       let items = [];
       // for(let field of value) if(field.trait_type && field.value){ //Validate
-      for(let field of value) if(field.trait_type && field.value && !field.trait_type.startsWith('bg_')){ //Validate
-        items.push(<DisplayMetadataField key={field.trait_type} label={field.trait_type} value={field.value} className="item"/>);
+      for (let field of value) if (field.trait_type && field.value && !field.trait_type.startsWith('bg_')) { //Validate
+        items.push(<DisplayMetadataField key={field.trait_type} label={field.trait_type} value={field.value} className="item" />);
       }
-      if(items.length > 0){
+      if (items.length > 0) {
         return (
           <dd className={label}>
             <dl>
@@ -89,21 +89,21 @@ export default NFTDisplayMetadata;
         );
       }//Has Data
     }//Attribures
-    else if(label === 'accounts'){
-      if(value.length > 0){
-        return (<DisplayMetadataField key={label} label={"Crypto "+label} value={value.length} className="item"/>)
+    else if (label === 'accounts') {
+      if (value.length > 0) {
+        return (<DisplayMetadataField key={label} label={"Crypto " + label} value={value.length} className="item" />)
       }//Has Data
     }//Accounts
-    else if(label === 'links'){
-      if(value.length> 0){
-        console.warn("[UNHANDLED] DisplayMetadataField() "+label+" is an Array", {label, value});
+    else if (label === 'links') {
+      if (value.length > 0) {
+        console.warn("[UNHANDLED] DisplayMetadataField() " + label + " is an Array", { label, value });
       }//Has Data
     }//Links
-    else if(value.length > 0){
-      console.warn("[UNHANDLED] DisplayMetadataField() "+label+" is an Array", {label, value});
+    else if (value.length > 0) {
+      console.warn("[UNHANDLED] DisplayMetadataField() " + label + " is an Array", { label, value });
       return (
         <dd key={label} className="debug">
-          <label>{label}: (IS ARRAY) </label> 
+          <label>{label}: (IS ARRAY) </label>
           <span className="value" title={value}>
             {value.toString(value)}
             {/* {value.map((field) => {
@@ -116,18 +116,18 @@ export default NFTDisplayMetadata;
       );
     }
   }//Array
-  else if(typeof value === 'object'){
+  else if (typeof value === 'object') {
     let items = [];
-    for(let key in value){
+    for (let key in value) {
       let val = value[key];
-      if(val) items.push(<DisplayMetadataField key={key} label={key} value={val} className="item"/>);
+      if (val) items.push(<DisplayMetadataField key={key} label={key} value={val} className="item" />);
       // if(val) return (
       //   <>
       //   {value.toString(value)}
       //   </>
       // );
     }
-    if(items.length > 0){
+    if (items.length > 0) {
       return (
         <dd className={label}>
           <dl>
@@ -139,10 +139,10 @@ export default NFTDisplayMetadata;
       );
     }
   }
-  else{
-    console.error("[UNHANDLED] DisplayMetadataField() Datatype " + typeof value+" is Not Supported", {label, value});
+  else {
+    console.error("[UNHANDLED] DisplayMetadataField() Datatype " + typeof value + " is Not Supported", { label, value });
     // logger.error("DisplayMetadataField() Datatype Not Supported", {label, value}, typeof value);
     //TODO: Try to Recurse on Objects...
-  } 
+  }
   return null;
 }//DisplayMetadataField()
