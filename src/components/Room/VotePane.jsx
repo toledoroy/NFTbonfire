@@ -43,7 +43,7 @@ const VotePane = (props) => {
     }//vote()
 
     return (
-        <div className="side_pane" onClick={(evt) => evt.stopPropagation()}>
+        <div className="side_pane">
             <Tooltip key="comment-basic-like" title={voteStatus === 1 ? "Undo" : "Great!"} placement="right" className="pointer">
                 <span onClick={(evt) => vote(1)}>
                     {/* {createElement(voteStatus === 1 ? LikeFilled : LikeOutlined)} */}

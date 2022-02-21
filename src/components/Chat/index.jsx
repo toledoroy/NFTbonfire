@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
+
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+
 import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
 import { FireTwoTone, ArrowLeftOutlined } from '@ant-design/icons';
@@ -118,15 +121,13 @@ function Chat(props) {
                             {rooms.map((room) => {
                                 const link = `/chat/${collection.chain}/${collection.hash}/${room.id}`;
                                 return (
-                                    <Link key={room.id} to={{ pathname: link }}>
-                                        <RoomEntrance key={room.id}
-                                            hash={collection.hash}
-                                            collection={collection}
-                                            room={room}
-                                            selected={(curRoomId === room.id)}
-                                            link={link}
-                                        />
-                                    </Link>
+                                    <RoomEntrance key={room.id}
+                                        hash={collection.hash}
+                                        collection={collection}
+                                        room={room}
+                                        selected={(curRoomId === room.id)}
+                                        link={link}
+                                    />
                                 );
                             })}
                             {/* </Skeleton> */}
@@ -308,6 +309,7 @@ function RoomEntrance(props) {
     const { room, selected: isSelected, link } = props;  //hash, collection, 
     const [persona, setPersona] = useState(room?.get('persona'));
     const { Moralis } = useMoralis();
+    const history = useHistory();
 
     /**
      * Load Post's Persona When Needed
@@ -342,7 +344,6 @@ function RoomEntrance(props) {
         return <div>ERROR - Room Missing</div>;
     }
 
-
     // let image = PersonaHelper.getImage(room?.get('persona'));
     let image = PersonaHelper.getImage(persona);
     let purpose = room?.get('persona')?.get('metadata')?.purpose;
@@ -352,12 +353,24 @@ function RoomEntrance(props) {
 
     // console.warn("[TEST] RoomEntrance() Room (Persona) Image:" + image, props);
 
+    /**
+     * Redirect to Room
+     */
+    function handleClick(event) {
+        // event.preventDefault();
+        // props.onClick(room);
+        // console.warn("[TEST] RoomEntrance.handleClick() Link:" + props.link, { event, props });
+        // return <Redirect to="/posts/" />;
+        if (props?.link) history.push(props.link);
+        else console.error("RoomEntrance.handleClick() Link Missing", { props });
+    }//handleClick()
+
     return (
         <div className="room_single container"
-        // onClick={() => {}
-        >
+            onClick={handleClick}>
+
             <div className={className} id={room.id}>
-                <div className="image">
+                <div className="image pointer">
                     <Avatar src={image} shape="circle" style={{ height: 'var(--avatarSM)', width: 'var(--avatarSM)' }}>
                         {/* Fallback */}
                         <img
@@ -369,7 +382,7 @@ function RoomEntrance(props) {
                         />
                     </Avatar>
                 </div>
-                <div className="content">
+                <div className="content pointer">
                     {/* {isSelected && <div key="back" className="back link" style={{position:'absolute', right:'15px'}}><ArrowLeftOutlined />Back</div>} */}
                     <div key="user_info" className="user_info">
                         <span className="updated">{moment(room?.get('updatedAt')).fromNow()}</span>
@@ -419,7 +432,7 @@ function RoomEntrance(props) {
                     </div>
 
                 </div>
-                <div className="vote" onClick={(evt) => { evt.stopPropagation() }}>
+                <div className="vote" onClick={(evt) => evt.stopPropagation()}>
                     <VotePane post={room} />
                 </div>
             </div>
@@ -447,7 +460,7 @@ function RoomHead(props) {
      */
     const { Moralis } = useMoralis();
     useEffect(() => {
-        if (Object.keys(persona.attributes).length === 0) {
+        if (persona && Object.keys(persona.attributes).length === 0) {
             // console.warn("[TEST] RoomHead() Loading Missing Persona for Room:"+room.id, room);
             loadItsPersona(room);
         }
@@ -508,7 +521,6 @@ function RoomHead(props) {
                         {room?.get('name')}
                     </h2>
 
-
                     <div key="user_info" className="user_info">
                         {isSelected
                             ? <>
@@ -525,8 +537,8 @@ function RoomHead(props) {
                                 </p>
                             </>
                         }
-
                     </div>
+
                     <div className="info">
                         {/* <span key="id">ID: {room.id}</span> */}
                         {/* {isSelected && <p key="desc">{room?.get('text')}</p>} */}
