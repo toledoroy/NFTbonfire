@@ -84,6 +84,10 @@ body{
   /* background: var(--comment-background); */
   border-radius: var(--borderRadius);
 }
+.indent{
+  background-color: rgba(0, 0, 0, 0.9);
+  border-radius: var(--borderRadius);
+}
 
 dt { text-transform: capitalize; }
 
@@ -92,11 +96,11 @@ dt { text-transform: capitalize; }
 .ant-table-tbody > tr > td {min-width: 60px;}
 .ant-popover-inner { 
   border-radius: 15px; 
-  background-color: var(--background-color);
+  background-color: var(--colorBG);
   box-shadow: 0 0 8px var(--shadowColor);
 }
 .ant-popover-arrow-content {
-  background-color: var(--background-color);
+  background-color: var(--colorBG);
   width: 9px;
   height: 9px;
   box-shadow: 0 0 8px var(--shadowColor);
@@ -112,7 +116,7 @@ small {font-size: 73%;}
 .itemsCenter {align-items: center;}
 .clearfloat{  clear: both; width: 100%; display: block; }
 .framed{ padding: var(--padding); max-width: var(--pageWidth); margin:0 auto;} 
-.hr { border-top: 1px solid var(--background-color); border-radius: 0 !important;}
+.hr { border-top: 1px solid var(--colorBG); border-radius: 0 !important;}
 .link {color:var(--colorLink); cursor: pointer;}
 .glass { background-color: rgba(255, 255, 255, 0.5);}
 .pointer { cursor: pointer; } 
@@ -131,7 +135,7 @@ small {font-size: 73%;}
   padding: 10px;
   border-radius: var(--borderRadius);
   overflow: hidden;
-  background-color: var(--background-color);
+  background-color: var(--colorBG);
 }
 
 .ant-card-body:empty {display: none;} /* AntD Card */

@@ -1,6 +1,6 @@
 
 .ant-layout{
-    background-color: var(--background-color);
+    background-color: var(--colorBG);
 }
   
 .ant-popover-message-title .tooltip { margin-top: 20px; }
@@ -205,8 +205,8 @@ body {
 
 /* Page:Persona */
 .persona {
-    background: var(--background-color);
-    background: var(--background-color);
+    background: var(--colorBG);
+    background: var(--colorBG);
     // padding-top: 0px;
     .backstep{
         float: right;
@@ -222,7 +222,7 @@ body {
             position: relative;
             right: 10px;
             .in_progress{
-                color: var(--background-color);
+                color: var(--colorBG);
                 margin-top: -10px;
             }
         }
@@ -255,7 +255,7 @@ body {
         position: relative;
         // top: -6rem;
         margin: -7rem auto auto 17px;
-        // background: var(--background-color);
+        // background: var(--colorBG);
         // background: #fff;
         background: var(--cardBG);
         border-radius: 50%;
@@ -282,7 +282,7 @@ body {
             position: relative;
             // top: -6rem;
             margin: -7rem auto auto 17px;
-            // background: var(--background-color);
+            // background: var(--colorBG);
             // background: #fff;
             background: var(--cardBG);
             border-radius: 50%;
@@ -926,7 +926,7 @@ body {
         padding: var(--padding) 0;
     }
     button { 
-        border: var(--background-color);
+        border: var(--colorBG);
     }
     .disallowed{
         margin-top:10px;
@@ -1011,21 +1011,10 @@ body {
         overflow: hidden;
     }
     .anticon{ margin-right: 5px; }
-    .vote { 
-        margin: auto 0 auto auto ; 
-        .inner {
-            text-align: right;
-            padding-right: 8px;
-        }
-        .side_pane {
-            display: flex;
-            flex-direction: column;
-            text-align: center;
-        }
-    }
+    
 }
-/* Account */
 
+/* Account */
 #account {     
     color: #21bf96;
     padding: 2px 18px;
@@ -1185,6 +1174,22 @@ body {
         }
     }
 }
+
+/* Voting Pane */
+.vote { 
+    margin: auto 0 auto auto ; 
+    .vote_count {
+        text-align: right;
+        padding-right: 8px;
+    }
+    .side_pane {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+
 /* Component: Chain Change */
 .chain_change {
     text-align:center; 
