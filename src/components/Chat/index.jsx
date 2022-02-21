@@ -11,7 +11,7 @@ import VotePane from "components/Room/VotePane";
 import PersonaHelper from "helpers/PersonaHelper";
 // import { PersonaContext } from "common/context";
 import { usePost } from "hooks/usePost";
-import { CollectionContext } from "common/context";
+// import { CollectionContext } from "common/context";
 import __ from "helpers/__";
 import moment from 'moment';
 import { Room, Comment as CommentObj } from "objects/objects";  //These Run in the Wrong Context
@@ -21,6 +21,7 @@ import { ChainHelper } from "helpers/ChainHelper";
 import Address from "components/Address/Address";
 import PageAuthenticate from "components/PageAuthenticate";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
+import CollectionSelection from "./CollectionSelection";
 
 import "./Chat.scss";
 
@@ -47,7 +48,7 @@ function Chat(props) {
     // if(props?.match?.params?.chain) options.chain = props.match.params.chain;
     options.chain = chain ? chain : chainId;
 
-    const { NFTCollections, NFTpersonas } = useNFTCollections(options);
+    const { NFTCollections, NFTpersonas, isLoading } = useNFTCollections(options);
     const collection = selectedHash ? NFTCollections[selectedHash] : null;
 
     const [space, setSpace] = useState({});
@@ -60,6 +61,11 @@ function Chat(props) {
     // const { isAllowed } = useIsAllowed({selectedHash, chain,});
     // const { persona, setPersona} = useContext(PersonaContext);
     // const chain = collection.chain;
+
+    React.useEffect(() => {
+        const room = rooms.find(room => (room.id === roomId));
+        setCurRoom(room);
+    }, [roomId, rooms]);
 
     // React.useEffect(() => {
     //     setIsAllowed((collection.owned));
@@ -80,42 +86,16 @@ function Chat(props) {
     console.warn("[TEST] Chat() Room:" + roomId, { chain, selectedHash, roomId, props, NFTCollections, collection });
 
     if (!isWeb3Enabled) return <PageAuthenticate />;   //Moralis getNFT Func only runs in Web3 is Enabled
+    if (Object.keys(NFTCollections).length === 0) return <div className="chat framed">No Collections Found</div>;
     return (
-        <Skeleton loading={!isInitialized}>
-            <div className="chat flex framed">
+        <Skeleton loading={isLoading}>
+            <div className="chat framed">
                 <div className="left" style={{ maxWidth: '400px' }}>
 
                     <div key="header" className="header">
-                        <div key="collections" className={"collection_select count_" + Object.keys(NFTCollections).length}>
-                            <h3>
-                                <span title={ChainHelper.get(options.chain, 'name')}>{ChainHelper.get(options.chain, 'icon')}</span> {Object.keys(NFTCollections).length} Collection(s)
-                            </h3>
-                            <ul className="collection-list">
-                                {NFTCollections && Object.values(NFTCollections).map((collection, index) => {
-                                    const selected = (selectedHash == collection.hash);
-
-                                    // if (!selectedHash || selectedHash === collection.hash) {
-
-                                    //Link Destination (Single Collection)
-                                    let dest = {
-                                        pathname: `/chat/${collection.chain}/${collection.hash}`  //Select Collection
-                                        // search: "?sort=name",
-                                        // hash: "#the-hash",
-                                        // state: { fromDashboard: true }
-                                    };
-                                    return (
-                                        <li key={collection.hash} className="collection container">
-                                            <Link to={dest} key={collection.hash}>
-                                                <div className="name">{collection.name}</div>
-                                            </Link>
-                                        </li>
-                                    );
-
-                                    // } else return '';
-                                })}
-                            </ul>
-                        </div>
+                        <CollectionSelection collections={NFTCollections} collection={collection} />
                     </div>
+
                     {!!collection &&
                         <div className="room_add_container">
                             <Collapse ghost expandIconPosition="right" expandIcon={() => (
@@ -131,8 +111,8 @@ function Chat(props) {
                         <div key="rooms" className={"rooms " + collection?.hash + ' : ' + selectedHash}>
                             <h3>
                                 {rooms.length} Bonfires
-                                <span className="">&nbsp; for {collection.name}</span>
-                                <span className="chain_icon debug" style={{ marginRight: '15px' }} title={ChainHelper.get(collection.chain, 'name')}>{ChainHelper.get(collection.chain, 'icon')}</span>
+                                {/* <span className="">&nbsp; for {collection.name}</span> */}
+                                {/* <span className="chain_icon debug" style={{ marginRight: '15px' }} title={ChainHelper.get(collection.chain, 'name')}>{ChainHelper.get(collection.chain, 'icon')}</span> */}
                             </h3>
                             {/* <Skeleton loading={!rooms}> */}
                             {rooms.map((room) => {
@@ -158,9 +138,9 @@ function Chat(props) {
                 </div>
                 <div className="middle">
                     {!!collection &&
-                        <div className="inner">
+                        <div className="inner container">
                             <div className="room-header">
-                                <h3>Room {roomId}</h3>
+                                <h3>[Room]</h3>
                             </div>
 
                             {rooms.length === 0 && <SpaceEmpty collection={collection} />}
@@ -170,7 +150,8 @@ function Chat(props) {
                                     {console.warn("[TEST] Chat() Room:" + roomId, { options, selectedHash, NFTCollections, collection, rooms })}
                                     <RoomMain
                                         // roomId={roomId}
-                                        room={rooms.find(room => (room.id === roomId))}
+                                        // room={rooms.find(room => (room.id === roomId))}
+                                        room={curRoom}
                                         selectedHash={selectedHash}
                                         collection={collection}
                                     />
@@ -184,7 +165,39 @@ function Chat(props) {
                 </div>
 
                 <div className="right">
-                    <h3>Room Data</h3>
+
+                    <div className="room-data">
+                        <div className="room-data-header">
+                            <h3>Room Data</h3>
+                        </div>
+                        {curRoomId &&
+                            <div className="room-data-container">
+                                <dl>
+                                    <dt>(i) Total Tokens</dt>
+                                    <dt>(i) Total Owners</dt>
+                                    <dt>(i) Files Shared</dt>
+                                    <dt>...</dt>
+                                </dl>
+                                <Collapse ghost expandIconPosition="right" expandIcon={() => (
+                                    <span>Members</span>
+                                )} >
+                                    <Collapse.Panel header={<span>&nbsp;</span>} key="1">
+                                        <ul>
+                                            {curRoom?.get('members').map((member) => (
+                                                <li></li>
+                                            ))}
+                                        </ul>
+                                    </Collapse.Panel>
+                                </Collapse>
+
+                                <ul className="members">
+
+                                </ul>
+
+                            </div>
+                        }
+                    </div>
+
                 </div>
             </div>
         </Skeleton >
@@ -337,7 +350,7 @@ function RoomEntrance(props) {
     let className = "room_entrance";
     if (isSelected) className += " selected";
 
-    console.warn("[TEST] RoomEntrance() Room (Persona) Image:" + image, props);
+    // console.warn("[TEST] RoomEntrance() Room (Persona) Image:" + image, props);
 
     return (
         <div className="room_single container"
@@ -358,8 +371,8 @@ function RoomEntrance(props) {
                 </div>
                 <div className="content">
                     {/* {isSelected && <div key="back" className="back link" style={{position:'absolute', right:'15px'}}><ArrowLeftOutlined />Back</div>} */}
-
                     <div key="user_info" className="user_info">
+                        <span className="updated">{moment(room?.get('updatedAt')).fromNow()}</span>
                         {isSelected
                             ? <>
                                 <p>
@@ -376,20 +389,27 @@ function RoomEntrance(props) {
                             </>
                         }
                     </div>
-                    <h5>
+                    <h5 className="title">
                         {/* <Link key="link" to={{ pathname: "/room/"+room.id, }} className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</Link> */}
                         {/* <a className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</a> */}
                         <FireTwoTone twoToneColor="red" />
                         {room?.get('name')}
+                        {/* <p key="comments" style={{
+                            display: 'inline',
+                            marginLeft: '10px',
+                            fontSize: '0.8em',
+                            fontWeight: '400',
+                        }}>{room?.get('childCount') || 0} {`${room?.get('childCount') == 1 ? 'Comment' : 'Comments'}`}</p> */}
                     </h5>
 
                     <div className="info">
                         {/* <span key="id">ID: {room.id}</span> */}
-                        {/* <p key="created">Created: {room?.createdAt}</p> */}
-                        {/* <p key="updated">Last Updated: {room?.updatedAt}</p> */}
                         {/* <p key="">Total Items: {room.total_items}</p> */}
-                        {/* <p key="members" className="members">Users: {room.members}</p> */}
-                        <p key="comments">{room?.get('childCount') || 0} Comments</p>
+                        {/* <p key="created">Created: {moment(room?.get('createdAt')).format('YYYY-MM-DD HH:mm:ss')}</p> */}
+                        <dl style={{ display: 'flex' }}>
+                            <dd key="comments" className="comments">{room?.get('childCount') || 0} {`${room?.get('childCount') == 1 ? 'comment' : 'comments'}`}</dd>
+                            <dd key="members" className="members">{room?.get('members')?.length} subs</dd>
+                        </dl>
                         <div className="actions debug">
                             {(1)
                                 ? <Button variant="contained" size="small" color="primary" onClick={() => { console.warn("CLICKED JOIN") }} title="Join the group">Join</Button>
@@ -404,7 +424,7 @@ function RoomEntrance(props) {
                 </div>
             </div>
 
-        </div>
+        </div >
     );
 }//RoomEntrance()
 
@@ -513,21 +533,14 @@ function RoomHead(props) {
                         {/* <p key="created">Created: {room?.createdAt}</p> */}
                         {/* <p key="updated">Last Updated: {room?.updatedAt}</p> */}
                         {/* <p key="">Total Items: {room.total_items}</p> */}
-                        <p key="comments">{room?.get('childCount') || 0} Comments</p>
-
                         {/* <p key="members" className="members">Users: {room.members}</p> */}
-
-                        {/* Single Room Link is Currently Broken...   //TODO: Single Room Needs its own URL
-                        <Link  key="link" to={{ pathname: "/room/"+room.id, }} className="btn">Go!</Link> 
-                        */}
-
+                        <p key="comments">{room?.get('childCount') || 0} Comments</p>
                         <div className="actions debug">
                             {(1)
                                 ? <Button variant="contained" size="small" color="primary" onClick={() => { console.warn("CLICKED JOIN") }} title="Join the group">Join</Button>
                                 : <Button variant="contained" size="small" onClick={() => { console.warn("CLICKED LEAVE") }} style={{ background: 'none', border: 'none' }} title="Leave the group">Leave</Button>
                             }
                         </div>
-
                     </div>
 
                 </div>
@@ -545,7 +558,6 @@ function RoomHead(props) {
  * Component - Show More Button
  */
 function RoomMain(props) {
-
     const { room, collection } = props;
     const curRoomId = room?.get('id');
     const { isWeb3Enabled, user } = useMoralis();
@@ -553,7 +565,7 @@ function RoomMain(props) {
     const [isAllowed, setIsAllowed] = useState(true);
 
     console.warn("[DEV] RoomMain() Room " + curRoomId, { props, room, collection, curRoomId });
-    if (!collection) return 'Loading...';
+    if (!collection || !room) return 'Loading...';
     return (
         <div className="room-main">
             <Skeleton active loading={!isWeb3Enabled && !collection}>

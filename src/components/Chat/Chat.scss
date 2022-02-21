@@ -1,12 +1,36 @@
+.collection_menu{
+    overflow: hidden;
+    img{
+        height:32px;
+    }
+}
+
 .chat{
     display: flex;
     height: 100%;
+    
+    padding-top:0;
+    padding-bottom:0;
     .left{
-        padding-right: 12px;
+        padding-top:6px;
+        overflow-y: auto;
+        padding-right: 6px;
         display: flex;
         flex-direction: column;
         // justify-content: space-between;
-        .collection-list{
+
+        .collection_select{
+            width:100%;
+            padding: 6px 12px;
+            border-radius: 12px;
+            height: auto;
+            display: flex;
+            align-items: center;
+            img{
+                height:32px;
+            }
+        }
+        .collection-list{       //Validate This
             li{ 
                 a{
                     padding: 12px 12px;
@@ -22,17 +46,66 @@
             a, a:visited{ color: var(--color); }
             .room_entrance{
                 margin-bottom: 6px;
-                padding: 6px 2px 6px 2px;
+                // padding: 6px 2px 0px 6px;
                 .user_info, .info{
                     font-size: 0.7rem;
+                    opacity: 0.75;
+                    dd{
+                        margin-right: 6px;
+                    }
+                }
+                .updated{
+                    float: right;
+                    font-size: 0.66rem;
+                    opacity: 0.75;
+                }
+                .image{
+                    padding: 6px 8px 0;
+                }
+                .content{
+                    padding: 6px 3px 6px 0px;
+                }
+                .vote{
+                    // margin-top: 0px;
+                }
+                .comments{
+                    
                 }
             }
         }
     }
-
     .middle{
         flex: 1 1;
+        overflow-y: auto;
+        padding-top:6px;
+        .room-header{
+            padding: 2px 12px;
+            margin-bottom: 6px;
+            border-bottom: 1px solid var(--color);
+        }
+        .room_head{
+            >.inner{
+                display: flex;
+                justify-content: space-between;
+                padding: 3px 5px 0 0;  //Compensate for Ant header
+                .content { 
+                    padding:0 10px; 
+                    flex: 1 1; 
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    overflow: hidden;
+                }
+                .anticon{ margin-right: 5px; }
+            }   
+        }
+        .room_single {
+            padding-top: 6px;
+        }
+    }
+    .right {
+        padding-top:6px;
+        overflow-y: auto;
+        display: none;
     }
 }
-
-

@@ -8,16 +8,17 @@
     --borderRadius: 12px;
     --padding: 15px;
     --pageWidth: 1200px;
-    --faintBG: rgba(244, 244, 244, 0.6);
     --shadowColor:#bbb;
     
-    --monochrome: #fff;
+    --color:#262626;
     --colorBG: #f0f2f5;
+    --faintBG: rgba(244, 244, 244, 0.6);
     --colorHeading:#444;
     --headerBG:#e2e2e2;
     --footerBG:#e2e2e2;
-    --color:#262626;
     --cardBG: #fff;
+    --monochrome: #fff;
+
     --comment-background: #f5f5f5;
     /* --colorLink:#1890ff; */
     --colorLink: blueviolet;
@@ -25,7 +26,6 @@
     /* --invert: black; */
     --colorAccent: #F68B4F;
     --colorAccent2: #21bf96;
-
     // --ant-primary-color: rgb(246,115,79);
 }
 
@@ -46,18 +46,18 @@
 
 }
 .dark_theme {
-    --monochrome: #000;
+    --color: #fdfdfd;
     --colorBG: #414141;
+    --faintBG: rgba(0,0,0, 0.8);
+    // --faintBG: rgba(244, 244, 244, 0.6);
     --headerBG:#2d2d2d;
     --footerBG:#2d2d2d;
-    --color: #fdfdfd;
     --cardBG: #f1f1f1;
+    --monochrome: #000;
+
     --comment-background: #f1f1f1;
     --colorHeading: #f1f1f1;
     --shadowColor:#333;
-    // --faintBG: rgba(244, 244, 244, 0.6);
-    --faintBG: rgba(0,0,0, 0.8);
-    
 }
 
 // .wrapper_main>header, .wrapper_main>footer { box-shadow: 0 0 8px var(--shadowColor);}
