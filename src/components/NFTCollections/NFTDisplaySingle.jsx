@@ -57,6 +57,22 @@ function NFTDisplaySingle({ nft }) {
             });
     }
 
+    let actions = [];
+    //View
+    if (getOpenSea(chainId)) actions.push(<Tooltip title="View On Opensea"><FileSearchOutlined onClick={(event) => { window.open(`${getOpenSea(chainId)}/${nft.token_address}/${nft.token_id}`, "_blank"); }} /></Tooltip>);
+    else actions.push(<Tooltip title="View On Blockexplorer"><FileSearchOutlined onClick={(event) => { window.open(`${getExplorer(chainId)}address/${nft.token_address}`, "_blank"); }} /></Tooltip>);
+    //Transfer
+    if (nft.owned) actions.push(<Tooltip title="Transfer NFT"><SendOutlined onClick={(event) => { event.preventDefault(); event.stopPropagation(); handleTransferClick(nft); }} /></Tooltip>);
+    //Sell
+    // <Tooltip title="Sell On OpenSea"><ShoppingCartOutlined onClick={(event) => { event.preventDefault(); alert("OPENSEA INTEGRATION COMING!");}} /></Tooltip>,
+    //Spaces
+    actions.push(<Tooltip title="Private Space">
+        {/* <Link to={{pathname:'/space/'+nft.chain+'/'+nft.token_address}}> */}
+        <Link to={{ pathname: '/chat/' + nft.chain + '/' + nft.token_address }}>
+            <FireTwoTone twoToneColor="red" />
+        </Link>
+    </Tooltip>);
+
     return (
         <>
             <Card size="small" className="item NFT" key={nft.token_id} style={{ width: 'var(--cardWidth)', border: "2px solid #e7eaf3", overflow: 'hidden' }}
@@ -81,24 +97,7 @@ function NFTDisplaySingle({ nft }) {
                         </div>
                     </div>
                 }
-                actions={[
-                    <>
-                        {getOpenSea(chainId)
-                            ? <Tooltip title="View On Opensea"><FileSearchOutlined onClick={(event) => { window.open(`${getOpenSea(chainId)}/${nft.token_address}/${nft.token_id}`, "_blank"); }} /></Tooltip>
-                            : <Tooltip title="View On Blockexplorer"><FileSearchOutlined onClick={(event) => { window.open(`${getExplorer(chainId)}address/${nft.token_address}`, "_blank"); }} /></Tooltip>
-                        }
-                    </>,
-                    <Tooltip title="Transfer NFT">
-                        <SendOutlined onClick={(event) => { event.preventDefault(); event.stopPropagation(); handleTransferClick(nft); }} />
-                    </Tooltip>,
-                    // <Tooltip title="Sell On OpenSea"><ShoppingCartOutlined onClick={(event) => { event.preventDefault(); alert("OPENSEA INTEGRATION COMING!");}} /></Tooltip>,
-                    <Tooltip title="Private Space">
-                        {/* <Link to={{pathname:'/space/'+nft.chain+'/'+nft.token_address}}> */}
-                        <Link to={{ pathname: '/chat/' + nft.chain + '/' + nft.token_address }}>
-                            <FireTwoTone twoToneColor="red" />
-                        </Link>
-                    </Tooltip>,
-                ]}
+                actions={actions}
             >
             </Card>
 
