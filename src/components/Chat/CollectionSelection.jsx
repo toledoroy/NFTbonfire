@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Menu, Dropdown, Button } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 const _ = require('lodash');
 
 /**
@@ -20,15 +21,15 @@ function CollectionSelection({ collections, collection }) {
 
     function getCollectionIcon(collection) {
         const image = collection?.image ? collection.image : collection?.items[0]?.image;
-        return <img src={image} />;
+        return <div className="image"><img src={image} /></div>;
     }
 
     const menu = menuItems.length < 2 ? '' : (
-        <Menu onClick={handleMenuClick} className="collection_menu container">
+        <Menu onClick={handleMenuClick} className="collection_menu collection_select container">
             {_.map(menuItems, (item, key) => {
                 //Link Destination (Single Collection)
                 let dest = {
-                    pathname: `/chat/${collection.chain}/${collection.hash}`  //Select Collection
+                    pathname: `/chat/${item.chain}/${item.hash}`  //Select Collection
                     // search: "?sort=name",
                     // hash: "#the-hash",
                     // state: { fromDashboard: true }

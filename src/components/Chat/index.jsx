@@ -60,6 +60,7 @@ function Chat(props) {
     const [curRoom, setCurRoom] = useState();
     const [limit, setLimit] = useState(12);
     const [isAllowed, setIsAllowed] = useState(null);
+    const [selectedLeft, setSelectedLeft] = useState(1);
     const { rooms } = usePost({ hash: selectedHash, limit });
     // const { isAllowed } = useIsAllowed({selectedHash, chain,});
     // const { persona, setPersona} = useContext(PersonaContext);
@@ -106,8 +107,14 @@ function Chat(props) {
                         <CollectionSelection collections={NFTCollections} collection={collection} />
                     </div> */}
 
-                    <Collapse ghost className="collection_selectX"
+                    <Collapse accordion ghost className="collection_selectX"
                         expandIconPosition="right"
+                        // activeKey={roomId ? '2' : '1'}
+                        activeKey={selectedLeft}
+                        onChange={(selected) => {
+                            console.log("selected", selected);
+                            if (selected) setSelectedLeft(selected);
+                        }}
                     // expandIcon={() => (<i className="main_color bi bi-plus-circle-fill"></i>)}
                     >
                         <Collapse.Panel header={
@@ -121,7 +128,9 @@ function Chat(props) {
                                 {/* {Object.keys(NFTCollections.length).length > 1 && <DownOutlined />} */}
                                 {/* </Button> */}
                             </div>
-                        } key="1">
+                        }
+                            showArrow={false}
+                            key={1}>
                             <>
                                 {/* Object.keys(NFTCollections.length).length > 1 &&  */}
                                 {/* {Object.values(NFTCollections).map((item, key) => { */}
@@ -133,8 +142,9 @@ function Chat(props) {
                                         // state: { fromDashboard: true }
                                     };
                                     return (
-                                        <List.Item key={key} icon={getCollectionIcon(item)} className="item">
+                                        <List.Item key={key} className="item flex">
                                             <Link to={dest} key={item.hash}>
+                                                {getCollectionIcon(item)}
                                                 <span>{item.name}</span>
                                             </Link>
                                         </List.Item>
@@ -143,45 +153,57 @@ function Chat(props) {
 
                             </>
                         </Collapse.Panel>
+
+                        <Collapse.Panel header={
+                            <div className="flex">
+                                <h3>{rooms.length} Bonfires</h3>
+                            </div>
+                        }
+                            showArrow={false}
+                            key={2}>
+                            <>
+                                {!!collection &&
+                                    <div className="room_add_container">
+                                        <Collapse ghost expandIconPosition="right" expandIcon={() => (
+                                            <><i className="main_color bi bi-plus-circle-fill"></i> ADD NEW ROOM </>
+                                        )} >
+                                            <Collapse.Panel header={<span>&nbsp;</span>} key="1">
+                                                <RoomAddForm parentId={collection?.hash} chain={collection.chain} collection={collection} onSuccess={(post) => { loadRooms(post.id) }} />
+                                            </Collapse.Panel>
+                                        </Collapse>
+                                    </div>
+                                }
+                                {!!collection &&
+                                    <div key="rooms" className={"rooms " + collection?.hash + ' : ' + selectedHash}>
+                                        {/* <h3> */}
+                                        {/* {rooms.length} Bonfires */}
+                                        {/* <span className="">&nbsp; for {collection.name}</span> */}
+                                        {/* <span className="chain_icon debug" style={{ marginRight: '15px' }} title={ChainHelper.get(collection.chain, 'name')}>{ChainHelper.get(collection.chain, 'icon')}</span> */}
+                                        {/* </h3> */}
+                                        {/* <Skeleton loading={!rooms}> */}
+                                        {rooms.map((room) => {
+                                            const link = `/chat/${collection.chain}/${collection.hash}/${room.id}`;
+                                            return (
+                                                <RoomEntrance key={room.id}
+                                                    hash={collection.hash}
+                                                    collection={collection}
+                                                    room={room}
+                                                    selected={(curRoomId === room.id)}
+                                                    link={link}
+                                                />
+                                            );
+                                        })}
+                                        {/* </Skeleton> */}
+                                    </div>
+                                }
+                            </>
+                        </Collapse.Panel>
                     </Collapse>
 
 
 
 
-                    {!!collection &&
-                        <div className="room_add_container">
-                            <Collapse ghost expandIconPosition="right" expandIcon={() => (
-                                <><i className="main_color bi bi-plus-circle-fill"></i> ADD NEW ROOM </>
-                            )} >
-                                <Collapse.Panel header={<span>&nbsp;</span>} key="1">
-                                    <RoomAddForm parentId={collection?.hash} chain={collection.chain} collection={collection} onSuccess={(post) => { loadRooms(post.id) }} />
-                                </Collapse.Panel>
-                            </Collapse>
-                        </div>
-                    }
-                    {!!collection &&
-                        <div key="rooms" className={"rooms " + collection?.hash + ' : ' + selectedHash}>
-                            <h3>
-                                {rooms.length} Bonfires
-                                {/* <span className="">&nbsp; for {collection.name}</span> */}
-                                {/* <span className="chain_icon debug" style={{ marginRight: '15px' }} title={ChainHelper.get(collection.chain, 'name')}>{ChainHelper.get(collection.chain, 'icon')}</span> */}
-                            </h3>
-                            {/* <Skeleton loading={!rooms}> */}
-                            {rooms.map((room) => {
-                                const link = `/chat/${collection.chain}/${collection.hash}/${room.id}`;
-                                return (
-                                    <RoomEntrance key={room.id}
-                                        hash={collection.hash}
-                                        collection={collection}
-                                        room={room}
-                                        selected={(curRoomId === room.id)}
-                                        link={link}
-                                    />
-                                );
-                            })}
-                            {/* </Skeleton> */}
-                        </div>
-                    }
+
                     <div className="footer">
                     </div>
 
