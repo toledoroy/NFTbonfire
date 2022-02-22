@@ -66,5 +66,34 @@ export const usePost = ({ hash, limit }) => {
         }//Authenticated
         else setRooms([]);
     }//loadRooms()
+
+    /** DEPRECATED
+     * Insert Rooms
+     */
+    function initRooms(hash) {
+        try {
+            let roomsInit = [
+                new Room().set("name", 'Introduction').set("text", 'Say Hi! and introduce yourself'),
+                // new Room().set("name", 'News').set("text", 'Things people like you should know about'),
+                // new Room().set("name", 'Events').set("text", 'Virtual Meta-Events or IRL, all private NFT events can be posete here'),
+            ];
+            for (let room of roomsInit) {
+                // room.set("space", space.id);    //Seems Unecessary. Spaces are 1-1 with Contract Hashes
+                room.set("parentId", hash);       //Link Directly to Space (By Hash)
+                room.save().then(result => {
+                    console.log("initRooms() Created Default Room for:" + hash, result);
+                });
+            }//Insert Each Room
+
+            //Set Rooms
+            // setRooms(roomsInit); //Try Without... Also Use Live Query
+            //Log
+            // console.log("[TEST] SpaceView() No Rooms Found for Space:"+hash+" --> Init Rooms", roomsInit);
+
+            //Return
+            // return roomsInit;
+        } catch (error) { console.error("[CAUGHT] SpaceView() Init Rooms Error", { error, hash }); }
+    }//initRooms()
+
     return { rooms, loadRooms };
 }
