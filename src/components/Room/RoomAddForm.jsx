@@ -249,7 +249,7 @@ function RoomAddForm(props) {
                   </Form.Item>
                   {persona &&
                     // <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-                    <Button type="primary" htmlType="submit"><FireTwoTone twoToneColor="red" />Light Up</Button>
+                    <Button type="primary" htmlType="submit"><FireTwoTone twoToneColor="red" />Light it Up</Button>
                     // </Form.Item>
                   }
                   {!persona && <p style={{ textAlign: 'center' }}>
