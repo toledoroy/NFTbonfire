@@ -5,9 +5,9 @@ import { useHistory } from "react-router-dom";
 
 import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
-import { FireTwoTone, ArrowLeftOutlined } from '@ant-design/icons';
+import { FireTwoTone, ArrowLeftOutlined, Expand } from '@ant-design/icons';
 // import { Image, Form, Input, Button, Checkbox } from "antd";
-import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Button } from 'antd';
+import { List, Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Button } from 'antd';
 import { useMoralisQuery } from "react-moralis";
 import VotePane from "components/Room/VotePane";
 // import PersonaChanger from "components/Persona/PersonaChanger";
@@ -86,6 +86,13 @@ function Chat(props) {
     //     }
     // }, [selectedHash, NFTCollections, isWeb3Enabled]);
 
+
+    function getCollectionIcon(collection) {
+        const image = collection?.image ? collection.image : collection?.items[0]?.image;
+        // return <img src={image} />;
+        return <img src={image} style={{ maxHeight: '38px' }} />;
+    }
+
     console.warn("[TEST] Chat() Room:" + roomId, { chain, selectedHash, roomId, props, NFTCollections, collection });
 
     if (!isWeb3Enabled) return <PageAuthenticate />;   //Moralis getNFT Func only runs in Web3 is Enabled
@@ -95,9 +102,51 @@ function Chat(props) {
             <div className="chat framed">
                 <div className="left" style={{ maxWidth: '400px' }}>
 
-                    <div key="header" className="header">
+                    {/* <div key="header" className="header">
                         <CollectionSelection collections={NFTCollections} collection={collection} />
-                    </div>
+                    </div> */}
+
+                    <Collapse ghost className="collection_selectX"
+                        expandIconPosition="right"
+                    // expandIcon={() => (<i className="main_color bi bi-plus-circle-fill"></i>)}
+                    >
+                        <Collapse.Panel header={
+                            <div className="flex">
+                                {console.log("NFTCollections", NFTCollections)}
+                                {getCollectionIcon(collection)}
+                                {/* <Button key={collection?.key} icon={getCollectionIcon(collection)}> */}
+                                <span style={{ marginLeft: "5px" }}>{collection?.name}</span>
+                                {/* <span style={{ marginLeft: "5px" }}>${collection?.symbol}</span> */}
+                                {/* <span title={ChainHelper.get(options.chain, 'name')}>{ChainHelper.get(options.chain, 'icon')}</span>  */}
+                                {/* {Object.keys(NFTCollections.length).length > 1 && <DownOutlined />} */}
+                                {/* </Button> */}
+                            </div>
+                        } key="1">
+                            <>
+                                {/* Object.keys(NFTCollections.length).length > 1 &&  */}
+                                {/* {Object.values(NFTCollections).map((item, key) => { */}
+                                {_.map(NFTCollections, (item, key) => {
+                                    let dest = {
+                                        pathname: `/chat/${item.chain}/${item.hash}`  //Select Collection
+                                        // search: "?sort=name",
+                                        // hash: "#the-hash",
+                                        // state: { fromDashboard: true }
+                                    };
+                                    return (
+                                        <List.Item key={key} icon={getCollectionIcon(item)} className="item">
+                                            <Link to={dest} key={item.hash}>
+                                                <span>{item.name}</span>
+                                            </Link>
+                                        </List.Item>
+                                    )
+                                })}
+
+                            </>
+                        </Collapse.Panel>
+                    </Collapse>
+
+
+
 
                     {!!collection &&
                         <div className="room_add_container">
@@ -181,7 +230,7 @@ function Chat(props) {
                                 </dl>
                                 <Collapse ghost expandIconPosition="right" expandIcon={() => (
                                     <span>Members</span>
-                                )} >
+                                )}>
                                     <Collapse.Panel header={<span>&nbsp;</span>} key="1">
                                         <ul>
                                             {curRoom?.get('members').map((member) => (
