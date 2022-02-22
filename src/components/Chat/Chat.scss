@@ -148,4 +148,9 @@
         overflow-y: auto;
         display: none;
     }
+    .comment_add{
+        .ant-comment{
+            padding:0 12px;   
+        }
+    }
 }

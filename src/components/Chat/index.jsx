@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
@@ -12,7 +12,7 @@ import { useMoralisQuery } from "react-moralis";
 import VotePane from "components/Room/VotePane";
 // import PersonaChanger from "components/Persona/PersonaChanger";
 import PersonaHelper from "helpers/PersonaHelper";
-// import { PersonaContext } from "common/context";
+import { PersonaContext } from "common/context";
 import { usePost } from "hooks/usePost";
 // import { CollectionContext } from "common/context";
 import __ from "helpers/__";
@@ -64,7 +64,7 @@ function Chat(props) {
     const [displayAdd, setDisaplyAdd] = useState(false);    //Display Room Add Form
     const { rooms, loadRooms } = usePost({ hash: selectedHash, limit });
     // const { isAllowed } = useIsAllowed({selectedHash, chain,});
-    // const { persona, setPersona} = useContext(PersonaContext);
+    const { persona, setPersona } = useContext(PersonaContext);
     // const chain = collection.chain;
 
     React.useEffect(() => {
@@ -174,6 +174,7 @@ function Chat(props) {
                                                         room={curRoom}
                                                         selectedHash={selectedHash}
                                                         collection={collection}
+                                                        chain={collection.chain}
                                                     />
                                                 }
                                             </>}
@@ -497,8 +498,9 @@ function RoomHead(props) {
  * Component - Show More Button
  */
 function RoomMain(props) {
-    const { room, collection } = props;
-    const curRoomId = room?.get('id');
+    const { room, collection, chain } = props;
+    // const curRoomId = room?.get('id');
+    const curRoomId = room?.id;
     const { isWeb3Enabled, user } = useMoralis();
     // const [isAllowed, setIsAllowed] = useState(null);
     const [isAllowed, setIsAllowed] = useState(true);
