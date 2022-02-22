@@ -19,7 +19,7 @@ import __ from "helpers/__";
 import moment from 'moment';
 import { Room, Comment as CommentObj } from "objects/objects";  //These Run in the Wrong Context
 import { Persona } from "objects/Persona";
-import { ChainHelper } from "helpers/ChainHelper";
+// import { ChainHelper } from "helpers/ChainHelper";
 //Components
 import Address from "components/Address/Address";
 import PageAuthenticate from "components/PageAuthenticate";
@@ -61,7 +61,8 @@ function Chat(props) {
     const [limit, setLimit] = useState(12);
     const [isAllowed, setIsAllowed] = useState(null);
     const [selectedLeft, setSelectedLeft] = useState(1);
-    const { rooms } = usePost({ hash: selectedHash, limit });
+    const [displayAdd, setDisaplyAdd] = useState(false);    //Display Room Add Form
+    const { rooms, loadRooms } = usePost({ hash: selectedHash, limit });
     // const { isAllowed } = useIsAllowed({selectedHash, chain,});
     // const { persona, setPersona} = useContext(PersonaContext);
     // const chain = collection.chain;
@@ -69,6 +70,7 @@ function Chat(props) {
     React.useEffect(() => {
         const room = rooms.find(room => (room.id === roomId));
         setCurRoom(room);
+        setDisaplyAdd(!room);
     }, [roomId, rooms]);
 
     // React.useEffect(() => {
@@ -94,20 +96,21 @@ function Chat(props) {
         return <img src={image} style={{ maxHeight: '38px' }} />;
     }
 
-    console.warn("[TEST] Chat() Room:" + roomId, { chain, selectedHash, roomId, props, NFTCollections, collection });
+    // console.warn("[TEST] Chat() Room:" + roomId, { chain, selectedHash, roomId, props, NFTCollections, collection });
 
     if (!isWeb3Enabled) return <PageAuthenticate />;   //Moralis getNFT Func only runs in Web3 is Enabled
     if (Object.keys(NFTCollections).length === 0) return <div className="chat framed">No Collections Found</div>;
     return (
         <Skeleton loading={isLoading}>
             <div className="chat framed">
-                <div className="left" style={{ maxWidth: '400px' }}>
+                <div className="left">
 
-                    {/* <div key="header" className="header">
+                    <div key="header" className="header">
                         <CollectionSelection collections={NFTCollections} collection={collection} />
-                    </div> */}
+                    </div>
 
-                    <Collapse accordion ghost className="collection_selectX"
+                    <div key="main" className="main">
+                        {/* <Collapse accordion ghost className="collection_selectX"
                         expandIconPosition="right"
                         // activeKey={roomId ? '2' : '1'}
                         activeKey={selectedLeft}
@@ -121,25 +124,15 @@ function Chat(props) {
                             <div className="flex">
                                 {console.log("NFTCollections", NFTCollections)}
                                 {getCollectionIcon(collection)}
-                                {/* <Button key={collection?.key} icon={getCollectionIcon(collection)}> */}
                                 <span style={{ marginLeft: "5px" }}>{collection?.name}</span>
-                                {/* <span style={{ marginLeft: "5px" }}>${collection?.symbol}</span> */}
-                                {/* <span title={ChainHelper.get(options.chain, 'name')}>{ChainHelper.get(options.chain, 'icon')}</span>  */}
-                                {/* {Object.keys(NFTCollections.length).length > 1 && <DownOutlined />} */}
-                                {/* </Button> */}
                             </div>
                         }
                             showArrow={false}
                             key={1}>
                             <>
-                                {/* Object.keys(NFTCollections.length).length > 1 &&  */}
-                                {/* {Object.values(NFTCollections).map((item, key) => { */}
                                 {_.map(NFTCollections, (item, key) => {
                                     let dest = {
                                         pathname: `/chat/${item.chain}/${item.hash}`  //Select Collection
-                                        // search: "?sort=name",
-                                        // hash: "#the-hash",
-                                        // state: { fromDashboard: true }
                                     };
                                     return (
                                         <List.Item key={key} className="item flex">
@@ -150,10 +143,8 @@ function Chat(props) {
                                         </List.Item>
                                     )
                                 })}
-
                             </>
                         </Collapse.Panel>
-
                         <Collapse.Panel header={
                             <div className="flex">
                                 <h3>{rooms.length} Bonfires</h3>
@@ -162,49 +153,63 @@ function Chat(props) {
                             showArrow={false}
                             key={2}>
                             <>
-                                {!!collection &&
-                                    <div className="room_add_container">
-                                        <Collapse ghost expandIconPosition="right" expandIcon={() => (
-                                            <><i className="main_color bi bi-plus-circle-fill"></i> ADD NEW ROOM </>
-                                        )} >
-                                            <Collapse.Panel header={<span>&nbsp;</span>} key="1">
-                                                <RoomAddForm parentId={collection?.hash} chain={collection.chain} collection={collection} onSuccess={(post) => { loadRooms(post.id) }} />
-                                            </Collapse.Panel>
-                                        </Collapse>
-                                    </div>
-                                }
-                                {!!collection &&
-                                    <div key="rooms" className={"rooms " + collection?.hash + ' : ' + selectedHash}>
-                                        {/* <h3> */}
-                                        {/* {rooms.length} Bonfires */}
-                                        {/* <span className="">&nbsp; for {collection.name}</span> */}
-                                        {/* <span className="chain_icon debug" style={{ marginRight: '15px' }} title={ChainHelper.get(collection.chain, 'name')}>{ChainHelper.get(collection.chain, 'icon')}</span> */}
-                                        {/* </h3> */}
-                                        {/* <Skeleton loading={!rooms}> */}
-                                        {rooms.map((room) => {
-                                            const link = `/chat/${collection.chain}/${collection.hash}/${room.id}`;
-                                            return (
-                                                <RoomEntrance key={room.id}
-                                                    hash={collection.hash}
-                                                    collection={collection}
-                                                    room={room}
-                                                    selected={(curRoomId === room.id)}
-                                                    link={link}
-                                                />
-                                            );
-                                        })}
-                                        {/* </Skeleton> */}
-                                    </div>
-                                }
+                               PANEL 2
                             </>
                         </Collapse.Panel>
-                    </Collapse>
+                    </Collapse> */}
 
 
+                        {!!collection &&
+                            <div className="room_add_container">
+
+                                {/* <div className="flex" onClick={() => setDisaplyAdd(true)}>
+                                <i className="main_color bi bi-plus-circle-fill"></i>
+                                ADD NEW ROOM
+                            </div> */}
 
 
+                                {/* <Collapse ghost expandIconPosition="right" expandIcon={() => (
+                                <><i className="main_color bi bi-plus-circle-fill"></i> ADD NEW ROOM </>
+                            )} >
+                                <Collapse.Panel header={<span>&nbsp;</span>} key="1">
+                                    <RoomAddForm parentId={collection?.hash} chain={collection.chain} collection={collection} onSuccess={(post) => { loadRooms(post.id) }} />
+                                </Collapse.Panel>
+                            </Collapse> */}
+                            </div>
+                        }
+                        {!!collection &&
+                            <div key="rooms" className={"rooms " + collection?.hash + ' : ' + selectedHash}>
+                                {/* <h3> */}
+                                {/* {rooms.length} Bonfires */}
+                                {/* <span className="">&nbsp; for {collection.name}</span> */}
+                                {/* <span className="chain_icon debug" style={{ marginRight: '15px' }} title={ChainHelper.get(collection.chain, 'name')}>{ChainHelper.get(collection.chain, 'icon')}</span> */}
+                                {/* </h3> */}
+                                {/* <Skeleton loading={!rooms}> */}
+                                {rooms.map((room) => {
+                                    const link = `/chat/${collection.chain}/${collection.hash}/${room.id}`;
+                                    return (
+                                        <RoomEntrance key={room.id}
+                                            hash={collection.hash}
+                                            collection={collection}
+                                            room={room}
+                                            selected={(curRoomId === room.id)}
+                                            link={link}
+                                        />
+                                    );
+                                })}
+                                {/* </Skeleton> */}
+                            </div>
+                        }
 
+                    </div>
                     <div className="footer">
+
+                        <div class="actions">
+                            <Button type="primary" shape="round" icon={<FireTwoTone twoToneColor="red" />} onClick={() => setDisaplyAdd(true)}
+                                style={{ width: '100%' }}>
+                                Start a new Bonfire
+                            </Button>
+                        </div>
                     </div>
 
                 </div>
@@ -212,23 +217,43 @@ function Chat(props) {
                     {!!collection &&
                         <div className="inner container">
                             <div className="room-header">
-                                <h3>[Room]</h3>
+                                <h3>
+                                    {/* {curRoom ? 'Bonfire in ' + collection.name : 'New Bonfire in ' + collection.name} */}
+                                    {displayAdd && <>New Bonfire in <span className="collection-name" style={{ textDecoration: 'underline' }}>{collection.name}</span> Collection</>}
+                                </h3>
                             </div>
 
-                            {rooms.length === 0 && <SpaceEmpty collection={collection} />}
+                            <div className="room-container">
+                                {console.warn("[TEST] Chat() Room:" + roomId, { options, selectedHash, NFTCollections, collection, rooms })}
 
-                            {(selectedHash && rooms.length > 0 && roomId) &&
-                                <div className="room-container">
-                                    {console.warn("[TEST] Chat() Room:" + roomId, { options, selectedHash, NFTCollections, collection, rooms })}
-                                    <RoomMain
-                                        // roomId={roomId}
-                                        // room={rooms.find(room => (room.id === roomId))}
-                                        room={curRoom}
-                                        selectedHash={selectedHash}
-                                        collection={collection}
-                                    />
-                                </div>}
+                                {displayAdd
+                                    ?
+                                    <div className="RoomMainAdd framed">
+                                        {/* <div>Loading Rooms...</div> */}
+                                        {rooms.length === 0 && <div className="texts">
+                                            <h4 key="R1">Welcome, cryptonout! You're the first person in this Space</h4>
+                                            {collection && <p key="R2">Why don't you go ahead and light up a new bonfire for your {__.sanitize(collection.name)} NFT buddies</p>}
+                                        </div>}
 
+                                        {collection && <RoomAddForm parentId={collection?.hash} chain={collection.chain} collection={collection} onSuccess={(post) => { loadRooms(post.id) }} />}
+                                    </div>
+
+                                    : <>
+                                        {/* {rooms.length === 0 && <SpaceEmpty collection={collection} />} */}
+
+
+                                        {/* {(selectedHash && rooms.length > 0 && roomId) && */}
+                                        {curRoom &&
+                                            <RoomMain
+                                                // roomId={roomId}
+                                                // room={rooms.find(room => (room.id === roomId))}
+                                                room={curRoom}
+                                                selectedHash={selectedHash}
+                                                collection={collection}
+                                            />
+                                        }
+                                    </>}
+                            </div>
                             <div className="room-footer">
 
                             </div>
@@ -362,16 +387,14 @@ export default Chat;
  */
 function SpaceEmpty({ collection }) {
     return (
-        <div className="SpaceEmpty">
+        <div className="SpaceEmpty framed">
             {/* <div>Loading Rooms...</div> */}
-            <p key="R1">Welcome, cryptonout! You're the first person in this Space</p>
+            <h4 key="R1">Welcome, cryptonout! You're the first person in this Space</h4>
             {collection && <p key="R2">Why don't you go ahead and light up a new bonfire for your {__.sanitize(collection.name)} NFT buddies</p>}
             {collection && <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} />}
         </div>
     );
 }//SpaceEmpty()
-
-
 
 /**
  * Component: Link To Room

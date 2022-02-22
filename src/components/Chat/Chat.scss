@@ -1,7 +1,12 @@
 .collection_menu{
     overflow: hidden;
-    img{
+    .image{
         height:32px;
+        max-width:32px;
+        overflow: hidden;
+        img{
+            height: 100%;
+        }
     }
 }
 
@@ -11,7 +16,18 @@
     
     padding-top:0;
     padding-bottom:0;
+    
     .left{
+        width: 280px;
+        .header{
+
+        }
+        .main{
+           
+        }
+        .footer{
+
+        }
         padding-top:6px;
         overflow-y: auto;
         padding-right: 6px;
@@ -26,6 +42,9 @@
             height: auto;
             display: flex;
             align-items: center;
+            span{
+                overflow: hidden;
+            }
             .image{
                 height:32px;
                 max-width:32px;
@@ -34,6 +53,9 @@
                     height: 100%;
                 }
             }
+        }
+        .actions{
+            // margin: 6px auto;
         }
         .collection-list{       //Validate This
             li{ 
@@ -49,6 +71,7 @@
         }
         .rooms{
             a, a:visited{ color: var(--color); }
+            margin: 6px 0;
             .room_entrance{
                 margin-bottom: 6px;
                 // padding: 6px 2px 0px 6px;
@@ -86,7 +109,12 @@
         .room-header{
             padding: 2px 12px;
             margin-bottom: 6px;
-            border-bottom: 1px solid var(--colorBgNeg);
+            // border-bottom: 1px solid var(--colorBgNeg);
+        }
+        .RoomMainAdd {
+            .texts{
+                margin-bottom: 6px;
+            }
         }
         .room_head{
             >.inner{
@@ -106,6 +134,13 @@
         }
         .room_single {
             padding-top: 6px;
+        }
+        .room_add{
+            margin: 0;
+            padding: 0;
+            .content{
+                padding: 0;
+            }
         }
     }
     .right {

@@ -35,7 +35,7 @@ function CollectionSelection({ collections, collection }) {
                     // state: { fromDashboard: true }
                 };
                 return (
-                    <Menu.Item key={key} icon={getCollectionIcon(item)} className="item">
+                    <Menu.Item key={key} icon={getCollectionIcon(item)} className="item ">
                         <Link to={dest} key={item.hash}>
                             <span>{item.name}</span>
                         </Link>
@@ -49,7 +49,6 @@ function CollectionSelection({ collections, collection }) {
     className += " flex count_" + Object.keys(collections)?.length;
     return (
         <Dropdown overlay={menu} trigger={["click"]}>
-            {/* <Button className="collection_select" key={selected?.key} icon={selected?.icon}> */}
             <Button className={className} key={collection?.key} icon={getCollectionIcon(collection)}>
                 <span style={{ marginLeft: "5px" }}>{collection?.name}</span>
                 {/* <span style={{ marginLeft: "5px" }}>${collection?.symbol}</span> */}
