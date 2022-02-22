@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Menu, Dropdown, Button } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 const _ = require('lodash');
 
 /**
@@ -20,21 +21,21 @@ function CollectionSelection({ collections, collection }) {
 
     function getCollectionIcon(collection) {
         const image = collection?.image ? collection.image : collection?.items[0]?.image;
-        return <img src={image} />;
+        return <div className="image"><img src={image} /></div>;
     }
 
     const menu = menuItems.length < 2 ? '' : (
-        <Menu onClick={handleMenuClick} className="collection_menu container">
+        <Menu onClick={handleMenuClick} className="collection_menu collection_select container">
             {_.map(menuItems, (item, key) => {
                 //Link Destination (Single Collection)
                 let dest = {
-                    pathname: `/chat/${collection.chain}/${collection.hash}`  //Select Collection
+                    pathname: `/chat/${item.chain}/${item.hash}`  //Select Collection
                     // search: "?sort=name",
                     // hash: "#the-hash",
                     // state: { fromDashboard: true }
                 };
                 return (
-                    <Menu.Item key={key} icon={getCollectionIcon(item)} className="item">
+                    <Menu.Item key={key} icon={getCollectionIcon(item)} className="item ">
                         <Link to={dest} key={item.hash}>
                             <span>{item.name}</span>
                         </Link>
@@ -48,7 +49,6 @@ function CollectionSelection({ collections, collection }) {
     className += " flex count_" + Object.keys(collections)?.length;
     return (
         <Dropdown overlay={menu} trigger={["click"]}>
-            {/* <Button className="collection_select" key={selected?.key} icon={selected?.icon}> */}
             <Button className={className} key={collection?.key} icon={getCollectionIcon(collection)}>
                 <span style={{ marginLeft: "5px" }}>{collection?.name}</span>
                 {/* <span style={{ marginLeft: "5px" }}>${collection?.symbol}</span> */}
