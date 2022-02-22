@@ -32,9 +32,10 @@ import "./Chat.scss";
  * Component: Chat (W/Chat Room)
  * 
  * Inspiration: 
- *  - https://github.com/gunnarmorling/discussions.morling.dev/discussions/291?sort=top
+ *  - Github Discussions
  *  - Stack Overflow
  *  - FB Messenger
+ *  - Discord
  */
 function Chat(props) {
     let { chain, hash: selectedHash, roomId } = props.match.params;
