@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
-import { FireTwoTone, ArrowLeftOutlined } from '@ant-design/icons';
+import { FireTwoTone, ArrowLeftOutlined, Expand } from '@ant-design/icons';
 // import { Image, Form, Input, Button, Checkbox } from "antd";
-import { Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Button } from 'antd';
+import { List, Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Button } from 'antd';
 import { useMoralisQuery } from "react-moralis";
 import VotePane from "components/Room/VotePane";
 // import PersonaChanger from "components/Persona/PersonaChanger";
 import PersonaHelper from "helpers/PersonaHelper";
-// import { PersonaContext } from "common/context";
+import { PersonaContext } from "common/context";
 import { usePost } from "hooks/usePost";
 // import { CollectionContext } from "common/context";
 import __ from "helpers/__";
 import moment from 'moment';
 import { Room, Comment as CommentObj } from "objects/objects";  //These Run in the Wrong Context
 import { Persona } from "objects/Persona";
-import { ChainHelper } from "helpers/ChainHelper";
+// import { ChainHelper } from "helpers/ChainHelper";
 //Components
 import Address from "components/Address/Address";
 import PageAuthenticate from "components/PageAuthenticate";
@@ -61,14 +61,17 @@ function Chat(props) {
     const [curRoom, setCurRoom] = useState();
     const [limit, setLimit] = useState(12);
     const [isAllowed, setIsAllowed] = useState(null);
-    const { rooms } = usePost({ hash: selectedHash, limit });
+    const [selectedLeft, setSelectedLeft] = useState(1);
+    const [displayAdd, setDisaplyAdd] = useState(false);    //Display Room Add Form
+    const { rooms, loadRooms } = usePost({ hash: selectedHash, limit });
     // const { isAllowed } = useIsAllowed({selectedHash, chain,});
-    // const { persona, setPersona} = useContext(PersonaContext);
+    const { persona, setPersona } = useContext(PersonaContext);
     // const chain = collection.chain;
 
     React.useEffect(() => {
         const room = rooms.find(room => (room.id === roomId));
         setCurRoom(room);
+        setDisaplyAdd(!room);
     }, [roomId, rooms]);
 
     // React.useEffect(() => {
@@ -87,83 +90,102 @@ function Chat(props) {
     //     }
     // }, [selectedHash, NFTCollections, isWeb3Enabled]);
 
-    console.warn("[TEST] Chat() Room:" + roomId, { chain, selectedHash, roomId, props, NFTCollections, collection });
+
+    function getCollectionIcon(collection) {
+        const image = collection?.image ? collection.image : collection?.items[0]?.image;
+        // return <img src={image} />;
+        return <img src={image} style={{ maxHeight: '38px' }} />;
+    }
+
+    // console.warn("[TEST] Chat() Room:" + roomId, { chain, selectedHash, roomId, props, NFTCollections, collection });
 
     if (!isWeb3Enabled) return <PageAuthenticate />;   //Moralis getNFT Func only runs in Web3 is Enabled
     if (Object.keys(NFTCollections).length === 0) return <div className="chat framed">No Collections Found</div>;
     return (
         <Skeleton loading={isLoading}>
             <div className="chat framed">
-                <div className="left" style={{ maxWidth: '400px' }}>
-
+                <div className="left">
                     <div key="header" className="header">
                         <CollectionSelection collections={NFTCollections} collection={collection} />
                     </div>
-
-                    {!!collection &&
-                        <div className="room_add_container">
-                            <Collapse ghost expandIconPosition="right" expandIcon={() => (
-                                <><i className="main_color bi bi-plus-circle-fill"></i> ADD NEW ROOM </>
-                            )} >
-                                <Collapse.Panel header={<span>&nbsp;</span>} key="1">
-                                    <RoomAddForm parentId={collection?.hash} chain={collection.chain} collection={collection} onSuccess={(post) => { loadRooms(post.id) }} />
-                                </Collapse.Panel>
-                            </Collapse>
-                        </div>
-                    }
-                    {!!collection &&
-                        <div key="rooms" className={"rooms " + collection?.hash + ' : ' + selectedHash}>
-                            <h3>
-                                {rooms.length} Bonfires
+                    <div key="main" className="main">
+                        {!!collection &&
+                            <div key="rooms" className={"rooms " + collection?.hash + ' : ' + selectedHash}>
+                                {/* <h3> */}
+                                {/* {rooms.length} Bonfires */}
                                 {/* <span className="">&nbsp; for {collection.name}</span> */}
                                 {/* <span className="chain_icon debug" style={{ marginRight: '15px' }} title={ChainHelper.get(collection.chain, 'name')}>{ChainHelper.get(collection.chain, 'icon')}</span> */}
-                            </h3>
-                            {/* <Skeleton loading={!rooms}> */}
-                            {rooms.map((room) => {
-                                const link = `/chat/${collection.chain}/${collection.hash}/${room.id}`;
-                                return (
-                                    <RoomEntrance key={room.id}
-                                        hash={collection.hash}
-                                        collection={collection}
-                                        room={room}
-                                        selected={(curRoomId === room.id)}
-                                        link={link}
-                                    />
-                                );
-                            })}
-                            {/* </Skeleton> */}
-                        </div>
-                    }
+                                {/* </h3> */}
+                                {/* <Skeleton loading={!rooms}> */}
+                                {rooms.map((room) => {
+                                    const link = `/chat/${collection.chain}/${collection.hash}/${room.id}`;
+                                    return (
+                                        <RoomEntrance key={room.id}
+                                            hash={collection.hash}
+                                            collection={collection}
+                                            room={room}
+                                            selected={(curRoomId === room.id)}
+                                            link={link}
+                                        />
+                                    );
+                                })}
+                                {/* </Skeleton> */}
+                            </div>
+                        }
+                    </div>
                     <div className="footer">
+
+                        <div class="actions">
+                            <Button type="primary" shape="round" icon={<FireTwoTone twoToneColor="red" />} onClick={() => setDisaplyAdd(true)}
+                                style={{ width: '100%' }}>
+                                Start a new Bonfire
+                            </Button>
+                        </div>
                     </div>
 
                 </div>
                 <div className="middle">
-                    {!!collection &&
-                        <div className="inner container">
-                            <div className="room-header">
-                                <h3>[Room]</h3>
-                            </div>
+                    {!isAuthenticated ? <div className="container"><PageAuthenticate /></div>
+                        : <>
+                            {collection &&
+                                <div className="inner container">
+                                    <div className="room-header">
+                                        <h3>
+                                            {/* {curRoom ? 'Bonfire in ' + collection.name : 'New Bonfire in ' + collection.name} */}
+                                            {displayAdd && <>New Bonfire in <span className="collection-name" style={{ textDecoration: 'underline' }}>{collection.name}</span> Collection</>}
+                                        </h3>
+                                    </div>
 
-                            {rooms.length === 0 && <SpaceEmpty collection={collection} />}
+                                    <div className="room-container">
+                                        {console.warn("[TEST] Chat() Room:" + roomId, { options, selectedHash, NFTCollections, collection, rooms })}
 
-                            {(selectedHash && rooms.length > 0 && roomId) &&
-                                <div className="room-container">
-                                    {console.warn("[TEST] Chat() Room:" + roomId, { options, selectedHash, NFTCollections, collection, rooms })}
-                                    <RoomMain
-                                        // roomId={roomId}
-                                        // room={rooms.find(room => (room.id === roomId))}
-                                        room={curRoom}
-                                        selectedHash={selectedHash}
-                                        collection={collection}
-                                    />
-                                </div>}
+                                        {displayAdd
+                                            ?
+                                            <div className="RoomMainAdd framed">
+                                                {/* <div>Loading Rooms...</div> */}
+                                                {rooms.length === 0 && <div className="texts">
+                                                    <h4 key="R1">Welcome, cryptonout! You're the first person in this Space</h4>
+                                                    {collection && <p key="R2">Why don't you go ahead and light up a new bonfire for your {__.sanitize(collection.name)} NFT buddies</p>}
+                                                </div>}
+                                                {collection && <RoomAddForm parentId={collection?.hash} chain={collection.chain} collection={collection} onSuccess={(post) => { loadRooms(post.id) }} />}
+                                            </div>
+                                            : <>
+                                                {curRoom &&
+                                                    <RoomMain
+                                                        room={curRoom}
+                                                        selectedHash={selectedHash}
+                                                        collection={collection}
+                                                        chain={collection.chain}
+                                                    />
+                                                }
+                                            </>}
+                                    </div>
+                                    <div className="room-footer">
 
-                            <div className="room-footer">
-
-                            </div>
-                        </div>
-                    }
+                                    </div>
+                                </div>
+                            }
+                        </>}
                 </div>
 
                 <div className="right">
@@ -182,7 +204,7 @@ function Chat(props) {
                                 </dl>
                                 <Collapse ghost expandIconPosition="right" expandIcon={() => (
                                     <span>Members</span>
-                                )} >
+                                )}>
                                     <Collapse.Panel header={<span>&nbsp;</span>} key="1">
                                         <ul>
                                             {curRoom?.get('members').map((member) => (
@@ -205,80 +227,6 @@ function Chat(props) {
         </Skeleton >
     );
 
-    /**
-     * Fetch Current Space
-     */
-    useEffect(() => async () => {
-        if (isWeb3Enabled && isAuthenticated) {
-            //Unset Space
-            setSpace(null);
-            try {
-                const Space = Moralis.Object.extend("Space");
-                const query = new Moralis.Query(Space);
-
-                query.equalTo("hash", hash);
-                query.first().then(async result => {
-                    if (result) {
-                        setSpace(result);
-                        //Log
-                        // console.log("[TEST] Got Space for Hash:'"+hash+"'", result); 
-                    }//Existing Space
-                    else {
-                        //Create a new Space
-                        const newSpace = new Space();
-                        newSpace.set("hash", hash);
-                        newSpace.set("name", "New Space"); //No Need
-                        newSpace.set("text", "This is a new space");  //No Need
-                        // newSpace.set("first_user", Moralis.currentUser.get("objectId"));   //TODO: Get Current User ObjectID, This isn't Really It...
-                        // newSpace.set("rooms", []); //Other Way...
-                        await newSpace.save()//.then(result => {
-                            .catch(error => {
-                                console.error("[CAUGHT] Chat() Error wile saving New Space", { error, hash, newSpace, isInitialized, isWeb3Enabled, isAuthenticated });
-                            });
-                        //Log
-                        console.log("(i) Automatically Created new Space for:" + hash);
-                        //Set
-                        // setSpace(result);
-                        // });
-                        setSpace(newSpace);
-                    }//New Space
-                });
-            } catch (error) {
-                console.error("[CAUGHT] Error in Chat.jsx", { error, isInitialized, isWeb3Enabled, isAuthenticated });
-            }
-        }//Web3 Enabled
-        else console.log("Chat() Waiting for Web3...");
-    }, [isWeb3Enabled, isAuthenticated, hash, Moralis.Query]);
-
-
-    /**
-     * Insert Rooms
-     */
-    function initRooms(hash) {
-        try {
-            let roomsInit = [
-                new Room().set("name", 'Introduction').set("text", 'Say Hi! and introduce yourself'),
-                // new Room().set("name", 'News').set("text", 'Things people like you should know about'),
-                // new Room().set("name", 'Events').set("text", 'Virtual Meta-Events or IRL, all private NFT events can be posete here'),
-            ];
-            for (let room of roomsInit) {
-                // room.set("space", space.id);    //Seems Unecessary. Spaces are 1-1 with Contract Hashes
-                room.set("parentId", hash);       //Link Directly to Space (By Hash)
-                room.save().then(result => {
-                    console.log("initRooms() Created Default Room for:" + hash, result);
-                });
-            }//Insert Each Room
-
-            //Set Rooms
-            // setRooms(roomsInit); //Try Without... Also Use Live Query
-            //Log
-            // console.log("[TEST] Chat() No Rooms Found for Space:"+hash+" --> Init Rooms", roomsInit);
-
-            //Return
-            // return roomsInit;
-        } catch (error) { console.error("[CAUGHT] Chat() Init Rooms Error", { error, hash }); }
-    }//initRooms()
-
     //Log
     // console.log("Chat() For collection:", { collection, rooms });
     // console.warn("[DEV] Room list Collapse", curRoomId);user
@@ -287,21 +235,19 @@ function Chat(props) {
 
 export default Chat;
 
-/**
+/** UNUSED
  * Component: Empty Space
  */
 function SpaceEmpty({ collection }) {
     return (
-        <div className="SpaceEmpty">
+        <div className="SpaceEmpty framed">
             {/* <div>Loading Rooms...</div> */}
-            <p key="R1">Welcome, cryptonout! You're the first person in this Space</p>
+            <h4 key="R1">Welcome, cryptonout! You're the first person in this Space</h4>
             {collection && <p key="R2">Why don't you go ahead and light up a new bonfire for your {__.sanitize(collection.name)} NFT buddies</p>}
             {collection && <RoomAddForm parentId={collection.hash} chain={collection.chain} collection={collection} />}
         </div>
     );
 }//SpaceEmpty()
-
-
 
 /**
  * Component: Link To Room
@@ -333,12 +279,7 @@ function RoomEntrance(props) {
     }
 
     if (room?.get('members')) console.warn("[TEST] RoomEntrance() For:" + room.id, { room, members: room?.get('members') });
-    /*
-    console.warn("[TEST] RoomEntrance() For:"+room.id, {
-      started:moment(room?.get('createdAt')).format('YYYY-MM-DD HH:mm:ss'),
-      letInteraction: moment(room?.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss'),
-    });
-    */
+
     //Validate
     if (!room) {
         console.error("RoomEntrance() Room Missing", { room });
@@ -351,8 +292,6 @@ function RoomEntrance(props) {
     let role = room?.get('persona')?.get('metadata')?.role;
     let className = "room_entrance";
     if (isSelected) className += " selected";
-
-    // console.warn("[TEST] RoomEntrance() Room (Persona) Image:" + image, props);
 
     /**
      * Redirect to Room
@@ -408,12 +347,6 @@ function RoomEntrance(props) {
                         {/* <a className="btn"><FireTwoTone twoToneColor="red" />{room?.get('name')}</a> */}
                         <FireTwoTone twoToneColor="red" />
                         {room?.get('name')}
-                        {/* <p key="comments" style={{
-                            display: 'inline',
-                            marginLeft: '10px',
-                            fontSize: '0.8em',
-                            fontWeight: '400',
-                        }}>{room?.get('childCount') || 0} {`${room?.get('childCount') == 1 ? 'Comment' : 'Comments'}`}</p> */}
                     </h5>
 
                     <div className="info">
@@ -478,12 +411,7 @@ function RoomHead(props) {
     }
 
     if (room?.get('members')) console.warn("[TEST] RoomHead() For:" + room.id, { room, members: room?.get('members') });
-    /*
-    console.warn("[TEST] RoomHead() For:"+room.id, {
-      started:moment(room?.get('createdAt')).format('YYYY-MM-DD HH:mm:ss'),
-      letInteraction: moment(room?.get('updatedAt')).format('YYYY-MM-DD HH:mm:ss'),
-    });
-    */
+
     //Validate
     if (!room) {
         console.error("RoomHead() Room Missing", { room });
@@ -571,8 +499,9 @@ function RoomHead(props) {
  * Component - Show More Button
  */
 function RoomMain(props) {
-    const { room, collection } = props;
-    const curRoomId = room?.get('id');
+    const { room, collection, chain } = props;
+    // const curRoomId = room?.get('id');
+    const curRoomId = room?.id;
     const { isWeb3Enabled, user } = useMoralis();
     // const [isAllowed, setIsAllowed] = useState(null);
     const [isAllowed, setIsAllowed] = useState(true);
@@ -654,7 +583,6 @@ function ShowComments({ room }) {
     const [limit, setLimit] = useState(100);
     const [order, setOrder] = useState('best'); //[olde, new, best]  //updatedAt, score
 
-
     // const { data:comments, error, isLoading } = useMoralisQuery(CommentObj, query =>
     const { data: comments } = useMoralisQuery(CommentObj, query =>
         query.equalTo("parentId", room.id)
@@ -671,19 +599,19 @@ function ShowComments({ room }) {
     return (
         <div className="comments_wrapper">
             {/* UNUSED
-      <div className="comments_top_bar">
-        <div className="comments_info">
-          {comments.length} Comments
-        </div>
-        <div className="comments_order">
-          <Radio.Group value={order} size="medium" onChange={(e) => {console.log('ShowComments() Order Canged to:'+e.target.value, e)}}>
-            <Radio.Button value="new">Newest</Radio.Button>
-            <Radio.Button value="old">Oldest</Radio.Button>
-            <Radio.Button value="best">Best</Radio.Button>
-          </Radio.Group>
-        </div>
-      </div>
-      */}
+            <div className="comments_top_bar">
+                <div className="comments_info">
+                {comments.length} Comments
+                </div>
+                <div className="comments_order">
+                <Radio.Group value={order} size="medium" onChange={(e) => {console.log('ShowComments() Order Canged to:'+e.target.value, e)}}>
+                    <Radio.Button value="new">Newest</Radio.Button>
+                    <Radio.Button value="old">Oldest</Radio.Button>
+                    <Radio.Button value="best">Best</Radio.Button>
+                </Radio.Group>
+                </div>
+            </div>
+            */}
             <div className="comment_list">
                 <div className="inner">
                     {/* <p>[...COMMENTS for Room:{room.id}]</p> */}

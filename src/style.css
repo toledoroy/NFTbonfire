@@ -80,12 +80,14 @@ body{
   color: var(--color);
 }
 .container {
-  background-color: rgba(240, 240, 240, 0.9);
+  /* background-color: rgba(240, 240, 240, 0.9); */
+  background-color: var(--colorBgPos);
   /* background: var(--comment-background); */
   border-radius: var(--borderRadius);
 }
 .indent{
-  background-color: rgba(0, 0, 0, 0.9);
+  /* background-color: rgba(0, 0, 0, 0.9); */
+  background-color: var(--colorBgNeg);
   border-radius: var(--borderRadius);
 }
 
