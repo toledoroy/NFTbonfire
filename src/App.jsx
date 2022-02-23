@@ -153,8 +153,8 @@ const App = ({ isServerInfo }) => {
               </div>
               <MenuItems />
               <div style={styles.headerRight}>
-                {account && <Chains />}
-                <NativeBalance />
+                {/* {account && <Chains />} */}
+                {/* <NativeBalance /> */}
                 <Account />
               </div>
             </div>

@@ -12,6 +12,7 @@ function CollectionSelection({ collections, collection }) {
     const [selected, setSelected] = useState({});
     //Filter
     const menuItems = collections;
+    const itemsLength = Object.keys(collections)?.length;
     console.warn("[TEST] CollectionSelection() Collections:", { collections });
 
     const handleMenuClick = (element) => {
@@ -23,6 +24,9 @@ function CollectionSelection({ collections, collection }) {
         const image = collection?.image ? collection.image : collection?.items[0]?.image;
         return <div className="image"><img src={image} /></div>;
     }
+    // useEffect(() => {
+
+    // },[collections]);
 
     const menu = menuItems.length < 2 ? '' : (
         <Menu onClick={handleMenuClick} className="collection_menu collection_select container">
@@ -46,10 +50,11 @@ function CollectionSelection({ collections, collection }) {
     );
 
     let className = menuItems.length > 1 ? "collection_select lightUp" : "collection_select";
-    className += " flex count_" + Object.keys(collections)?.length;
+    className += " flex count_" + itemsLength;
     return (
         <Dropdown overlay={menu} trigger={["click"]}>
             <Button className={className} key={collection?.key} icon={getCollectionIcon(collection)}>
+                {itemsLength === 0 && <span>No Possessions Found</span>}
                 <span style={{ marginLeft: "5px" }}>{collection?.name}</span>
                 {/* <span style={{ marginLeft: "5px" }}>${collection?.symbol}</span> */}
                 {/* <span title={ChainHelper.get(options.chain, 'name')}>{ChainHelper.get(options.chain, 'icon')}</span>  */}

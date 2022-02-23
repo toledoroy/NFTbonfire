@@ -97,6 +97,22 @@ body {
             max-width: var(--pageWidth);
             margin:0 auto;
         }
+        /* Chain Select */
+        .chainSelect{
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            font-family: "Roboto", sans-serif;
+            font-size: 14px;
+            padding: 21px 16px;
+            height: 42px;
+            border-radius: 42px;
+            border: 2px solid rgb(231, 234, 243);
+            background-color: rgba(244, 244, 244, 0.87);
+            /* background-color: var(--faintBG);  */
+            /* border: 2px solid var(--faintBG); */
+            /* border: none; */
+        }
     }
     >footer{
         margin-top: 40px;

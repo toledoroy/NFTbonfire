@@ -25,6 +25,7 @@ import Address from "components/Address/Address";
 import PageAuthenticate from "components/PageAuthenticate";
 import { useNFTCollections } from "hooks/useNFTCollectionsNew";
 import CollectionSelection from "./CollectionSelection";
+import Chains from "components/Chains";
 
 import "./Chat.scss";
 
@@ -53,7 +54,9 @@ function Chat(props) {
     options.chain = chain ? chain : chainId;
 
     const { NFTCollections, NFTpersonas, isLoading } = useNFTCollections(options);
+
     const collection = selectedHash ? NFTCollections[selectedHash] : null;
+    // const collection = selectedHash ? NFTCollections[selectedHash] : Object.keys(NFTCollections).length > 0 ? NFTCollections[Object.keys(NFTCollections)[0]] : null; //Default to first collection
 
     const [space, setSpace] = useState({});
     // const [rooms, setRooms] = useState([]);
@@ -67,6 +70,7 @@ function Chat(props) {
     // const { isAllowed } = useIsAllowed({selectedHash, chain,});
     const { persona, setPersona } = useContext(PersonaContext);
     // const chain = collection.chain;
+    const history = useHistory();
 
     React.useEffect(() => {
         const room = rooms.find(room => (room.id === roomId));
@@ -77,8 +81,22 @@ function Chat(props) {
     // React.useEffect(() => {
     //     setIsAllowed((collection.owned));
     //     //Log
-    //     console.log("(i) Space() Check if Allowed on Collection:" + collection.owned, collection);
+    //     console.log("(i) Chat() Check if Allowed on Collection:" + collection.owned, collection);
+    //     //Check if Allowed
     // }, [collection]);
+    React.useEffect(() => {
+        if (!collection && Object.keys(NFTCollections).length > 0) {
+            //Default to First Collection
+            let first = NFTCollections[Object.keys(NFTCollections)[0]];
+            // if (first.chain == chainId) {    //Validate Same Chain (Running on Change Swap)
+            const link = `/chat/${first.chain}/${first.hash}`;
+            // console.warn("[TEST] Chat() Set Default Collection (Redirect) ", { first, NFTCollections, collection, link });   //V
+            history.push(link);
+            // }
+            // else console.warn("[TEST] Chat() Not Same Chain " + first.chain + " & Current" + chainId, { first, NFTCollections, collection, chainId });
+        }
+    }, [NFTCollections]);
+
 
     // React.useEffect(() => {
     //     if (!selectedHash) setIsAllowed(true);
@@ -100,13 +118,17 @@ function Chat(props) {
     // console.warn("[TEST] Chat() Room:" + roomId, { chain, selectedHash, roomId, props, NFTCollections, collection });
 
     if (!isWeb3Enabled) return <PageAuthenticate />;   //Moralis getNFT Func only runs in Web3 is Enabled
-    if (Object.keys(NFTCollections).length === 0) return <div className="chat framed">No Collections Found</div>;
+    // if (Object.keys(NFTCollections).length === 0) return <div className="chat framed">No Collections Found</div>;
+
     return (
         <Skeleton loading={isLoading}>
             <div className="chat framed">
                 <div className="left">
-                    <div key="header" className="header">
+                    <div key="header" className="header container">
+                        {/* <div className="container flex"> */}
+                        <Chains showName={false} showArrow={false} onChange={(chainId) => { if (chainId) history.push(`/chat/${chainId}`); }} />
                         <CollectionSelection collections={NFTCollections} collection={collection} />
+                        {/* </div> */}
                     </div>
                     <div key="main" className="main">
                         {!!collection &&
@@ -274,7 +296,7 @@ function RoomEntrance(props) {
         const PersonaQuery = new Moralis.Query(Persona);
         let personaId = parseObj?.get('persona').id;
         let personaFull = await PersonaQuery?.get(personaId);
-        // console.warn("Space() Persona", personaFull?.attributes,  personaFull);
+        // console.warn("Chat() Persona", personaFull?.attributes,  personaFull);
         setPersona(personaFull);
     }
 
@@ -406,7 +428,7 @@ function RoomHead(props) {
         const PersonaQuery = new Moralis.Query(Persona);
         let personaId = parseObj?.get('persona').id;
         let personaFull = await PersonaQuery?.get(personaId);
-        // console.warn("Space() Persona", personaFull?.attributes,  personaFull);
+        // console.warn("Chat() Persona", personaFull?.attributes,  personaFull);
         setPersona(personaFull);
     }
 

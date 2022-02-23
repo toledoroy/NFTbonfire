@@ -20,7 +20,18 @@
     .left{
         width: 280px;
         .header{
-
+            display: flex;
+            overflow: hidden;
+            .chainSelect{
+                // display: flex;
+                // align-items: center;
+                // font-family: "Roboto", sans-serif;
+                // font-size: 14px;
+                padding: 4px 9px 0;
+                height: 100%;
+                border: none;
+                border-radius: 0;
+            }
         }
         .main{
            
@@ -38,7 +49,7 @@
         .collection_select{
             width:100%;
             padding: 6px 12px;
-            border-radius: 12px;
+            border-radius: 0px;
             height: auto;
             display: flex;
             align-items: center;
