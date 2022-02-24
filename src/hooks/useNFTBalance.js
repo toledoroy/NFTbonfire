@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useMoralis, useMoralisWeb3Api, useMoralisWeb3ApiCall } from "react-moralis";
-import { useIPFS } from "./useIPFS";
+// import { useIPFS } from "./useIPFS";
 
 export const useNFTBalance = (options) => {
   const { account } = useMoralisWeb3Api();
-  const { chainId } = useMoralis();
-  const { resolveLink } = useIPFS();
-  const [NFTBalance, setNFTBalance] = useState([]);
+  const { chainId, isInitialized } = useMoralis();
+  // const { resolveLink } = useIPFS();
+  // const [NFTBalance, setNFTBalance] = useState([]);
+
   const {
     // fetch: getNFTBalance,
     fetch,
@@ -15,36 +16,32 @@ export const useNFTBalance = (options) => {
     isLoading,
   } = useMoralisWeb3ApiCall(account.getNFTs, { chain: chainId, ...options });
 
-  const dataTest = useMoralisWeb3ApiCall(account.getNFTs, { chain: chainId, ...options });
-
-  console.log("dataTest for Chain:" + chainId, dataTest, { chain: chainId, ...options });
+  // useEffect(() => {
+  // console.warn("useNFTBalance() Data Changed", { data, error, isLoading });
+  // }, [data]);
 
   useEffect(() => {
-
-    /* WORKS FINE
-    let guestOptions = {chain: chainId, address: '0x9e87f6bd0964300d2bde778b0a6444217d09f3c1'};
-    account.getNFTs(guestOptions).then((data) => {
-      console.warn("Guest NFTs Raw result", data);
-    });
-    */
-
-    account.getNFTs(options).then((data) => {
-      console.warn("NFTs Raw result", data);
-    });
-
-    if (data?.result) {
-      const NFTs = data.result;
-      for (let NFT of NFTs) {
-        if (NFT?.metadata) {
-          NFT.metadata = JSON.parse(NFT.metadata);
-          // metadata is a string type
-          NFT.image = resolveLink(NFT.metadata?.image);
+    if (isInitialized && options) {
+      // console.warn("[TEST] useNFTBalance() Run Fetch", { data, error, isLoading, options });
+      fetch();
+      /* Moved Outside
+      if (data?.result) {
+        const NFTs = data.result;
+        for (let NFT of NFTs) {
+          if (NFT?.metadata && typeof NFT.metadata == 'string') {
+            NFT.metadata = JSON.parse(NFT.metadata);
+            // metadata is a string type
+            NFT.image = resolveLink(NFT.metadata?.image);
+          }
         }
+        setNFTBalance(NFTs);
       }
-      setNFTBalance(NFTs);
+      */
     }
+    // else setNFTBalance([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+    // }, [options, isInitialized]);
+  }, [options?.chain, options?.address, isInitialized]);
 
-  return { fetch, NFTBalance, error, isLoading };
+  return { fetch, data, error, isLoading };
 };

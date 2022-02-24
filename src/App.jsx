@@ -75,7 +75,7 @@ const App = ({ isServerInfo }) => {
   useEffect(() => {
     // if(isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading){
     if (!isWeb3Enabled && !isWeb3EnableLoading) {
-      console.log("(i) App() Running enableWeb3()", { isInitialized, isWeb3Enabled, isWeb3EnableLoading, isAuthenticated })
+      // console.log("(i) App() Running enableWeb3()", { isInitialized, isWeb3Enabled, isWeb3EnableLoading, isAuthenticated })
       enableWeb3();
     }
     // else console.log("(i) App() Not Running enableWeb3()", {isInitialized, isWeb3Enabled, isWeb3EnableLoading, isAuthenticated})

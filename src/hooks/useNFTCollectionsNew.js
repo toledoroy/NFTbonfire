@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNFTBalances } from "react-moralis";
+// import { useNFTBalances } from "react-moralis";
+import { useNFTBalance as useNFTBalances } from "hooks/useNFTBalance";
 import { useMoralis } from "react-moralis";
 import { useVerifyMetadata } from "hooks/useVerifyMetadata";
 import __ from "helpers/__";
+import { IPFS } from "helpers/IPFS";
 
 /**
  * Hook - Fetches NFT Balances for Account
@@ -13,6 +15,9 @@ export const useNFTCollections = (options) => {
   const [NFTCollections, setNFTCollections] = useState({});
   const [NFTpersonas, setPersonas] = useState([]);
   const { verifyMetadata, personaUpdateFromDB, updateToken } = useVerifyMetadata();  //updateToken
+  //Get NFTs for Account
+  const { data: NFTBalances, isLoading, error } = useNFTBalances(options);
+
 
   /**
    * Check if Token is a  Persona
@@ -92,8 +97,7 @@ export const useNFTCollections = (options) => {
     return { collections, personas };
   }//collect()
 
-  //Get NFTs for Account
-  const { data: NFTBalances, isLoading, error } = useNFTBalances(options);
+
   useEffect(() => {
     // console.log("[TEST] useNFTCollections() TRIGGERED", {NFTBalances, options, isInitialized, isLoading, error});
     // if (isWeb3Enabled && NFTBalances?.result) {
@@ -105,6 +109,12 @@ export const useNFTCollections = (options) => {
         NFT.chain = chain;
         //Check if Owned By Current User
         NFT.owned = __.matchAddr(account, NFT.owner_of);
+        if (NFT?.metadata && typeof NFT.metadata == 'string') {
+          NFT.metadata = JSON.parse(NFT.metadata);
+          // metadata is a string type
+          NFT.image = IPFS.resolveLink(NFT.metadata?.image);
+        }
+
       }//Each NFT
       //Organize Into Collections
       // let collections = collect(NFTs);
@@ -115,6 +125,7 @@ export const useNFTCollections = (options) => {
       setNFTCollections(collections);
       setPersonas(personas);
     }//Has Results
+    else if (!isLoading) console.warn("[FYI] useNFTCollections() Got Nothing", { options, isInitialized, isLoading, NFTBalances });
     // eslint-disable-next-line
   }, [NFTBalances, isWeb3Enabled, isInitialized]);
   // }, [NFTBalances, isWeb3Enabled, options]);

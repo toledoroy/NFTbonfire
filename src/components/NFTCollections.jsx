@@ -74,6 +74,9 @@ function NFTCollections(props) {
       // console.log("(i) NFTCollections() Check if Allowed on Collection:"+collectionHash, NFTCollections, NFTCollections[collectionHash]?.owned, (NFTCollections[collectionHash]?.owned));
       setIsAllowed((NFTCollections[collectionHash]?.owned));
     }
+
+    // console.warn("[TEST] NFTCollections() Selected Collection:" + collectionHash, { NFTCollections, options, isInitialized });
+
   }, [collectionHash, NFTCollections, isWeb3Enabled]);
 
   // React.useEffect(() => {
@@ -84,7 +87,7 @@ function NFTCollections(props) {
   // console.warn("[TEST] AUTH", {isWeb3Enabled, isAuthenticated});
   // if(!isWeb3Enabled || !isAuthenticated) return <PageAuthenticate />;  //Authentication Not Really Required
   // if(!options.address && isInitialized) return <PageAuthenticate />; //Ideally...
-  if (!isWeb3Enabled) return <PageAuthenticate />;   //Moralis getNFT Func only runs in Web3 is Enabled
+  // if (!isWeb3Enabled) return <PageAuthenticate />;   //Moralis getNFT Func only runs if Web3 is Enabled
   return (
     <Skeleton loading={!isInitialized}>
 
@@ -93,62 +96,57 @@ function NFTCollections(props) {
       <div key="collections" className={"collections framed count_" + Object.keys(NFTCollections).length}>
 
         <div key="header" className="header">
-          {(props?.match?.params?.showBreadcrumbs !== false) &&
+          {(props?.match?.params?.showBreadcrumbs === true) &&
+            <Breadcrumb separator=">">
+              {/* <Breadcrumb.Item key="1">Home</Breadcrumb.Item> */}
+              {accountHash && <Breadcrumb.Item key="2">
+                <Link key={'Link'} to={{ pathname: "/nftCollections/" + accountHash }}>
+                  {accountHash === account ? "My Collections" : "NFT Collections"}
+                  {/* {console.warn("[TEST] Account Hash", {account, accountHash, user})} */}
+                  {/* for <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
+                </Link>
+              </Breadcrumb.Item>}
+              {collectionHash && <Breadcrumb.Item key="3"><Link key={'Link'} to={{ pathname: "/nftCollections/" + accountHash + '/' + collectionHash }}>Space for {NFTCollections[collectionHash]?.name}</Link></Breadcrumb.Item>}
+              {/* <Breadcrumb.Item key="4"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>SELECT</Link></Breadcrumb.Item> */}
+              {/* <Breadcrumb.Item key="4">Post</Breadcrumb.Item> */}
+            </Breadcrumb>
+          }
+          {(false && !collectionHash) &&
             <>
-
-              {false &&
-                <Breadcrumb separator=">">
-                  {/* <Breadcrumb.Item key="1">Home</Breadcrumb.Item> */}
-                  {accountHash && <Breadcrumb.Item key="2">
-                    <Link key={'Link'} to={{ pathname: "/nftCollections/" + accountHash }}>
-                      {accountHash === account ? "My Collections" : "NFT Collections"}
-                      {/* {console.warn("[TEST] Account Hash", {account, accountHash, user})} */}
-                      {/* for <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
-                    </Link>
-                  </Breadcrumb.Item>}
-                  {collectionHash && <Breadcrumb.Item key="3"><Link key={'Link'} to={{ pathname: "/nftCollections/" + accountHash + '/' + collectionHash }}>Space for {NFTCollections[collectionHash]?.name}</Link></Breadcrumb.Item>}
-                  {/* <Breadcrumb.Item key="4"><Link key={'Link'} to={{pathname:"/nftCollections/"+accountHash}}>SELECT</Link></Breadcrumb.Item> */}
-                  {/* <Breadcrumb.Item key="4">Post</Breadcrumb.Item> */}
-                </Breadcrumb>
-              }
-
-              {!collectionHash &&
-                <>
-                  {accountHash
-                    ? <>
-                      <CarvedHeading heading={2} text={accountHash + "'s NFTs"} />
-                      {/* {accountHash}'s NFTs */}
-                      {/* <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
-                    </>
-                    : <>
-                      {collectionHash
-                        ? <CarvedHeading heading={2} text={"Private Space for " + NFTCollections[collectionHash].name} />
-                        : <CarvedHeading heading={1} text={"My NFTs"} />
-                      }
-                    </>}
+              {accountHash
+                ? <>
+                  <CarvedHeading heading={2} text={accountHash + "'s NFTs"} />
+                  {/* {accountHash}'s NFTs */}
+                  {/* <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
                 </>
-              }
-
-
-              {!collectionHash &&
-                <h2>
-                  {accountHash
-                    ? <>
-                      {accountHash}'s NFTs
-                      {/* <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
-                    </>
-                    : <>
-                      {collectionHash
-                        ? <> Private Space for {NFTCollections[collectionHash].name}</>
-                        : <>  {ChainHelper.get(options.chain, 'name')}
-                          {/* <span>{ChainHelper.get(options.chain,'icon')}</span> */}
-                        </>
-                      }
-                    </>}
-                </h2>
-              }
+                : <>
+                  {collectionHash
+                    ? <CarvedHeading heading={2} text={"Private Space for " + NFTCollections[collectionHash].name} />
+                    : <CarvedHeading heading={1} text={"My NFTs"} />
+                  }
+                </>}
             </>
           }
+
+
+          {(false && !collectionHash) &&
+            <h2>
+              {accountHash
+                ? <>
+                  {accountHash}'s NFTs
+                  {/* <Address icon={getChainLogo(options.chain)} copyable address={accountHash} size={6} /> */}
+                </>
+                : <>
+                  {collectionHash
+                    ? <> Private Space for {NFTCollections[collectionHash].name}</>
+                    : <>  {ChainHelper.get(options.chain, 'name')}
+                      {/* <span>{ChainHelper.get(options.chain,'icon')}</span> */}
+                    </>
+                  }
+                </>}
+            </h2>
+          }
+
           {/* {!collectionHash && <h4 className="subheading">{Object.keys(NFTCollections).length} Collections</h4>} */}
         </div>
 
