@@ -28,7 +28,19 @@ export default function AssetSelector(props) {
     const token = fullBalance.find((token) => token.token_address === value);
     setAsset(token);
   }
-
+  /**
+   * Get Value
+   * @param {*} item 
+   * @returns 
+   */
+  function getValue(item) {
+    try {
+      return parseFloat(Number(Moralis?.Units?.FromWei(item.balance, item.decimals))?.toFixed(6));
+    } catch (error) {
+      console.error("[CAUGHT] AssetSelector Error", { item, error });
+      return 0;
+    }
+  }
   return (
     <Select onChange={handleChange} size="large" style={style} placeholder={props.placeholder}>
       {fullBalance &&
@@ -60,7 +72,7 @@ export default function AssetSelector(props) {
                 {/* {console.warn("[TEST] AssetSelector Balance:" + item.balance, { item })} */}
                 <p>{item.symbol}</p>
                 <p style={{ alignSelf: "right" }}>
-                  ({parseFloat(Number(Moralis?.Units?.FromWei(item.balance, item.decimals)).toFixed(6))})
+                  ({getValue(item)})
                 </p>
               </div>
             </div>

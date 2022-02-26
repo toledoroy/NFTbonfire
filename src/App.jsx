@@ -75,7 +75,7 @@ const App = ({ isServerInfo }) => {
   useEffect(() => {
     // if(isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading){
     if (!isWeb3Enabled && !isWeb3EnableLoading) {
-      console.log("(i) App() Running enableWeb3()", { isInitialized, isWeb3Enabled, isWeb3EnableLoading, isAuthenticated })
+      // console.log("(i) App() Running enableWeb3()", { isInitialized, isWeb3Enabled, isWeb3EnableLoading, isAuthenticated })
       enableWeb3();
     }
     // else console.log("(i) App() Not Running enableWeb3()", {isInitialized, isWeb3Enabled, isWeb3EnableLoading, isAuthenticated})
@@ -252,10 +252,10 @@ const App = ({ isServerInfo }) => {
             <span>NFT Bonfire</span>
           </div> */}
               {/* Built with  */}
-              <a target="_blank" rel="noopener noreferrer" href="https://moralis.io?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplat">
+              {/* <a target="_blank" rel="noopener noreferrer" href="https://moralis.io?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplat">
                 <img src="/moralis/Powered-by-Moralis-Badge-Green.svg" alt="Moralis Power!" />
-              </a>
-              <a href='https://www.freepik.com/'>Cool Art by Freepik.com</a>
+              </a> */}
+              {/* <a href='https://www.freepik.com/'>Cool Art by Freepik.com</a> */}
               <a href="https://discord.gg/PeDb9MXXa9" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center' }}>
                 <i className="bi bi-discord"></i> <span style={{ margin: '0 5px' }}>Support</span>
               </a>

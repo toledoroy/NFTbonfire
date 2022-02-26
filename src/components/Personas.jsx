@@ -27,8 +27,7 @@ function Personas(props) {
     // <Link key={nft.token_address+'L'+nft.token_id} to={{pathname:"/personatoken/"+nft.chain+"/"+nft.token_address+"/"+nft.token_id}}> 
     return (
         <div className="framed">
-
-            <Skeleton loading={!isWeb3Enabled || !isAuthenticated || isLoading1 || isLoading2}>
+            <Skeleton loading={isLoading1 || isLoading2}>
                 <div key={params1.hash + 'items'} className="NFTitems" id={"NFTitems" + params1.hash} style={props.style}>
                     {tokens1.map((nft) => (
                         <NFTDisplaySingle key={nft.token_address + ':' + nft.token_id} nft={nft} />
@@ -38,7 +37,6 @@ function Personas(props) {
                     ))}
                 </div>
             </Skeleton>
-
         </div>
     );
 }
