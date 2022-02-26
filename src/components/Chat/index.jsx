@@ -126,13 +126,16 @@ function Chat(props) {
         <Skeleton loading={isLoading}>
             <div className="chat framed">
                 <div className="left">
+
                     <div key="header" className="header container">
                         {/* <div className="container flex"> */}
                         <Chains showName={false} showArrow={false} onChange={(chainId) => { if (chainId) history.push(`/chat/${chainId}`); }} />
                         <CollectionSelection collections={NFTCollections} collection={collection} />
                         {/* </div> */}
                     </div>
+
                     <div key="main" className="main">
+
                         {rooms.length > 0 &&
                             <div className="rooms_top_bar">
                                 <div className="rooms_info">
@@ -150,16 +153,18 @@ function Chat(props) {
                             </div>
                         }
 
-                        {!!collection && <ShowRooms rooms={rooms} collection={collection} curRoomId={setCurRoomId} />}
-                    </div>
-                    <div className="footer">
-
                         <div class="actions">
                             <Button type="primary" shape="round" icon={<FireTwoTone twoToneColor="red" />} onClick={() => setDisaplyAdd(true)}
                                 style={{ width: '100%' }}>
                                 Start a new Bonfire
                             </Button>
                         </div>
+
+                        {!!collection && <ShowRooms rooms={rooms} collection={collection} curRoomId={setCurRoomId} />}
+                    </div>
+
+                    <div className="footer">
+
                     </div>
 
                 </div>
