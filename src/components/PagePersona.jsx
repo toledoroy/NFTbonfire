@@ -63,65 +63,11 @@ function PagePersona(props) {
     // const [ imageLoading, setImageLoading ] = useState(false);
     // const history = useHistory();
     const { switchNetwork } = useChain();   //chain
-    //https://github.com/MoralisWeb3/react-moralis#usemoralisweb3api
-
-
-    //Cloud Function Examples
-    // const { data, error, isLoading } = useMoralisCloudFunction("topScores", { limit, });
-    // const { fetch, data, error, isLoading } = useMoralisCloudFunction("topScores", {limit}, { autoFetch: false } );  //Trigger Manually (via fetch func.)
-
     const [form] = Form.useForm();  //Form Handle
 
     // useEffect(() => { 
     //     console.log("Persona() Valid Chain:"+validateChain(chainId), chainId);
     // }, [chainId]);
-
-    /**
-     * Set Persona Wrapper Function
-     */
-    function setPersona(persona) {
-        setPersonaActual(persona);
-        //Set Derivitives
-        setIsOwned(__.matchAddr(account, persona?.get('owner')));
-        if (persona.get('metadata')) updateMetadata(persona.get('metadata'));
-        else console.warn("PagePersona() Persona Has no Metadata", { persona });
-    }//setPersona()
-
-    /**
-     * Update Metadata Field (Prefer This)
-     * @param {*} field 
-     * @param {*} value 
-     */
-    function updateMetadataField(field, value) {
-        // console.warn("[TEST] updateMetadataField()", {field, value, metadata});
-        setMetadata(prevState => {
-            console.warn("[TEST] updateMetadataField() Prev Metadata:", { prevState });
-            // Object.assign would also work
-            // return {...prevState, ...{ [field]: value }};
-            return { ...prevState, [field]: value };
-        });
-        console.warn("[TEST] updateMetadataField() metadata Again", { field, value, metadata });
-        if (field === 'image') setImageUrl(value);
-        //Set Derivitives (Image)       //Deprecate?
-        // setImageUrl(metadata?.image); 
-        //Done Loading
-        setIsLoading(false);
-    }//updateMetadataField()
-
-    /**
-     * Full Metadata Update Procedure
-     * @param {*} metadata 
-     */
-    function updateMetadata(metadata) {
-        //Validate
-        if (typeof metadata != 'object') console.error("PagePersona.updateMetadata() Invalid Metadata:", metadata);
-        //Set Metadata State
-        setMetadata(metadata);
-        //Set Derivitives (Image)       //Deprecate?
-        setImageUrl(metadata?.image);
-        //Done Loading
-        setIsLoading(false);
-    }//updateMetadata()
 
     useEffect(() => {
         //When Entering Edit More - Reload Persona from Contract
@@ -152,96 +98,141 @@ function PagePersona(props) {
             loadPersona(params);
             //Log
             // persona && console.log("PagePersona() Loaded Different persona:",  {persona, isWeb3Enabled, user, metadata, personaTokenId: persona?.get('token_id'), params});
-            console.log("PagePersona() Load Persona:", { isInitialized });
+            // console.log("PagePersona() Load Persona:", { isInitialized });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params, isInitialized]);
 
     /**
+     * Set Persona Wrapper Function
+     * @param {Persona} persona
+     */
+    function setPersona(persona) {
+        setPersonaActual(persona);
+        //Set Derivitives
+        setIsOwned(__.matchAddr(account, persona?.get('owner')));
+        if (persona.get('metadata')) updateMetadata(persona.get('metadata'));
+        else console.warn("PagePersona() Persona Has no Metadata", { persona });
+    }//setPersona()
+
+    /**
+     * Update Metadata Field (Prefer This)
+     * @param {string} field 
+     * @param {*} value 
+     */
+    function updateMetadataField(field, value) {
+        // console.warn("[TEST] updateMetadataField()", {field, value, metadata});
+        setMetadata(prevState => {
+            console.warn("[TEST] updateMetadataField() Prev Metadata:", { prevState });
+            // Object.assign would also work
+            // return {...prevState, ...{ [field]: value }};
+            return { ...prevState, [field]: value };
+        });
+        console.warn("[TEST] updateMetadataField() metadata Again", { field, value, metadata });
+        if (field === 'image') setImageUrl(value);
+        //Set Derivitives (Image)       //Deprecate?
+        // setImageUrl(metadata?.image); 
+        //Done Loading
+        setIsLoading(false);
+    }//updateMetadataField()
+
+    /**
+     * Full Metadata Update Procedure
+     * @param {object} metadata 
+     */
+    function updateMetadata(metadata) {
+        //Validate
+        if (typeof metadata != 'object') console.error("PagePersona.updateMetadata() Invalid Metadata:", metadata);
+        //Set Metadata State
+        setMetadata(metadata);
+        //Set Derivitives (Image)       //Deprecate?
+        setImageUrl(metadata?.image);
+        //Done Loading
+        setIsLoading(false);
+    }//updateMetadata()
+
+    /**
      * Load Persona Procedure
      */
-    const loadPersona = async (params) => {
+    async function loadPersona(params) {
         //Start Loading
         setIsLoading(true);
-        // if(!isWeb3Enabled){ 
         if (!isInitialized) {
             //This is usually a temprorary state 
-            // console.error("Waiting for W3");
             console.error("Waiting for Init");
         }
-        else
-            if (params.chain && params.contract && params.token_id) {//By Token Address
-                //Fetch Token (from DB or Chain)
-                let result = await Moralis.Cloud.run("getPersona", params);
-                //Set
-                setPersona(result);
-                // updateMetadata(result.get('metadata'));      //Now, Included in setPersona()
-                setIsLoading(false);
-            }//Requested: Specific Token
-            else if (params.handle) { //By Registered Handle
-                // console.warn("[DEBUG] PagePersona() Get Persona By Handle:'" + handle + "'", { params, isInitialized });
-                // console.log("Get Persona By Handle:'" + handle + "'");
-                //Start Loading
-                setIsLoading(true);
-                //Query
-                const query = new Moralis.Query(Persona);
-                query.equalTo("handle", handle).first().then((persona) => {     //TESTING
-                    // console.warn("[TEST] PagePersona() Got persona By Handle:'"+handle+"'", persona);    //V
-                    if (persona) {
-                        //Reload Metadata
-                        if (persona.get('metadata')) {
-                            setPersona(persona);
-                            // console.warn("[DEV] PagePersona() Updated Persona from DB", {persona});    //V
-                        }
-                        else {
-                            console.warn("[DEV] PagePersona() Persona Missing Metadata - Handle:" + params.handle, { persona });
-                            //Load Fresh Metadata
-                            loadMetadata(persona).then((freshMetadata) => {
-                                console.warn("[TEST] PagePersona() Loaded Fresh Metadata For:'" + params.handle + "'", { freshMetadata, persona });
-                                setPersona(persona);
-                                //Override With Newly Fetched Metadata
-                                updateMetadata(freshMetadata);
-                            });
-                        }//No Metadata
-                    }//Known Handle
-                    else {//No Such Persona for Handle (404)
-                        //Log
-                        console.error("PagePersona() No Persona Found for Handle:" + params.handle, { persona, metadata });
-                        //Done Loading
-                        setIsLoading(false);
-                    }//Unknown Handle
-                });
-            }//Requsted: Handle
-            else {//New Persona
-                //Validate Authenticated User
-                if (isAuthenticated) {
-
-                    //Validate Chain
-                    let valid = validateChain(chainId);
-                    if (!valid) {
-                        console.warn("Persona.loadPersona() Invalid Chain:" + chainId + " - " + valid);
-                        message.error("Current Chain (" + ChainHelper.get(chainId, 'name') + ") is not yet supported. Please change to a supported chain", 30);
-
-                        //TODO: Display Something Else Does Not Support Minting Chain is Not Supported    
-                        // <ChainUnsupported />
-
+        else if (params.chain && params.contract && params.token_id) {//By Token Address
+            //Fetch Token (from DB or Chain)
+            let result = await Moralis.Cloud.run("getPersona", params);
+            //Set
+            setPersona(result);
+            // updateMetadata(result.get('metadata'));      //Now, Included in setPersona()
+            setIsLoading(false);
+        }//Requested: Specific Token
+        else if (params.handle) { //By Registered Handle
+            // console.warn("[DEBUG] PagePersona() Get Persona By Handle:'" + handle + "'", { params, isInitialized });
+            // console.log("Get Persona By Handle:'" + handle + "'");
+            //Start Loading
+            setIsLoading(true);
+            //Query
+            const query = new Moralis.Query(Persona);
+            query.equalTo("handle", handle).first().then((persona) => {     //TESTING
+                // console.warn("[TEST] PagePersona() Got persona By Handle:'"+handle+"'", persona);    //V
+                if (persona) {
+                    //Reload Metadata
+                    if (persona.get('metadata')) {
+                        setPersona(persona);
+                        // console.warn("[DEV] PagePersona() Updated Persona from DB", {persona});    //V
                     }
-                    // else console.warn("Persona.loadPersona() Valid Chain:"+chainId+" - "+valid);                
-
+                    else {
+                        console.warn("[DEV] PagePersona() Persona Missing Metadata - Handle:" + params.handle, { persona });
+                        //Load Fresh Metadata
+                        loadMetadata(persona).then((freshMetadata) => {
+                            console.warn("[TEST] PagePersona() Loaded Fresh Metadata For:'" + params.handle + "'", { freshMetadata, persona });
+                            setPersona(persona);
+                            //Override With Newly Fetched Metadata
+                            updateMetadata(freshMetadata);
+                        });
+                    }//No Metadata
+                }//Known Handle
+                else {//No Such Persona for Handle (404)
                     //Log
-                    console.warn("PagePersona() New Persona -- Init in Edit Mode", { params });
-                    initNewPersona();
-                    setIsEditMode(true);
-                    setIsLoading(false);    //Seems Necessary...
+                    console.error("PagePersona() No Persona Found for Handle:" + params.handle, { persona, metadata });
+                    //Done Loading
+                    setIsLoading(false);
+                }//Unknown Handle
+            });
+        }//Requsted: Handle
+        else {//New Persona
+            //Validate Authenticated User
+            if (isAuthenticated) {
+
+                //Validate Chain
+                let valid = validateChain(chainId);
+                if (!valid) {
+                    console.warn("Persona.loadPersona() Invalid Chain:" + chainId + " - " + valid);
+                    message.error("Current Chain (" + ChainHelper.get(chainId, 'name') + ") is not yet supported. Please change to a supported chain", 30);
+
+                    //TODO: Display Something Else: Does Not Support Minting - Chain is Not Supported    
+                    // <ChainUnsupported />
+
                 }
-                else {
-                    console.error("PagePersona() Can't Create New Persona -- User Not Authenticated");
-                    //Request for Authentication
-                    message.error('To mint yourself a new persona, please first authenticate using your Web3 wallet.');
-                }
-                //Ready
-                setIsLoading(false);
-            }//New Persona
+                // else console.warn("Persona.loadPersona() Valid Chain:"+chainId+" - "+valid);                
+
+                //Log
+                console.warn("PagePersona() New Persona -- Init in Edit Mode", { params });
+                initNewPersona();
+                setIsEditMode(true);
+                setIsLoading(false);    //Seems Necessary...
+            }
+            else {
+                console.error("PagePersona() Can't Create New Persona -- User Not Authenticated");
+                //Request for Authentication
+                message.error('To mint yourself a new persona, please first authenticate using your Web3 wallet.');
+            }
+            //Ready
+            setIsLoading(false);
+        }//New Persona
     }//loadPersona()
 
     /**
@@ -263,10 +254,7 @@ function PagePersona(props) {
             //Init Placehodler Persona
             const persona = new Persona(personaData);
             setPersona(persona);
-
-            //Load Default Metadata
-            // updateMetadata( loadDefaultMetadata() ); //Default Metadata
-            // console.log("PagePersona.initNewPersona() New Persona w/Default Metadata",  {persona, user, metadata, params, props});
+            //Load Fresh Metadata
             updateMetadata(freshMetadata());          //Empty Metadata
             // console.log("PagePersona.initNewPersona() New Persona w/Empty Metadata",  {persona, user, metadata, params, props});
         }
@@ -311,15 +299,14 @@ function PagePersona(props) {
     const canEdit = () => {
         // console.warn("[TEST] ", {pChain:persona?.get('chain'), chainId, isEditMode});
         // if(!persona?.get('chain') || persona.get('chain')!==chainId) return false;
-        return (isSameChain && isAuthenticated && isOwned);
+        return (isSameChain() && isAuthenticated && isOwned);
     }
     /**
-     * Check if persona matches the current chain
+     * Check if persona is on the current chain
      * @returns 
      */
-    const isSameChain = () => {
-        return (!persona?.get('chain') || persona.get('chain') === chainId);
-    }
+    const isSameChain = () => (!persona?.get('chain') || persona.get('chain') === chainId);
+
 
     /**
      * Tab Close/Add (Add/Remove Account)
