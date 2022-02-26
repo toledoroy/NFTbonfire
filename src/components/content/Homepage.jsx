@@ -80,7 +80,7 @@ function Homepage(props) {
             <Row className="welcom_message container" style={{ margin: '10px 0 30px 0' }}>
                 <Col xs={24} className="framed welcom_message">
                     <div className="inner">
-                        {chainId === "0xa869"
+                        {(chainId === "0xa869" || chainId === "0x4")
                             ? <>
                                 <CarvedHeading text="Welcome to NFT Bonfire" />
                                 <p className="" style={{ padding: '10px 0', fontSize: '1.3rem', fontWeight: '500', lineHeight: '2rem', color: 'var(--color)' }}>
