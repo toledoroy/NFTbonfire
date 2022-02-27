@@ -188,15 +188,17 @@ function NFTCollections(props) {
 
                           {/* <span className="debug">[{collection.contract_type}]</span> */}
 
-                          <Button variant="contained" color="primary" className="link arrow"
-                            style={{ marginLeft: '1rem' }}
-                            // icon={<i className="bi bi-arrow-left"></i>}
-                            title="Enter Private Space"
-                          >
-                            {/* Enter Private Space for  */}
-                            {/* '{__.sanitize(collection.name)}' Collection */}
-                            <i className="bi bi-arrow-right"></i>
-                          </Button>
+                          {false &&
+                            <Button variant="contained" color="primary" className="link arrow"
+                              style={{ marginLeft: '1rem' }}
+                              // icon={<i className="bi bi-arrow-left"></i>}
+                              title="Enter Private Space"
+                            >
+                              {/* Enter Private Space for  */}
+                              {/* '{__.sanitize(collection.name)}' Collection */}
+                              <i className="bi bi-arrow-right"></i>
+                            </Button>
+                          }
 
                         </Link>
                       </h2>
