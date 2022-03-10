@@ -11,6 +11,17 @@ Moralis.Cloud.beforeSaveFile((request) => {
 
 //-- DEV
 
+Moralis.Cloud.beforeSave('Persona', async request => {
+  //Fetch Post Object
+  const object = request.object;
+  if(!object.get('GUID')){
+    object.set('GUID', 
+          object.get('chain') + ':' + 
+          object.get('address') + ':' + 
+          object.get('token_id')
+      );
+  }
+});
 /**
  * DB - Custom Post Save Validation
  * Make sure that author has access to Room

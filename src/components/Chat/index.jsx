@@ -7,7 +7,7 @@ import { useMoralis } from "react-moralis";
 import RoomAddForm from "components/Room/RoomAddForm";
 import { FireTwoTone, ArrowLeftOutlined, Expand } from '@ant-design/icons';
 // import { Image, Form, Input, Button, Checkbox } from "antd";
-import { List, Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Button } from 'antd';
+import { List, Radio, Skeleton, Collapse, Badge, Avatar, Comment, Tooltip, Button } from 'antd';
 import { useMoralisQuery } from "react-moralis";
 import VotePane from "components/Room/VotePane";
 // import PersonaChanger from "components/Persona/PersonaChanger";
@@ -62,15 +62,17 @@ function Chat(props) {
     // const [rooms, setRooms] = useState([]);
     const [curRoomId, setCurRoomId] = useState();
     const [curRoom, setCurRoom] = useState();
-    const [limit, setLimit] = useState(12);
     const [isAllowed, setIsAllowed] = useState(null);
     const [selectedLeft, setSelectedLeft] = useState(1);
     const [displayAdd, setDisaplyAdd] = useState(false);    //Display Room Add Form
-    const { rooms, loadRooms } = usePost({ hash: selectedHash, limit });
     // const { isAllowed } = useIsAllowed({selectedHash, chain,});
     const { persona, setPersona } = useContext(PersonaContext);
     // const chain = collection.chain;
     const history = useHistory();
+
+    const [limit, setLimit] = useState(12);
+    const [order, setOrder] = useState('best'); //[old, new, best]  //updatedAt, score
+    const { rooms, loadRooms } = usePost({ hash: selectedHash, limit, order });
 
     React.useEffect(() => {
         const room = rooms.find(room => (room.id === roomId));
@@ -124,38 +126,32 @@ function Chat(props) {
         <Skeleton loading={isLoading}>
             <div className="chat framed">
                 <div className="left">
+
                     <div key="header" className="header container">
                         {/* <div className="container flex"> */}
                         <Chains showName={false} showArrow={false} onChange={(chainId) => { if (chainId) history.push(`/chat/${chainId}`); }} />
                         <CollectionSelection collections={NFTCollections} collection={collection} />
                         {/* </div> */}
                     </div>
+
                     <div key="main" className="main">
-                        {!!collection &&
-                            <div key="rooms" className={"rooms " + collection?.hash + ' : ' + selectedHash}>
-                                {/* <h3> */}
-                                {/* {rooms.length} Bonfires */}
-                                {/* <span className="">&nbsp; for {collection.name}</span> */}
-                                {/* <span className="chain_icon debug" style={{ marginRight: '15px' }} title={ChainHelper.get(collection.chain, 'name')}>{ChainHelper.get(collection.chain, 'icon')}</span> */}
-                                {/* </h3> */}
-                                {/* <Skeleton loading={!rooms}> */}
-                                {rooms.map((room) => {
-                                    const link = `/chat/${collection.chain}/${collection.hash}/${room.id}`;
-                                    return (
-                                        <RoomEntrance key={room.id}
-                                            hash={collection.hash}
-                                            collection={collection}
-                                            room={room}
-                                            selected={(curRoomId === room.id)}
-                                            link={link}
-                                        />
-                                    );
-                                })}
-                                {/* </Skeleton> */}
+
+                        {rooms.length > 0 &&
+                            <div className="rooms_top_bar">
+                                <div className="rooms_info">
+                                    {rooms.length} rooms
+                                </div>
+                                <div className="rooms_order">
+                                    <Radio.Group value={order} size="small" onChange={(e) => {
+                                        console.log('Chat() Rooms Order Canged to:' + e.target.value, e);
+                                        setOrder(e.target.value);
+                                    }}>
+                                        <Radio.Button value="new">Latest</Radio.Button>
+                                        <Radio.Button value="best">Greatest</Radio.Button>
+                                    </Radio.Group>
+                                </div>
                             </div>
                         }
-                    </div>
-                    <div className="footer">
 
                         <div class="actions">
                             <Button type="primary" shape="round" icon={<FireTwoTone twoToneColor="red" />} onClick={() => setDisaplyAdd(true)}
@@ -163,6 +159,12 @@ function Chat(props) {
                                 Start a new Bonfire
                             </Button>
                         </div>
+
+                        {!!collection && <ShowRooms rooms={rooms} collection={collection} curRoomId={setCurRoomId} />}
+                    </div>
+
+                    <div className="footer">
+
                     </div>
 
                 </div>
@@ -273,6 +275,10 @@ function SpaceEmpty({ collection }) {
 
 /**
  * Component: Link To Room
+ * @param {Object} props
+ *  @param {Object} props.room
+ *  @param {Bool} props.selected
+ *  @param {String} props.link  [Optional]
  */
 function RoomEntrance(props) {
     const { room, selected: isSelected, link } = props;  //hash, collection, 
@@ -595,6 +601,53 @@ function ShowMore() {
         </div>
     );
 }//ShowMore()
+
+/**
+ * Component: Show Comments
+ */
+function ShowRooms({ curRoomId, collection, rooms }) {
+    // const { isAuthenticated } = useMoralis();
+
+    // const [limit, setLimit] = useState(100);
+    // const [order, setOrder] = useState('best'); //[olde, new, best]  //updatedAt, score
+
+    /*
+    // const { data:comments, error, isLoading } = useMoralisQuery(CommentObj, query =>
+    const { data: comments } = useMoralisQuery(CommentObj, query =>
+        query.equalTo("parentId", room.id)
+            // .greaterThanOrEqualTo("score", 100)
+            .descending("updatedAt").descending("score")    //Best First
+        // .limit(limit),
+        , [room, limit, isAuthenticated, order]
+        , { live: true }   //Seems like it's not really live...
+    );
+    */
+
+    // console.warn("[DEBUG] ShowRooms() Loaded "+comments.length+" Comments for Room:"+room.id, {comments});
+
+    //Render
+    return (
+        <div key="rooms" className={"rooms " + collection?.hash}>
+            {/* <h3> */}
+            {/* {rooms.length} Bonfires */}
+            {/* <span className="">&nbsp; for {collection.name}</span> */}
+            {/* <span className="chain_icon debug" style={{ marginRight: '15px' }} title={ChainHelper.get(collection.chain, 'name')}>{ChainHelper.get(collection.chain, 'icon')}</span> */}
+            {/* </h3> */}
+            {/* <Skeleton loading={!rooms}> */}
+            {rooms.map((room) => {
+                const link = `/chat/${collection.chain}/${collection.hash}/${room.id}`;
+                return (
+                    <RoomEntrance key={room.id}
+                        room={room}
+                        selected={(curRoomId === room.id)}
+                        link={link}
+                    />
+                );
+            })}
+            {/* </Skeleton> */}
+        </div>
+    );
+}//ShowRooms()
 
 /**
  * Component: Show Comments

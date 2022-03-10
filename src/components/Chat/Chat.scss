@@ -34,7 +34,14 @@
             }
         }
         .main{
-           
+            .rooms_top_bar {
+                display:flex;
+                justify-content: space-between;
+                margin:6px 0; 
+                label.ant-radio-button-wrapper:first-child{ border-radius: 14px 0 0 14px; }
+                label.ant-radio-button-wrapper:last-child{ border-radius: 0 14px 14px 0; }
+                .ant-radio-button-wrapper:focus-within{ box-shadow: none; }
+            }
         }
         .footer{
 

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
 import { Room, Comment as CommentObj } from "objects/objects";  //These Run in the Wrong Context
 
-export const usePost = ({ hash, limit }) => {
+export const usePost = ({ hash, limit, order }) => {
     const { Moralis, isAuthenticated } = useMoralis();
     const [rooms, setRooms] = useState([]);
 
@@ -13,7 +13,7 @@ export const usePost = ({ hash, limit }) => {
     useEffect(() => {
         loadRooms();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [hash, limit, isAuthenticated]);
+    }, [hash, limit, order, isAuthenticated]);
 
     const loadRooms = (postId) => {
         if (isAuthenticated && hash) {    //TODO: Check if User is Allowed to View this Space
@@ -24,10 +24,19 @@ export const usePost = ({ hash, limit }) => {
             RoomQuery.equalTo("parentId", hash);  //By Hash
             const PersonaQuery = new Moralis.Query('Persona');
             RoomQuery.matchesKeyInQuery("persona", "objectId", PersonaQuery);
-            RoomQuery
-                .addDescending("score")    //Best First
-                .addDescending("updatedAt") //Latest Activity
-                .limit(limit);
+            RoomQuery.limit(limit);
+            //Order
+            if (order == "old") {
+                //Oldest First
+                RoomQuery.addAscending("updatedAt");
+            } else if (order == "new") {
+                //Latest Activity First
+                RoomQuery.addDescending("updatedAt");
+            } else {
+                //Best First
+                RoomQuery.addDescending("score");    //Best First
+                RoomQuery.addDescending("updatedAt"); //Latest Activity
+            }
             RoomQuery.find().then(results => {
                 //Log
                 console.log("Chat() Got " + results.length + " Rooms for Space:" + hash);
