@@ -6,7 +6,7 @@ const logger = Moralis.Cloud.getLogger();
 
 //-- PRODUCTION
 
-const isHash = (string) => (string.substr(0,2) === '0x');
+const isHash = (string) => (string.substr(0, 2) === '0x');
 
 /**
  * Something Like Contract's balanceOf() Function
@@ -17,9 +17,9 @@ const isHash = (string) => (string.substr(0,2) === '0x');
  * @returns number
  */
 const getBalance = async (account, contractAddress, chainId) => {
-  const options = { 
+  const options = {
     chain: chainId ? chainId : "0x4", //Default to Rinkbey
-    address: account, 
+    address: account,
     token_address: contractAddress,
   };
   // const userEthNFTs = await Moralis.Web3API.account.getNFTs(options);  //All NFTs
@@ -37,17 +37,17 @@ const getBalance = async (account, contractAddress, chainId) => {
  * @var string chain        Chain ID
  * @ret bool
  */
-Moralis.Cloud.define("isAllowed", async (request) => { 
+Moralis.Cloud.define("isAllowed", async (request) => {
   //Validate
   // if(!request?.params?.account || !request?.params?.hash || !request?.params?.chain) throw new Error("Missing Request Parameters (account, hash, chain)");
-  if(!request?.params?.hash || !request?.params?.chain) throw new Error("Missing Request Parameters (hash, chain)");
+  if (!request?.params?.hash || !request?.params?.chain) throw new Error("Missing Request Parameters (hash, chain)");
   // const account = request?.params?.account || request.user?.get('ethAddress'); //Check other Accounts
   const account = request.user?.get('ethAddress');  //Only Check Current Account
   // const accounts = request.user?.get('accounts');  //Any of Current Addresses [?]
   //Get Balance
   const balance = await getBalance(account, request.params.hash, request.params.chain);
   //Log
-  logger.info("(i) isAllowed() Chain:"+request?.params?.chain+" Account:"+account+" Balance:"+balance);
+  logger.info("(i) isAllowed() Chain:" + request?.params?.chain + " Account:" + account + " Balance:" + balance);
   //True if has any balance
   return (balance > 0);
 });
@@ -58,28 +58,28 @@ Moralis.Cloud.define("isAllowed", async (request) => {
  * @returns ?
  */
 const hashByPostId = async (parentId) => {
-  if(!parentId || isHash(parentId)) return parentId;
+  if (!parentId || isHash(parentId)) return parentId;
   let ret = parentId;
-  try{
+  try {
     const query = new Moralis.Query("Post");
     //Climb up the Parent Ladder untill hitting a Hash (or Empty)
     let count = 0;
-    while(ret && !isHash(ret)){
+    while (ret && !isHash(ret)) {
       // logger.warn("hashByPostId() '"+ret+"' is Not Hash");
       //Fetch Parent
       // let parentPost = await query.get(ret);
-      let parentPost = await query.select("parentId").get(ret, {useMasterKey: true});
+      let parentPost = await query.select("parentId").get(ret, { useMasterKey: true });
       // logger.warn("hashByPostId() Parent Post for id:'"+ret+"' -- "+JSON.stringify(parentPost)); 
       // logger.warn("hashByPostId() Climb from:"+ret+" to "+parentPost.get('parentId'));   //V
       //Get its Parent
       ret = parentPost.get('parentId');
       //Depth Check
       ++count;
-      if(count >= 10) throw new Error("hashByPostId() Entity is too Deep (D:"+count+")");
+      if (count >= 10) throw new Error("hashByPostId() Entity is too Deep (D:" + count + ")");
     }
   }
-  catch(error){ 
-    logger.error("hashByPostId() Exception Caught: "+JSON.stringify(error)); 
+  catch (error) {
+    logger.error("hashByPostId() Exception Caught: " + JSON.stringify(error));
     // logger.error(error);
   }
   //Return
@@ -95,17 +95,17 @@ const hashByPostId = async (parentId) => {
 //-- DEV
 
 Moralis.Cloud.define('dbSchema', request => {
-    
+
   //TODO: Test This
 
   //[DEV] Schema Stuff        https://parseplatform.org/Parse-SDK-JS/api/2.9.0/Parse.Schema.html
   const schema = new Moralis.Schema('Persona');
-  console.warn("[DEV] Moralis Persona Schema:"+JSON.stringify(schema));
+  console.warn("[DEV] Moralis Persona Schema:" + JSON.stringify(schema));
   // const options = { required: true, defaultValue: 'hello world' };
   // schema.addString('TestField', options);
   schema.addIndex('i_handle', { 'handle': 1 });
   // schema.save();
-  schema.save(null, {useMasterKey: true});
+  schema.save(null, { useMasterKey: true });
 
   /* TODO: Edit Schema
   const schema = new Moralis.Schema('Post');
@@ -125,11 +125,28 @@ const validationRules = request => {
 
 Moralis.Cloud.define('adminFunction', request => {
   // do admin code here, confident that request.user?.id is masterUser, or masterKey is provided
-},validationRules)
+}, validationRules)
 
 /** TEST Func.
  * 
  */
-Moralis.Cloud.define("sayHi", async (request) => {  
-    return "Hi! 👋"; 
+Moralis.Cloud.define("sayHi", async (request) => {
+  return "Hi! 👋";
 });
+
+/** 
+ * Trigger Events
+ */
+const trigger = async (type, data) => {
+
+  switch (type) {
+    case "Post":
+
+      console.warn("[FYI] Triggered Event Type:'" + type + "' w/data:" + JSON.stringify(data));
+
+      // const pointer = await Moralis.Object.createWithoutData("Post", data.objectId);
+      break;
+    default: console.warn("[UNHANDLED] Triggered Event Type:'" + type + "' w/data:" + JSON.stringify(data));
+
+  }
+};
