@@ -1,7 +1,6 @@
 import React from "react";
 import { useMoralis } from "react-moralis";
 import PagePersona from "components/PagePersona";
-// import PageAuthenticate from "components/PageAuthenticate";
 import { Skeleton } from 'antd';
 
 /**
@@ -21,6 +20,6 @@ function PersonaNew(props) {
             </div>
         );
     }
-}//PersonaNew()
+}
 
 export default PersonaNew;

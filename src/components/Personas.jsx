@@ -1,12 +1,8 @@
 import { useMoralis } from "react-moralis";
-// import NFTDisplaySingle from "components/NFTCollections/NFTDisplaySingle";
 import NFTDisplaySingle from "components/Persona/DisplaySinglePersona";
 import { useContractTokens } from "hooks/useContractTokens";
 import { Skeleton } from 'antd';
 import { Persona } from "objects/Persona";
-// import { ChainHelper } from "helpers/ChainHelper";
-// import { PersonaHelper } from "helpers/PersonaHelper";
-// import { Link } from "react-router-dom";
 
 /**
  * Component: NFTs from All (Supported) Chains
